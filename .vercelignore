@@ -1,0 +1,15 @@
+tmp/
+.agents/
+.git/
+tools/__pycache__/
+
+# Runtime uses animation sheets. Individual frame exports stay in GitHub.
+assets/modular/characters/**/frames/
+assets/modular/fps/characters/**/frames/
+
+# Keep production deployment small; source masters remain in GitHub.
+assets/generated/sources/
+assets/generated/**/*-source.png
+assets/modular/**/source/
+assets/modular/**/*source*.png
+assets/modular/weapons/sources/
