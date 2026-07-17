@@ -1,0 +1,209 @@
+{
+  "version": 1,
+  "langue": "fr",
+  "collection": "Yomi no Kage — Sabres de l'ère Kan'ei",
+  "periode": "Japon, 1638",
+  "generation": "OpenAI ImageGen intégré, un appel distinct par sabre",
+  "detourage": "Chroma-key #ff00ff retiré avec le helper remove_chroma_key.py",
+  "validation": {
+    "format_final": "PNG RGBA",
+    "alpha_min_max": [
+      0,
+      255
+    ],
+    "coins_transparents": true,
+    "residu_chroma_visible": false
+  },
+  "sabres": [
+    {
+      "id": "01-kurokage",
+      "nom_japonais": "黒影",
+      "nom_romanise": "Kurokage",
+      "traduction": "Ombre noire",
+      "rarete": "Rare",
+      "bonus_gameplay": {
+        "nom": "Pas de l'ombre",
+        "effet": "Réduit de 12 % la détection ennemie et augmente de 10 % les dégâts infligés dans le dos."
+      },
+      "lore": "Un armurier de Sunpu forgea Kurokage pour un messager du bakufu contraint de traverser les provinces après le couvre-feu. Son saya mat porte encore les marques des portes et des chemins empruntés pour avertir le shogun de la contagion.",
+      "source": "assets/generated/sources/weapons/01-kurokage.png",
+      "final": "assets/generated/weapons/01-kurokage.png",
+      "dimensions_px": {
+        "largeur": 1821,
+        "hauteur": 864
+      },
+      "prompt_final": "Use case: stylized-concept\nAsset type: transparent-ready 2D game weapon sprite source\nPrimary request: Create one original Japanese katana named Kurokage (Black Shadow) together with its matching saya scabbard as two separate, parallel objects. The katana is fully unsheathed; show the entire blade, habaki, tsuba and tsuka. Historically plausible for Kan'ei-era Japan, 1638.\nSubject details: severe stealth weapon; blackened iron circular maru-gata tsuba with four restrained crescent-shaped sukashi openings; black tsuka-ito over very dark indigo samegawa; dark iron fittings; matte ink-black lacquer saya with a bone-colored kojiri and several believable travel scuffs; subtle shallow notare hamon, dark patina, carefully maintained cutting edge. No supernatural glow.\nStyle/medium: highly finished authentic 16-bit pixel art game sprite, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector lines, no painterly texture.\nComposition/framing: strict orthographic side profile, both katana and saya perfectly horizontal from left to right, entire silhouettes visible with generous padding; blade above and saya below, separated and not touching; no perspective and no foreshortening.\nColor palette: ink black, deep indigo, restrained lacquer red, aged bone, tiny ember accents, steel gray. Do not use magenta in either object.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background for local removal.\nConstraints: the background must be exactly one uniform #ff00ff color edge to edge, with no shadow, gradient, texture, reflection, floor plane, border, vignette, lighting variation or glow. Crisp isolated silhouettes. No cast shadow, contact shadow or reflection. No person, hands, rack, stand, environment, UI, frame, labels, symbols that resemble writing, text, logo, watermark, extra weapon or loose accessories. Exactly one katana and one matching saya."
+    },
+    {
+      "id": "02-shogun-no-in",
+      "nom_japonais": "将軍の印",
+      "nom_romanise": "Shōgun no In",
+      "traduction": "Sceau du Shogun",
+      "rarete": "Légendaire",
+      "bonus_gameplay": {
+        "nom": "Autorité du bakufu",
+        "effet": "Augmente de 15 % le gain de résolution et accorde 20 % de résistance pendant deux secondes après une parade parfaite."
+      },
+      "lore": "Shōgun no In fut remis à un hatamoto chargé d'inspecter les routes revenues de Shimabara. Lorsque son porteur succomba à la fièvre, le sceau abstrait du saya devint la preuve que l'ordre d'éradication venait bien d'Edo.",
+      "source": "assets/generated/sources/weapons/02-shogun-no-in.png",
+      "final": "assets/generated/weapons/02-shogun-no-in.png",
+      "dimensions_px": {
+        "largeur": 2172,
+        "hauteur": 724
+      },
+      "prompt_final": "Use case: stylized-concept\nAsset type: transparent-ready 2D game weapon sprite source\nPrimary request: Create one original Japanese katana named Shogun no In (Seal of the Shogun) together with its matching saya scabbard as two separate, parallel objects. The katana is fully unsheathed; show the entire blade, habaki, tsuba and tsuka. Historically plausible formal weapon for Kan'ei-era Japan, 1638.\nSubject details: prestigious but restrained shogunal presentation blade; refined four-lobed mokko-gata iron tsuba with small original paulownia-inspired piercings, not an actual modern logo; dark indigo tsuka-ito over bone-white samegawa; aged brass menuki and fittings; deep lacquer-red saya with black end fittings and one small abstract gold mon medallion with no writing; elegant midare hamon, polished edge, only slight ceremonial wear. No supernatural glow.\nStyle/medium: highly finished authentic 16-bit pixel art game sprite, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector lines, no painterly texture.\nComposition/framing: strict orthographic side profile, both katana and saya perfectly horizontal from left to right, entire silhouettes visible with generous padding; blade above and saya below, separated and not touching; no perspective and no foreshortening.\nColor palette: ink black, deep indigo, lacquer red, aged bone, restrained ember-gold and steel gray. Do not use magenta in either object.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background for local removal.\nConstraints: the background must be exactly one uniform #ff00ff color edge to edge, with no shadow, gradient, texture, reflection, floor plane, border, vignette, lighting variation or glow. Crisp isolated silhouettes. No cast shadow, contact shadow or reflection. No person, hands, rack, stand, environment, UI, frame, labels, written characters, text, logo, watermark, extra weapon or loose accessories. Exactly one katana and one matching saya."
+    },
+    {
+      "id": "03-hinezumi",
+      "nom_japonais": "火鼠",
+      "nom_romanise": "Hinezumi",
+      "traduction": "Rat de feu",
+      "rarete": "Peu commun",
+      "bonus_gameplay": {
+        "nom": "Fuite des braises",
+        "effet": "Une esquive parfaite augmente la vitesse d'attaque de 15 % pendant trois secondes."
+      },
+      "lore": "Hinezumi fut retrouvé sous les poutres d'un relais incendié de la route du Nakasendō. Sa trempe resta intacte malgré la chaleur, et les survivants en firent le symbole de ceux qui échappent aux hordes.",
+      "source": "assets/generated/sources/weapons/03-hinezumi.png",
+      "final": "assets/generated/weapons/03-hinezumi.png",
+      "dimensions_px": {
+        "largeur": 2172,
+        "hauteur": 724
+      },
+      "prompt_final": "Use case: stylized-concept\nAsset type: transparent-ready 2D game weapon sprite source\nPrimary request: Create one original Japanese katana named Hinezumi (Fire Rat) together with its matching saya scabbard as two separate, parallel objects. The katana is fully unsheathed; show the entire blade, habaki, tsuba and tsuka. Historically plausible working weapon for Kan'ei-era Japan, 1638.\nSubject details: fast, compact-feeling field blade without fantasy exaggeration; small round blackened-iron tsuba with restrained wheel-and-whisker sukashi geometry inspired by a field mouse; ember-red tsuka-ito over charcoal samegawa; dark copper menuki; smoke-darkened steel with a lively gunome hamon; deep burnt-red urushi saya fading into soot-black at both ends, scratched and heat-blistered from a village fire; robust edge with visible maintenance marks. No flames and no supernatural glow.\nStyle/medium: highly finished authentic 16-bit pixel art game sprite, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector lines, no painterly texture.\nComposition/framing: strict orthographic side profile, both katana and saya perfectly horizontal from left to right, entire silhouettes visible with generous padding; blade above and saya below, separated and not touching; no perspective and no foreshortening.\nColor palette: ink black, deep indigo, burnt lacquer red, aged bone, restrained ember orange, dark copper and steel gray. Do not use magenta in either object.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background for local removal.\nConstraints: the background must be exactly one uniform #ff00ff color edge to edge, with no shadow, gradient, texture, reflection, floor plane, border, vignette, lighting variation or glow. Crisp isolated silhouettes. No cast shadow, contact shadow or reflection. No person, hands, rack, stand, environment, UI, frame, labels, written characters, text, logo, watermark, extra weapon or loose accessories. Exactly one katana and one matching saya."
+    },
+    {
+      "id": "04-shirogane",
+      "nom_japonais": "白銀",
+      "nom_romanise": "Shirogane",
+      "traduction": "Argent",
+      "rarete": "Épique",
+      "bonus_gameplay": {
+        "nom": "Fil immaculé",
+        "effet": "Élargit de 18 % la fenêtre de parade parfaite et inflige 12 % de dégâts supplémentaires aux ennemis en armure."
+      },
+      "lore": "Shirogane sortit des forges d'un maître de Mino pour célébrer la promotion d'un jeune hatamoto. Le sabre ne quitta son coffre qu'au jour où les morts forcèrent les portes du domaine.",
+      "source": "assets/generated/sources/weapons/04-shirogane.png",
+      "final": "assets/generated/weapons/04-shirogane.png",
+      "dimensions_px": {
+        "largeur": 1821,
+        "hauteur": 864
+      },
+      "prompt_final": "Use case: stylized-concept\nAsset type: transparent-ready 2D game weapon sprite source\nPrimary request: Create one original Japanese katana named Shirogane (Silver Steel) together with its matching saya scabbard as two separate, parallel objects. The katana is fully unsheathed; show the entire blade, habaki, tsuba and tsuka. Historically plausible high-grade weapon for Kan'ei-era Japan, 1638.\nSubject details: exceptionally clean silvery blade with a quiet suguha hamon and crisp polished edge; pale iron round tsuba pierced with a restrained six-point winter-flower geometry, period metalwork rather than fantasy; light gray tsuka-ito over bone-white samegawa, silver-toned fittings with tiny indigo accents; smooth aged-ivory lacquer saya with pale gray kojiri and understated indigo sageo; nearly pristine condition with only two minute scuffs, elegant and austere. No supernatural glow.\nStyle/medium: highly finished authentic 16-bit pixel art game sprite, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector lines, no painterly texture.\nComposition/framing: strict orthographic side profile, both katana and saya perfectly horizontal from left to right, entire silhouettes visible with generous padding; blade above and saya below, separated and not touching; no perspective and no foreshortening.\nColor palette: silver and steel gray, aged bone, ink black, deep indigo, tiny restrained lacquer-red details. Do not use magenta in either object.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background for local removal.\nConstraints: the background must be exactly one uniform #ff00ff color edge to edge, with no shadow, gradient, texture, reflection, floor plane, border, vignette, lighting variation or glow. Crisp isolated silhouettes. No cast shadow, contact shadow or reflection. No person, hands, rack, stand, environment, UI, frame, labels, written characters, text, logo, watermark, extra weapon or loose accessories. Exactly one katana and one matching saya."
+    },
+    {
+      "id": "05-yomibane",
+      "nom_japonais": "黄泉羽",
+      "nom_romanise": "Yomibane",
+      "traduction": "Plume de Yomi",
+      "rarete": "Rare",
+      "bonus_gameplay": {
+        "nom": "Dernier souffle",
+        "effet": "Achever un infecté étourdi rend 8 points de résolution, avec un délai interne de quatre secondes."
+      },
+      "lore": "Yomibane appartenait aux gardiens d'un temple qui brûlaient les corps avant que la fièvre ne puisse les relever. Les motifs de plume du saya rappellent les tablettes funéraires que les moines ne purent jamais inscrire.",
+      "source": "assets/generated/sources/weapons/05-yomibane.png",
+      "final": "assets/generated/weapons/05-yomibane.png",
+      "dimensions_px": {
+        "largeur": 1920,
+        "hauteur": 819
+      },
+      "prompt_final": "Use case: stylized-concept\nAsset type: transparent-ready 2D game weapon sprite source\nPrimary request: Create one original Japanese katana named Yomibane (Feather of Yomi) together with its matching saya scabbard as two separate, parallel objects. The katana is fully unsheathed; show the entire blade, habaki, tsuba and tsuka. Historically plausible somber weapon for Kan'ei-era Japan, 1638.\nSubject details: funeral-austere blade associated with hunters of the infected, with no literal magic; oval blackened-iron tsuba pierced by two elegant feather-like negative spaces in period sukashi workmanship; deep indigo tsuka-ito over black samegawa, aged-bone menuki and kashira; smoked steel blade with a restrained shallow choji hamon and old sharpening marks; ink-black saya brushed with a subtle dark-indigo feather grain, bone throat and tip, worn sageo and moderate travel scuffs. No feathers floating, no supernatural glow.\nStyle/medium: highly finished authentic 16-bit pixel art game sprite, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector lines, no painterly texture.\nComposition/framing: strict orthographic side profile, both katana and saya perfectly horizontal from left to right, entire silhouettes visible with generous padding; blade above and saya below, separated and not touching; no perspective and no foreshortening.\nColor palette: ink black, deep indigo, aged bone, restrained lacquer red, dim ember, dark steel gray. Do not use magenta in either object.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background for local removal.\nConstraints: the background must be exactly one uniform #ff00ff color edge to edge, with no shadow, gradient, texture, reflection, floor plane, border, vignette, lighting variation or glow. Crisp isolated silhouettes. No cast shadow, contact shadow or reflection. No person, hands, rack, stand, environment, UI, frame, labels, written characters, text, logo, watermark, extra weapon or loose accessories. Exactly one katana and one matching saya."
+    },
+    {
+      "id": "06-kegare-kiri",
+      "nom_japonais": "穢れ斬り",
+      "nom_romanise": "Kegare-kiri",
+      "traduction": "Tranche-souillure",
+      "rarete": "Peu commun",
+      "bonus_gameplay": {
+        "nom": "Outil d'éradication",
+        "effet": "Inflige 22 % de dégâts supplémentaires aux infectés lourds et à leurs membres mutés."
+      },
+      "lore": "Kegare-kiri fut raccourci, repoli et remonté après les premières attaques sur les villages du Kantō. Chaque éclat de laque révèle une réparation effectuée par un survivant différent.",
+      "source": "assets/generated/sources/weapons/06-kegare-kiri.png",
+      "final": "assets/generated/weapons/06-kegare-kiri.png",
+      "dimensions_px": {
+        "largeur": 1774,
+        "hauteur": 887
+      },
+      "prompt_final": "Use case: stylized-concept\nAsset type: transparent-ready 2D game weapon sprite source\nPrimary request: Create one original Japanese katana named Kegare-kiri (Defilement Cutter) together with its matching saya scabbard as two separate, parallel objects. The katana is fully unsheathed; show the entire blade, habaki, tsuba and tsuka. Historically plausible hard-used anti-infected weapon for Kan'ei-era Japan, 1638.\nSubject details: brutal but realistic battlefield blade; thick dark-steel blade with an irregular gunome hamon, several small edge nicks near the monouchi, old sharpening scratches and faint rust pitting away from the cutting edge; squared kakugata black-iron tsuba with simple corner cutouts; filthy bone-gray hemp tsuka-ito over dark samegawa, oxidized copper fittings; dried lacquer-red saya almost black with grime, chipped lacquer exposing wood in a few places, rough repaired sageo. No gore, no supernatural effects and no glow.\nStyle/medium: highly finished authentic 16-bit pixel art game sprite, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector lines, no painterly texture.\nComposition/framing: strict orthographic side profile, both katana and saya perfectly horizontal from left to right, entire silhouettes visible with generous padding; blade above and saya below, separated and not touching; no perspective and no foreshortening.\nColor palette: ink black, dirty bone, deep indigo, dried lacquer red, muted ember-copper and dark steel gray. Do not use magenta in either object.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background for local removal.\nConstraints: the background must be exactly one uniform #ff00ff color edge to edge, with no shadow, gradient, texture, reflection, floor plane, border, vignette, lighting variation or glow. Crisp isolated silhouettes. No cast shadow, contact shadow or reflection. No person, hands, rack, stand, environment, UI, frame, labels, written characters, text, logo, watermark, extra weapon or loose accessories. Exactly one katana and one matching saya."
+    },
+    {
+      "id": "07-takekaze",
+      "nom_japonais": "竹風",
+      "nom_romanise": "Takekaze",
+      "traduction": "Vent du bambou",
+      "rarete": "Commun",
+      "bonus_gameplay": {
+        "nom": "Souplesse du roseau",
+        "effet": "Réduit de 12 % le coût en endurance des attaques légères et de 8 % celui des esquives."
+      },
+      "lore": "Takekaze fut assemblé pour le fils d'un gōshi chargé de défendre les hameaux forestiers. Ses garnitures modestes permirent de le réparer loin des grandes forges lorsque les routes furent coupées.",
+      "source": "assets/generated/sources/weapons/07-takekaze.png",
+      "final": "assets/generated/weapons/07-takekaze.png",
+      "dimensions_px": {
+        "largeur": 1821,
+        "hauteur": 864
+      },
+      "prompt_final": "Use case: stylized-concept\nAsset type: transparent-ready 2D game weapon sprite source\nPrimary request: Create one original Japanese katana named Takekaze (Bamboo Wind) together with its matching saya scabbard as two separate, parallel objects. The katana is fully unsheathed; show the entire blade, habaki, tsuba and tsuka. Historically plausible light field weapon for Kan'ei-era Japan, 1638.\nSubject details: nimble rural guardian's blade; round dark-iron tsuba pierced with three simple bamboo-leaf sukashi openings; deep indigo tsuka-ito over bone samegawa, small smoked-brass bamboo-node menuki; clean but modest steel blade with a calm straight suguha hamon and light polishing marks; dark indigo-black lacquer saya decorated only with subtle aged-bone bamboo-node bands, practical braided sageo, light rain wear and a few travel scuffs. Natural craftsmanship, no literal wind effect and no supernatural glow.\nStyle/medium: highly finished authentic 16-bit pixel art game sprite, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector lines, no painterly texture.\nComposition/framing: strict orthographic side profile, both katana and saya perfectly horizontal from left to right, entire silhouettes visible with generous padding; blade above and saya below, separated and not touching; no perspective and no foreshortening.\nColor palette: ink black, deep indigo, aged bone, smoked brass, restrained lacquer red and steel gray. Do not use magenta or bright green in either object.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background for local removal.\nConstraints: the background must be exactly one uniform #ff00ff color edge to edge, with no shadow, gradient, texture, reflection, floor plane, border, vignette, lighting variation or glow. Crisp isolated silhouettes. No cast shadow, contact shadow or reflection. No person, hands, rack, stand, environment, UI, frame, labels, written characters, text, logo, watermark, extra weapon or loose accessories. Exactly one katana and one matching saya."
+    },
+    {
+      "id": "08-raijin-no-tsume",
+      "nom_japonais": "雷神の爪",
+      "nom_romanise": "Raijin no Tsume",
+      "traduction": "Griffe de Raijin",
+      "rarete": "Épique",
+      "bonus_gameplay": {
+        "nom": "Brise-garde",
+        "effet": "Augmente de 25 % les dégâts de posture des attaques lourdes chargées."
+      },
+      "lore": "Raijin no Tsume fut commandé à Echizen par un officier réputé pour rompre les lignes d'ashigaru sous l'orage. Son hamon anguleux n'a rien de surnaturel, mais les infectés qui le virent approcher lui prêtèrent une légende.",
+      "source": "assets/generated/sources/weapons/08-raijin-no-tsume.png",
+      "final": "assets/generated/weapons/08-raijin-no-tsume.png",
+      "dimensions_px": {
+        "largeur": 2103,
+        "hauteur": 748
+      },
+      "prompt_final": "Use case: stylized-concept\nAsset type: transparent-ready 2D game weapon sprite source\nPrimary request: Create one original Japanese katana named Raijin no Tsume (Claw of Raijin) together with its matching saya scabbard as two separate, parallel objects. The katana is fully unsheathed; show the entire blade, habaki, tsuba and tsuka. Historically plausible elite weapon for Kan'ei-era Japan, 1638.\nSubject details: aggressive silhouette achieved through real craftsmanship, not fantasy; heavy iron maru-gata tsuba pierced with restrained curled-cloud openings and three blunt claw-notch accents; black-and-indigo tsuka-ito over bone samegawa with aged brass menuki; bright steel blade with a pronounced jagged gunome hamon resembling distant lightning but physically etched by differential hardening, immaculate sharp edge; glossy ink-black saya with sparse muted-silver cloud maki-e, indigo sageo, tiny brass fittings and only light campaign wear. No lightning bolts, electricity or supernatural glow.\nStyle/medium: highly finished authentic 16-bit pixel art game sprite, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector lines, no painterly texture.\nComposition/framing: strict orthographic side profile, both katana and saya perfectly horizontal from left to right, entire silhouettes visible with generous padding; blade above and saya below, separated and not touching; no perspective and no foreshortening.\nColor palette: ink black, deep indigo, aged bone, muted silver, aged brass, tiny lacquer-red accents and steel gray. Do not use magenta in either object.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background for local removal.\nConstraints: the background must be exactly one uniform #ff00ff color edge to edge, with no shadow, gradient, texture, reflection, floor plane, border, vignette, lighting variation or glow. Crisp isolated silhouettes. No cast shadow, contact shadow or reflection. No person, hands, rack, stand, environment, UI, frame, labels, written characters, text, logo, watermark, extra weapon or loose accessories. Exactly one katana and one matching saya."
+    },
+    {
+      "id": "09-akatsuki",
+      "nom_japonais": "暁",
+      "nom_romanise": "Akatsuki",
+      "traduction": "Aube",
+      "rarete": "Rare",
+      "bonus_gameplay": {
+        "nom": "Premier rayon",
+        "effet": "Augmente de 15 % les dégâts tant que la santé reste supérieure à 80 %."
+      },
+      "lore": "Akatsuki fut porté par l'officier qui reprit une forteresse contaminée au lever du jour. Les entailles du saya furent conservées pour rappeler que la victoire coûta davantage que la lame elle-même.",
+      "source": "assets/generated/sources/weapons/09-akatsuki.png",
+      "final": "assets/generated/weapons/09-akatsuki.png",
+      "dimensions_px": {
+        "largeur": 1536,
+        "hauteur": 1024
+      },
+      "prompt_final": "Use case: stylized-concept\nAsset type: transparent-ready 2D game weapon sprite source\nPrimary request: Create one original Japanese katana named Akatsuki (Dawn) together with its matching saya scabbard as two separate, parallel objects. The katana is fully unsheathed; show the entire blade, habaki, tsuba and tsuka. Historically plausible ceremonial campaign weapon for Kan'ei-era Japan, 1638.\nSubject details: resolute shogunate officer's blade; round dark-iron tsuba with a simple rising-sun half-disc cutout at the lower rim, abstract and period-crafted; lacquer-red tsuka-ito over aged bone samegawa with dark copper menuki; luminous polished steel achieved only through normal reflection, with an elegant choji hamon; rich dawn-red lacquer saya grading subtly from near-black at the throat to ember red toward the tip, without a smooth background-like gradient, fitted with black iron and a bone-colored sageo; ceremonial quality but with several honest campaign scuffs and a slightly dulled koiguchi. No sun rays, no supernatural glow.\nStyle/medium: highly finished authentic 16-bit pixel art game sprite, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector lines, no painterly texture.\nComposition/framing: strict orthographic side profile, both katana and saya perfectly horizontal from left to right, entire silhouettes visible with generous padding; blade above and saya below, separated and not touching; no perspective and no foreshortening.\nColor palette: ink black, deep lacquer red, ember orange, aged bone, deep indigo, dark copper and steel gray. Do not use magenta in either object.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background for local removal.\nConstraints: the background must be exactly one uniform #ff00ff color edge to edge, with no shadow, gradient, texture, reflection, floor plane, border, vignette, lighting variation or glow. Crisp isolated silhouettes. No cast shadow, contact shadow or reflection. No person, hands, rack, stand, environment, UI, frame, labels, written characters, text, logo, watermark, extra weapon or loose accessories. Exactly one katana and one matching saya."
+    },
+    {
+      "id": "10-mujo",
+      "nom_japonais": "無常",
+      "nom_romanise": "Mujō",
+      "traduction": "Impermanence",
+      "rarete": "Légendaire",
+      "bonus_gameplay": {
+        "nom": "Rien ne demeure",
+        "effet": "Sous 30 % de santé, les parades parfaites rendent 10 points d'endurance et infligent 20 % de dégâts de posture supplémentaires."
+      },
+      "lore": "Mujō passa de main en main parmi des rōnin dont aucun nom ne survécut aux registres. Ses réparations rouges ne cachent pas les fractures du saya, car son dernier maître disait qu'une cicatrice honnête vaut mieux qu'un mensonge neuf.",
+      "source": "assets/generated/sources/weapons/10-mujo.png",
+      "final": "assets/generated/weapons/10-mujo.png",
+      "dimensions_px": {
+        "largeur": 2172,
+        "hauteur": 724
+      },
+      "prompt_final": "Use case: stylized-concept\nAsset type: transparent-ready 2D game weapon sprite source\nPrimary request: Create one original Japanese katana named Mujo (Impermanence) together with its matching saya scabbard as two separate, parallel objects. The katana is fully unsheathed; show the entire blade, habaki, tsuba and tsuka. Historically plausible old wandering samurai's weapon for Kan'ei-era Japan, 1638.\nSubject details: radically plain wabi-sabi blade whose age is visible; small undecorated round maru-gata iron tsuba with soft worn edges; faded indigo tsuka-ito with two repaired crossings over aged bone samegawa, plain dark iron fittings; old steel blade with a narrow straight suguha hamon, honest patina on the spine, many fine polishing marks but a well-kept edge; cracked ink-black lacquer saya repaired in three restrained lacquer-red seams, mismatched bone kojiri, frayed practical sageo. Utilitarian, balanced and dignified. No mystical symbols, no supernatural glow.\nStyle/medium: highly finished authentic 16-bit pixel art game sprite, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector lines, no painterly texture.\nComposition/framing: strict orthographic side profile, both katana and saya perfectly horizontal from left to right, entire silhouettes visible with generous padding; blade above and saya below, separated and not touching; no perspective and no foreshortening.\nColor palette: ink black, faded deep indigo, aged bone, sparse lacquer red, muted ember-brown and old steel gray. Do not use magenta in either object.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background for local removal.\nConstraints: the background must be exactly one uniform #ff00ff color edge to edge, with no shadow, gradient, texture, reflection, floor plane, border, vignette, lighting variation or glow. Crisp isolated silhouettes. No cast shadow, contact shadow or reflection. No person, hands, rack, stand, environment, UI, frame, labels, written characters, text, logo, watermark, extra weapon or loose accessories. Exactly one katana and one matching saya."
+    }
+  ]
+}

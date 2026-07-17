@@ -1,0 +1,480 @@
+{
+  "schema": 1,
+  "category": "giant",
+  "count": 10,
+  "generationTool": "OpenAI ImageGen built-in",
+  "generationPolicy": "Un appel ImageGen distinct par boss. Les armes et composants détachables sont exclus des silhouettes.",
+  "animationStandard": {
+    "masterGrid": {
+      "columns": 6,
+      "rows": 5,
+      "totalPoses": 30
+    },
+    "engineRows": [
+      "idle",
+      "move",
+      "attack",
+      "hurt",
+      "death"
+    ],
+    "semanticRows": [
+      "repos",
+      "déplacement",
+      "attaque",
+      "spécial ou blessure",
+      "destruction"
+    ],
+    "framesPerRow": 6,
+    "facing": "left",
+    "weaponsBakedIntoBody": false,
+    "backgroundSource": "#ff00ff",
+    "finalFormat": "PNG RGBA"
+  },
+  "entries": [
+    {
+      "id": "giant-01-kurogane-warder",
+      "name": "Gardien Kurogane",
+      "subtitle": "Geôlier colossal de la porte noire",
+      "folder": "assets/modular/characters/giant/giant-01-kurogane-warder",
+      "displayScale": 3.6,
+      "screenCoverage": {
+        "width": "30–36 %",
+        "height": "58–66 %"
+      },
+      "equipment": {
+        "weaponId": "poutre-massue-kurogane",
+        "anchor": "mainHandTwoHanded",
+        "detachable": true
+      },
+      "lore": "Ancien geôlier du château, Kurogane a gonflé sous l’effet de la peste du Yomi. Son armure lamellaire retient encore sa masse infectée.",
+      "gameplay": "Boss d’ouverture lent et lisible. Ses coups de poing préparent l’arrivée de sa poutre-massue détachable.",
+      "phases": [
+        {
+          "name": "Verrou vivant",
+          "health": "100–55 %",
+          "behaviour": "Marches lourdes, balayages courts et charge télégraphiée."
+        },
+        {
+          "name": "Porte arrachée",
+          "health": "54–0 %",
+          "behaviour": "Saisit la poutre, augmente la portée et brise les plateformes fragiles."
+        }
+      ],
+      "weakPoints": [
+        {
+          "id": "yeux",
+          "window": "Après une charge manquée",
+          "effect": "Étourdissement bref"
+        },
+        {
+          "id": "jointures-armure",
+          "window": "Pendant le relèvement de la poutre",
+          "effect": "Dégâts d’armure accrus"
+        }
+      ],
+      "prompt": "Create a production-ready original 16-bit pixel-art giant boss master atlas for a fictional late-feudal Japanese zombie-plague game. Strict 6 columns by 5 rows, exactly 30 isolated full-body left-facing poses of a plague-swollen castle gatekeeper in battered black lamellar armor, shaved head and iron menpo, with empty fists. Row 1 idle; row 2 heavy movement; row 3 unarmed punches, body checks and body slam; row 4 special defensive tension and hurt recoil; row 5 destruction and final collapse. No weapon, beam, club, scabbard, detachable item, text, labels, border or grid. Flat exact #ff00ff background, generous gutters, crisp hard-edged 16-bit pixels."
+    },
+    {
+      "id": "giant-02-aka-ushi",
+      "name": "Aka-Ushi",
+      "subtitle": "Bœuf de trait pestiféré",
+      "folder": "assets/modular/characters/giant/giant-02-aka-ushi",
+      "displayScale": 3.4,
+      "screenCoverage": {
+        "width": "38–46 %",
+        "height": "46–54 %"
+      },
+      "equipment": {
+        "weaponId": "joug-tranchant-aka-ushi",
+        "anchor": "neckRig",
+        "detachable": true
+      },
+      "lore": "Les convois de quarantaine ont abandonné Aka-Ushi sur la route. La fièvre a épaissi sa peau et déformé ses cornes.",
+      "gameplay": "Boss quadrupède de charge. Son joug tranchant peut être arraché pour réduire son rayon latéral.",
+      "phases": [
+        {
+          "name": "Bête affolée",
+          "health": "100–50 %",
+          "behaviour": "Charge, coup de corne et piétinement."
+        },
+        {
+          "name": "Joug brisé",
+          "health": "49–0 %",
+          "behaviour": "Plus rapide, trajectoires irrégulières et ruades."
+        }
+      ],
+      "weakPoints": [
+        {
+          "id": "pattes-arriere",
+          "window": "Après une charge contre un mur",
+          "effect": "Chute sur le flanc"
+        },
+        {
+          "id": "attaches-du-joug",
+          "window": "Pendant le piétinement",
+          "effect": "Détache l’équipement"
+        }
+      ],
+      "prompt": "Create a production-ready original 16-bit pixel-art giant boss master atlas for a fictional late-feudal Japanese zombie-plague game. Strict 6 columns by 5 rows, exactly 30 isolated full-body left-facing poses of a colossal infected red-brown draft ox with cracked horns and plague lesions. Row 1 idle breathing; row 2 heavy movement; row 3 horn charge, stomp and gore attacks; row 4 special bellow and hurt recoil; row 5 destruction and collapse. No saddle, yoke, harness, rider, armor, weapon, detachable item, text, labels, border or grid. Flat exact #ff00ff background, generous gutters, crisp hard-edged 16-bit pixels."
+    },
+    {
+      "id": "giant-03-take-mori",
+      "name": "Take-Mori",
+      "subtitle": "Colosse de la bambouseraie",
+      "folder": "assets/modular/characters/giant/giant-03-take-mori",
+      "displayScale": 4.2,
+      "screenCoverage": {
+        "width": "27–33 %",
+        "height": "66–76 %"
+      },
+      "equipment": {
+        "weaponId": "belier-bambou-take-mori",
+        "anchor": "mainHandTwoHanded",
+        "detachable": true
+      },
+      "lore": "Un ouvrier de quarantaine dont les excroissances kératinisées ont pris la forme du bambou qu’il abattait.",
+      "gameplay": "Très grand boss vertical. Ses crêtes protègent le torse, mais ses jambes restent vulnérables pendant le bélier.",
+      "phases": [
+        {
+          "name": "Sous-bois",
+          "health": "100–60 %",
+          "behaviour": "Paumes, avant-bras et écrasements."
+        },
+        {
+          "name": "Bélier de bambou",
+          "health": "59–0 %",
+          "behaviour": "Prend le bélier détachable et traverse l’arène."
+        }
+      ],
+      "weakPoints": [
+        {
+          "id": "genoux",
+          "window": "Pendant le port du bélier",
+          "effect": "Interrompt la charge"
+        },
+        {
+          "id": "ventre-sans-cretes",
+          "window": "Après l’écrasement",
+          "effect": "Dégâts critiques"
+        }
+      ],
+      "prompt": "Create a production-ready original 16-bit pixel-art giant boss master atlas for a fictional late-feudal Japanese zombie-plague game. Strict 6 columns by 5 rows, exactly 30 isolated full-body left-facing poses of a towering bamboo-grove quarantine laborer whose bamboo-like ridges are organic keratin anatomy, wearing torn work clothes and using empty hands. Row 1 idle; row 2 long-stride movement; row 3 forearm strikes, palm attacks and body slam; row 4 defensive ridge posture and hurt recoil; row 5 destruction and collapse. No weapon, bamboo ram, carried stalk, tool, detachable item, text, labels, border or grid. Flat exact #ff00ff background, generous gutters, crisp hard-edged 16-bit pixels."
+    },
+    {
+      "id": "giant-04-enjin-bozu",
+      "name": "Enjin-Bōzu",
+      "subtitle": "Moine du foyer consumé",
+      "folder": "assets/modular/characters/giant/giant-04-enjin-bozu",
+      "displayScale": 3.8,
+      "screenCoverage": {
+        "width": "29–35 %",
+        "height": "60–70 %"
+      },
+      "equipment": {
+        "weaponId": "fleau-cloche-enjin",
+        "anchor": "mainHand",
+        "detachable": true
+      },
+      "lore": "Le gardien du brasier de purification a brûlé avec son temple. Des fissures d’ambre courent encore sous sa peau noircie.",
+      "gameplay": "Boss de pression thermique. Ses frappes au sol laissent des zones dangereuses sans lancer de magie.",
+      "phases": [
+        {
+          "name": "Braises contenues",
+          "health": "100–45 %",
+          "behaviour": "Paumes, coudes et chocs au sol."
+        },
+        {
+          "name": "Cloche ardente",
+          "health": "44–0 %",
+          "behaviour": "Utilise le fléau-cloche, puis refroidit après chaque série."
+        }
+      ],
+      "weakPoints": [
+        {
+          "id": "fissures-du-dos",
+          "window": "Pendant le refroidissement",
+          "effect": "Brise la posture"
+        },
+        {
+          "id": "chevilles-brulees",
+          "window": "Après le choc au sol",
+          "effect": "Ralentissement"
+        }
+      ],
+      "prompt": "Create a production-ready original 16-bit pixel-art giant boss master atlas for a fictional late-feudal Japanese zombie-plague game. Strict 6 columns by 5 rows, exactly 30 isolated full-body left-facing poses of a colossal infected fire-keeper monk in burned robes, with ember-like cracks beneath charred skin and empty hands. Row 1 idle; row 2 movement; row 3 palm, elbow and ground-smash attacks; row 4 special body tension and hurt recoil; row 5 cooling destruction and collapse. No bell, flail, staff, weapon, detachable item, text, labels, border or grid. Flat exact #ff00ff background, generous gutters, crisp hard-edged 16-bit pixels."
+    },
+    {
+      "id": "giant-05-numa-no-oyakata",
+      "name": "Numa-no-Oyakata",
+      "subtitle": "Seigneur noyé du domaine fluvial",
+      "folder": "assets/modular/characters/giant/giant-05-numa-no-oyakata",
+      "displayScale": 4.0,
+      "screenCoverage": {
+        "width": "33–40 %",
+        "height": "61–70 %"
+      },
+      "equipment": {
+        "weaponId": "ancre-riviere-numa",
+        "anchor": "mainHand",
+        "detachable": true
+      },
+      "lore": "Le maître d’un domaine inondé a retenu les digues jusqu’à la mort. Son corps gonflé rejette encore l’eau contaminée.",
+      "gameplay": "Boss massif de saisie. Ses pauses de dépressurisation ouvrent les meilleures fenêtres d’attaque.",
+      "phases": [
+        {
+          "name": "Corps noyé",
+          "health": "100–55 %",
+          "behaviour": "Saisies, coups de ventre et écrasements."
+        },
+        {
+          "name": "Ancre du domaine",
+          "health": "54–0 %",
+          "behaviour": "Tractions à l’ancre et grands balayages."
+        }
+      ],
+      "weakPoints": [
+        {
+          "id": "flancs-gonfles",
+          "window": "Après une saisie manquée",
+          "effect": "Provoque une dépressurisation"
+        },
+        {
+          "id": "poignet-de-l-ancre",
+          "window": "Pendant la traction",
+          "effect": "Fait lâcher l’ancre"
+        }
+      ],
+      "prompt": "Create a production-ready original 16-bit pixel-art giant boss master atlas for a fictional late-feudal Japanese zombie-plague game. Strict 6 columns by 5 rows, exactly 30 isolated full-body left-facing poses of a drowned river-estate lord, waterlogged formal garments, swollen body and empty hands. Row 1 idle; row 2 heavy movement; row 3 grab, belly-check and slam attacks; row 4 pressure posture and hurt recoil; row 5 deflation, destruction and collapse. No anchor, rope, weapon, detachable item, text, labels, border or grid. Flat exact #ff00ff background, generous gutters, crisp hard-edged 16-bit pixels."
+    },
+    {
+      "id": "giant-06-kinoko-haha",
+      "name": "Kinoko-Haha",
+      "subtitle": "Matrone fongique de la quarantaine",
+      "folder": "assets/modular/characters/giant/giant-06-kinoko-haha",
+      "displayScale": 3.7,
+      "screenCoverage": {
+        "width": "34–42 %",
+        "height": "57–66 %"
+      },
+      "equipment": {
+        "weaponId": "encensoir-spores-kinoko",
+        "anchor": "offHand",
+        "detachable": true
+      },
+      "lore": "Une vieille guérisseuse a absorbé les champignons des malades. Les consoles fongiques sont désormais soudées à son corps.",
+      "gameplay": "Boss de contrôle d’espace. Les excroissances sont destructibles, l’encensoir étant un sprite indépendant.",
+      "phases": [
+        {
+          "name": "Mère guérisseuse",
+          "health": "100–65 %",
+          "behaviour": "Griffes, coups d’épaule et nuages courts."
+        },
+        {
+          "name": "Floraison",
+          "health": "64–30 %",
+          "behaviour": "Ouvre ses consoles et révèle les points faibles."
+        },
+        {
+          "name": "Sporulation",
+          "health": "29–0 %",
+          "behaviour": "Encensoir détachable et déplacements plus agressifs."
+        }
+      ],
+      "weakPoints": [
+        {
+          "id": "consoles-fongiques",
+          "window": "Pendant la floraison",
+          "effect": "Désactive une émission de spores"
+        },
+        {
+          "id": "visage",
+          "window": "Après la rupture de deux consoles",
+          "effect": "Dégâts critiques"
+        }
+      ],
+      "prompt": "Create a production-ready original 16-bit pixel-art giant boss master atlas for a fictional late-feudal Japanese zombie-plague game. Strict 6 columns by 5 rows, exactly 30 isolated full-body left-facing poses of an elderly infected healer transformed into a fungal matriarch, with organic shelf fungi fused to her body, torn robes and empty hands. Row 1 idle; row 2 movement; row 3 claw, shoulder ram and slam attacks; row 4 bloom posture and hurt recoil; row 5 withering destruction and collapse. No censer, staff, basket, weapon, detachable item, text, labels, border or grid. Flat exact #ff00ff background, generous gutters, crisp hard-edged 16-bit pixels."
+    },
+    {
+      "id": "giant-07-shiro-kabuto",
+      "name": "Shiro-Kabuto",
+      "subtitle": "Scarabée pâle de la peste",
+      "folder": "assets/modular/characters/giant/giant-07-shiro-kabuto",
+      "displayScale": 3.5,
+      "screenCoverage": {
+        "width": "42–50 %",
+        "height": "44–52 %"
+      },
+      "equipment": {
+        "weaponId": "bouclier-carapace-shiro",
+        "anchor": "dorsalShell",
+        "detachable": true
+      },
+      "lore": "Un coléoptère des fosses communes, nourri par les cadavres contaminés jusqu’à atteindre la taille d’une maison.",
+      "gameplay": "Boss bas et large. Sa carapace détachable bloque les attaques hautes jusqu’à fissuration.",
+      "phases": [
+        {
+          "name": "Carapace close",
+          "health": "100–50 %",
+          "behaviour": "Charge blindée, mandibules et coups de pattes."
+        },
+        {
+          "name": "Abdomen exposé",
+          "health": "49–0 %",
+          "behaviour": "Plus rapide, sans bouclier dorsal."
+        }
+      ],
+      "weakPoints": [
+        {
+          "id": "articulations-des-pattes",
+          "window": "Pendant la défense",
+          "effect": "Fait pivoter le boss"
+        },
+        {
+          "id": "abdomen",
+          "window": "Après rupture de la carapace",
+          "effect": "Dégâts critiques"
+        }
+      ],
+      "prompt": "Create a production-ready original 16-bit pixel-art giant boss master atlas for a fictional late-feudal Japanese zombie-plague game. Strict 6 columns by 5 rows, exactly 30 isolated full-body left-facing poses of a colossal pale plague beetle with six legs, anatomical carapace and mandibles. Row 1 idle; row 2 crawling movement; row 3 mandible, foreleg and charge attacks; row 4 shell-defense posture and hurt recoil; row 5 destruction and collapse. No rider, saddle, armor, cannon, carried shield, weapon, detachable item, text, labels, border or grid. Flat exact #ff00ff background, generous gutters, crisp hard-edged 16-bit pixels."
+    },
+    {
+      "id": "giant-08-nuno-kyojin",
+      "name": "Nuno-Kyojin",
+      "subtitle": "Titan des linceuls de quarantaine",
+      "folder": "assets/modular/characters/giant/giant-08-nuno-kyojin",
+      "displayScale": 4.5,
+      "screenCoverage": {
+        "width": "26–32 %",
+        "height": "70–80 %"
+      },
+      "equipment": {
+        "weaponId": "chaines-menottes-nuno",
+        "anchor": "wristPair",
+        "detachable": true
+      },
+      "lore": "Les linges d’un charnier ont recouvert un porteur encore vivant. Il marche désormais comme un monument funéraire.",
+      "gameplay": "Boss de très grande taille aux bras allongés. Les menottes et la chaîne restent entièrement modulaires.",
+      "phases": [
+        {
+          "name": "Linceul noué",
+          "health": "100–60 %",
+          "behaviour": "Longs balayages, genou et frappe verticale."
+        },
+        {
+          "name": "Entravé",
+          "health": "59–0 %",
+          "behaviour": "Chaîne détachable, tirages et changements de côté."
+        }
+      ],
+      "weakPoints": [
+        {
+          "id": "noeuds-du-torse",
+          "window": "Après une frappe verticale",
+          "effect": "Déroule une bande protectrice"
+        },
+        {
+          "id": "chevilles",
+          "window": "Pendant le tirage de chaîne",
+          "effect": "Renverse le titan"
+        }
+      ],
+      "prompt": "Create a production-ready original 16-bit pixel-art giant boss master atlas for a fictional late-feudal Japanese zombie-plague game. Strict 6 columns by 5 rows, exactly 30 isolated full-body left-facing poses of a very tall long-armed quarantine titan wrapped in burial cloth as costume, with empty hands. Row 1 idle; row 2 movement; row 3 long-arm sweep, overhead strike and knee attacks; row 4 special guard and hurt recoil; row 5 unraveling destruction and collapse. No chains, manacles, coffin, weapon, detachable item, text, labels, border or grid. Flat exact #ff00ff background, generous gutters, crisp hard-edged 16-bit pixels."
+    },
+    {
+      "id": "giant-09-ganseki-otoko",
+      "name": "Ganseki-Otoko",
+      "subtitle": "Contremaître pétrifié de la carrière",
+      "folder": "assets/modular/characters/giant/giant-09-ganseki-otoko",
+      "displayScale": 3.9,
+      "screenCoverage": {
+        "width": "32–39 %",
+        "height": "62–71 %"
+      },
+      "equipment": {
+        "weaponId": "marteau-carriere-ganseki",
+        "anchor": "mainHandTwoHanded",
+        "detachable": true
+      },
+      "lore": "La poussière minérale s’est calcifiée dans les plaies du contremaître, formant des plaques de schiste autour de ses muscles.",
+      "gameplay": "Boss blindé de rupture de terrain. Les fissures s’élargissent à chaque coup de marteau.",
+      "phases": [
+        {
+          "name": "Schiste compact",
+          "health": "100–55 %",
+          "behaviour": "Crochets, coups de tête et frappes au sol."
+        },
+        {
+          "name": "Carrière ouverte",
+          "health": "54–0 %",
+          "behaviour": "Marteau détachable, éclats de plateforme et armure fissurée."
+        }
+      ],
+      "weakPoints": [
+        {
+          "id": "fissures-du-torse",
+          "window": "Après trois impacts au sol",
+          "effect": "Réduit l’armure"
+        },
+        {
+          "id": "nuque",
+          "window": "Pendant l’attaque au marteau",
+          "effect": "Interrompt l’enchaînement"
+        }
+      ],
+      "prompt": "Create a production-ready original 16-bit pixel-art giant boss master atlas for a fictional late-feudal Japanese zombie-plague game. Strict 6 columns by 5 rows, exactly 30 isolated full-body left-facing poses of a calcified quarry foreman with slate-like body calluses, torn work clothes and empty hands. Row 1 idle; row 2 movement; row 3 hook, headbutt and ground-strike attacks; row 4 defensive cross-arm posture and hurt recoil; row 5 cracking destruction and collapse. No hammer, pick, tool, weapon, detachable item, text, labels, border or grid. Flat exact #ff00ff background, generous gutters, crisp hard-edged 16-bit pixels."
+    },
+    {
+      "id": "giant-10-yomi-no-kanrei",
+      "name": "Yomi-no-Kanrei",
+      "subtitle": "Régent à quatre bras du château",
+      "folder": "assets/modular/characters/giant/giant-10-yomi-no-kanrei",
+      "displayScale": 4.8,
+      "screenCoverage": {
+        "width": "35–43 %",
+        "height": "72–84 %"
+      },
+      "equipment": {
+        "weaponId": "nodachi-geant-yomi",
+        "anchor": "lowerMainHandTwoHanded",
+        "detachable": true
+      },
+      "lore": "Le daimyō de Kurokawa a voulu maîtriser la peste. Le Yomi lui a donné deux bras supplémentaires et a conservé sa volonté de régner.",
+      "gameplay": "Boss final à trois phases. Ses quatre bras sont anatomiques, mais le nodachi reste un sprite d’équipement indépendant.",
+      "phases": [
+        {
+          "name": "Audience du régent",
+          "health": "100–70 %",
+          "behaviour": "Paumes, balayages et contres défensifs."
+        },
+        {
+          "name": "Décret du Yomi",
+          "health": "69–35 %",
+          "behaviour": "Enchaînements à quatre poings et déplacement accéléré."
+        },
+        {
+          "name": "Dernier sceau",
+          "health": "34–0 %",
+          "behaviour": "Nodachi géant détachable, ouverture du torse après chaque combo."
+        }
+      ],
+      "weakPoints": [
+        {
+          "id": "paumes-inferieures",
+          "window": "Après le coup à quatre poings",
+          "effect": "Désactive temporairement deux bras"
+        },
+        {
+          "id": "torse",
+          "window": "Pendant le dernier sceau",
+          "effect": "Dégâts critiques"
+        },
+        {
+          "id": "masque",
+          "window": "Après une parade parfaite",
+          "effect": "Étourdissement long"
+        }
+      ],
+      "prompt": "Create a production-ready original 16-bit pixel-art giant boss master atlas for a fictional late-feudal Japanese zombie-plague game. Strict 6 columns by 5 rows, exactly 30 isolated full-body left-facing poses of a local daimyo transformed into a final giant with four anatomical arms, ornate black-and-red lamellar armor and no helmet, using empty hands. Row 1 regal idle; row 2 movement; row 3 palm strikes, sweeps and four-fist slam; row 4 crossed defensive opening and hurt recoil; row 5 destruction and collapse. No sword, nodachi, scabbard, weapon, detachable item, text, labels, border or grid. Flat exact #ff00ff background, generous gutters, crisp hard-edged 16-bit pixels."
+    }
+  ]
+}

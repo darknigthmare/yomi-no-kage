@@ -1,0 +1,166 @@
+{
+  "schema": 1,
+  "source": "assets/modular/environments/kurokawa/props/source/atlas-alpha.png",
+  "grid": {
+    "columns": 4,
+    "rows": 3
+  },
+  "sprites": [
+    {
+      "id": "minka-tuiles-intacte",
+      "file": "minka-tuiles-intacte.png",
+      "sourceCell": [
+        0,
+        0
+      ],
+      "size": [
+        310,
+        244
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "minka-chaume-brulee",
+      "file": "minka-chaume-brulee.png",
+      "sourceCell": [
+        1,
+        0
+      ],
+      "size": [
+        323,
+        243
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "kura-entrepot-riz",
+      "file": "kura-entrepot-riz.png",
+      "sourceCell": [
+        2,
+        0
+      ],
+      "size": [
+        246,
+        268
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "tour-guet-kurokawa",
+      "file": "tour-guet-kurokawa.png",
+      "sourceCell": [
+        3,
+        0
+      ],
+      "size": [
+        196,
+        320
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "puits-pierre",
+      "file": "puits-pierre.png",
+      "sourceCell": [
+        0,
+        1
+      ],
+      "size": [
+        204,
+        230
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "kaki-calcine",
+      "file": "kaki-calcine.png",
+      "sourceCell": [
+        1,
+        1
+      ],
+      "size": [
+        264,
+        247
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "charrette-cassee",
+      "file": "charrette-cassee.png",
+      "sourceCell": [
+        2,
+        1
+      ],
+      "size": [
+        320,
+        176
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "barriere-village",
+      "file": "barriere-village.png",
+      "sourceCell": [
+        3,
+        1
+      ],
+      "size": [
+        257,
+        164
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "tonneau-provisions",
+      "file": "tonneau-provisions.png",
+      "sourceCell": [
+        0,
+        2
+      ],
+      "size": [
+        183,
+        219
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "tas-paille",
+      "file": "tas-paille.png",
+      "sourceCell": [
+        1,
+        2
+      ],
+      "size": [
+        224,
+        250
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "foyer-incendie",
+      "file": "foyer-incendie.png",
+      "sourceCell": [
+        2,
+        2
+      ],
+      "size": [
+        274,
+        192
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "autel-route",
+      "file": "autel-route.png",
+      "sourceCell": [
+        3,
+        2
+      ],
+      "size": [
+        192,
+        227
+      ],
+      "nonEmpty": true
+    }
+  ]
+}

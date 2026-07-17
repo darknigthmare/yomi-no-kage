@@ -1,0 +1,211 @@
+{
+  "assets": [
+    {
+      "type": "character",
+      "id": "akio-character-sheet",
+      "name": "Akio",
+      "subtitle": "Samouraï du shogun — feuille de personnage",
+      "file": "assets/generated/characters/akio-character-sheet.png",
+      "lore": "À vingt-huit ans, Akio reçoit du shogun l'ordre de gagner Kurokawa et d'éradiquer la peste du Yomi avant qu'elle n'atteigne Edo. Son armure noire à laçage rouge et son maedate en croissant le rendent reconnaissable jusque dans la fumée.",
+      "gameplay": "Référence principale pour le héros en vue latérale : pose neutre, profil de combat et attaque au katana."
+    },
+    {
+      "type": "character",
+      "id": "akio-fps-katana",
+      "name": "Katana d'Akio — vue FPS",
+      "subtitle": "Avant-bras et arme à la première personne",
+      "file": "assets/generated/characters/akio-fps-katana.png",
+      "lore": "Les kote noirs et rouges d'Akio portent les traces de sa mission. Sa lame, sobre et entretenue malgré les cendres, demeure son dernier rempart quand les couloirs du château se referment sur lui.",
+      "gameplay": "Overlay d'arme pour les séquences FPS rétro et base visuelle des animations d'attaque."
+    },
+    {
+      "type": "weapon",
+      "id": "01-kurokage",
+      "name": "Kurokage",
+      "subtitle": "Ombre noire — Rare",
+      "file": "assets/generated/weapons/01-kurokage.png",
+      "lore": "Un armurier de Sunpu forgea Kurokage pour un messager du bakufu contraint de traverser les provinces après le couvre-feu. Son saya mat porte encore les marques des chemins empruntés pour avertir le shogun de la contagion.",
+      "gameplay": "Pas de l'ombre : réduit de 12 % la détection ennemie et augmente de 10 % les dégâts infligés dans le dos."
+    },
+    {
+      "type": "weapon",
+      "id": "02-shogun-no-in",
+      "name": "Shōgun no In",
+      "subtitle": "Sceau du Shogun — Légendaire",
+      "file": "assets/generated/weapons/02-shogun-no-in.png",
+      "lore": "Shōgun no In fut remis à un hatamoto chargé d'inspecter les routes revenues de Shimabara. Lorsque son porteur succomba à la fièvre, le sceau abstrait du saya devint la preuve que l'ordre d'éradication venait bien d'Edo.",
+      "gameplay": "Autorité du bakufu : augmente de 15 % le gain de résolution et accorde 20 % de résistance pendant deux secondes après une parade parfaite."
+    },
+    {
+      "type": "weapon",
+      "id": "03-hinezumi",
+      "name": "Hinezumi",
+      "subtitle": "Rat de feu — Peu commun",
+      "file": "assets/generated/weapons/03-hinezumi.png",
+      "lore": "Hinezumi fut retrouvé sous les poutres d'un relais incendié de la route du Nakasendō. Sa trempe resta intacte malgré la chaleur, et les survivants en firent le symbole de ceux qui échappent aux hordes.",
+      "gameplay": "Fuite des braises : une esquive parfaite augmente la vitesse d'attaque de 15 % pendant trois secondes."
+    },
+    {
+      "type": "weapon",
+      "id": "04-shirogane",
+      "name": "Shirogane",
+      "subtitle": "Argent — Épique",
+      "file": "assets/generated/weapons/04-shirogane.png",
+      "lore": "Shirogane sortit des forges d'un maître de Mino pour célébrer la promotion d'un jeune hatamoto. Le sabre ne quitta son coffre qu'au jour où les morts forcèrent les portes du domaine.",
+      "gameplay": "Fil immaculé : élargit de 18 % la fenêtre de parade parfaite et inflige 12 % de dégâts supplémentaires aux ennemis en armure."
+    },
+    {
+      "type": "weapon",
+      "id": "05-yomibane",
+      "name": "Yomibane",
+      "subtitle": "Plume de Yomi — Rare",
+      "file": "assets/generated/weapons/05-yomibane.png",
+      "lore": "Yomibane appartenait aux gardiens d'un temple qui brûlaient les corps avant que la fièvre ne puisse les relever. Les motifs de plume du saya rappellent les tablettes funéraires que les moines ne purent jamais inscrire.",
+      "gameplay": "Dernier souffle : achever un infecté étourdi rend 8 points de résolution, avec un délai interne de quatre secondes."
+    },
+    {
+      "type": "weapon",
+      "id": "06-kegare-kiri",
+      "name": "Kegare-kiri",
+      "subtitle": "Tranche-souillure — Peu commun",
+      "file": "assets/generated/weapons/06-kegare-kiri.png",
+      "lore": "Kegare-kiri fut raccourci, repoli et remonté après les premières attaques sur les villages du Kantō. Chaque éclat de laque révèle une réparation effectuée par un survivant différent.",
+      "gameplay": "Outil d'éradication : inflige 22 % de dégâts supplémentaires aux infectés lourds et à leurs membres mutés."
+    },
+    {
+      "type": "weapon",
+      "id": "07-takekaze",
+      "name": "Takekaze",
+      "subtitle": "Vent du bambou — Commun",
+      "file": "assets/generated/weapons/07-takekaze.png",
+      "lore": "Takekaze fut assemblé pour le fils d'un gōshi chargé de défendre les hameaux forestiers. Ses garnitures modestes permirent de le réparer loin des grandes forges lorsque les routes furent coupées.",
+      "gameplay": "Souplesse du roseau : réduit de 12 % le coût en endurance des attaques légères et de 8 % celui des esquives."
+    },
+    {
+      "type": "weapon",
+      "id": "08-raijin-no-tsume",
+      "name": "Raijin no Tsume",
+      "subtitle": "Griffe de Raijin — Épique",
+      "file": "assets/generated/weapons/08-raijin-no-tsume.png",
+      "lore": "Raijin no Tsume fut commandé à Echizen par un officier réputé pour rompre les lignes d'ashigaru sous l'orage. Son hamon anguleux n'a rien de surnaturel, mais les infectés qui le virent approcher lui prêtèrent une légende.",
+      "gameplay": "Brise-garde : augmente de 25 % les dégâts de posture des attaques lourdes chargées."
+    },
+    {
+      "type": "weapon",
+      "id": "09-akatsuki",
+      "name": "Akatsuki",
+      "subtitle": "Aube — Rare",
+      "file": "assets/generated/weapons/09-akatsuki.png",
+      "lore": "Akatsuki fut porté par l'officier qui reprit une forteresse contaminée au lever du jour. Les entailles du saya furent conservées pour rappeler que la victoire coûta davantage que la lame elle-même.",
+      "gameplay": "Premier rayon : augmente de 15 % les dégâts tant que la santé reste supérieure à 80 %."
+    },
+    {
+      "type": "weapon",
+      "id": "10-mujo",
+      "name": "Mujō",
+      "subtitle": "Impermanence — Légendaire",
+      "file": "assets/generated/weapons/10-mujo.png",
+      "lore": "Mujō passa de main en main parmi des rōnin dont aucun nom ne survécut aux registres. Ses réparations rouges ne cachent pas les fractures du saya, car son dernier maître disait qu'une cicatrice honnête vaut mieux qu'un mensonge neuf.",
+      "gameplay": "Rien ne demeure : sous 30 % de santé, les parades parfaites rendent 10 points d'endurance et infligent 20 % de dégâts de posture supplémentaires."
+    },
+    {
+      "type": "enemy",
+      "id": "01-shibito-villager",
+      "name": "Shibito des rizières",
+      "subtitle": "Fantassin commun",
+      "file": "assets/generated/enemies/01-shibito-villager.png",
+      "lore": "Le virus du Yomi a gagné les hameaux par les canaux d'irrigation. Ces paysans morts conservent le réflexe de saisir leurs outils, mais ne reconnaissent plus ni famille ni maître.",
+      "gameplay": "38 PV, 8 dégâts. Titube, accélère à courte portée et cherche à encercler le joueur avant un large coup de faucille."
+    },
+    {
+      "type": "enemy",
+      "id": "02-ashigaru-revenant",
+      "name": "Ashigaru revenant",
+      "subtitle": "Contrôle de distance",
+      "file": "assets/generated/enemies/02-ashigaru-revenant.png",
+      "lore": "Ce fantassin est tombé en tenant le dernier barrage dressé sur la route d'Edo. La peste a préservé sa discipline, et son cadavre répète encore les formations apprises sous les cris du gunsō.",
+      "gameplay": "62 PV, 14 dégâts. Maintient le joueur à distance avec son yari ; une parade parfaite ou une attaque plongeante brise sa garde."
+    },
+    {
+      "type": "enemy",
+      "id": "03-kegare-sohei",
+      "name": "Sōhei du Kegare",
+      "subtitle": "Élite mobile",
+      "file": "assets/generated/enemies/03-kegare-sohei.png",
+      "lore": "Les gardiens du temple de Kurotaki ont tenté de purifier les premiers malades par le feu et la prière. Leur volonté sert désormais la souillure qu'ils voulaient contenir.",
+      "gameplay": "88 PV, 18 dégâts. Balaye la zone avec sa naginata, puis bondit ; son atterrissage ouvre une courte fenêtre de riposte."
+    },
+    {
+      "type": "enemy",
+      "id": "04-onryo-miko",
+      "name": "Miko onryō",
+      "subtitle": "Soutien occulte",
+      "file": "assets/generated/enemies/04-onryo-miko.png",
+      "lore": "La desservante du sanctuaire de Tsukikage ferma les portes pour protéger les pèlerins. Sa cloche appelle maintenant les morts, tandis que ses prières se lisent à l'envers.",
+      "gameplay": "54 PV, 11 dégâts. Renforce les infectés et lance un ofuda maudit ; sa défaite interrompt les bonus et étourdit les ennemis proches."
+    },
+    {
+      "type": "enemy",
+      "id": "05-kabuto-brute",
+      "name": "Brute au kabuto",
+      "subtitle": "Mur blindé",
+      "file": "assets/generated/enemies/05-kabuto-brute.png",
+      "lore": "Ce samouraï gardait les réserves de poudre du château lorsque les portes intérieures furent rompues. Son armure a contenu la morsure, mais aussi emprisonné la chose éveillée sous le kabuto.",
+      "gameplay": "165 PV, 27 dégâts. Encaisse les attaques légères et abat son kanabō ; son dos devient vulnérable pendant la récupération."
+    },
+    {
+      "type": "enemy",
+      "id": "06-daimyo-corrupted",
+      "name": "Daimyō corrompu",
+      "subtitle": "Boss à trois phases",
+      "file": "assets/generated/enemies/06-daimyo-corrupted.png",
+      "lore": "Le daimyō fit sceller la forteresse pour contenir l'épidémie. Il règne encore au cœur du château, persuadé que la voix du virus est celle de ses ancêtres venus légitimer un règne éternel.",
+      "gameplay": "520 PV, 34 dégâts. Tachi et parade punitive, charge contaminée, puis frappes éclairs et invocation limitée de Shibito."
+    },
+    {
+      "type": "environment",
+      "id": "01-kurokawa-burning-village",
+      "name": "Kurokawa en cendres",
+      "subtitle": "Décor latéral — village d'ouverture",
+      "file": "assets/generated/environments/01-kurokawa-burning-village.png",
+      "lore": "Kurokawa est le premier village placé sous quarantaine par le shogun. Les habitants ont fui pendant la nuit, abandonnant foyers et réserves aux flammes afin de ralentir la propagation du fléau.",
+      "gameplay": "Arrière-plan 2D composé en trois plans de parallaxe, avec une route inférieure dégagée pour les combats."
+    },
+    {
+      "type": "environment",
+      "id": "02-bamboo-shrine",
+      "name": "Sanctuaire des bambous contaminés",
+      "subtitle": "Décor latéral — lieu de purification",
+      "file": "assets/generated/environments/02-bamboo-shrine.png",
+      "lore": "Ce sanctuaire rural protégeait autrefois la route de montagne. Depuis l'épidémie, ses racines absorbent la souillure des morts et relâchent des spores vertes sous la lune rouge.",
+      "gameplay": "Arrière-plan 2D à trois profondeurs ; le chemin de pierre conduit naturellement le joueur vers l'autel."
+    },
+    {
+      "type": "environment",
+      "id": "03-daimyo-castle-interior",
+      "name": "Donjon du daimyō",
+      "subtitle": "Décor frontal — séquence FPS",
+      "file": "assets/generated/environments/03-daimyo-castle-interior.png",
+      "lore": "Le daimyō contaminé a fait sceller le cœur du château. Les racines du fléau ont gagné les fondations, mais les portes laquées et la discipline géométrique du donjon trahissent encore son ancien pouvoir.",
+      "gameplay": "Référence FPS avec point de fuite central, axe jouable dégagé et alcôves latérales destinées aux rencontres."
+    },
+    {
+      "type": "prop",
+      "id": "props-feudal-atlas",
+      "name": "Accessoires du Japon contaminé",
+      "subtitle": "Atlas transparent — 12 objets",
+      "file": "assets/generated/props/props-feudal-atlas.png",
+      "lore": "Ces objets ordinaires témoignent de la vie interrompue par l'épidémie. Les accessoires de culte et les foyers infectés marquent la progression de la souillure depuis les villages jusqu'aux sanctuaires.",
+      "gameplay": "Atlas 4 × 3 pour décorer les niveaux, créer des obstacles, des interactions, des objectifs et des indices narratifs."
+    },
+    {
+      "type": "prop",
+      "id": "fps-wall-texture-atlas",
+      "name": "Textures du donjon FPS",
+      "subtitle": "Atlas transparent — 8 matériaux",
+      "file": "assets/generated/props/fps-wall-texture-atlas.png",
+      "lore": "La progression des matériaux raconte la contamination : bois brûlé des villages, sanctuaires profanés, puis murs du château gagnés par les mêmes racines malades.",
+      "gameplay": "Atlas 4 × 2 de textures frontales pour murs et sols du raycaster FPS, avec gouttières transparentes."
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "view": "fps",
+  "columns": 6,
+  "rows": 1,
+  "frameWidth": 96,
+  "frameHeight": 128,
+  "sourceCharacter": "boss/boss-17-yokozuna-ganryu"
+}

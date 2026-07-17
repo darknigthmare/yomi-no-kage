@@ -1,0 +1,868 @@
+{
+  "schema": 1,
+  "category": "special",
+  "count": 20,
+  "generationTool": "OpenAI ImageGen built-in",
+  "generationPolicy": "Un appel ImageGen distinct par personnage. Les armes, outils et accessoires de combat restent des sprites séparés.",
+  "animationStandard": {
+    "masterGrid": {
+      "columns": 6,
+      "rows": 5,
+      "totalPoses": 30
+    },
+    "rows": [
+      "idle",
+      "move",
+      "attack",
+      "hurt",
+      "death"
+    ],
+    "framesPerRow": 6,
+    "facing": "left",
+    "weaponsBakedIntoBody": false,
+    "sourceBackground": "#ff00ff",
+    "finalFormat": "PNG RGBA"
+  },
+  "entries": [
+    {
+      "id": "s01-kusa-shinobi",
+      "name": "Éclaireur shinobi de Kusa",
+      "subtitle": "Traqueur furtif",
+      "lore": [
+        "Envoyé pour observer la quarantaine, cet éclaireur fut abandonné lorsque son rapport cessa d'arriver.",
+        "Il utilise désormais les toits et les angles morts pour servir une volonté qui n'est plus celle de son clan."
+      ],
+      "stats": {
+        "hp": 96,
+        "damage": 18,
+        "speed": 1.42,
+        "posture": 42
+      },
+      "pattern": "Disparaît brièvement hors écran, revient par un saut et combine faucille et chaîne.",
+      "weaponId": "kusarigama",
+      "weaponRoleOriginal": "weapon-kusarigama",
+      "nom": "Éclaireur shinobi de Kusa",
+      "role": "Traqueur furtif",
+      "gameplay": "96 PV, 18 dégâts, vitesse 1.42. Disparaît brièvement hors écran, revient par un saut et combine faucille et chaîne.",
+      "weapon": {
+        "id": "kusarigama",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/special/s01-kusa-shinobi",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/special/s01-kusa-shinobi/source-master.png",
+        "masterAlpha": "assets/modular/characters/special/s01-kusa-shinobi/master-alpha.png",
+        "master": "assets/modular/characters/special/s01-kusa-shinobi/master.png",
+        "sprite": "assets/modular/characters/special/s01-kusa-shinobi/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/special/s01-kusa-shinobi/sheets/idle.png",
+          "move": "assets/modular/characters/special/s01-kusa-shinobi/sheets/move.png",
+          "attack": "assets/modular/characters/special/s01-kusa-shinobi/sheets/attack.png",
+          "hurt": "assets/modular/characters/special/s01-kusa-shinobi/sheets/hurt.png",
+          "death": "assets/modular/characters/special/s01-kusa-shinobi/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/special/s01-kusa-shinobi/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular special-enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original special enemy identity, the Kusa Shinobi: an infected covert scout from Kan'ei Japan, 1638, lean adult man in historically grounded deep-indigo hood and face wrap, fitted charcoal uwagi, flexible segmented cloth-and-lacquer forearm protection, muted red waist ties, close trousers and tabi, with only subtle sick-green eyes visible. No gore, no supernatural effects.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical scale and camera, consistent baseline, generous padding, nothing crosses boundaries. Rows top-to-bottom: row 1 six-frame idle; row 2 six-frame fast left-facing run; row 3 six-frame empty-handed kusarigama attack body motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns sequential left to right.\nInvariants: same mask, clothing, proportions and colors in all cells; pure lateral side view facing left only; every pose fully visible.\nStyle: polished authentic 16-bit pixel art, crisp large square pixels, hard clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette.\nBackdrop: continuous perfectly flat solid #ff00ff chroma-key.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. No weapon, chain, sickle, kunai, pouch, smoke bomb, tool, prop, object, pack, sheath or attached item; all equipment will be separate sprites.\nAvoid: no text, labels, logo, watermark, frame, border, grid line, scenery, ground, shadow, gradient, texture, glow, smoke, particles, blood, extra character, other view or magenta/pink on character."
+    },
+    {
+      "id": "s02-doku-kunoichi",
+      "name": "Kunoichi au poison",
+      "subtitle": "Assassineuse toxique",
+      "lore": [
+        "Elle infiltra les réserves médicales afin d'identifier l'origine de la peste avant d'être contaminée.",
+        "Les poisons qu'elle maîtrisait autrefois se mêlent maintenant à la souillure du Yomi."
+      ],
+      "stats": {
+        "hp": 88,
+        "damage": 17,
+        "speed": 1.5,
+        "posture": 36
+      },
+      "pattern": "Enchaîne deux kunai, traverse la cible et laisse une accumulation de poison.",
+      "weaponId": "uchine",
+      "weaponRoleOriginal": "weapon-twin-kunai",
+      "nom": "Kunoichi au poison",
+      "role": "Assassineuse toxique",
+      "gameplay": "88 PV, 17 dégâts, vitesse 1.5. Enchaîne deux kunai, traverse la cible et laisse une accumulation de poison.",
+      "weapon": {
+        "id": "uchine",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/special/s02-doku-kunoichi",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/special/s02-doku-kunoichi/source-master.png",
+        "masterAlpha": "assets/modular/characters/special/s02-doku-kunoichi/master-alpha.png",
+        "master": "assets/modular/characters/special/s02-doku-kunoichi/master.png",
+        "sprite": "assets/modular/characters/special/s02-doku-kunoichi/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/special/s02-doku-kunoichi/sheets/idle.png",
+          "move": "assets/modular/characters/special/s02-doku-kunoichi/sheets/move.png",
+          "attack": "assets/modular/characters/special/s02-doku-kunoichi/sheets/attack.png",
+          "hurt": "assets/modular/characters/special/s02-doku-kunoichi/sheets/hurt.png",
+          "death": "assets/modular/characters/special/s02-doku-kunoichi/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/special/s02-doku-kunoichi/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular special-enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original special enemy identity, the Doku Kunoichi: an infected female infiltrator from Kan'ei Japan, 1638, athletic adult woman with tied high braid, short black face veil, close deep-indigo kosode, lacquer-red sleeveless overlayer, dark split leggings, wrapped forearms and tabi, subtle sick-green eyes and restrained green contamination markings on sleeves. No gore, no effects.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical scale and camera, consistent baseline, generous padding, nothing crosses boundaries. Rows top-to-bottom: row 1 six-frame idle; row 2 six-frame fast left-facing run; row 3 six-frame empty-handed twin-kunai attack body motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns sequential left to right.\nInvariants: same face veil, braid, clothing, proportions and colors in all cells; pure lateral side view facing left only; every pose fully visible.\nStyle: polished authentic 16-bit pixel art, crisp large square pixels, hard clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette.\nBackdrop: continuous perfectly flat solid #ff00ff chroma-key.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. No weapon, kunai, vial, needle, pouch, poison cloud, tool, prop, object, pack, sheath or attached item; all equipment will be separate sprites.\nAvoid: no text, labels, logo, watermark, frame, border, grid line, scenery, ground, shadow, gradient, texture, glow, smoke, particles, blood, extra character, other view or magenta/pink on character."
+    },
+    {
+      "id": "s03-bakusai-runner",
+      "name": "Coureur Bakusai",
+      "subtitle": "Sapeur explosif",
+      "lore": [
+        "Ce sapeur devait faire sauter les accès du château pour ralentir la contagion.",
+        "La fièvre l'a gagné avant l'ordre final et il cherche encore une porte à détruire."
+      ],
+      "stats": {
+        "hp": 72,
+        "damage": 24,
+        "speed": 1.55,
+        "posture": 28
+      },
+      "pattern": "Allume une charge séparée, sprinte vers le joueur puis tente de la lancer avant d'exploser.",
+      "weaponId": "encensoir-spores-kinoko",
+      "weaponRoleOriginal": "prop-explosive-pot",
+      "nom": "Coureur Bakusai",
+      "role": "Sapeur explosif",
+      "gameplay": "72 PV, 24 dégâts, vitesse 1.55. Allume une charge séparée, sprinte vers le joueur puis tente de la lancer avant d'exploser.",
+      "weapon": {
+        "id": "encensoir-spores-kinoko",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/special/s03-bakusai-runner",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/special/s03-bakusai-runner/source-master.png",
+        "masterAlpha": "assets/modular/characters/special/s03-bakusai-runner/master-alpha.png",
+        "master": "assets/modular/characters/special/s03-bakusai-runner/master.png",
+        "sprite": "assets/modular/characters/special/s03-bakusai-runner/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/special/s03-bakusai-runner/sheets/idle.png",
+          "move": "assets/modular/characters/special/s03-bakusai-runner/sheets/move.png",
+          "attack": "assets/modular/characters/special/s03-bakusai-runner/sheets/attack.png",
+          "hurt": "assets/modular/characters/special/s03-bakusai-runner/sheets/hurt.png",
+          "death": "assets/modular/characters/special/s03-bakusai-runner/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/special/s03-bakusai-runner/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular special-enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original special enemy identity, the Bakusai Runner: an infected castle sapper from Kan'ei Japan, 1638, compact frantic man with singed cropped hair, layered soot-black padded vest over dark indigo work clothes, lacquer-red fireproof bindings sewn flat around torso and forearms, reinforced knee wraps, tabi boots, pale skin and subtle sick-green eyes. No burns shown graphically, no gore.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical scale and camera, consistent baseline, generous padding, nothing crosses boundaries. Rows top-to-bottom: row 1 six-frame twitching idle; row 2 six-frame sprint left; row 3 six-frame empty-handed explosive-throw body motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns sequential left to right.\nInvariants: same face, clothing, proportions and colors in all cells; pure lateral side view facing left only; every pose fully visible.\nStyle: polished authentic 16-bit pixel art, crisp large square pixels, hard clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette.\nBackdrop: continuous perfectly flat solid #ff00ff chroma-key.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. No explosive, bomb, fuse, fire, satchel, weapon, tool, prop, object, pack, sheath or attached item; bomb sprite will be separate.\nAvoid: no text, labels, logo, watermark, frame, border, grid line, scenery, ground, shadow, gradient, texture, glow, flames, smoke, particles, blood, extra character, other view or magenta/pink on character."
+    },
+    {
+      "id": "s04-onibi-adept",
+      "name": "Adepte de l'Onibi",
+      "subtitle": "Exorciste corrompu",
+      "lore": [
+        "Cet exorciste laïc suivait les feux errants pour retrouver les premiers corps disparus.",
+        "Ses talismans répondent encore, mais chaque invocation ouvre davantage le passage vers le Yomi."
+      ],
+      "stats": {
+        "hp": 82,
+        "damage": 20,
+        "speed": 0.96,
+        "posture": 34
+      },
+      "pattern": "Pose un talisman, invoque un projectile lent et se téléporte vers une marque libre.",
+      "weaponId": "shakujo",
+      "weaponRoleOriginal": "prop-onibi-ofuda",
+      "nom": "Adepte de l'Onibi",
+      "role": "Exorciste corrompu",
+      "gameplay": "82 PV, 20 dégâts, vitesse 0.96. Pose un talisman, invoque un projectile lent et se téléporte vers une marque libre.",
+      "weapon": {
+        "id": "shakujo",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/special/s04-onibi-adept",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/special/s04-onibi-adept/source-master.png",
+        "masterAlpha": "assets/modular/characters/special/s04-onibi-adept/master-alpha.png",
+        "master": "assets/modular/characters/special/s04-onibi-adept/master.png",
+        "sprite": "assets/modular/characters/special/s04-onibi-adept/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/special/s04-onibi-adept/sheets/idle.png",
+          "move": "assets/modular/characters/special/s04-onibi-adept/sheets/move.png",
+          "attack": "assets/modular/characters/special/s04-onibi-adept/sheets/attack.png",
+          "hurt": "assets/modular/characters/special/s04-onibi-adept/sheets/hurt.png",
+          "death": "assets/modular/characters/special/s04-onibi-adept/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/special/s04-onibi-adept/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular special-enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original special enemy identity, the Onibi Adept: an infected lay exorcist from Kan'ei Japan, 1638, thin androgynous adult with straight tied black hair, aged-bone ritual kosode, short deep-indigo sleeveless mantle, narrow lacquer-red obi, black hakama, white tabi, pale face and subtle sick-green eyes. Entire figure solid and opaque; no aura or magic shown.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical scale and camera, consistent baseline, generous padding, nothing crosses boundaries. Rows top-to-bottom: row 1 six-frame ritual idle; row 2 six-frame gliding left-facing walk; row 3 six-frame empty-handed talisman-casting body motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns sequential left to right.\nInvariants: same face, hair, clothing, proportions and colors in all cells; pure lateral side view facing left only; every pose fully visible.\nStyle: polished authentic 16-bit pixel art, crisp large square pixels, hard clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette.\nBackdrop: continuous perfectly flat solid #ff00ff chroma-key.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. No ofuda, flame, orb, weapon, fan, wand, beads, tool, prop, object, bag, sheath or attached item; effects and equipment will be separate sprites.\nAvoid: no text, labels, logo, watermark, frame, border, grid line, scenery, ground, shadow, gradient, texture, glow, smoke, aura, particles, blood, extra character, other view or magenta/pink on character."
+    },
+    {
+      "id": "s05-raimei-yamabushi",
+      "name": "Yamabushi de Raimei",
+      "subtitle": "Ascète de la foudre",
+      "lore": [
+        "Il descendit de la montagne en suivant le tonnerre qui grondait sans nuages au-dessus de Kurokawa.",
+        "Son souffle rituel s'est changé en une cadence lourde qui fait trembler les sanctuaires."
+      ],
+      "stats": {
+        "hp": 124,
+        "damage": 22,
+        "speed": 0.84,
+        "posture": 58
+      },
+      "pattern": "Canalise longuement, frappe le sol avec son bâton et crée trois zones de foudre différées.",
+      "weaponId": "shakujo",
+      "weaponRoleOriginal": "weapon-raimei-staff",
+      "nom": "Yamabushi de Raimei",
+      "role": "Ascète de la foudre",
+      "gameplay": "124 PV, 22 dégâts, vitesse 0.84. Canalise longuement, frappe le sol avec son bâton et crée trois zones de foudre différées.",
+      "weapon": {
+        "id": "shakujo",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/special/s05-raimei-yamabushi",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/special/s05-raimei-yamabushi/source-master.png",
+        "masterAlpha": "assets/modular/characters/special/s05-raimei-yamabushi/master-alpha.png",
+        "master": "assets/modular/characters/special/s05-raimei-yamabushi/master.png",
+        "sprite": "assets/modular/characters/special/s05-raimei-yamabushi/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/special/s05-raimei-yamabushi/sheets/idle.png",
+          "move": "assets/modular/characters/special/s05-raimei-yamabushi/sheets/move.png",
+          "attack": "assets/modular/characters/special/s05-raimei-yamabushi/sheets/attack.png",
+          "hurt": "assets/modular/characters/special/s05-raimei-yamabushi/sheets/hurt.png",
+          "death": "assets/modular/characters/special/s05-raimei-yamabushi/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/special/s05-raimei-yamabushi/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular special-enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original special enemy identity, the Raimei Yamabushi: an infected mountain ascetic from Kan'ei Japan, 1638, tall weathered man with small black tokin cap, layered bone-white and dark-indigo robes, short lacquer-red shoulder mantle, wrapped calves, straw sandals, storm-gray fabric wear, pale skin and subtle sick-green eyes. No supernatural effect, no gore.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical scale and camera, consistent baseline, generous padding, nothing crosses boundaries. Rows top-to-bottom: row 1 six-frame meditative idle; row 2 six-frame left-facing mountain stride; row 3 six-frame empty-handed staff-casting body motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns sequential left to right.\nInvariants: same face, cap, clothing, proportions and colors in all cells; pure lateral side view facing left only; every pose fully visible.\nStyle: polished authentic 16-bit pixel art, crisp large square pixels, hard clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette.\nBackdrop: continuous perfectly flat solid #ff00ff chroma-key.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. No staff, beads, conch, weapon, lightning, charm, tool, prop, object, pack, sheath or attached item; weapon and effect sprites will be separate.\nAvoid: no text, labels, logo, watermark, frame, border, grid line, scenery, ground, shadow, gradient, texture, glow, smoke, lightning, particles, blood, extra character, other view or magenta/pink on character."
+    },
+    {
+      "id": "s06-oni-men-executioner",
+      "name": "Bourreau au masque d'oni",
+      "subtitle": "Exécuteur colossal",
+      "lore": [
+        "Le bourreau du château garda son masque lorsqu'il reçut l'ordre de supprimer les premiers infectés.",
+        "Nul ne sait si l'homme respire encore derrière le bois rouge ou si le masque seul commande le corps."
+      ],
+      "stats": {
+        "hp": 168,
+        "damage": 28,
+        "speed": 0.62,
+        "posture": 78
+      },
+      "pattern": "Traîne son ōdachi, prépare une exécution très lente et provoque une onde au contact du sol.",
+      "weaponId": "odachi",
+      "weaponRoleOriginal": "weapon-execution-odachi",
+      "nom": "Bourreau au masque d'oni",
+      "role": "Exécuteur colossal",
+      "gameplay": "168 PV, 28 dégâts, vitesse 0.62. Traîne son ōdachi, prépare une exécution très lente et provoque une onde au contact du sol.",
+      "weapon": {
+        "id": "odachi",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/special/s06-oni-men-executioner",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/special/s06-oni-men-executioner/source-master.png",
+        "masterAlpha": "assets/modular/characters/special/s06-oni-men-executioner/master-alpha.png",
+        "master": "assets/modular/characters/special/s06-oni-men-executioner/master.png",
+        "sprite": "assets/modular/characters/special/s06-oni-men-executioner/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/special/s06-oni-men-executioner/sheets/idle.png",
+          "move": "assets/modular/characters/special/s06-oni-men-executioner/sheets/move.png",
+          "attack": "assets/modular/characters/special/s06-oni-men-executioner/sheets/attack.png",
+          "hurt": "assets/modular/characters/special/s06-oni-men-executioner/sheets/hurt.png",
+          "death": "assets/modular/characters/special/s06-oni-men-executioner/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/special/s06-oni-men-executioner/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular special-enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original special enemy identity, the Oni-men Executioner: an infected castle executioner from Kan'ei Japan, 1638, huge broad man wearing one solid dark-red wooden oni mask with short carved brow horns, black sleeveless work kimono, deep-indigo split hakama, thick forearm wraps, lacquer-red belt and straw sandals, subtle sick-green glow only through mask eye slits. No gore.\nRequired atlas: STRICTLY 6 columns × 5 rows, exactly 30 full-body poses of same character; equal invisible cells, same scale/camera/baseline, padding, no crossing. Rows: 1 idle, 2 left-facing heavy walk, 3 empty-handed odachi execution swing body motion, 4 hurt recoil, 5 death collapse; six sequential frames each.\nInvariants: same mask, body, clothing and colors; pure lateral left view; fully visible head-to-toe.\nStyle: polished authentic 16-bit pixel art, crisp large square pixels, hard clusters, ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette.\nBackdrop: continuous perfectly flat #ff00ff.\nCritical: BOTH HANDS EMPTY IN EVERY FRAME. No sword, weapon, blade, sheath, scabbard, chopping block, rope, prop, object or attached gear; weapon separate.\nAvoid: text, label, logo, watermark, frame, grid, scenery, ground, shadow, gradient, texture, glow aura, smoke, particles, blood, extra character, other view, magenta/pink on character."
+    },
+    {
+      "id": "s07-tessen-courtier",
+      "name": "Courtisan au tessen",
+      "subtitle": "Duelliste de cour",
+      "lore": [
+        "Ce courtisan transforma les rumeurs de contagion en arme politique avant que la cour ne s'effondre.",
+        "Son éventail de fer dissimule toujours des gestes aussi précis que ses anciennes paroles."
+      ],
+      "stats": {
+        "hp": 104,
+        "damage": 19,
+        "speed": 1.12,
+        "posture": 50
+      },
+      "pattern": "Pare de face avec le tessen, riposte en éventail et recule derrière une garde haute.",
+      "weaponId": "tessen-ferme",
+      "weaponRoleOriginal": "weapon-iron-tessen",
+      "nom": "Courtisan au tessen",
+      "role": "Duelliste de cour",
+      "gameplay": "104 PV, 19 dégâts, vitesse 1.12. Pare de face avec le tessen, riposte en éventail et recule derrière une garde haute.",
+      "weapon": {
+        "id": "tessen-ferme",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/special/s07-tessen-courtier",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/special/s07-tessen-courtier/source-master.png",
+        "masterAlpha": "assets/modular/characters/special/s07-tessen-courtier/master-alpha.png",
+        "master": "assets/modular/characters/special/s07-tessen-courtier/master.png",
+        "sprite": "assets/modular/characters/special/s07-tessen-courtier/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/special/s07-tessen-courtier/sheets/idle.png",
+          "move": "assets/modular/characters/special/s07-tessen-courtier/sheets/move.png",
+          "attack": "assets/modular/characters/special/s07-tessen-courtier/sheets/attack.png",
+          "hurt": "assets/modular/characters/special/s07-tessen-courtier/sheets/hurt.png",
+          "death": "assets/modular/characters/special/s07-tessen-courtier/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/special/s07-tessen-courtier/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular special-enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original special enemy identity, the Tessen Courtier: an infected male castle courtier from Kan'ei Japan, 1638, elegant narrow figure with formal high topknot, aged-bone kosode under a fitted lacquer-red kataginu shoulder vest, deep-indigo hakama, black tabi and subtle sick-green eyes, refined but predatory posture. No gore.\nRequired atlas: STRICTLY 6 columns × 5 rows, exactly 30 full-body poses of same character; equal invisible cells, same scale/camera/baseline, padding, no crossing. Rows: 1 poised idle, 2 left-facing measured walk, 3 empty-handed iron-fan slash body motion, 4 hurt recoil, 5 death collapse; six sequential frames each.\nInvariants: same face, hair, clothing and colors; pure lateral left view; fully visible head-to-toe.\nStyle: polished authentic 16-bit pixel art, crisp large square pixels, hard clusters, ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette.\nBackdrop: continuous perfectly flat #ff00ff.\nCritical: BOTH HANDS EMPTY IN EVERY FRAME. No fan, weapon, sword, sheath, scabbard, scroll, prop, object or attached gear; weapon separate.\nAvoid: text, label, logo, watermark, frame, grid, scenery, ground, shadow, gradient, texture, glow aura, smoke, particles, blood, extra character, other view, magenta/pink on character."
+    },
+    {
+      "id": "s08-gomon-jailer",
+      "name": "Geôlier de Gomon",
+      "subtitle": "Gardien de contrôle",
+      "lore": [
+        "Le responsable des cellules refusa d'ouvrir les portes lorsque la prison fut touchée.",
+        "Il patrouille encore les couloirs avec l'obsession de ramener chaque intrus derrière les barreaux."
+      ],
+      "stats": {
+        "hp": 142,
+        "damage": 21,
+        "speed": 0.72,
+        "posture": 70
+      },
+      "pattern": "Bloque le passage avec son sasumata, saisit à moyenne portée puis projette la cible.",
+      "weaponId": "sasumata",
+      "weaponRoleOriginal": "weapon-sasumata",
+      "nom": "Geôlier de Gomon",
+      "role": "Gardien de contrôle",
+      "gameplay": "142 PV, 21 dégâts, vitesse 0.72. Bloque le passage avec son sasumata, saisit à moyenne portée puis projette la cible.",
+      "weapon": {
+        "id": "sasumata",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/special/s08-gomon-jailer",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/special/s08-gomon-jailer/source-master.png",
+        "masterAlpha": "assets/modular/characters/special/s08-gomon-jailer/master-alpha.png",
+        "master": "assets/modular/characters/special/s08-gomon-jailer/master.png",
+        "sprite": "assets/modular/characters/special/s08-gomon-jailer/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/special/s08-gomon-jailer/sheets/idle.png",
+          "move": "assets/modular/characters/special/s08-gomon-jailer/sheets/move.png",
+          "attack": "assets/modular/characters/special/s08-gomon-jailer/sheets/attack.png",
+          "hurt": "assets/modular/characters/special/s08-gomon-jailer/sheets/hurt.png",
+          "death": "assets/modular/characters/special/s08-gomon-jailer/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/special/s08-gomon-jailer/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular special-enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original special enemy identity, the Gomon Jailer: an infected prison warden from Kan'ei Japan, 1638, stocky middle-aged man with shaved crown, stern scarred face, black padded jacket reinforced by small deep-indigo lacquer plates, muted red lacing, heavy thigh guards, forearm bracers and tabi boots, pale skin and sick-green eyes. No gore.\nRequired atlas: STRICTLY 6 columns × 5 rows, exactly 30 full-body poses of same character; equal invisible cells, same scale/camera/baseline, padding, no crossing. Rows: 1 guarded idle, 2 left-facing armored walk, 3 empty-handed sasumata thrust body motion, 4 hurt recoil, 5 death collapse; six sequential frames each.\nInvariants: same face, armor, clothing and colors; pure lateral left view; fully visible head-to-toe.\nStyle: polished authentic 16-bit pixel art, crisp large square pixels, hard clusters, ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette.\nBackdrop: continuous perfectly flat #ff00ff.\nCritical: BOTH HANDS EMPTY IN EVERY FRAME. No polearm, weapon, keys, chain, rope, sheath, scabbard, prop, object or attached gear; weapon separate.\nAvoid: text, label, logo, watermark, frame, grid, scenery, ground, shadow, gradient, texture, glow aura, smoke, particles, blood, extra character, other view, magenta/pink on character."
+    },
+    {
+      "id": "s09-kuro-yakushi",
+      "name": "Yakushi noir",
+      "subtitle": "Médecin de la peste",
+      "lore": [
+        "Cette praticienne resta auprès des malades après le départ des autorités et nota chaque symptôme.",
+        "Son remède d'encens ralentit la fièvre mais attire désormais les infectés vers sa fumée."
+      ],
+      "stats": {
+        "hp": 92,
+        "damage": 14,
+        "speed": 0.88,
+        "posture": 40
+      },
+      "pattern": "Pulvérise un cône d'encens contaminé, soigne les infectés proches et évite le corps à corps.",
+      "weaponId": "encensoir-spores-kinoko",
+      "weaponRoleOriginal": "weapon-incense-sprayer",
+      "nom": "Yakushi noir",
+      "role": "Médecin de la peste",
+      "gameplay": "92 PV, 14 dégâts, vitesse 0.88. Pulvérise un cône d'encens contaminé, soigne les infectés proches et évite le corps à corps.",
+      "weapon": {
+        "id": "encensoir-spores-kinoko",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/special/s09-kuro-yakushi",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/special/s09-kuro-yakushi/source-master.png",
+        "masterAlpha": "assets/modular/characters/special/s09-kuro-yakushi/master-alpha.png",
+        "master": "assets/modular/characters/special/s09-kuro-yakushi/master.png",
+        "sprite": "assets/modular/characters/special/s09-kuro-yakushi/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/special/s09-kuro-yakushi/sheets/idle.png",
+          "move": "assets/modular/characters/special/s09-kuro-yakushi/sheets/move.png",
+          "attack": "assets/modular/characters/special/s09-kuro-yakushi/sheets/attack.png",
+          "hurt": "assets/modular/characters/special/s09-kuro-yakushi/sheets/hurt.png",
+          "death": "assets/modular/characters/special/s09-kuro-yakushi/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/special/s09-kuro-yakushi/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular special-enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original special enemy identity, the Kuro Yakushi: an infected epidemic physician from Kan'ei Japan, 1638, elderly woman wearing a historically grounded black zukin hood and plain bone-white cloth mouth cover, layered deep-indigo medical robe, short charcoal apron, narrow lacquer-red sleeve ties, dark trousers and tabi, subtle sick-green eyes. No Western beak mask, no gore.\nRequired atlas: STRICTLY 6 columns × 5 rows, exactly 30 full-body poses of same character; equal invisible cells, same scale/camera/baseline, padding, no crossing. Rows: 1 analytical idle, 2 left-facing cautious walk, 3 empty-handed incense-sprayer body motion, 4 hurt recoil, 5 death collapse; six sequential frames each.\nInvariants: same hood, mask, clothing and colors; pure lateral left view; fully visible head-to-toe.\nStyle: polished authentic 16-bit pixel art, crisp large square pixels, hard clusters, ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette.\nBackdrop: continuous perfectly flat #ff00ff.\nCritical: BOTH HANDS EMPTY IN EVERY FRAME. No bottle, medicine, sprayer, incense, weapon, pouch, tool, prop, object or attached gear; equipment separate.\nAvoid: text, label, logo, watermark, frame, grid, scenery, ground, shadow, gradient, texture, glow aura, smoke, particles, blood, extra character, other view, magenta/pink on character."
+    },
+    {
+      "id": "s10-hatamoto-fallen",
+      "name": "Hatamoto déchue",
+      "subtitle": "Élite du bakufu",
+      "lore": [
+        "Cette vassale directe du shogun devait vérifier la loyauté du daimyō pendant la quarantaine.",
+        "Sa discipline a survécu à l'infection et transforme chaque duel en jugement militaire."
+      ],
+      "stats": {
+        "hp": 154,
+        "damage": 26,
+        "speed": 1.06,
+        "posture": 76
+      },
+      "pattern": "Alternera garde, charge blindée et trois tailles de nodachi dont la dernière brise la posture.",
+      "weaponId": "odachi",
+      "weaponRoleOriginal": "weapon-hatamoto-nodachi",
+      "nom": "Hatamoto déchue",
+      "role": "Élite du bakufu",
+      "gameplay": "154 PV, 26 dégâts, vitesse 1.06. Alternera garde, charge blindée et trois tailles de nodachi dont la dernière brise la posture.",
+      "weapon": {
+        "id": "odachi",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/special/s10-hatamoto-fallen",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/special/s10-hatamoto-fallen/source-master.png",
+        "masterAlpha": "assets/modular/characters/special/s10-hatamoto-fallen/master-alpha.png",
+        "master": "assets/modular/characters/special/s10-hatamoto-fallen/master.png",
+        "sprite": "assets/modular/characters/special/s10-hatamoto-fallen/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/special/s10-hatamoto-fallen/sheets/idle.png",
+          "move": "assets/modular/characters/special/s10-hatamoto-fallen/sheets/move.png",
+          "attack": "assets/modular/characters/special/s10-hatamoto-fallen/sheets/attack.png",
+          "hurt": "assets/modular/characters/special/s10-hatamoto-fallen/sheets/hurt.png",
+          "death": "assets/modular/characters/special/s10-hatamoto-fallen/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/special/s10-hatamoto-fallen/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular special-enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original special enemy identity, the Fallen Hatamoto: an infected elite retainer from Kan'ei Japan, 1638, tall disciplined woman in fitted black and deep-indigo lamellar armor with restrained lacquer-red lacing, narrow kabuto with a small crescent crest, compact sode, armored sleeves, dark hakama and tabi boots, pale lower face and sick-green eyes. No gore.\nRequired atlas: STRICTLY 6 columns × 5 rows, exactly 30 full-body poses of same character; equal invisible cells, same scale/camera/baseline, padding, no crossing. Rows: 1 disciplined idle, 2 left-facing armored stride, 3 empty-handed nodachi swing body motion, 4 hurt recoil, 5 death collapse; six sequential frames each.\nInvariants: same face, helmet, armor and colors; pure lateral left view; fully visible head-to-toe.\nStyle: polished authentic 16-bit pixel art, crisp large square pixels, hard clusters, ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette.\nBackdrop: continuous perfectly flat #ff00ff.\nCritical: BOTH HANDS EMPTY IN EVERY FRAME. No sword, weapon, bow, sheath, scabbard, banner, prop, object or attached gear; weapon separate.\nAvoid: oversized fantasy armor, text, label, logo, watermark, frame, grid, scenery, ground, shadow, gradient, texture, glow aura, smoke, particles, blood, extra character, other view, magenta/pink on character."
+    },
+    {
+      "id": "s11-biwa-revenant",
+      "name": "Revenant au biwa",
+      "subtitle": "Musicien d'onde",
+      "lore": [
+        "Le musicien aveugle consignait en chanson les morts de la province avant d'être chassé du château.",
+        "Les cordes de son biwa font maintenant vibrer la souillure cachée dans les pierres et les corps."
+      ],
+      "stats": {
+        "hp": 98,
+        "damage": 18,
+        "speed": 0.76,
+        "posture": 44
+      },
+      "pattern": "Émet des ondes sonores au sol, écoute les déplacements et punit les courses répétées.",
+      "weaponId": "fleau-cloche-enjin",
+      "weaponRoleOriginal": "weapon-biwa",
+      "nom": "Revenant au biwa",
+      "role": "Musicien d'onde",
+      "gameplay": "98 PV, 18 dégâts, vitesse 0.76. Émet des ondes sonores au sol, écoute les déplacements et punit les courses répétées.",
+      "weapon": {
+        "id": "fleau-cloche-enjin",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/special/s11-biwa-revenant",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/special/s11-biwa-revenant/source-master.png",
+        "masterAlpha": "assets/modular/characters/special/s11-biwa-revenant/master-alpha.png",
+        "master": "assets/modular/characters/special/s11-biwa-revenant/master.png",
+        "sprite": "assets/modular/characters/special/s11-biwa-revenant/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/special/s11-biwa-revenant/sheets/idle.png",
+          "move": "assets/modular/characters/special/s11-biwa-revenant/sheets/move.png",
+          "attack": "assets/modular/characters/special/s11-biwa-revenant/sheets/attack.png",
+          "hurt": "assets/modular/characters/special/s11-biwa-revenant/sheets/hurt.png",
+          "death": "assets/modular/characters/special/s11-biwa-revenant/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/special/s11-biwa-revenant/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular special-enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original special enemy identity, the Biwa Revenant: an infected blind itinerant musician from Kan'ei Japan, 1638, thin elderly man with closed clouded eyes, shaved crown with gray side hair, layered aged-bone and deep-indigo travel robes, short lacquer-red shoulder wrap, cloth gaiters and straw sandals, subtle sick-green vein marks. No gore.\nRequired atlas: STRICTLY 6 columns × 5 rows, exactly 30 full-body poses of same character, equal invisible cells, identical scale/camera/baseline, padding, no crossing. Rows: 1 listening idle, 2 left-facing slow walk, 3 empty-handed biwa shockwave body motion, 4 hurt recoil, 5 death collapse; six sequential frames each.\nInvariants: same face, clothing, body and colors; lateral left only; fully visible.\nStyle: polished 16-bit pixel art, crisp large square pixels, hard clusters, ink black, deep indigo, lacquer red, aged bone, subtle sick green.\nBackdrop: continuous perfectly flat #ff00ff.\nCritical: BOTH HANDS EMPTY IN EVERY FRAME. No biwa, instrument, plectrum, weapon, bag, tool, prop, object or attached gear; instrument/effect separate.\nAvoid: text, labels, logo, watermark, frame, grid, scenery, ground, shadows, gradient, texture, glow, notes, waves, smoke, particles, blood, extra character, other view, magenta/pink on character."
+    },
+    {
+      "id": "s12-shikigami-scribe",
+      "name": "Scribe aux shikigami",
+      "subtitle": "Invocatrice tactique",
+      "lore": [
+        "Cette copiste reproduisait les archives d'onmyōdō saisies par le daimyō.",
+        "L'encre contaminée anime désormais ses feuillets et leur donne une faim propre."
+      ],
+      "stats": {
+        "hp": 86,
+        "damage": 16,
+        "speed": 0.94,
+        "posture": 38
+      },
+      "pattern": "Place des ofuda séparés, invoque deux shikigami de papier et se protège derrière eux.",
+      "weaponId": "shakujo",
+      "weaponRoleOriginal": "prop-shikigami-ofuda",
+      "nom": "Scribe aux shikigami",
+      "role": "Invocatrice tactique",
+      "gameplay": "86 PV, 16 dégâts, vitesse 0.94. Place des ofuda séparés, invoque deux shikigami de papier et se protège derrière eux.",
+      "weapon": {
+        "id": "shakujo",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/special/s12-shikigami-scribe",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/special/s12-shikigami-scribe/source-master.png",
+        "masterAlpha": "assets/modular/characters/special/s12-shikigami-scribe/master-alpha.png",
+        "master": "assets/modular/characters/special/s12-shikigami-scribe/master.png",
+        "sprite": "assets/modular/characters/special/s12-shikigami-scribe/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/special/s12-shikigami-scribe/sheets/idle.png",
+          "move": "assets/modular/characters/special/s12-shikigami-scribe/sheets/move.png",
+          "attack": "assets/modular/characters/special/s12-shikigami-scribe/sheets/attack.png",
+          "hurt": "assets/modular/characters/special/s12-shikigami-scribe/sheets/hurt.png",
+          "death": "assets/modular/characters/special/s12-shikigami-scribe/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/special/s12-shikigami-scribe/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular special-enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original special enemy identity, the Shikigami Scribe: an infected onmyōdō copyist from Kan'ei Japan, 1638, slender adult woman with straight black hair tied low, tall soft black eboshi cap, bone-white kosode, deep-indigo kariginu-style short robe, restrained lacquer-red waist cord, black hakama and white tabi, pale face and sick-green eyes. No gore or effects.\nRequired atlas: STRICTLY 6 columns × 5 rows, exactly 30 full-body poses of same character, equal invisible cells, identical scale/camera/baseline, padding, no crossing. Rows: 1 calculating idle, 2 left-facing measured walk, 3 empty-handed ofuda-casting body motion, 4 hurt recoil, 5 death collapse; six sequential frames each.\nInvariants: same face, cap, clothing, body and colors; lateral left only; fully visible.\nStyle: polished 16-bit pixel art, crisp large square pixels, hard clusters, ink black, deep indigo, lacquer red, aged bone, subtle sick green.\nBackdrop: continuous perfectly flat #ff00ff.\nCritical: BOTH HANDS EMPTY IN EVERY FRAME. No brush, scroll, ofuda, paper, inkstone, weapon, bag, tool, prop, object or attached gear; effects separate.\nAvoid: text, symbols, labels, logo, watermark, frame, grid, scenery, ground, shadows, gradient, texture, glow, aura, smoke, particles, blood, extra character, other view, magenta/pink on character."
+    },
+    {
+      "id": "s13-kegare-sumotori",
+      "name": "Sumotori souillé",
+      "subtitle": "Mur de chair",
+      "lore": [
+        "Le lutteur devait se produire devant le daimyō quand la cour fut placée en isolement.",
+        "La souillure a alourdi son corps sans effacer ses appuis ni les règles de son ancien cercle."
+      ],
+      "stats": {
+        "hp": 196,
+        "damage": 27,
+        "speed": 0.66,
+        "posture": 96
+      },
+      "pattern": "Piétine, charge en ligne droite et repousse toutes les attaques légères avec ses paumes.",
+      "weaponId": "chaines-menottes-nuno",
+      "weaponRoleOriginal": "weapon-kegare-gauntlets",
+      "nom": "Sumotori souillé",
+      "role": "Mur de chair",
+      "gameplay": "196 PV, 27 dégâts, vitesse 0.66. Piétine, charge en ligne droite et repousse toutes les attaques légères avec ses paumes.",
+      "weapon": {
+        "id": "chaines-menottes-nuno",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/special/s13-kegare-sumotori",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/special/s13-kegare-sumotori/source-master.png",
+        "masterAlpha": "assets/modular/characters/special/s13-kegare-sumotori/master-alpha.png",
+        "master": "assets/modular/characters/special/s13-kegare-sumotori/master.png",
+        "sprite": "assets/modular/characters/special/s13-kegare-sumotori/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/special/s13-kegare-sumotori/sheets/idle.png",
+          "move": "assets/modular/characters/special/s13-kegare-sumotori/sheets/move.png",
+          "attack": "assets/modular/characters/special/s13-kegare-sumotori/sheets/attack.png",
+          "hurt": "assets/modular/characters/special/s13-kegare-sumotori/sheets/hurt.png",
+          "death": "assets/modular/characters/special/s13-kegare-sumotori/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/special/s13-kegare-sumotori/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular special-enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original special enemy identity, the Kegare Sumotori: an infected professional wrestler from Kan'ei Japan, 1638, enormous heavy adult man with traditional chonmage topknot, dark indigo mawashi with restrained lacquer-red cord, bare torso and limbs, cloth ankle wraps, pale gray skin with subtle sick-green contamination patches. No wounds, no gore.\nRequired atlas: STRICTLY 6 columns × 5 rows, exactly 30 full-body poses of same character, equal invisible cells, identical scale/camera/baseline, padding, no crossing. Rows: 1 stomping idle, 2 left-facing sumo charge, 3 empty-handed palm-strike body motion, 4 hurt recoil, 5 death collapse; six sequential frames each.\nInvariants: same face, body, mawashi and colors; lateral left only; fully visible head-to-toe.\nStyle: polished 16-bit pixel art, crisp large square pixels, hard clusters, ink black, deep indigo, lacquer red, aged bone, subtle sick green.\nBackdrop: continuous perfectly flat #ff00ff.\nCritical: BOTH HANDS EMPTY IN EVERY FRAME. No gauntlet, weapon, belt object, salt, prop, object or attached gear; effects separate.\nAvoid: text, labels, logo, watermark, frame, grid, scenery, ground, shadows, gradient, texture, glow, aura, smoke, particles, blood, extra character, other view, magenta/pink on character."
+    },
+    {
+      "id": "s14-mizuchi-diver",
+      "name": "Plongeuse Mizuchi",
+      "subtitle": "Chasseuse amphibie",
+      "lore": [
+        "Elle fouillait la rivière à la recherche des cargaisons jetées depuis le pont de quarantaine.",
+        "La morsure reçue sous l'eau a laissé son corps froid et son regard fixé sur les rives."
+      ],
+      "stats": {
+        "hp": 108,
+        "damage": 21,
+        "speed": 1.24,
+        "posture": 46
+      },
+      "pattern": "Reste accroupie, bondit en poussée de trident et glisse sous les attaques hautes.",
+      "weaponId": "jumonji-yari",
+      "weaponRoleOriginal": "weapon-river-trident",
+      "nom": "Plongeuse Mizuchi",
+      "role": "Chasseuse amphibie",
+      "gameplay": "108 PV, 21 dégâts, vitesse 1.24. Reste accroupie, bondit en poussée de trident et glisse sous les attaques hautes.",
+      "weapon": {
+        "id": "jumonji-yari",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/special/s14-mizuchi-diver",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/special/s14-mizuchi-diver/source-master.png",
+        "masterAlpha": "assets/modular/characters/special/s14-mizuchi-diver/master-alpha.png",
+        "master": "assets/modular/characters/special/s14-mizuchi-diver/master.png",
+        "sprite": "assets/modular/characters/special/s14-mizuchi-diver/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/special/s14-mizuchi-diver/sheets/idle.png",
+          "move": "assets/modular/characters/special/s14-mizuchi-diver/sheets/move.png",
+          "attack": "assets/modular/characters/special/s14-mizuchi-diver/sheets/attack.png",
+          "hurt": "assets/modular/characters/special/s14-mizuchi-diver/sheets/hurt.png",
+          "death": "assets/modular/characters/special/s14-mizuchi-diver/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/special/s14-mizuchi-diver/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular special-enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original special enemy identity, the Mizuchi Diver: an infected river salvage diver from Kan'ei Japan, 1638, compact adult woman with tight dark-indigo cloth hood, layered water-darkened short work coat, bone-white cross-body fabric bands sewn flat, lacquer-red waist ties, close trousers, wrapped calves and straw sandals, pallid face and sick-green eyes. Entirely solid and dry-looking; no water effects, no gore.\nRequired atlas: STRICTLY 6 columns × 5 rows, exactly 30 full-body poses of same character, equal invisible cells, identical scale/camera/baseline, padding, no crossing. Rows: 1 crouched idle, 2 left-facing low run, 3 empty-handed trident-thrust body motion, 4 hurt recoil, 5 death collapse; six sequential frames each.\nInvariants: same face, hood, clothing, body and colors; lateral left only; fully visible.\nStyle: polished 16-bit pixel art, crisp large square pixels, hard clusters, ink black, deep indigo, lacquer red, aged bone, subtle sick green.\nBackdrop: continuous perfectly flat #ff00ff.\nCritical: BOTH HANDS EMPTY IN EVERY FRAME. No trident, hook, rope, net, salvage, weapon, bag, tool, prop, object or attached gear; equipment separate.\nAvoid: text, labels, logo, watermark, frame, grid, scenery, ground, shadows, gradient, texture, water, droplets, glow, smoke, particles, blood, extra character, other view, magenta/pink on character."
+    },
+    {
+      "id": "s15-teppo-corpsman",
+      "name": "Arquebusier Teppō",
+      "subtitle": "Tireur d'élite",
+      "lore": [
+        "Cet ashigaru gardait la poudre sèche pendant que son unité défendait les remparts.",
+        "Il recharge encore son tanegashima avec une précision irréelle malgré la fièvre qui le consume."
+      ],
+      "stats": {
+        "hp": 112,
+        "damage": 30,
+        "speed": 0.82,
+        "posture": 52
+      },
+      "pattern": "Vise longuement, tire une balle très rapide puis se déplace vers une nouvelle ligne de feu.",
+      "weaponId": "tanegashima-teppo",
+      "weaponRoleOriginal": "weapon-tanegashima",
+      "nom": "Arquebusier Teppō",
+      "role": "Tireur d'élite",
+      "gameplay": "112 PV, 30 dégâts, vitesse 0.82. Vise longuement, tire une balle très rapide puis se déplace vers une nouvelle ligne de feu.",
+      "weapon": {
+        "id": "tanegashima-teppo",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/special/s15-teppo-corpsman",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/special/s15-teppo-corpsman/source-master.png",
+        "masterAlpha": "assets/modular/characters/special/s15-teppo-corpsman/master-alpha.png",
+        "master": "assets/modular/characters/special/s15-teppo-corpsman/master.png",
+        "sprite": "assets/modular/characters/special/s15-teppo-corpsman/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/special/s15-teppo-corpsman/sheets/idle.png",
+          "move": "assets/modular/characters/special/s15-teppo-corpsman/sheets/move.png",
+          "attack": "assets/modular/characters/special/s15-teppo-corpsman/sheets/attack.png",
+          "hurt": "assets/modular/characters/special/s15-teppo-corpsman/sheets/hurt.png",
+          "death": "assets/modular/characters/special/s15-teppo-corpsman/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/special/s15-teppo-corpsman/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular special-enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original special enemy identity, the Teppo Corpsman: an infected ashigaru matchlock specialist from Kan'ei Japan, 1638, lean adult man wearing a dark indigo jingasa, fitted black tatami armor with lacquer-red lacing, bone-gray sleeves, thigh guards, wrapped calves and straw sandals, pale face and sick-green eyes. No gore.\nRequired atlas: STRICTLY 6 columns × 5 rows, exactly 30 full-body poses of same character, equal invisible cells, identical scale/camera/baseline, padding, no crossing. Rows: 1 aiming-ready idle, 2 left-facing tactical walk, 3 empty-handed matchlock-fire body motion, 4 hurt recoil, 5 death collapse; six sequential frames each.\nInvariants: same face, helmet, armor, body and colors; lateral left only; fully visible.\nStyle: polished 16-bit pixel art, crisp large square pixels, hard clusters, ink black, deep indigo, lacquer red, aged bone, subtle sick green.\nBackdrop: continuous perfectly flat #ff00ff.\nCritical: BOTH HANDS EMPTY IN EVERY FRAME. No firearm, matchlock, ammunition, powder flask, sword, weapon, pouch, tool, prop, object, sheath or attached gear; firearm separate.\nAvoid: text, labels, logo, watermark, frame, grid, scenery, ground, shadows, gradient, texture, muzzle flash, glow, smoke, particles, blood, extra character, other view, magenta/pink on character."
+    },
+    {
+      "id": "s16-kage-mai-dancer",
+      "name": "Danseuse Kage-mai",
+      "subtitle": "Lame tournoyante",
+      "lore": [
+        "Elle se mêlait aux fêtes de village pour transmettre secrètement les messages d'un réseau clandestin.",
+        "Sa danse contaminée ne célèbre plus les récoltes mais dessine un cercle mortel autour de chaque témoin."
+      ],
+      "stats": {
+        "hp": 102,
+        "damage": 20,
+        "speed": 1.46,
+        "posture": 42
+      },
+      "pattern": "Tourne avec deux lames croissantes, traverse la cible puis termine par une pose vulnérable.",
+      "weaponId": "kusarigama",
+      "weaponRoleOriginal": "weapon-crescent-blades",
+      "nom": "Danseuse Kage-mai",
+      "role": "Lame tournoyante",
+      "gameplay": "102 PV, 20 dégâts, vitesse 1.46. Tourne avec deux lames croissantes, traverse la cible puis termine par une pose vulnérable.",
+      "weapon": {
+        "id": "kusarigama",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/special/s16-kage-mai-dancer",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/special/s16-kage-mai-dancer/source-master.png",
+        "masterAlpha": "assets/modular/characters/special/s16-kage-mai-dancer/master-alpha.png",
+        "master": "assets/modular/characters/special/s16-kage-mai-dancer/master.png",
+        "sprite": "assets/modular/characters/special/s16-kage-mai-dancer/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/special/s16-kage-mai-dancer/sheets/idle.png",
+          "move": "assets/modular/characters/special/s16-kage-mai-dancer/sheets/move.png",
+          "attack": "assets/modular/characters/special/s16-kage-mai-dancer/sheets/attack.png",
+          "hurt": "assets/modular/characters/special/s16-kage-mai-dancer/sheets/hurt.png",
+          "death": "assets/modular/characters/special/s16-kage-mai-dancer/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/special/s16-kage-mai-dancer/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular special-enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original special enemy identity, the Kage-mai Dancer: an infected covert festival dancer from Kan'ei Japan, 1638, agile adult woman with black hair tied in a short looped ponytail, pale face with narrow sick-green eyes, layered ink-black and deep-indigo dance kosode with split sleeves sewn close to the arms, lacquer-red obi and trailing waist ribbons kept short, fitted leggings, white tabi and straw sandals. No gore.\nRequired atlas: STRICTLY 6 columns × 5 rows, exactly 30 full-body poses of the same character; equal invisible cells, identical scale, camera, baseline and padding, with no silhouette crossing into neighboring cells. Rows: 1 poised breathing idle, 2 left-facing dancing run, 3 empty-handed twin crescent-blade spinning body motion, 4 hurt recoil, 5 death collapse; six sequential frames each.\nInvariants: same woman, face, clothing, proportions and colors in every cell; pure lateral left-facing side view only; fully visible head-to-toe in every pose.\nStyle: polished authentic 16-bit pixel art, crisp large square pixels, hard clusters, ink-black, deep-indigo, lacquer-red, aged-bone and subtle sick-green palette.\nBackdrop: one continuous perfectly flat solid #ff00ff background.\nCritical: BOTH HANDS EMPTY IN EVERY FRAME. No crescent blade, sword, knife, fan, ribbon weapon, sheath, scabbard, pouch, prop, object or attached combat gear; weapons are separate sprites.\nAvoid: text, labels, logo, watermark, border, frame, visible grid, scenery, ground, shadow, gradient, texture, glow aura, smoke, particles, blood, extra character, other view, magenta or pink on the character."
+    },
+    {
+      "id": "s17-kurohata-bearer",
+      "name": "Porte-étendard Kurohata",
+      "subtitle": "Commandant de horde",
+      "lore": [
+        "Il porta l'étendard de quarantaine jusqu'à la chute de la dernière barricade.",
+        "La bannière noire rassemble maintenant les infectés autour de lui comme une unité sans général."
+      ],
+      "stats": {
+        "hp": 138,
+        "damage": 18,
+        "speed": 0.78,
+        "posture": 68
+      },
+      "pattern": "Renforce les ennemis proches, balaie avec sa hampe et devient vulnérable si la bannière tombe.",
+      "weaponId": "bo",
+      "weaponRoleOriginal": "weapon-kurohata-banner",
+      "nom": "Porte-étendard Kurohata",
+      "role": "Commandant de horde",
+      "gameplay": "138 PV, 18 dégâts, vitesse 0.78. Renforce les ennemis proches, balaie avec sa hampe et devient vulnérable si la bannière tombe.",
+      "weapon": {
+        "id": "bo",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/special/s17-kurohata-bearer",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/special/s17-kurohata-bearer/source-master.png",
+        "masterAlpha": "assets/modular/characters/special/s17-kurohata-bearer/master-alpha.png",
+        "master": "assets/modular/characters/special/s17-kurohata-bearer/master.png",
+        "sprite": "assets/modular/characters/special/s17-kurohata-bearer/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/special/s17-kurohata-bearer/sheets/idle.png",
+          "move": "assets/modular/characters/special/s17-kurohata-bearer/sheets/move.png",
+          "attack": "assets/modular/characters/special/s17-kurohata-bearer/sheets/attack.png",
+          "hurt": "assets/modular/characters/special/s17-kurohata-bearer/sheets/hurt.png",
+          "death": "assets/modular/characters/special/s17-kurohata-bearer/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/special/s17-kurohata-bearer/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular special-enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original special enemy identity, the Kurohata Bearer: an infected ashigaru plague bannerman from Kan'ei Japan, 1638, tall gaunt adult man with a cloth hachimaki, soot-dark face and sick-green eyes, black tatami-do armor with deep-indigo kusazuri, lacquer-red lacing, aged-bone sleeves, wrapped calves and waraji sandals. His back is completely bare with no sashimono socket or banner. No gore.\nRequired atlas: STRICTLY 6 columns × 5 rows, exactly 30 full-body poses of the same character; equal invisible cells, identical scale, camera, baseline and padding, with no silhouette crossing into neighboring cells. Rows: 1 rigid sentry idle, 2 left-facing military march, 3 empty-handed war-banner sweeping body motion, 4 hurt recoil, 5 death collapse; six sequential frames each.\nInvariants: same man, armor, clothing, proportions and colors in every cell; pure lateral left-facing side view only; fully visible head-to-toe in every pose.\nStyle: polished authentic 16-bit pixel art, crisp large square pixels, hard clusters, ink-black, deep-indigo, lacquer-red, aged-bone and subtle sick-green palette.\nBackdrop: one continuous perfectly flat solid #ff00ff background.\nCritical: BOTH HANDS EMPTY IN EVERY FRAME. No banner, flag, pole, spear, sword, weapon, sheath, scabbard, backpack, sashimono holder, pouch, prop, object or attached combat gear; banner is a separate sprite.\nAvoid: text, labels, logo, watermark, border, frame, visible grid, scenery, ground, shadow, gradient, texture, glow aura, smoke, particles, blood, extra character, other view, magenta or pink on the character."
+    },
+    {
+      "id": "s18-yomi-herald",
+      "name": "Héraut du Yomi",
+      "subtitle": "Officiant du gong",
+      "lore": [
+        "Le héraut proclamait les décrets du temple à chaque heure de la quarantaine.",
+        "Derrière son masque, sa voix s'est tue mais le gong annonce encore l'ouverture des portes du Yomi."
+      ],
+      "stats": {
+        "hp": 118,
+        "damage": 22,
+        "speed": 0.86,
+        "posture": 56
+      },
+      "pattern": "Frappe un gong rituel, produit une onde retardée et inverse brièvement les commandes de déplacement.",
+      "weaponId": "fleau-cloche-enjin",
+      "weaponRoleOriginal": "weapon-ritual-gong",
+      "nom": "Héraut du Yomi",
+      "role": "Officiant du gong",
+      "gameplay": "118 PV, 22 dégâts, vitesse 0.86. Frappe un gong rituel, produit une onde retardée et inverse brièvement les commandes de déplacement.",
+      "weapon": {
+        "id": "fleau-cloche-enjin",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/special/s18-yomi-herald",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/special/s18-yomi-herald/source-master.png",
+        "masterAlpha": "assets/modular/characters/special/s18-yomi-herald/master-alpha.png",
+        "master": "assets/modular/characters/special/s18-yomi-herald/master.png",
+        "sprite": "assets/modular/characters/special/s18-yomi-herald/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/special/s18-yomi-herald/sheets/idle.png",
+          "move": "assets/modular/characters/special/s18-yomi-herald/sheets/move.png",
+          "attack": "assets/modular/characters/special/s18-yomi-herald/sheets/attack.png",
+          "hurt": "assets/modular/characters/special/s18-yomi-herald/sheets/hurt.png",
+          "death": "assets/modular/characters/special/s18-yomi-herald/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/special/s18-yomi-herald/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular special-enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original special enemy identity, the Yomi Herald: an infected temple proclamation officer from Kan'ei Japan, 1638, solemn androgynous adult with long black hair bound low, an aged-bone lacquer half-mask covering nose and mouth, deep-indigo ceremonial hitatare robe with ink-black shoulder panels, lacquer-red cords, narrow black hakama, white tabi and dark sandals, subtle sick-green eye glow. No gore.\nRequired atlas: STRICTLY 6 columns × 5 rows, exactly 30 full-body poses of the same character; equal invisible cells, identical scale, camera, baseline and padding, with no silhouette crossing into neighboring cells. Rows: 1 solemn listening idle, 2 left-facing processional walk, 3 empty-handed ritual-gong striking body motion, 4 hurt recoil, 5 death collapse; six sequential frames each.\nInvariants: same person, mask, clothing, proportions and colors in every cell; pure lateral left-facing side view only; fully visible head-to-toe in every pose.\nStyle: polished authentic 16-bit pixel art, crisp large square pixels, hard clusters, ink-black, deep-indigo, lacquer-red, aged-bone and subtle sick-green palette.\nBackdrop: one continuous perfectly flat solid #ff00ff background.\nCritical: BOTH HANDS EMPTY IN EVERY FRAME. No gong, mallet, bell, staff, weapon, scroll, rope, sheath, pouch, prop, object or attached combat gear; ritual instrument is a separate sprite.\nAvoid: text, labels, logo, watermark, border, frame, visible grid, scenery, ground, shadow, gradient, texture, glow aura, sound waves, smoke, particles, blood, extra character, other view, magenta or pink on the character."
+    },
+    {
+      "id": "s19-wana-trapper",
+      "name": "Trappeur de Wana",
+      "subtitle": "Contrôleur forestier",
+      "lore": [
+        "Ce chasseur gardait les sentiers de montagne quand les réfugiés ont quitté la route principale.",
+        "Ses pièges rouillés ne distinguent plus les infectés des vivants qui cherchent un passage."
+      ],
+      "stats": {
+        "hp": 110,
+        "damage": 19,
+        "speed": 1.08,
+        "posture": 48
+      },
+      "pattern": "Pose un piège de chaîne, attire la cible vers lui et profite de l'immobilisation pour frapper.",
+      "weaponId": "manrikigusari",
+      "weaponRoleOriginal": "weapon-wana-trap",
+      "nom": "Trappeur de Wana",
+      "role": "Contrôleur forestier",
+      "gameplay": "110 PV, 19 dégâts, vitesse 1.08. Pose un piège de chaîne, attire la cible vers lui et profite de l'immobilisation pour frapper.",
+      "weapon": {
+        "id": "manrikigusari",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/special/s19-wana-trapper",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/special/s19-wana-trapper/source-master.png",
+        "masterAlpha": "assets/modular/characters/special/s19-wana-trapper/master-alpha.png",
+        "master": "assets/modular/characters/special/s19-wana-trapper/master.png",
+        "sprite": "assets/modular/characters/special/s19-wana-trapper/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/special/s19-wana-trapper/sheets/idle.png",
+          "move": "assets/modular/characters/special/s19-wana-trapper/sheets/move.png",
+          "attack": "assets/modular/characters/special/s19-wana-trapper/sheets/attack.png",
+          "hurt": "assets/modular/characters/special/s19-wana-trapper/sheets/hurt.png",
+          "death": "assets/modular/characters/special/s19-wana-trapper/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/special/s19-wana-trapper/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular special-enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original special enemy identity, the Wana Trapper: an infected mountain hunter from Kan'ei Japan, 1638, wiry middle-aged man with shaggy tied hair and stubble, patched deep-indigo hunting coat over an aged-bone under-robe, ink-black leather-free cloth shoulder guards, lacquer-red sash, narrow trousers, wrapped calves and straw sandals, subtle sick-green eyes. No fur pelt, no gore.\nRequired atlas: STRICTLY 6 columns × 5 rows, exactly 30 full-body poses of the same character; equal invisible cells, identical scale, camera, baseline and padding, with no silhouette crossing into neighboring cells. Rows: 1 low stalking idle, 2 left-facing forest run, 3 empty-handed trap-setting and chain-yank body motion, 4 hurt recoil, 5 death collapse; six sequential frames each.\nInvariants: same man, face, clothing, proportions and colors in every cell; pure lateral left-facing side view only; fully visible head-to-toe in every pose.\nStyle: polished authentic 16-bit pixel art, crisp large square pixels, hard clusters, ink-black, deep-indigo, lacquer-red, aged-bone and subtle sick-green palette.\nBackdrop: one continuous perfectly flat solid #ff00ff background.\nCritical: BOTH HANDS EMPTY IN EVERY FRAME. No trap, chain, rope, snare, bow, knife, tool, weapon, quiver, pouch, basket, prop, object or attached combat gear; trap weapon is a separate sprite.\nAvoid: text, labels, logo, watermark, border, frame, visible grid, scenery, ground, shadow, gradient, texture, glow aura, smoke, particles, blood, animal, extra character, other view, magenta or pink on the character."
+    },
+    {
+      "id": "s20-mekura-oracle",
+      "name": "Oracle Mekura",
+      "subtitle": "Voyante aveugle",
+      "lore": [
+        "L'oracle se banda les yeux après avoir décrit une ombre montant du puits sacré.",
+        "Elle voit désormais les mouvements à travers la souillure et prédit chaque attaque trop répétitive."
+      ],
+      "stats": {
+        "hp": 106,
+        "damage": 20,
+        "speed": 0.8,
+        "posture": 50
+      },
+      "pattern": "Écoute les actions du joueur, anticipe la plus fréquente et déclenche une cloche de contre.",
+      "weaponId": "shakujo",
+      "weaponRoleOriginal": "weapon-oracle-rosary",
+      "nom": "Oracle Mekura",
+      "role": "Voyante aveugle",
+      "gameplay": "106 PV, 20 dégâts, vitesse 0.8. Écoute les actions du joueur, anticipe la plus fréquente et déclenche une cloche de contre.",
+      "weapon": {
+        "id": "shakujo",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/special/s20-mekura-oracle",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/special/s20-mekura-oracle/source-master.png",
+        "masterAlpha": "assets/modular/characters/special/s20-mekura-oracle/master-alpha.png",
+        "master": "assets/modular/characters/special/s20-mekura-oracle/master.png",
+        "sprite": "assets/modular/characters/special/s20-mekura-oracle/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/special/s20-mekura-oracle/sheets/idle.png",
+          "move": "assets/modular/characters/special/s20-mekura-oracle/sheets/move.png",
+          "attack": "assets/modular/characters/special/s20-mekura-oracle/sheets/attack.png",
+          "hurt": "assets/modular/characters/special/s20-mekura-oracle/sheets/hurt.png",
+          "death": "assets/modular/characters/special/s20-mekura-oracle/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/special/s20-mekura-oracle/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular special-enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original special enemy identity, the Mekura Oracle: an infected rural shrine seer from Kan'ei Japan, 1638, elderly woman with long silver-black hair tied low, both eyes covered by a plain aged-bone cloth bandage, layered deep-indigo miko-style kosode under an ink-black sleeveless mantle, lacquer-red waist cord, dark split hakama, white tabi and straw sandals, faint sick-green markings only on her hands. No gore.\nRequired atlas: STRICTLY 6 columns × 5 rows, exactly 30 full-body poses of the same character; equal invisible cells, identical scale, camera, baseline and padding, with no silhouette crossing into neighboring cells. Rows: 1 listening prophetic idle, 2 left-facing careful glide walk, 3 empty-handed rosary-and-bell divination body motion, 4 hurt recoil, 5 death collapse; six sequential frames each.\nInvariants: same woman, eye bandage, clothing, proportions and colors in every cell; pure lateral left-facing side view only; fully visible head-to-toe in every pose.\nStyle: polished authentic 16-bit pixel art, crisp large square pixels, hard clusters, ink-black, deep-indigo, lacquer-red, aged-bone and subtle sick-green palette.\nBackdrop: one continuous perfectly flat solid #ff00ff background.\nCritical: BOTH HANDS EMPTY IN EVERY FRAME. No rosary, beads, bell, staff, charm, ofuda, weapon, pouch, prop, object or attached combat gear; ritual implements are separate sprites.\nAvoid: text, labels, logo, watermark, border, frame, visible grid, scenery, ground, shadow, gradient, texture, glow aura, spirit, smoke, particles, blood, extra character, other view, magenta or pink on the character."
+    }
+  ]
+}

@@ -1,0 +1,237 @@
+{
+  "schema": 1,
+  "category": "environments",
+  "count": 3,
+  "generationTool": "OpenAI ImageGen built-in",
+  "generationPolicy": "Un appel ImageGen distinct pour chaque couche, atlas d’accessoires et atlas de plateformes.",
+  "totals": {
+    "layers": 12,
+    "props": 36,
+    "platforms": 36
+  },
+  "renderStandard": {
+    "resolution": [
+      1664,
+      936
+    ],
+    "layerOrderBackToFront": [
+      "sky",
+      "far",
+      "mid",
+      "near"
+    ],
+    "sky": {
+      "mode": "RGB",
+      "opaque": true
+    },
+    "transparentLayers": {
+      "mode": "RGBA",
+      "sourceChroma": "#ff00ff"
+    },
+    "atlasGrid": {
+      "columns": 4,
+      "rows": 3,
+      "spritesPerAtlas": 12
+    }
+  },
+  "zones": [
+    {
+      "id": "kurokawa",
+      "name": "Village de Kurokawa",
+      "lore": "Premier foyer déclaré de la peste du Yomi : maisons brûlées, réserves scellées et routes de quarantaine abandonnées.",
+      "gameplay": "Zone latérale d’ouverture, lisible grâce au contraste entre ciel indigo, reliefs lointains, village central et avant-plan calciné.",
+      "layers": {
+        "sky": {
+          "file": "assets/modular/environments/kurokawa/layers/sky.png",
+          "source": "assets/modular/environments/kurokawa/layers/source/sky-imagegen-raw.png",
+          "prompt": "Create an original opaque modular sky layer in crisp 16-bit pixel art for Kurokawa, a plague-struck village in fictional late-feudal Japan. Exact wide 16:9 composition. Show only a deep indigo nocturnal sky, high soot clouds, faint stars, ember haze near the low horizon and restrained fire glow. Absolutely no land, mountain, tree, bamboo, building, house, roof, tower, torii, road, prop, person, creature, text, logo, border, grid, transparency or chroma key. Fully opaque and repeat-friendly."
+        },
+        "far": {
+          "file": "assets/modular/environments/kurokawa/layers/far.png",
+          "source": "assets/modular/environments/kurokawa/layers/source/far-imagegen-raw.png",
+          "prompt": "Create one original modular far parallax layer in crisp 16-bit pixel art for Kurokawa. Exact wide 16:9 composition. Show only distant natural terrain: layered indigo mountain silhouettes, wooded ridges and a thin smoke veil across the lower half. Absolutely no houses, roofs, towers, torii, roads, fences, props or other human-made element. Flat uniform exact #ff00ff background, clean hard pixel silhouettes, no characters, creatures, text, logo, labels, border or grid."
+        },
+        "mid": {
+          "file": "assets/modular/environments/kurokawa/layers/mid.png",
+          "source": "assets/modular/environments/kurokawa/layers/source/mid-imagegen-raw.png",
+          "prompt": "Create one original modular middle parallax architecture band in crisp 16-bit pixel art for plague-struck Kurokawa. Exact wide 16:9 composition. Along a common baseline show several late-feudal minka houses with tiled and thatched roofs, one rice storehouse, one wooden watchtower, leafless persimmon trees and small attached roof fires, with readable gaps between forms. No sky, ground platform, road, loose prop sheet, character, creature, weapon or text. Flat uniform exact #ff00ff background, clean hard pixel silhouettes, no labels, logo, border or grid."
+        },
+        "near": {
+          "file": "assets/modular/environments/kurokawa/layers/near.png",
+          "source": "assets/modular/environments/kurokawa/layers/source/near-imagegen-raw.png",
+          "prompt": "Create one original modular near parallax foreground layer in crisp 16-bit pixel art for plague-struck Kurokawa. Exact wide 16:9 composition. Show only charred road-edge silhouettes around the bottom 18 percent and outer edges: broken fence pieces, scorched reeds, a partial wagon wheel and black branches entering from left and right, while preserving a broad empty center. No house, tower, gameplay platform, character, creature, weapon or text. Flat uniform exact #ff00ff background, hard pixel edges, no labels, logo, border or grid."
+        }
+      },
+      "props": {
+        "sourceAtlas": "assets/modular/environments/kurokawa/props/source/atlas-imagegen-raw.png",
+        "alphaAtlas": "assets/modular/environments/kurokawa/props/source/atlas-alpha.png",
+        "prompt": "Create one original 16-bit pixel-art ASSET ATLAS for the plague village zone “Kurokawa” in a side-scrolling game set in fictional late-feudal Japan. STRICT technical layout: exactly 4 columns × 3 rows = exactly 12 equal cells, aligned to a regular invisible grid, with one complete isolated asset centered in every cell, generous uniform empty gutters, nothing crossing a cell boundary, no extra objects. The entire background and every gutter must be perfectly flat, uniform, exact chroma-key magenta #ff00ff. Do not draw grid lines, borders, frames, panels, shadows, ground, labels, numbers, text, Japanese writing, logos, watermarks, characters, creatures, weapons, or UI. Orthographic side-view game sprites, consistent scale within type, crisp hard-edged 16-bit pixel art, limited indigo/charcoal/burnt-wood/muted-red palette, clean silhouette, no antialias fringe. Exact cell contents in reading order left-to-right, top-to-bottom: row 1: (1) intact tiled-roof minka house, (2) burned thatched minka house, (3) small white-plaster rice storehouse kura, (4) wooden village watchtower. Row 2: (5) stone well, (6) leafless scorched persimmon tree, (7) broken handcart, (8) low wooden village barrier. Row 3: (9) sealed provision barrel, (10) bundled haystack, (11) small contained burning hearth with orange embers, (12) tiny roadside protective altar with no writing or religious text. Original designs, no existing-game likeness.",
+        "items": [
+          "assets/modular/environments/kurokawa/props/minka-tuiles-intacte.png",
+          "assets/modular/environments/kurokawa/props/minka-chaume-brulee.png",
+          "assets/modular/environments/kurokawa/props/kura-entrepot-riz.png",
+          "assets/modular/environments/kurokawa/props/tour-guet-kurokawa.png",
+          "assets/modular/environments/kurokawa/props/puits-pierre.png",
+          "assets/modular/environments/kurokawa/props/kaki-calcine.png",
+          "assets/modular/environments/kurokawa/props/charrette-cassee.png",
+          "assets/modular/environments/kurokawa/props/barriere-village.png",
+          "assets/modular/environments/kurokawa/props/tonneau-provisions.png",
+          "assets/modular/environments/kurokawa/props/tas-paille.png",
+          "assets/modular/environments/kurokawa/props/foyer-incendie.png",
+          "assets/modular/environments/kurokawa/props/autel-route.png"
+        ]
+      },
+      "platforms": {
+        "sourceAtlas": "assets/modular/environments/kurokawa/platforms/source/atlas-imagegen-raw.png",
+        "alphaAtlas": "assets/modular/environments/kurokawa/platforms/source/atlas-alpha.png",
+        "prompt": "Create one original 16-bit pixel-art GAMEPLAY PLATFORM AND TILE ATLAS for the plague village zone “Kurokawa” in a side-scrolling game set in fictional late-feudal Japan. STRICT technical layout: exactly 4 columns × 3 rows = exactly 12 equal cells, aligned to a regular invisible grid, one complete isolated side-view terrain piece centered in every cell, generous uniform empty gutters, nothing crossing cell boundaries, no extra objects. The entire background and gutters must be perfectly flat, uniform, exact chroma-key magenta #ff00ff. No grid lines, borders, frames, panels, shadows outside pieces, labels, numbers, text, logos, watermark, characters, creatures, weapons, buildings, or UI. Crisp hard-edged 16-bit pixel art, consistent 2D side-platform perspective and thickness, tileable-looking ends where appropriate, indigo soil, gray stone, burnt cedar, dark roof tile and straw palette. Exact contents in reading order left-to-right, top-to-bottom: row 1: (1) central packed-earth floor tile with flat playable top, (2) left-edge packed-earth floor tile, (3) right-edge packed-earth floor tile, (4) cracked packed-earth floor variant. Row 2: (5) long suspended burnt-wood platform, (6) short suspended burnt-wood platform, (7) suspended dark ceramic roof-tile platform, (8) suspended thatch platform. Row 3: (9) low stone ledge, (10) wooden stair step cluster, (11) packed-earth slope rising to the right, (12) ash-pit hazard rim with hollow dark center. Original designs, no existing-game likeness.",
+        "items": [
+          "assets/modular/environments/kurokawa/platforms/sol-terre-centre.png",
+          "assets/modular/environments/kurokawa/platforms/sol-terre-gauche.png",
+          "assets/modular/environments/kurokawa/platforms/sol-terre-droite.png",
+          "assets/modular/environments/kurokawa/platforms/sol-terre-fissure.png",
+          "assets/modular/environments/kurokawa/platforms/plateforme-bois-longue.png",
+          "assets/modular/environments/kurokawa/platforms/plateforme-bois-courte.png",
+          "assets/modular/environments/kurokawa/platforms/plateforme-toit-tuile.png",
+          "assets/modular/environments/kurokawa/platforms/plateforme-chaume.png",
+          "assets/modular/environments/kurokawa/platforms/bord-pierre.png",
+          "assets/modular/environments/kurokawa/platforms/marche-bois.png",
+          "assets/modular/environments/kurokawa/platforms/pente-terre.png",
+          "assets/modular/environments/kurokawa/platforms/fosse-cendre.png"
+        ]
+      }
+    },
+    {
+      "id": "bamboo-shrine",
+      "name": "Sanctuaire de bambous",
+      "lore": "Un sanctuaire rural noyé dans la bambouseraie, où les rites de purification ont été interrompus par la contamination.",
+      "gameplay": "Zone verticale et mobile : lune rouge, reliefs naturels, torii central et avant-plan de racines encadrent les combats.",
+      "layers": {
+        "sky": {
+          "file": "assets/modular/environments/bamboo-shrine/layers/sky.png",
+          "source": "assets/modular/environments/bamboo-shrine/layers/source/sky-imagegen-raw.png",
+          "prompt": "Create an original 16-bit pixel-art environment layer for a game set in a fictional late-feudal Japan during a zombie plague. This is ONLY the opaque SKY layer for the zone “Bamboo Shrine”, designed for horizontal parallax in a side-scrolling game. Exact wide 16:9 composition. Show a deep nocturnal blue-black sky, a huge muted crimson moon slightly right of center, sparse thin clouds, faint mist glow and a few dim stars. Keep the lower horizon simple so other transparent layers can overlap it. Absolutely no ground, mountains, hills, trees, bamboo, branches, torii, shrine, pagoda, roof, house, lantern, prop, character, creature, weapon, interface, logo, lettering, symbols, labels, watermark, border, panels, grid, transparency, checkerboard, or chroma-key background. Fully opaque edge to edge. Crisp hard-edged 16-bit pixel art, limited palette, no anti-aliased painterly blur, no gradients that look photographic. Original design, not based on any existing game asset."
+        },
+        "far": {
+          "file": "assets/modular/environments/bamboo-shrine/layers/far.png",
+          "source": "assets/modular/environments/bamboo-shrine/layers/source/far-imagegen-raw.png",
+          "prompt": "Create one original modular PARALLAX FAR-LAYER bitmap in crisp 16-bit pixel art for a side-scrolling game set in a fictional late-feudal Japanese bamboo shrine during a zombie plague. Exact wide 16:9 composition. Show ONLY distant natural terrain: two or three layered silhouettes of bamboo-covered ridges, thin rows of very distant bamboo trunks, and low blue-violet mist, occupying mainly the lower 45 percent with an irregular skyline and generous empty space above. Muted indigo palette, subtle crimson rim light compatible with a red moon behind it. The entire backdrop behind every visible pixel must be a perfectly flat, uniform, exact chroma-key magenta #ff00ff, including all four corners. Hard pixel edges and clean silhouettes, no antialias fringe, no cast shadow outside objects. Absolutely no house, shrine, torii, pagoda, roof, bridge, lantern, fence, road, stairs, human-made structure, separate prop, character, creature, weapon, text, logo, labels, watermark, panels, borders, or grid. One continuous far-distance layer only; original design, not copied from any existing game."
+        },
+        "mid": {
+          "file": "assets/modular/environments/bamboo-shrine/layers/mid.png",
+          "source": "assets/modular/environments/bamboo-shrine/layers/source/mid-imagegen-raw.png",
+          "prompt": "Create one original modular PARALLAX MID-LAYER bitmap in crisp 16-bit pixel art for a side-scrolling game set at a fictional late-feudal Japanese bamboo shrine during a zombie plague. Exact wide 16:9 composition. Build a single coherent middle-distance silhouette band along a common lower baseline: tall bamboo trunks and leafy clusters across the width, a large weathered vermilion torii slightly left of center, a compact rural wooden shrine with tiled roof slightly right of center, two integrated stone lanterns, and thin drifting plague mist. Leave readable gaps between major shapes and a traversable-looking open center. Moonlit indigo, moss green, dark wood, worn muted red palette. The entire backdrop behind every visible pixel must be perfectly flat, uniform, exact chroma-key magenta #ff00ff, including all four corners. Hard pixel edges, clean silhouettes, no antialias fringe and no cast shadows outside the layer. No sky, no distant mountains, no ground platform, no loose item sheet, no character, zombie, creature, weapon, text, Japanese writing, logo, labels, watermark, panel divisions, border, or grid. One continuous scenery layer only; original design, not copied from any existing game."
+        },
+        "near": {
+          "file": "assets/modular/environments/bamboo-shrine/layers/near.png",
+          "source": "assets/modular/environments/bamboo-shrine/layers/source/near-imagegen-raw.png",
+          "prompt": "Create one original modular PARALLAX NEAR-LAYER bitmap in crisp 16-bit pixel art for a side-scrolling game set at a fictional late-feudal Japanese bamboo shrine during a zombie plague. Exact wide 16:9 composition. Show foreground scenery ONLY around the outer edges and lowest 20 percent: a dark mossy stone path lip along parts of the bottom, thick bamboo leaves and cut stalk silhouettes framing the left and right edges, a few gnarled roots, ferns, damp rocks, and small pale fungal growths attached to the roots. Preserve a broad empty central viewing area and avoid a solid full-width floor. Dark indigo, black-green, moss and muted fungal ivory palette with restrained crimson moon rim light. The entire backdrop behind every visible pixel must be perfectly flat, uniform, exact chroma-key magenta #ff00ff, including all four corners wherever no foreground object exists. Hard pixel edges, clean silhouettes, no antialias fringe and no cast shadows outside objects. No sky, mountain, house, shrine, torii, pagoda, bridge, free-standing prop, character, zombie, creature, weapon, text, symbols, logo, labels, watermark, panel divisions, border, or grid. One continuous foreground framing layer only; original design, not copied from any existing game."
+        }
+      },
+      "props": {
+        "sourceAtlas": "assets/modular/environments/bamboo-shrine/props/source/atlas-imagegen-raw.png",
+        "alphaAtlas": "assets/modular/environments/bamboo-shrine/props/source/atlas-alpha.png",
+        "prompt": "Create one original 16-bit pixel-art ASSET ATLAS for the zone “Bamboo Shrine” in a side-scrolling game set in fictional late-feudal Japan during a zombie plague. STRICT technical layout: exactly 4 columns × 3 rows = exactly 12 equal cells, aligned to a regular invisible grid, with one complete isolated asset centered in every cell, generous uniform empty gutters, nothing crossing a cell boundary, no extra objects. Entire background and gutters perfectly flat, uniform, exact chroma-key magenta #ff00ff. Do not draw grid lines, borders, frames, panels, shadows, ground, labels, numbers, text, Japanese writing, logos, watermarks, characters, creatures, weapons, or UI. Orthographic side-view game sprites, consistent scale within type, crisp hard-edged 16-bit pixel art, limited indigo/moss/dark-bamboo/weathered-vermilion palette, clean silhouettes, no antialias fringe. Exact contents in reading order left-to-right, top-to-bottom: row 1: (1) large weathered vermilion torii, (2) small simple wooden torii, (3) compact rural shrine with tiled roof and no writing, (4) carved stone lantern. Row 2: (5) stone purification water basin without inscription, (6) dense cluster of tall bamboo stalks, (7) bundle of cut bamboo stalks, (8) short arched wooden footbridge. Row 3: (9) low ritual rope barrier with plain paper streamers but no symbols, (10) infected gnarled roots with pale fungi, (11) suspended bronze shrine bell in a small wooden support, (12) small purification altar without statue or writing. Original designs, no existing-game likeness.",
+        "items": [
+          "assets/modular/environments/bamboo-shrine/props/grand-torii.png",
+          "assets/modular/environments/bamboo-shrine/props/petit-torii.png",
+          "assets/modular/environments/bamboo-shrine/props/sanctuaire-rural.png",
+          "assets/modular/environments/bamboo-shrine/props/lanterne-pierre.png",
+          "assets/modular/environments/bamboo-shrine/props/bassin-purification.png",
+          "assets/modular/environments/bamboo-shrine/props/bambous-hauts.png",
+          "assets/modular/environments/bamboo-shrine/props/bambous-coupes.png",
+          "assets/modular/environments/bamboo-shrine/props/pont-bois.png",
+          "assets/modular/environments/bamboo-shrine/props/barriere-rituelle.png",
+          "assets/modular/environments/bamboo-shrine/props/racines-contaminees.png",
+          "assets/modular/environments/bamboo-shrine/props/cloche-sanctuaire.png",
+          "assets/modular/environments/bamboo-shrine/props/autel-purification.png"
+        ]
+      },
+      "platforms": {
+        "sourceAtlas": "assets/modular/environments/bamboo-shrine/platforms/source/atlas-imagegen-raw.png",
+        "alphaAtlas": "assets/modular/environments/bamboo-shrine/platforms/source/atlas-alpha.png",
+        "prompt": "Create one original 16-bit pixel-art GAMEPLAY PLATFORM AND TILE ATLAS for the zone “Bamboo Shrine” in a side-scrolling game set in fictional late-feudal Japan during a zombie plague. STRICT technical layout: exactly 4 columns × 3 rows = exactly 12 equal cells, aligned to a regular invisible grid, one complete isolated side-view terrain piece centered in every cell, generous uniform empty gutters, nothing crossing cell boundaries, no extra objects. Entire background and gutters perfectly flat, uniform, exact chroma-key magenta #ff00ff. No grid lines, borders, frames, panels, shadows outside pieces, labels, numbers, text, logos, watermark, characters, creatures, weapons, buildings, or UI. Crisp hard-edged 16-bit pixel art, consistent 2D side-platform perspective and thickness, tileable-looking ends where appropriate, moonlit stone, moss, dark bamboo and infected root palette. Exact contents in reading order left-to-right, top-to-bottom: row 1: (1) central mossy stone-path floor tile with flat playable top, (2) left-edge mossy stone floor tile, (3) right-edge mossy stone floor tile, (4) cracked moss-covered stone floor variant. Row 2: (5) long suspended lashed-bamboo platform, (6) short suspended lashed-bamboo platform, (7) suspended gnarled-root platform, (8) suspended weathered torii-crossbeam platform. Row 3: (9) stone stair step cluster, (10) mossy stone slope rising right, (11) low purification-basin stone rim, (12) spore-pit hazard rim with hollow dark center and pale fungi. Original designs, no existing-game likeness.",
+        "items": [
+          "assets/modular/environments/bamboo-shrine/platforms/sol-pierre-centre.png",
+          "assets/modular/environments/bamboo-shrine/platforms/sol-pierre-gauche.png",
+          "assets/modular/environments/bamboo-shrine/platforms/sol-pierre-droite.png",
+          "assets/modular/environments/bamboo-shrine/platforms/sol-mousse-fissure.png",
+          "assets/modular/environments/bamboo-shrine/platforms/plateforme-bambou-longue.png",
+          "assets/modular/environments/bamboo-shrine/platforms/plateforme-bambou-courte.png",
+          "assets/modular/environments/bamboo-shrine/platforms/plateforme-racine.png",
+          "assets/modular/environments/bamboo-shrine/platforms/plateforme-torii.png",
+          "assets/modular/environments/bamboo-shrine/platforms/marche-pierre.png",
+          "assets/modular/environments/bamboo-shrine/platforms/pente-mousse.png",
+          "assets/modular/environments/bamboo-shrine/platforms/bord-bassin.png",
+          "assets/modular/environments/bamboo-shrine/platforms/fosse-spores.png"
+        ]
+      }
+    },
+    {
+      "id": "daimyo-castle",
+      "name": "Château du daimyō",
+      "lore": "Le cœur politique de Kurokawa, transformé en forteresse de quarantaine puis en nid de la peste du Yomi.",
+      "gameplay": "Zone finale compatible avec le passage latéral/FPS : extérieur fortifié au plan moyen et cadre intérieur contaminé au premier plan.",
+      "layers": {
+        "sky": {
+          "file": "assets/modular/environments/daimyo-castle/layers/sky.png",
+          "source": "assets/modular/environments/daimyo-castle/layers/source/sky-imagegen-raw.png",
+          "prompt": "Create an original 16-bit pixel-art environment layer for a game set in a fictional late-feudal Japanese castle during a zombie plague. This is ONLY the opaque SKY layer for the zone “Daimyo Castle”, designed for horizontal parallax in a side-scrolling game and to match a sinister first-person castle segment. Exact wide 16:9 composition. Show a stormy charcoal-indigo night sky, a smaller blood-orange moon high left, layered wind-torn clouds and a faint reddish glow near the low horizon. Keep the lower area simple for transparent castle layers to overlap. Absolutely no ground, mountain, hill, forest, tree, bamboo, castle, tower, roof, wall, shoji, torii, building, lantern, prop, character, creature, weapon, interface, logo, lettering, symbols, labels, watermark, border, panels, grid, transparency, checkerboard, or chroma-key background. Fully opaque edge to edge. Crisp hard-edged 16-bit pixel art, limited palette, no photographic softness. Original design, not based on any existing game asset."
+        },
+        "far": {
+          "file": "assets/modular/environments/daimyo-castle/layers/far.png",
+          "source": "assets/modular/environments/daimyo-castle/layers/source/far-imagegen-raw.png",
+          "prompt": "Create one original modular PARALLAX FAR-LAYER bitmap in crisp 16-bit pixel art for a side-scrolling game set near a fictional late-feudal Japanese daimyo castle during a zombie plague. Exact wide 16:9 composition. Show ONLY distant natural terrain: layered black-indigo mountain silhouettes, a dark conifer and deciduous forest ridge, narrow ravines, and thin reddish plague haze close to the lower horizon, occupying mainly the lower 45 percent with generous empty space above. The entire backdrop behind every visible pixel must be a perfectly flat, uniform, exact chroma-key magenta #ff00ff, including all four corners. Hard pixel edges and clean silhouettes, no antialias fringe, no cast shadow outside objects. Absolutely no castle, keep, tower, wall, roof, house, shrine, torii, road, stairs, bridge, lantern, fence, human-made structure, separate prop, character, creature, weapon, text, logo, labels, watermark, panels, borders, or grid. One continuous far-distance natural layer only; original design, not copied from any existing game."
+        },
+        "mid": {
+          "file": "assets/modular/environments/daimyo-castle/layers/mid.png",
+          "source": "assets/modular/environments/daimyo-castle/layers/source/mid-imagegen-raw.png",
+          "prompt": "Create one original modular PARALLAX MID-LAYER bitmap in crisp 16-bit pixel art for a side-scrolling game set in a fictional late-feudal Japanese daimyo castle during a zombie plague. Exact wide 16:9 composition. Build a coherent middle-distance castle architecture band along a common lower baseline: dark stone foundation, blackened plaster walls, ornate multi-tier tiled roof sections, one squat keep tower left, a fortified gate and cedar corridor center, shattered shoji openings and a smaller tower right, with sparse infected roots clinging to masonry. Keep clear gaps and door openings so the layer reads behind gameplay. Charcoal, indigo, aged cedar, bone-white plaster and restrained blood-red accents. The entire backdrop behind every visible pixel must be perfectly flat, uniform, exact chroma-key magenta #ff00ff, including all four corners. Hard pixel edges, clean silhouettes, no antialias fringe and no cast shadow outside objects. No sky, no distant mountain or forest, no ground gameplay platform, no loose prop sheet, no character, zombie, creature, weapon, text, clan mon, Japanese writing, logo, labels, watermark, panel divisions, border, or grid. One continuous architecture scenery layer only; original design, not copied from any existing game."
+        },
+        "near": {
+          "file": "assets/modular/environments/daimyo-castle/layers/near.png",
+          "source": "assets/modular/environments/daimyo-castle/layers/source/near-imagegen-raw.png",
+          "prompt": "Create one original modular PARALLAX NEAR-LAYER bitmap in crisp 16-bit pixel art for a side-scrolling game set in a fictional late-feudal Japanese daimyo castle during a zombie plague. Exact wide 16:9 composition. Show foreground framing ONLY around the outer edges and lowest 20 percent: dark cedar floor beams and cracked tatami fragments along parts of the bottom, heavy black lacquered posts at the left and right edges, torn shoji frame corners, a collapsed brazier edge, scattered roof-tile fragments, and a few thick infected roots entering from both sides. Preserve a broad empty central viewing area and avoid a solid full-width floor. Charcoal, black cedar, dull gold, dirty ivory, deep indigo and restrained blood-red palette. The entire backdrop behind every visible pixel must be perfectly flat, uniform, exact chroma-key magenta #ff00ff wherever no foreground object exists. Hard pixel edges, clean silhouettes, no antialias fringe and no cast shadows outside objects. No sky, mountain, exterior castle building, free-standing prop sheet, character, zombie, creature, weapon, text, clan crest, Japanese writing, logo, labels, watermark, panel divisions, border, or grid. One continuous interior foreground framing layer only; original design, not copied from any existing game."
+        }
+      },
+      "props": {
+        "sourceAtlas": "assets/modular/environments/daimyo-castle/props/source/atlas-imagegen-raw.png",
+        "alphaAtlas": "assets/modular/environments/daimyo-castle/props/source/atlas-alpha.png",
+        "prompt": "Create one original 16-bit pixel-art ASSET ATLAS for the zone “Daimyo Castle” in a side-scrolling and first-person game set in fictional late-feudal Japan during a zombie plague. STRICT technical layout: exactly 4 columns × 3 rows = exactly 12 equal cells, aligned to a regular invisible grid, with one complete isolated asset centered in every cell, generous uniform empty gutters, nothing crossing a cell boundary, no extra objects. Entire background and gutters perfectly flat, uniform, exact chroma-key magenta #ff00ff. Do not draw grid lines, borders, frames, panels, shadows, ground, labels, numbers, text, clan crests, Japanese writing, logos, watermarks, characters, creatures, weapons, or UI. Orthographic side-view game sprites, consistent scale within type, crisp hard-edged 16-bit pixel art, limited charcoal/black-cedar/bone-plaster/dull-gold/deep-red palette, clean silhouettes, no antialias fringe. Exact contents in reading order left-to-right, top-to-bottom: row 1: (1) small detached multi-tier castle tower section, (2) fortified cedar castle gate, (3) broken shoji wall section with no writing, (4) thick carved cedar support pillar. Row 2: (5) iron castle brazier with contained embers, (6) closed black-lacquer sliding door without crest, (7) empty display suit of samurai armor on a stand with no wearer and no weapon, (8) empty wooden weapon rack with no weapon. Row 3: (9) torn plain folding screen without painting or writing, (10) compact wooden stair unit, (11) tatami alcove module without decoration, (12) mass of infected deep-red roots from the dungeon. Original designs, no existing-game likeness.",
+        "items": [
+          "assets/modular/environments/daimyo-castle/props/tour-chateau.png",
+          "assets/modular/environments/daimyo-castle/props/porte-chateau.png",
+          "assets/modular/environments/daimyo-castle/props/mur-shoji.png",
+          "assets/modular/environments/daimyo-castle/props/pilier-cedre.png",
+          "assets/modular/environments/daimyo-castle/props/brasero-fer.png",
+          "assets/modular/environments/daimyo-castle/props/porte-laquee.png",
+          "assets/modular/environments/daimyo-castle/props/armure-vide.png",
+          "assets/modular/environments/daimyo-castle/props/ratelier-vide.png",
+          "assets/modular/environments/daimyo-castle/props/paravent-dechire.png",
+          "assets/modular/environments/daimyo-castle/props/escalier-bois.png",
+          "assets/modular/environments/daimyo-castle/props/alcove-tatami.png",
+          "assets/modular/environments/daimyo-castle/props/racines-donjon.png"
+        ]
+      },
+      "platforms": {
+        "sourceAtlas": "assets/modular/environments/daimyo-castle/platforms/source/atlas-imagegen-raw.png",
+        "alphaAtlas": "assets/modular/environments/daimyo-castle/platforms/source/atlas-alpha.png",
+        "prompt": "Create one original 16-bit pixel-art GAMEPLAY PLATFORM AND TILE ATLAS for the zone “Daimyo Castle” in a side-scrolling game set in fictional late-feudal Japan during a zombie plague. STRICT technical layout: exactly 4 columns × 3 rows = exactly 12 equal cells, aligned to a regular invisible grid, one complete isolated side-view terrain piece centered in every cell, generous uniform empty gutters, nothing crossing cell boundaries, no extra objects. Entire background and gutters perfectly flat, uniform, exact chroma-key magenta #ff00ff. No grid lines, borders, frames, panels, shadows outside pieces, labels, numbers, text, clan crests, Japanese writing, logos, watermark, characters, creatures, weapons, buildings, or UI. Crisp hard-edged 16-bit pixel art, consistent 2D side-platform perspective and thickness, tileable-looking ends where appropriate, dirty tatami, black cedar, dark ceramic roof tile, gray castle stone and deep-red infected root palette. Exact contents in reading order left-to-right, top-to-bottom: row 1: (1) central tatami floor tile with flat playable top, (2) left-edge tatami floor tile, (3) right-edge tatami floor tile, (4) blood-soiled torn tatami floor variant. Row 2: (5) long suspended cedar platform, (6) short suspended cedar platform, (7) suspended heavy ceiling-beam platform, (8) suspended curved ceramic roof-tile platform. Row 3: (9) compact castle stair step cluster, (10) rubble slope rising right, (11) low castle-stone ledge, (12) infected-root pit hazard rim with hollow dark center and no face. Original designs, no existing-game likeness.",
+        "items": [
+          "assets/modular/environments/daimyo-castle/platforms/sol-tatami-centre.png",
+          "assets/modular/environments/daimyo-castle/platforms/sol-tatami-gauche.png",
+          "assets/modular/environments/daimyo-castle/platforms/sol-tatami-droite.png",
+          "assets/modular/environments/daimyo-castle/platforms/sol-tatami-souille.png",
+          "assets/modular/environments/daimyo-castle/platforms/plateforme-cedre-longue.png",
+          "assets/modular/environments/daimyo-castle/platforms/plateforme-cedre-courte.png",
+          "assets/modular/environments/daimyo-castle/platforms/plateforme-poutre.png",
+          "assets/modular/environments/daimyo-castle/platforms/plateforme-toit-tuile.png",
+          "assets/modular/environments/daimyo-castle/platforms/marche-chateau.png",
+          "assets/modular/environments/daimyo-castle/platforms/pente-decombres.png",
+          "assets/modular/environments/daimyo-castle/platforms/bord-pierre.png",
+          "assets/modular/environments/daimyo-castle/platforms/fosse-racines.png"
+        ]
+      }
+    }
+  ]
+}

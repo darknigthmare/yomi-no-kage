@@ -1,0 +1,166 @@
+{
+  "schema": 1,
+  "source": "assets/modular/weapons/atlases/giant.png",
+  "grid": {
+    "columns": 4,
+    "rows": 3
+  },
+  "sprites": [
+    {
+      "id": "poutre-massue-kurogane",
+      "file": "poutre-massue-kurogane.png",
+      "sourceCell": [
+        0,
+        0
+      ],
+      "size": [
+        318,
+        332
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "joug-tranchant-aka-ushi",
+      "file": "joug-tranchant-aka-ushi.png",
+      "sourceCell": [
+        1,
+        0
+      ],
+      "size": [
+        308,
+        256
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "belier-bambou-take-mori",
+      "file": "belier-bambou-take-mori.png",
+      "sourceCell": [
+        2,
+        0
+      ],
+      "size": [
+        306,
+        312
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "fleau-cloche-enjin",
+      "file": "fleau-cloche-enjin.png",
+      "sourceCell": [
+        3,
+        0
+      ],
+      "size": [
+        296,
+        311
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "ancre-riviere-numa",
+      "file": "ancre-riviere-numa.png",
+      "sourceCell": [
+        0,
+        1
+      ],
+      "size": [
+        269,
+        321
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "encensoir-spores-kinoko",
+      "file": "encensoir-spores-kinoko.png",
+      "sourceCell": [
+        1,
+        1
+      ],
+      "size": [
+        242,
+        290
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "bouclier-carapace-shiro",
+      "file": "bouclier-carapace-shiro.png",
+      "sourceCell": [
+        2,
+        1
+      ],
+      "size": [
+        243,
+        313
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "chaines-menottes-nuno",
+      "file": "chaines-menottes-nuno.png",
+      "sourceCell": [
+        3,
+        1
+      ],
+      "size": [
+        309,
+        201
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "marteau-carriere-ganseki",
+      "file": "marteau-carriere-ganseki.png",
+      "sourceCell": [
+        0,
+        2
+      ],
+      "size": [
+        283,
+        349
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "nodachi-geant-yomi",
+      "file": "nodachi-geant-yomi.png",
+      "sourceCell": [
+        1,
+        2
+      ],
+      "size": [
+        348,
+        319
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "maillet-tambour-geant",
+      "file": "maillet-tambour-geant.png",
+      "sourceCell": [
+        2,
+        2
+      ],
+      "size": [
+        296,
+        333
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "pavois-siege-geant",
+      "file": "pavois-siege-geant.png",
+      "sourceCell": [
+        3,
+        2
+      ],
+      "size": [
+        304,
+        343
+      ],
+      "nonEmpty": true
+    }
+  ]
+}

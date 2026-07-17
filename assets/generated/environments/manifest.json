@@ -1,0 +1,194 @@
+{
+  "pack": "Yomi no Kage — Décors du fléau",
+  "version": 1,
+  "langue": "fr",
+  "date_generation": "2026-07-17",
+  "outil": "OpenAI imagegen intégré",
+  "mode_generation": "Un appel imagegen distinct par asset",
+  "direction_artistique": {
+    "epoque": "Japon, ère Kan'ei, 1638",
+    "style": "Pixel art 16-bit haute finition, gros pixels nets et silhouettes lisibles",
+    "palette": [
+      "noir d'encre",
+      "indigo profond",
+      "rouge laque",
+      "ivoire os",
+      "vert maladif",
+      "orange braise"
+    ],
+    "ton": "Horreur sobre, historique et non graphique",
+    "interdits": [
+      "texte ou écriture",
+      "interface",
+      "logo ou filigrane",
+      "objets modernes",
+      "personnages visibles"
+    ]
+  },
+  "assets": [
+    {
+      "id": "01-kurokawa-burning-village",
+      "nom": "Kurokawa en cendres",
+      "type": "arriere_plan_2d_lateral",
+      "usage": "Village d'ouverture et zone de combat latérale. La route dégagée du tiers inférieur accueille le joueur, les ennemis et les collisions.",
+      "lore": "Kurokawa est le premier village placé sous quarantaine par le shogun. Les habitants ont fui pendant la nuit, laissant les foyers et les réserves aux flammes afin de ralentir la propagation du fléau.",
+      "parallax": {
+        "actif": true,
+        "note": "L'image finale est aplatie, mais les plans ont été composés pour permettre un découpage manuel propre.",
+        "plans_suggeres": [
+          {
+            "id": "lointain",
+            "contenu": "Ciel, fumée froide et silhouettes de montagnes",
+            "vitesse_relative": 0.15
+          },
+          {
+            "id": "milieu",
+            "contenu": "Toits, maisons incendiées, tour de guet et arbres",
+            "vitesse_relative": 0.45
+          },
+          {
+            "id": "proche",
+            "contenu": "Route, barrières calcinées, roue, bottes de paille et braises",
+            "vitesse_relative": 0.8
+          }
+        ]
+      },
+      "dimensions": {
+        "source": {
+          "largeur": 1672,
+          "hauteur": 941
+        },
+        "final": {
+          "largeur": 1664,
+          "hauteur": 936,
+          "ratio": "16:9"
+        },
+        "traitement_final": "Recadrage central de 4 px à gauche et à droite, 2 px en haut et 3 px en bas, sans interpolation."
+      },
+      "paths": {
+        "source": "assets/generated/environments/01-kurokawa-burning-village-source.png",
+        "final": "assets/generated/environments/01-kurokawa-burning-village.png"
+      },
+      "prompt_imagegen": [
+        "Use case: stylized-concept",
+        "Asset type: 2D side-scrolling game environment background, exact 16:9 landscape composition",
+        "Primary request: Kurokawa, a small Japanese feudal village at night after the first hours of a zombie plague, burning and collapsing into ash, designed as a readable parallax background for a side-scrolling action game",
+        "Scene/backdrop: Japan, Kan'ei era, year 1638; distant indigo mountain silhouettes and a smoke-stained night sky, middle layer of tiled minka rooftops, watchtower and leafless persimmon trees, foreground road edges with charred timber, embers and broken fences; clear horizontal ground line and strong separation between far, middle and near layers",
+        "Subject: environment only; period-authentic wooden houses, clay roof tiles, rain gutters, wells, rice storehouses, straw bundles and small fires; signs of hurried abandonment but no visible people, zombies, bodies or silhouettes",
+        "Style/medium: premium 16-bit pixel art game background, deliberate chunky square pixels, crisp hard-edged clusters, limited-color dithering, hand-authored sprite-game finish, not smooth digital painting, not 3D",
+        "Composition/framing: exact 16:9 wide establishing shot, side-on orthographic gameplay view, horizontally navigable scene, no extreme perspective; distinct parallax bands with uncluttered traversal/readability zone through the lower third; do not divide into panels",
+        "Lighting/mood: moonless nocturne, restrained horror, ember glow through dense smoke, quiet dread rather than gore",
+        "Color palette: ink black, deep indigo, lacquer red, bone ivory, sickly green accents, ember orange; no bright modern colors",
+        "Materials/textures: charred cedar, sooty plaster, old straw, wet earth, roof tile, fine ash",
+        "Constraints: historically plausible Kan'ei 1638 Japan; no characters, no creatures, no corpses, no modern objects, no firearms, no electricity; no text, signage, writing, kanji, UI, frame, border, logo, watermark; no gradients that blur the pixel-art pixels; every pixel edge crisp and intentional"
+      ]
+    },
+    {
+      "id": "02-bamboo-shrine",
+      "nom": "Le sanctuaire des bambous contaminés",
+      "type": "arriere_plan_2d_lateral",
+      "usage": "Zone latérale surnaturelle centrée sur la purification. Le chemin de pierre reste lisible pour le combat et conduit naturellement vers l'autel.",
+      "lore": "Ce sanctuaire rural protégeait autrefois la route de montagne. Depuis l'épidémie, ses racines absorbent la souillure des morts et relâchent des spores vertes sous la lune rouge.",
+      "parallax": {
+        "actif": true,
+        "note": "L'image finale est aplatie, mais les silhouettes et contrastes séparent volontairement les profondeurs.",
+        "plans_suggeres": [
+          {
+            "id": "lointain",
+            "contenu": "Lune rouge, brume indigo et bambous en silhouette",
+            "vitesse_relative": 0.12
+          },
+          {
+            "id": "milieu",
+            "contenu": "Allée de torii, forêt de bambous et bâtiment du sanctuaire",
+            "vitesse_relative": 0.42
+          },
+          {
+            "id": "proche",
+            "contenu": "Chemin de pierre, bassin, lanternes, racines et feuillage",
+            "vitesse_relative": 0.78
+          }
+        ]
+      },
+      "dimensions": {
+        "source": {
+          "largeur": 1672,
+          "hauteur": 941
+        },
+        "final": {
+          "largeur": 1664,
+          "hauteur": 936,
+          "ratio": "16:9"
+        },
+        "traitement_final": "Recadrage central de 4 px à gauche et à droite, 2 px en haut et 3 px en bas, sans interpolation."
+      },
+      "paths": {
+        "source": "assets/generated/environments/02-bamboo-shrine-source.png",
+        "final": "assets/generated/environments/02-bamboo-shrine.png"
+      },
+      "prompt_imagegen": [
+        "Use case: stylized-concept",
+        "Asset type: 2D side-scrolling game environment background, exact 16:9 landscape composition",
+        "Primary request: an abandoned Shinto shrine and torii path swallowed by a contaminated bamboo grove during a zombie plague, designed as a readable parallax background for a side-scrolling action game",
+        "Scene/backdrop: Japan, Kan'ei era, year 1638; distant layered bamboo silhouettes beneath an enormous blood-red moon, middle layer of leaning bamboo trunks and weathered vermilion torii gates, foreground stone approach with moss, broken shimenawa-free fencing, small purification basin, stone lanterns and creeping infected roots; clear horizontal traversal path",
+        "Subject: environment only; authentic modest rural shrine architecture, old cedar, stone steps, bamboo leaves, sickly fungal growth and sealed offering alcove; supernatural contamination is subtle and biological, never modern or science-fiction",
+        "Style/medium: premium 16-bit pixel art game background, deliberate chunky square pixels, crisp hard-edged clusters, limited-color dithering, hand-authored sprite-game finish, not smooth digital painting, not 3D",
+        "Composition/framing: exact 16:9 wide side-on orthographic gameplay view, horizontally navigable; three strongly separated parallax bands: moon and mist far layer, bamboo and torii middle layer, stones and foliage near layer; uncluttered readable lower-third path; do not divide into panels",
+        "Lighting/mood: red moon backlight, cold indigo mist, sparse sick-green bioluminescent spores, solemn restrained horror, no gore",
+        "Color palette: ink black, deep indigo, lacquer red, bone ivory, sickly green, tiny ember accents; no bright modern colors",
+        "Materials/textures: old bamboo, mossy granite, flaking vermilion lacquer, cedar, damp soil, papery leaves",
+        "Constraints: historically plausible Kan'ei 1638 Japan; no characters, no creatures, no corpses, no modern objects, no electricity; no text, signage, writing, kanji, UI, frame, border, logo, watermark; no gradients that blur the pixel-art pixels; every pixel edge crisp and intentional"
+      ]
+    },
+    {
+      "id": "03-daimyo-castle-interior",
+      "nom": "Le donjon du daimyō",
+      "type": "arriere_plan_fps",
+      "usage": "Décor frontal pour une séquence FPS rétro. Le couloir central, les plans muraux et les alcôves latérales servent de référence visuelle aux murs raycastés et aux rencontres.",
+      "lore": "Le daimyō contaminé a fait sceller le cœur du château. Les racines du fléau ont gagné les fondations, mais les portes laquées et la discipline géométrique du donjon trahissent encore son ancien pouvoir.",
+      "parallax": {
+        "actif": false,
+        "raison": "La perspective frontale et le point de fuite central sont destinés au mode FPS."
+      },
+      "fps": {
+        "point_de_fuite": "centré",
+        "hauteur_camera": "hauteur humaine",
+        "voie_jouable": "axe central dégagé",
+        "zones_de_rencontre": [
+          "alcôve gauche",
+          "alcôve droite",
+          "porte scellée au fond"
+        ]
+      },
+      "dimensions": {
+        "source": {
+          "largeur": 1672,
+          "hauteur": 941
+        },
+        "final": {
+          "largeur": 1664,
+          "hauteur": 936,
+          "ratio": "16:9"
+        },
+        "traitement_final": "Recadrage central de 4 px à gauche et à droite, 2 px en haut et 3 px en bas, sans interpolation."
+      },
+      "paths": {
+        "source": "assets/generated/environments/03-daimyo-castle-interior-source.png",
+        "final": "assets/generated/environments/03-daimyo-castle-interior.png"
+      },
+      "prompt_imagegen": [
+        "Use case: stylized-concept",
+        "Asset type: retro first-person dungeon game environment background, exact 16:9 landscape composition",
+        "Primary request: the infected inner keep of a Japanese daimyo castle, a dark navigable corridor-room composed for a Doom-style first-person encounter",
+        "Scene/backdrop: Japan, Kan'ei era, year 1638; symmetrical wooden castle interior seen from standing eye height, central corridor receding toward a sealed lacquered door, side alcoves, heavy cedar pillars, low ceiling beams, raised tatami rooms, cracked plaster walls, torn blank shoji, stone foundation and narrow defensive passages; subtle sickly roots invade from floor cracks",
+        "Subject: environment only; period-authentic feudal castle dungeon architecture and sparse props such as unmarked armor stands, braziers, rope bundles and broken screens; absolutely no visible weapon, hands, character, zombie, corpse or silhouette",
+        "Style/medium: premium 16-bit pixel art for a Doom-like raycast/FPS sequence, deliberate chunky square pixels, crisp hard-edged clusters, limited-color dithering, hand-authored retro game finish, not smooth digital painting, not 3D render",
+        "Composition/framing: exact 16:9 first-person perspective, camera centered at human eye level; strong straight corridor vanishing point, readable wall planes and floor grid, open center lane for gameplay, left and right encounter recesses; one continuous scene, no panels, no HUD",
+        "Lighting/mood: dim braziers cast lacquer-red and ember pools, deep indigo shadows, pale bone moonlight through torn shoji, restrained sick-green infection glow, oppressive silent horror without gore",
+        "Color palette: ink black, deep indigo, lacquer red, bone ivory, sickly green, ember orange",
+        "Materials/textures: scorched cedar, aged tatami, wet stone, cracked lime plaster, torn paper, dulled lacquer",
+        "Constraints: historically plausible Kan'ei 1638 Japan; no modern objects, no electricity, no European castle elements, no fantasy armor; no text, signage, writing, kanji, UI, crosshair, weapon, hands, frame, border, logo, watermark; no gradients that blur the pixel-art pixels; every pixel edge crisp and intentional"
+      ]
+    }
+  ]
+}

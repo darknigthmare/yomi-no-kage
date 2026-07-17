@@ -1,0 +1,1088 @@
+{
+  "schema": 1,
+  "category": "miniboss",
+  "count": 20,
+  "generationTool": "OpenAI ImageGen built-in — un appel distinct",
+  "generationPolicy": "Un appel ImageGen distinct par personnage. Les armes et accessoires de combat restent des sprites séparés et chaque weaponId résout une entrée de weapons.json.",
+  "animationStandard": {
+    "masterGrid": {
+      "columns": 6,
+      "rows": 5,
+      "totalPoses": 30
+    },
+    "rows": [
+      "idle",
+      "move",
+      "attack",
+      "hurt",
+      "death"
+    ],
+    "framesPerRow": 6,
+    "facing": "left",
+    "weaponsBakedIntoBody": false,
+    "sourceBackground": "#ff00ff",
+    "finalFormat": "PNG RGBA"
+  },
+  "entries": [
+    {
+      "id": "mb-01-gunso-croc-fer",
+      "name": "Gunsō Croc de Fer",
+      "subtitle": "Capitaine ashigaru",
+      "role": "Garde et contre",
+      "lore": [
+        "Le gunsō ferma la route de Kurokawa jusqu’à ce que la fièvre gagne toute sa section.",
+        "Même contaminé, il maintient sa formation et punit quiconque franchit la portée de sa lance."
+      ],
+      "stats": {
+        "hp": 260,
+        "damage": 24,
+        "speed": 0.92,
+        "posture": 125
+      },
+      "pattern": "Garde haute, estoc retardé et contre immédiat après une attaque bloquée.",
+      "phases": [
+        {
+          "name": "Ligne fermée",
+          "health": "100–51 %",
+          "behaviour": "Estocs mesurés et pas de garde."
+        },
+        {
+          "name": "Croc brisé",
+          "health": "50–0 %",
+          "behaviour": "Enchaînements plus courts et charge d’épaule."
+        }
+      ],
+      "weaponId": "kikuchi-yari",
+      "nom": "Gunsō Croc de Fer",
+      "gameplay": "260 PV, 24 dégâts, vitesse 0.92. Garde haute, estoc retardé et contre immédiat après une attaque bloquée.",
+      "weapon": {
+        "id": "kikuchi-yari",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/miniboss/mb-01-gunso-croc-fer",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/miniboss/mb-01-gunso-croc-fer/source-master.png",
+        "master": "assets/modular/characters/miniboss/mb-01-gunso-croc-fer/master.png",
+        "sprite": "assets/modular/characters/miniboss/mb-01-gunso-croc-fer/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/miniboss/mb-01-gunso-croc-fer/sheets/idle.png",
+          "move": "assets/modular/characters/miniboss/mb-01-gunso-croc-fer/sheets/move.png",
+          "attack": "assets/modular/characters/miniboss/mb-01-gunso-croc-fer/sheets/attack.png",
+          "hurt": "assets/modular/characters/miniboss/mb-01-gunso-croc-fer/sheets/hurt.png",
+          "death": "assets/modular/characters/miniboss/mb-01-gunso-croc-fer/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/miniboss/mb-01-gunso-croc-fer/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production animation master sprite sheet for one modular 2D miniboss in Yomi no Kage\nPrimary request: create exactly one original miniboss character, the \"Gunsō Croc de Fer\", an infected ashigaru field captain from Kan’ei-era Japan, 1638. He has a compact veteran build, a low flared black jingasa with one broken rim, layered indigo tatami armor, lacquer-red command cords, a bone-colored jaw guard, asymmetrical shoulder plates and restrained sick-green contamination visible at the eyes and armor seams. He is stern, disciplined and physically corrupted, but with no graphic gore.\nAnimation layout: ONE SINGLE MASTER SHEET arranged as an exact invisible grid of 6 columns by 5 rows, exactly 30 equal cells, read left to right. Row 1 contains six coherent idle frames with subtle breathing. Row 2 contains six coherent movement frames for a heavy forward march. Row 3 contains six coherent EMPTY-HANDED attack frames: wind-up, forward body strike, recovery. Row 4 contains six coherent hurt/recoil frames. Row 5 contains six coherent death/collapse frames ending prone. Do not draw any grid lines, cell borders, panels, labels, numbers or separators.\nCharacter consistency: every cell depicts the exact same single character, identical face, helmet, armor, colors, proportions and scale. Strict orthographic side view facing LEFT in all 30 cells. Full body and feet visible in every cell, centered inside each invisible cell with generous internal padding, same ground baseline and camera height, no cropping, no overlap into neighboring cells.\nWeapon modularity: BOTH HANDS COMPLETELY EMPTY in every frame. Absolutely no weapon, blade, polearm, bow, firearm, shield, tool, object, scabbard, holster or carried prop anywhere on the body or in the sheet.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering, readable at small gameplay scale.\nColor palette: ink black, deep indigo, lacquer red, aged bone, restrained sick green and tiny ember accents. Do not use magenta or pink in the character.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background, uniform edge to edge and throughout all spacing between cells.\nConstraints: background must contain no shadow, gradient, texture, floor plane, reflection, glow, particles or lighting variation. No cast/contact shadows. No scenery, architecture, ground, extra character, duplicate outside the 30 cells, text, logo, watermark or UI. Historically grounded 1638 Japanese clothing and armor, no modern elements, no fantasy spikes, no graphic gore.",
+      "generationTool": "OpenAI ImageGen built-in — un appel distinct"
+    },
+    {
+      "id": "mb-02-ronin-kurogane",
+      "name": "Rōnin de Kurogane",
+      "subtitle": "Duelliste sans maître",
+      "role": "Traque et duel",
+      "lore": [
+        "Ce rōnin vendit sa lame aux convois de quarantaine avant de disparaître dans les cols.",
+        "La peste a conservé son instinct du duel, mais effacé le nom du maître qu’il cherche encore."
+      ],
+      "stats": {
+        "hp": 230,
+        "damage": 31,
+        "speed": 1.18,
+        "posture": 105
+      },
+      "pattern": "Marche lente, feinte de dégainé puis coupe longue qui traverse la garde.",
+      "phases": [
+        {
+          "name": "Défi muet",
+          "health": "100–46 %",
+          "behaviour": "Attend une ouverture et riposte."
+        },
+        {
+          "name": "Acier sans nom",
+          "health": "45–0 %",
+          "behaviour": "Deux dashs suivis d’une coupe verticale."
+        }
+      ],
+      "weaponId": "odachi",
+      "nom": "Rōnin de Kurogane",
+      "gameplay": "230 PV, 31 dégâts, vitesse 1.18. Marche lente, feinte de dégainé puis coupe longue qui traverse la garde.",
+      "weapon": {
+        "id": "odachi",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/miniboss/mb-02-ronin-kurogane",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/miniboss/mb-02-ronin-kurogane/source-master.png",
+        "master": "assets/modular/characters/miniboss/mb-02-ronin-kurogane/master.png",
+        "sprite": "assets/modular/characters/miniboss/mb-02-ronin-kurogane/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/miniboss/mb-02-ronin-kurogane/sheets/idle.png",
+          "move": "assets/modular/characters/miniboss/mb-02-ronin-kurogane/sheets/move.png",
+          "attack": "assets/modular/characters/miniboss/mb-02-ronin-kurogane/sheets/attack.png",
+          "hurt": "assets/modular/characters/miniboss/mb-02-ronin-kurogane/sheets/hurt.png",
+          "death": "assets/modular/characters/miniboss/mb-02-ronin-kurogane/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/miniboss/mb-02-ronin-kurogane/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production animation master sprite sheet for one modular 2D miniboss in Yomi no Kage\nPrimary request: create exactly one original miniboss character, the \"Rōnin de Kurogane\", an infected masterless samurai from Kan’ei-era Japan, 1638. He is tall and unnaturally lean, with a torn dark-indigo haori, narrow black dō armor beneath it, a weathered half-broken woven kasa, long bound hair, aged-bone forearm wraps, lacquer-red repair stitching and restrained sick-green contamination around one eye and the ribs. His silhouette is stooped, wary and duelist-like, with no graphic gore.\nAnimation layout: ONE SINGLE MASTER SHEET arranged as an exact invisible grid of 6 columns by 5 rows, exactly 30 equal cells, read left to right. Row 1 contains six coherent idle frames with controlled breathing. Row 2 contains six coherent movement frames for a low stalking walk. Row 3 contains six coherent EMPTY-HANDED attack frames using a swift drawing-like body motion and palm strike, but with no weapon. Row 4 contains six coherent hurt/recoil frames. Row 5 contains six coherent death/collapse frames ending prone. Do not draw grid lines, cell borders, panels, labels, numbers or separators.\nCharacter consistency: every cell depicts the exact same single character, identical face, hat, clothing, armor, colors, proportions and scale. Strict orthographic side view facing LEFT in all 30 cells. Full body and feet visible in every cell, centered inside each invisible cell with generous internal padding, same ground baseline and camera height, no cropping, no overlap into neighboring cells.\nWeapon modularity: BOTH HANDS COMPLETELY EMPTY in every frame. Absolutely no weapon, blade, polearm, bow, firearm, shield, tool, object, scabbard, holster or carried prop anywhere on the body or in the sheet.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering, readable at small gameplay scale.\nColor palette: ink black, deep indigo, muted lacquer red, aged bone, restrained sick green and cold steel-gray accents. Do not use magenta or pink in the character.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background, uniform edge to edge and throughout all spacing between cells.\nConstraints: background must contain no shadow, gradient, texture, floor plane, reflection, glow, particles or lighting variation. No cast/contact shadows. No scenery, architecture, ground, extra character, duplicate outside the 30 cells, text, logo, watermark or UI. Historically grounded 1638 Japanese clothing and armor, no modern elements, no fantasy spikes, no graphic gore.",
+      "generationTool": "OpenAI ImageGen built-in — un appel distinct"
+    },
+    {
+      "id": "mb-03-sohei-cent-prieres",
+      "name": "Sōhei aux Cent Prières",
+      "subtitle": "Moine guerrier corrompu",
+      "role": "Contrôle de zone",
+      "lore": [
+        "Il récita cent prières devant la cloche de Kurotaki sans parvenir à contenir la souillure.",
+        "Chaque nœud de sa robe marque désormais un frère tombé qu’il croit encore protéger."
+      ],
+      "stats": {
+        "hp": 310,
+        "damage": 27,
+        "speed": 0.82,
+        "posture": 155
+      },
+      "pattern": "Balayages circulaires, recul discipliné et frappe au sol à large portée.",
+      "phases": [
+        {
+          "name": "Cercle des sutras",
+          "health": "100–56 %",
+          "behaviour": "Maintient Akio à distance."
+        },
+        {
+          "name": "Prière rompue",
+          "health": "55–0 %",
+          "behaviour": "Balayages doublés et frappe descendante."
+        }
+      ],
+      "weaponId": "naginata",
+      "nom": "Sōhei aux Cent Prières",
+      "gameplay": "310 PV, 27 dégâts, vitesse 0.82. Balayages circulaires, recul discipliné et frappe au sol à large portée.",
+      "weapon": {
+        "id": "naginata",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/miniboss/mb-03-sohei-cent-prieres",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/miniboss/mb-03-sohei-cent-prieres/source-master.png",
+        "master": "assets/modular/characters/miniboss/mb-03-sohei-cent-prieres/master.png",
+        "sprite": "assets/modular/characters/miniboss/mb-03-sohei-cent-prieres/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/miniboss/mb-03-sohei-cent-prieres/sheets/idle.png",
+          "move": "assets/modular/characters/miniboss/mb-03-sohei-cent-prieres/sheets/move.png",
+          "attack": "assets/modular/characters/miniboss/mb-03-sohei-cent-prieres/sheets/attack.png",
+          "hurt": "assets/modular/characters/miniboss/mb-03-sohei-cent-prieres/sheets/hurt.png",
+          "death": "assets/modular/characters/miniboss/mb-03-sohei-cent-prieres/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/miniboss/mb-03-sohei-cent-prieres/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production animation master sprite sheet for one modular 2D miniboss in Yomi no Kage\nPrimary request: create exactly one original miniboss character, the \"Sōhei aux Cent Prières\", a corrupted warrior monk from Kan’ei-era Japan, 1638. He has a broad powerful build, a bone-white wrapped head cowl, layered soot-black and deep-indigo temple robes, short lacquered lamellar waist guards, oversized wrapped forearms, a red knotted shoulder mantle and restrained sick-green contamination branching across the shaved side of his face. His silhouette is grounded, ritualistic and imposing, with no graphic gore.\nAnimation layout: ONE SINGLE MASTER SHEET arranged as an exact invisible grid of 6 columns by 5 rows, exactly 30 equal cells, read left to right. Row 1 contains six coherent idle frames with slow ritual breathing. Row 2 contains six coherent movement frames for a deliberate monk’s stride. Row 3 contains six coherent EMPTY-HANDED attack frames using a sweeping martial-arts body turn and double-palm strike. Row 4 contains six coherent hurt/recoil frames. Row 5 contains six coherent death/collapse frames ending prone. Do not draw grid lines, cell borders, panels, labels, numbers or separators.\nCharacter consistency: every cell depicts the exact same single character, identical face, cowl, robes, armor, colors, proportions and scale. Strict orthographic side view facing LEFT in all 30 cells. Full body and feet visible in every cell, centered inside each invisible cell with generous internal padding, same ground baseline and camera height, no cropping, no overlap into neighboring cells.\nWeapon modularity: BOTH HANDS COMPLETELY EMPTY in every frame. Absolutely no weapon, blade, polearm, bow, firearm, shield, prayer beads, bell, tool, object, scabbard, holster or carried prop anywhere on the body or in the sheet.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering, readable at small gameplay scale.\nColor palette: ink black, deep indigo, aged bone, lacquer red, restrained sick green and muted bronze accents. Do not use magenta or pink in the character.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background, uniform edge to edge and throughout all spacing between cells.\nConstraints: background must contain no shadow, gradient, texture, floor plane, reflection, glow, particles or lighting variation. No cast/contact shadows. No scenery, architecture, ground, extra character, duplicate outside the 30 cells, text, logo, watermark or UI. Historically grounded 1638 Japanese clothing and armor, no modern elements, no fantasy spikes, no graphic gore.",
+      "generationTool": "OpenAI ImageGen built-in — un appel distinct"
+    },
+    {
+      "id": "mb-04-miko-tsukikage",
+      "name": "Miko de Tsukikage",
+      "subtitle": "Gardienne du sanctuaire lunaire",
+      "role": "Affaiblissement rituel",
+      "lore": [
+        "La miko resta seule pour sceller les pavillons du sanctuaire de Tsukikage.",
+        "Son chant s’est changé en souffle malade qui affaiblit les vivants à chaque pas."
+      ],
+      "stats": {
+        "hp": 205,
+        "damage": 20,
+        "speed": 1.06,
+        "posture": 90
+      },
+      "pattern": "Glisse hors de portée, applique une marque puis frappe pendant son déclenchement.",
+      "phases": [
+        {
+          "name": "Voile lunaire",
+          "health": "100–51 %",
+          "behaviour": "Déplacements espacés et marques lentes."
+        },
+        {
+          "name": "Éclipse malade",
+          "health": "50–0 %",
+          "behaviour": "Deux marques simultanées et ruée courte."
+        }
+      ],
+      "weaponId": "shakujo",
+      "nom": "Miko de Tsukikage",
+      "gameplay": "205 PV, 20 dégâts, vitesse 1.06. Glisse hors de portée, applique une marque puis frappe pendant son déclenchement.",
+      "weapon": {
+        "id": "shakujo",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/miniboss/mb-04-miko-tsukikage",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/miniboss/mb-04-miko-tsukikage/source-master.png",
+        "master": "assets/modular/characters/miniboss/mb-04-miko-tsukikage/master.png",
+        "sprite": "assets/modular/characters/miniboss/mb-04-miko-tsukikage/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/miniboss/mb-04-miko-tsukikage/sheets/idle.png",
+          "move": "assets/modular/characters/miniboss/mb-04-miko-tsukikage/sheets/move.png",
+          "attack": "assets/modular/characters/miniboss/mb-04-miko-tsukikage/sheets/attack.png",
+          "hurt": "assets/modular/characters/miniboss/mb-04-miko-tsukikage/sheets/hurt.png",
+          "death": "assets/modular/characters/miniboss/mb-04-miko-tsukikage/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/miniboss/mb-04-miko-tsukikage/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production animation master sprite sheet for one modular 2D miniboss in Yomi no Kage\nPrimary request: create exactly one original miniboss character, the \"Miko de Tsukikage\", an infected shrine guardian from Kan’ei-era Japan, 1638. She has a tall slender silhouette, very long tied black hair secured by an aged-bone comb, a weathered white kosode with broad but controlled sleeves, deep lacquer-red hakama, an indigo sleeveless ritual over-vest with a crescent-shaped stitched motif, dark forearm bindings and restrained sick-green contamination around the eyes and fingertips. She is opaque, physical and solemn, with no spectral smoke and no graphic gore.\nAnimation layout: ONE SINGLE MASTER SHEET arranged as an exact invisible grid of 6 columns by 5 rows, exactly 30 equal cells, read left to right. Row 1 contains six coherent idle frames with subtle breathing and sleeve movement. Row 2 contains six coherent movement frames for a measured gliding step while feet remain grounded. Row 3 contains six coherent EMPTY-HANDED attack frames using ritual hand signs and a forceful double-hand thrust, with no emitted effect. Row 4 contains six coherent hurt/recoil frames. Row 5 contains six coherent death/collapse frames ending prone. Do not draw grid lines, cell borders, panels, labels, numbers or separators.\nCharacter consistency: every cell depicts the exact same single character, identical face, hair, garments, colors, proportions and scale. Strict orthographic side view facing LEFT in all 30 cells. Full body and feet visible in every cell, centered inside each invisible cell with generous internal padding, same ground baseline and camera height, no cropping, no overlap into neighboring cells.\nWeapon modularity: BOTH HANDS COMPLETELY EMPTY in every frame. Absolutely no weapon, blade, polearm, bow, firearm, shield, bell, ofuda, gohei, fan, tool, object, scabbard, holster or carried prop anywhere on the body or in the sheet.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering, readable at small gameplay scale.\nColor palette: ink black, aged bone-white, deep indigo, lacquer red and restrained sick green. Do not use magenta or pink in the character.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background, uniform edge to edge and throughout all spacing between cells.\nConstraints: background must contain no shadow, gradient, texture, floor plane, reflection, glow, mist, aura, particles or lighting variation. No cast/contact shadows. No scenery, architecture, ground, extra character, duplicate outside the 30 cells, text, logo, watermark or UI. Historically grounded 1638 Japanese garments, no modern elements, no fantasy accessories, no graphic gore.",
+      "generationTool": "OpenAI ImageGen built-in — un appel distinct"
+    },
+    {
+      "id": "mb-05-yamabushi-akaoni",
+      "name": "Yamabushi Akaoni",
+      "subtitle": "Ascète de la montagne rouge",
+      "role": "Charge et brise-garde",
+      "lore": [
+        "Akaoni escortait les pèlerins par les sentiers où les premiers infectés furent brûlés.",
+        "La fumée du charnier a gonflé son corps et transformé ses exercices en charges furieuses."
+      ],
+      "stats": {
+        "hp": 345,
+        "damage": 34,
+        "speed": 0.78,
+        "posture": 175
+      },
+      "pattern": "Charge télégraphiée, coup lourd vertical et saisie si la garde cède.",
+      "phases": [
+        {
+          "name": "Pas du tengu",
+          "health": "100–61 %",
+          "behaviour": "Charges uniques faciles à lire."
+        },
+        {
+          "name": "Visage rouge",
+          "health": "60–0 %",
+          "behaviour": "Retour de charge et coup de tête."
+        }
+      ],
+      "weaponId": "kanabo",
+      "nom": "Yamabushi Akaoni",
+      "gameplay": "345 PV, 34 dégâts, vitesse 0.78. Charge télégraphiée, coup lourd vertical et saisie si la garde cède.",
+      "weapon": {
+        "id": "kanabo",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/miniboss/mb-05-yamabushi-akaoni",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/miniboss/mb-05-yamabushi-akaoni/source-master.png",
+        "master": "assets/modular/characters/miniboss/mb-05-yamabushi-akaoni/master.png",
+        "sprite": "assets/modular/characters/miniboss/mb-05-yamabushi-akaoni/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/miniboss/mb-05-yamabushi-akaoni/sheets/idle.png",
+          "move": "assets/modular/characters/miniboss/mb-05-yamabushi-akaoni/sheets/move.png",
+          "attack": "assets/modular/characters/miniboss/mb-05-yamabushi-akaoni/sheets/attack.png",
+          "hurt": "assets/modular/characters/miniboss/mb-05-yamabushi-akaoni/sheets/hurt.png",
+          "death": "assets/modular/characters/miniboss/mb-05-yamabushi-akaoni/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/miniboss/mb-05-yamabushi-akaoni/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production animation master sprite sheet for one modular 2D miniboss in Yomi no Kage\nPrimary request: create exactly one original miniboss character, the \"Yamabushi Akaoni\", a plague-twisted mountain ascetic from Kan’ei-era Japan, 1638. He has a very broad barrel-chested build, a weathered lacquer-red hood shaped by cloth folds into a restrained oni-like silhouette, a short straw rain mantle over black mountain robes, indigo leg wraps, aged-bone forearm bindings, a heavy rope belt integrated as clothing and restrained sick-green contamination around the eyes and neck. His exposed face is human but fierce, with no literal demon horns and no graphic gore.\nAnimation layout: ONE SINGLE MASTER SHEET arranged as an exact invisible grid of 6 columns by 5 rows, exactly 30 equal cells, read left to right. Row 1 contains six coherent idle frames with deep breathing. Row 2 contains six coherent movement frames for a stomping mountain stride. Row 3 contains six coherent EMPTY-HANDED attack frames using a shoulder charge and crushing double-fist slam, with no impact effect. Row 4 contains six coherent hurt/recoil frames. Row 5 contains six coherent death/collapse frames ending prone. Do not draw grid lines, cell borders, panels, labels, numbers or separators.\nCharacter consistency: every cell depicts the exact same single character, identical face, hood, mantle, garments, colors, proportions and scale. Strict orthographic side view facing LEFT in all 30 cells. Full body and feet visible in every cell, centered inside each invisible cell with generous internal padding, same ground baseline and camera height, no cropping, no overlap into neighboring cells.\nWeapon modularity: BOTH HANDS COMPLETELY EMPTY in every frame. Absolutely no weapon, blade, polearm, bow, firearm, shield, staff, prayer beads, horn, tool, object, scabbard, holster or carried prop anywhere on the body or in the sheet.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering, readable at small gameplay scale.\nColor palette: ink black, deep indigo, dominant weathered lacquer red, straw-bone, restrained sick green and muted ember accents. Do not use magenta or pink in the character.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background, uniform edge to edge and throughout all spacing between cells.\nConstraints: background must contain no shadow, gradient, texture, floor plane, reflection, glow, particles or lighting variation. No cast/contact shadows. No scenery, architecture, ground, extra character, duplicate outside the 30 cells, text, logo, watermark or UI. Historically grounded 1638 Japanese clothing, no modern elements, no fantasy spikes, no literal demon anatomy, no graphic gore.",
+      "generationTool": "OpenAI ImageGen built-in — un appel distinct"
+    },
+    {
+      "id": "mb-06-shinobi-brumes",
+      "name": "Shinobi des Brumes",
+      "subtitle": "Agent de la vallée noyée",
+      "role": "Mobilité et embuscade",
+      "lore": [
+        "Cet éclaireur devait cartographier les villages contaminés dissimulés par la brume.",
+        "Il ne répond plus à son clan et surgit désormais de chaque angle mort comme un même cauchemar."
+      ],
+      "stats": {
+        "hp": 190,
+        "damage": 23,
+        "speed": 1.42,
+        "posture": 78
+      },
+      "pattern": "Disparition latérale, retour dans le dos et enchaînement bref avant retraite.",
+      "phases": [
+        {
+          "name": "Brume basse",
+          "health": "100–51 %",
+          "behaviour": "Une embuscade après chaque retraite."
+        },
+        {
+          "name": "Brume fermée",
+          "health": "50–0 %",
+          "behaviour": "Leurre puis attaque depuis le côté opposé."
+        }
+      ],
+      "weaponId": "kusarigama",
+      "nom": "Shinobi des Brumes",
+      "gameplay": "190 PV, 23 dégâts, vitesse 1.42. Disparition latérale, retour dans le dos et enchaînement bref avant retraite.",
+      "weapon": {
+        "id": "kusarigama",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/miniboss/mb-06-shinobi-brumes",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/miniboss/mb-06-shinobi-brumes/source-master.png",
+        "master": "assets/modular/characters/miniboss/mb-06-shinobi-brumes/master.png",
+        "sprite": "assets/modular/characters/miniboss/mb-06-shinobi-brumes/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/miniboss/mb-06-shinobi-brumes/sheets/idle.png",
+          "move": "assets/modular/characters/miniboss/mb-06-shinobi-brumes/sheets/move.png",
+          "attack": "assets/modular/characters/miniboss/mb-06-shinobi-brumes/sheets/attack.png",
+          "hurt": "assets/modular/characters/miniboss/mb-06-shinobi-brumes/sheets/hurt.png",
+          "death": "assets/modular/characters/miniboss/mb-06-shinobi-brumes/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/miniboss/mb-06-shinobi-brumes/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production animation master sprite sheet for one modular 2D miniboss in Yomi no Kage\nPrimary request: create exactly one original miniboss character, the \"Shinobi des Brumes\", a plague-infected covert agent from Kan’ei-era Japan, 1638. The character has a short wiry build, a fitted soot-black hood and lower face wrap, deep-indigo layered work clothes over subtle period chain mesh, a torn asymmetrical hip mantle, lacquer-red binding cords, bone-gray shin wraps, split-toe footwear and restrained sick-green contamination visible around one eye and one forearm. The silhouette is low, angular and extremely agile, with no smoke effects and no graphic gore.\nAnimation layout: ONE SINGLE MASTER SHEET arranged as an exact invisible grid of 6 columns by 5 rows, exactly 30 equal cells, read left to right. Row 1 contains six coherent low idle frames. Row 2 contains six coherent movement frames for a fast crouched run. Row 3 contains six coherent EMPTY-HANDED attack frames using an evasive spin, elbow strike and low sweep, with no emitted effect. Row 4 contains six coherent hurt/recoil frames. Row 5 contains six coherent death/collapse frames ending prone. Do not draw grid lines, cell borders, panels, labels, numbers or separators.\nCharacter consistency: every cell depicts the exact same single character, identical masked face, hood, clothing, colors, proportions and scale. Strict orthographic side view facing LEFT in all 30 cells. Full body and feet visible in every cell, centered inside each invisible cell with generous internal padding, same ground baseline and camera height, no cropping, no overlap into neighboring cells.\nWeapon modularity: BOTH HANDS COMPLETELY EMPTY in every frame. Absolutely no weapon, blade, throwing star, chain, polearm, bow, firearm, shield, bomb, tool, object, scabbard, pouch, holster or carried prop anywhere on the body or in the sheet.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering, readable at small gameplay scale.\nColor palette: ink black, deep indigo, muted lacquer red, aged bone and restrained sick green. Do not use magenta or pink in the character.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background, uniform edge to edge and throughout all spacing between cells.\nConstraints: background must contain no shadow, gradient, texture, floor plane, reflection, glow, smoke, mist, particles or lighting variation. No cast/contact shadows. No scenery, architecture, ground, extra character, duplicate outside the 30 cells, text, logo, watermark or UI. Historically grounded 1638 Japanese clothing, no modern tactical gear, no fantasy spikes, no graphic gore.",
+      "generationTool": "OpenAI ImageGen built-in — un appel distinct"
+    },
+    {
+      "id": "mb-07-arquebusier-jigoku",
+      "name": "Arquebusier de Jigoku",
+      "subtitle": "Vétéran du teppō",
+      "role": "Pression à distance",
+      "lore": [
+        "Il commandait la ligne de mousquets chargée d’abattre les infectés avant le pont.",
+        "La fièvre lui fait encore compter ses salves, même lorsque plus aucun soldat ne répond."
+      ],
+      "stats": {
+        "hp": 245,
+        "damage": 32,
+        "speed": 0.76,
+        "posture": 120
+      },
+      "pattern": "Mise en joue longue, tir perçant puis repositionnement protégé par un coup de crosse.",
+      "phases": [
+        {
+          "name": "Salve réglée",
+          "health": "100–51 %",
+          "behaviour": "Un tir précis après trois pas."
+        },
+        {
+          "name": "Mèche d’enfer",
+          "health": "50–0 %",
+          "behaviour": "Double mise en joue avec délai variable."
+        }
+      ],
+      "weaponId": "tanegashima-teppo",
+      "nom": "Arquebusier de Jigoku",
+      "gameplay": "245 PV, 32 dégâts, vitesse 0.76. Mise en joue longue, tir perçant puis repositionnement protégé par un coup de crosse.",
+      "weapon": {
+        "id": "tanegashima-teppo",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/miniboss/mb-07-arquebusier-jigoku",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/miniboss/mb-07-arquebusier-jigoku/source-master.png",
+        "master": "assets/modular/characters/miniboss/mb-07-arquebusier-jigoku/master.png",
+        "sprite": "assets/modular/characters/miniboss/mb-07-arquebusier-jigoku/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/miniboss/mb-07-arquebusier-jigoku/sheets/idle.png",
+          "move": "assets/modular/characters/miniboss/mb-07-arquebusier-jigoku/sheets/move.png",
+          "attack": "assets/modular/characters/miniboss/mb-07-arquebusier-jigoku/sheets/attack.png",
+          "hurt": "assets/modular/characters/miniboss/mb-07-arquebusier-jigoku/sheets/hurt.png",
+          "death": "assets/modular/characters/miniboss/mb-07-arquebusier-jigoku/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/miniboss/mb-07-arquebusier-jigoku/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production animation master sprite sheet for one modular 2D miniboss in Yomi no Kage\nPrimary request: create exactly one original miniboss character, the \"Arquebusier de Jigoku\", an infected matchlock corps veteran from Kan’ei-era Japan, 1638, shown without his separately equipped firearm. He has a medium sturdy build, a low soot-black conical jingasa, an asymmetrical padded firing coat in burnt indigo with a reinforced right shoulder, short lacquer-red lamellar hip guards, a scorched bone-colored face wrap, blackened gloves, a visibly heat-damaged left sleeve and restrained sick-green contamination around the eyes. His silhouette reads as a period gunner through stance and protective clothing only, with no ammunition or graphic gore.\nAnimation layout: ONE SINGLE MASTER SHEET arranged as an exact invisible grid of 6 columns by 5 rows, exactly 30 equal cells, read left to right. Row 1 contains six coherent alert idle frames. Row 2 contains six coherent movement frames for a braced tactical walk. Row 3 contains six coherent EMPTY-HANDED attack frames mimicking a strong forward recoil stance and then a close elbow strike, but without any firearm or effect. Row 4 contains six coherent hurt/recoil frames. Row 5 contains six coherent death/collapse frames ending prone. Do not draw grid lines, cell borders, panels, labels, numbers or separators.\nCharacter consistency: every cell depicts the exact same single character, identical face wrap, helmet, padded coat, armor, colors, proportions and scale. Strict orthographic side view facing LEFT in all 30 cells. Full body and feet visible in every cell, centered inside each invisible cell with generous internal padding, same ground baseline and camera height, no cropping, no overlap into neighboring cells.\nWeapon modularity: BOTH HANDS COMPLETELY EMPTY in every frame. Absolutely no firearm, matchlock, weapon, blade, polearm, bow, shield, ammunition, powder flask, fuse, tool, object, scabbard, pouch, holster or carried prop anywhere on the body or in the sheet.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering, readable at small gameplay scale.\nColor palette: ink black, burnt deep indigo, lacquer red, aged bone, restrained sick green and ember-brown. Do not use magenta or pink in the character.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background, uniform edge to edge and throughout all spacing between cells.\nConstraints: background must contain no shadow, gradient, texture, floor plane, reflection, glow, smoke, sparks, particles or lighting variation. No cast/contact shadows. No scenery, architecture, ground, extra character, duplicate outside the 30 cells, text, logo, watermark or UI. Historically grounded 1638 Japanese gunner clothing, no modern firearms or equipment, no fantasy elements, no graphic gore.",
+      "generationTool": "OpenAI ImageGen built-in — un appel distinct"
+    },
+    {
+      "id": "mb-08-archer-os",
+      "name": "Archer d’Os",
+      "subtitle": "Sentinelle des remparts",
+      "role": "Tir de précision",
+      "lore": [
+        "L’archer resta trois jours sur les remparts à tirer sur les silhouettes quittant la ville.",
+        "Ses doigts décharnés suivent encore les distances gravées dans sa mémoire militaire."
+      ],
+      "stats": {
+        "hp": 215,
+        "damage": 29,
+        "speed": 0.94,
+        "posture": 92
+      },
+      "pattern": "Vise les trajectoires de saut, tire en cloche puis recule derrière une flèche directe.",
+      "phases": [
+        {
+          "name": "Œil du rempart",
+          "health": "100–46 %",
+          "behaviour": "Alterne tir direct et tir en cloche."
+        },
+        {
+          "name": "Dernière volée",
+          "health": "45–0 %",
+          "behaviour": "Trois tirs rapides avec zones sûres étroites."
+        }
+      ],
+      "weaponId": "yumi-daikyu",
+      "nom": "Archer d’Os",
+      "gameplay": "215 PV, 29 dégâts, vitesse 0.94. Vise les trajectoires de saut, tire en cloche puis recule derrière une flèche directe.",
+      "weapon": {
+        "id": "yumi-daikyu",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/miniboss/mb-08-archer-os",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/miniboss/mb-08-archer-os/source-master.png",
+        "master": "assets/modular/characters/miniboss/mb-08-archer-os/master.png",
+        "sprite": "assets/modular/characters/miniboss/mb-08-archer-os/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/miniboss/mb-08-archer-os/sheets/idle.png",
+          "move": "assets/modular/characters/miniboss/mb-08-archer-os/sheets/move.png",
+          "attack": "assets/modular/characters/miniboss/mb-08-archer-os/sheets/attack.png",
+          "hurt": "assets/modular/characters/miniboss/mb-08-archer-os/sheets/hurt.png",
+          "death": "assets/modular/characters/miniboss/mb-08-archer-os/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/miniboss/mb-08-archer-os/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production animation master sprite sheet for one modular 2D miniboss in Yomi no Kage\nPrimary request: create exactly one original miniboss character, the \"Archer d’Os\", an infected castle archer from Kan’ei-era Japan, 1638, shown without his separately equipped bow. He is very tall and narrow, with a bone-colored half mask, a high dark-indigo eboshi-like archer cap, a long asymmetric black hitatare jacket, one lacquer-red shoulder guard, fitted hakama, traditional wrapped archer gloves, an aged-bone rib motif painted on the torso cloth and restrained sick-green contamination around the exposed eye and fingers. His silhouette is elegant, vertical and predatory, with no literal exposed bones and no graphic gore.\nAnimation layout: ONE SINGLE MASTER SHEET arranged as an exact invisible grid of 6 columns by 5 rows, exactly 30 equal cells, read left to right. Row 1 contains six coherent watchful idle frames. Row 2 contains six coherent movement frames for a long quiet stride. Row 3 contains six coherent EMPTY-HANDED attack frames using the body mechanics of drawing and releasing a bow followed by a palm strike, but with no bow, arrow, string or emitted projectile. Row 4 contains six coherent hurt/recoil frames. Row 5 contains six coherent death/collapse frames ending prone. Do not draw grid lines, cell borders, panels, labels, numbers or separators.\nCharacter consistency: every cell depicts the exact same single character, identical mask, cap, clothing, armor, colors, proportions and scale. Strict orthographic side view facing LEFT in all 30 cells. Full body and feet visible in every cell, centered inside each invisible cell with generous internal padding, same ground baseline and camera height, no cropping, no overlap into neighboring cells.\nWeapon modularity: BOTH HANDS COMPLETELY EMPTY in every frame. Absolutely no bow, arrow, quiver, string, projectile, weapon, blade, polearm, firearm, shield, tool, object, scabbard, pouch, holster or carried prop anywhere on the body or in the sheet.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering, readable at small gameplay scale.\nColor palette: ink black, deep indigo, aged bone, lacquer red and restrained sick green. Do not use magenta or pink in the character.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background, uniform edge to edge and throughout all spacing between cells.\nConstraints: background must contain no shadow, gradient, texture, floor plane, reflection, glow, particles or lighting variation. No cast/contact shadows. No scenery, architecture, ground, extra character, duplicate outside the 30 cells, text, logo, watermark or UI. Historically grounded 1638 Japanese archer clothing, no modern equipment, no fantasy anatomy, no graphic gore.",
+      "generationTool": "OpenAI ImageGen built-in — un appel distinct"
+    },
+    {
+      "id": "mb-09-pisteur-kegare",
+      "name": "Pisteur du Kegare",
+      "subtitle": "Chasseur de quarantaine",
+      "role": "Traque et bond",
+      "lore": [
+        "Le pisteur suivait les traces des fuyards pour les ramener aux postes de contrôle.",
+        "Il flaire maintenant la chaleur des vivants et confond toute piste avec celle du patient zéro."
+      ],
+      "stats": {
+        "hp": 225,
+        "damage": 25,
+        "speed": 1.28,
+        "posture": 88
+      },
+      "pattern": "Reste accroupi, bondit sur une longue distance puis frappe à la retombée.",
+      "phases": [
+        {
+          "name": "Piste fraîche",
+          "health": "100–56 %",
+          "behaviour": "Un bond suivi d’une pause."
+        },
+        {
+          "name": "Odeur du sang",
+          "health": "55–0 %",
+          "behaviour": "Bond retour et attaque basse."
+        }
+      ],
+      "weaponId": "wakizashi",
+      "nom": "Pisteur du Kegare",
+      "gameplay": "225 PV, 25 dégâts, vitesse 1.28. Reste accroupi, bondit sur une longue distance puis frappe à la retombée.",
+      "weapon": {
+        "id": "wakizashi",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/miniboss/mb-09-pisteur-kegare",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/miniboss/mb-09-pisteur-kegare/source-master.png",
+        "master": "assets/modular/characters/miniboss/mb-09-pisteur-kegare/master.png",
+        "sprite": "assets/modular/characters/miniboss/mb-09-pisteur-kegare/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/miniboss/mb-09-pisteur-kegare/sheets/idle.png",
+          "move": "assets/modular/characters/miniboss/mb-09-pisteur-kegare/sheets/move.png",
+          "attack": "assets/modular/characters/miniboss/mb-09-pisteur-kegare/sheets/attack.png",
+          "hurt": "assets/modular/characters/miniboss/mb-09-pisteur-kegare/sheets/hurt.png",
+          "death": "assets/modular/characters/miniboss/mb-09-pisteur-kegare/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/miniboss/mb-09-pisteur-kegare/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production animation master sprite sheet for one modular 2D miniboss in Yomi no Kage\nPrimary request: create exactly one original miniboss character, the \"Pisteur du Kegare\", a plague-scarred quarantine tracker from Kan’ei-era Japan, 1638. He has a compact hunched hunter’s build, a torn bone-gray head veil covering the nose and mouth, a sleeveless deep-indigo work coat over a black fitted under-robe, uneven lacquer-red leather shoulder patches, thick wrapped calves, long stained forearm bindings, a broad rope sash integrated as clothing and restrained sick-green contamination tracing the neck and hands. His silhouette is feral but still human, designed to sniff out survivors, with no animal anatomy and no graphic gore.\nAnimation layout: ONE SINGLE MASTER SHEET arranged as an exact invisible grid of 6 columns by 5 rows, exactly 30 equal cells, read left to right. Row 1 contains six coherent crouched idle frames. Row 2 contains six coherent movement frames for a quick tracking lope. Row 3 contains six coherent EMPTY-HANDED attack frames using a low pounce, rake-like open-hand strike and recovery, with no effect. Row 4 contains six coherent hurt/recoil frames. Row 5 contains six coherent death/collapse frames ending prone. Do not draw grid lines, cell borders, panels, labels, numbers or separators.\nCharacter consistency: every cell depicts the exact same single character, identical veil, clothing, bindings, colors, proportions and scale. Strict orthographic side view facing LEFT in all 30 cells. Full body and feet visible in every cell, centered inside each invisible cell with generous internal padding, same ground baseline and camera height, no cropping, no overlap into neighboring cells.\nWeapon modularity: BOTH HANDS COMPLETELY EMPTY in every frame. Absolutely no weapon, blade, claw weapon, polearm, bow, firearm, shield, tool, object, scabbard, pouch, holster or carried prop anywhere on the body or in the sheet; normal human fingernails only.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering, readable at small gameplay scale.\nColor palette: ink black, deep indigo, aged bone, worn lacquer red and restrained sick green. Do not use magenta or pink in the character.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background, uniform edge to edge and throughout all spacing between cells.\nConstraints: background must contain no shadow, gradient, texture, floor plane, reflection, glow, particles or lighting variation. No cast/contact shadows. No scenery, architecture, ground, extra character, duplicate outside the 30 cells, text, logo, watermark or UI. Historically grounded 1638 Japanese work clothing, no modern gear, no fantasy anatomy, no graphic gore.",
+      "generationTool": "OpenAI ImageGen built-in — un appel distinct"
+    },
+    {
+      "id": "mb-10-forgeron-hibana",
+      "name": "Forgeron Hibana",
+      "subtitle": "Armurier du château",
+      "role": "Armure et écrasement",
+      "lore": [
+        "Hibana forgea les ferrures des portes de quarantaine jusqu’à l’épuisement.",
+        "Son tablier brûlé retient encore des étincelles tandis qu’il frappe les vivants comme du métal impur."
+      ],
+      "stats": {
+        "hp": 360,
+        "damage": 36,
+        "speed": 0.68,
+        "posture": 190
+      },
+      "pattern": "Marteau vertical, onde au sol et courte fenêtre de vulnérabilité après l’impact.",
+      "phases": [
+        {
+          "name": "Fer rouge",
+          "health": "100–61 %",
+          "behaviour": "Coups uniques très lourds."
+        },
+        {
+          "name": "Trempe noire",
+          "health": "60–0 %",
+          "behaviour": "Deux impacts et armure temporaire."
+        }
+      ],
+      "weaponId": "otsuchi",
+      "nom": "Forgeron Hibana",
+      "gameplay": "360 PV, 36 dégâts, vitesse 0.68. Marteau vertical, onde au sol et courte fenêtre de vulnérabilité après l’impact.",
+      "weapon": {
+        "id": "otsuchi",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/miniboss/mb-10-forgeron-hibana",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/miniboss/mb-10-forgeron-hibana/source-master.png",
+        "master": "assets/modular/characters/miniboss/mb-10-forgeron-hibana/master.png",
+        "sprite": "assets/modular/characters/miniboss/mb-10-forgeron-hibana/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/miniboss/mb-10-forgeron-hibana/sheets/idle.png",
+          "move": "assets/modular/characters/miniboss/mb-10-forgeron-hibana/sheets/move.png",
+          "attack": "assets/modular/characters/miniboss/mb-10-forgeron-hibana/sheets/attack.png",
+          "hurt": "assets/modular/characters/miniboss/mb-10-forgeron-hibana/sheets/hurt.png",
+          "death": "assets/modular/characters/miniboss/mb-10-forgeron-hibana/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/miniboss/mb-10-forgeron-hibana/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production animation master sprite sheet for one modular 2D miniboss in Yomi no Kage\nPrimary request: create exactly one original miniboss character, the \"Forgeron Hibana\", an infected castle armorer from Kan’ei-era Japan, 1638, shown without his separately equipped hammer. He has an extremely stocky powerful build, a shaved crown with a short tied topknot, a dark iron half-mask over the nose and jaw, a thick soot-black sleeveless work coat, a scorched lacquer-red leather apron split for movement, oversized bone-wrapped forearms, indigo trousers, iron-reinforced sandals and restrained sick-green contamination visible around one eye and old burn marks. His silhouette is square, heavy and unmistakably artisanal, with no graphic gore.\nAnimation layout: ONE SINGLE MASTER SHEET arranged as an exact invisible grid of 6 columns by 5 rows, exactly 30 equal cells, read left to right. Row 1 contains six coherent heavy idle frames. Row 2 contains six coherent movement frames for a lumbering workshop stride. Row 3 contains six coherent EMPTY-HANDED attack frames using the full body mechanics of lifting and slamming a great hammer followed by a shoulder check, but with no hammer, tool, anvil or impact effect. Row 4 contains six coherent hurt/recoil frames. Row 5 contains six coherent death/collapse frames ending prone. Do not draw grid lines, cell borders, panels, labels, numbers or separators.\nCharacter consistency: every cell depicts the exact same single character, identical face, mask, clothing, apron, colors, proportions and scale. Strict orthographic side view facing LEFT in all 30 cells. Full body and feet visible in every cell, centered inside each invisible cell with generous internal padding, same ground baseline and camera height, no cropping, no overlap into neighboring cells.\nWeapon modularity: BOTH HANDS COMPLETELY EMPTY in every frame. Absolutely no hammer, tongs, anvil, tool, weapon, blade, polearm, bow, firearm, shield, object, scabbard, pouch, holster or carried prop anywhere on the body or in the sheet.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering, readable at small gameplay scale.\nColor palette: soot black, deep indigo, scorched lacquer red, aged bone, dark iron, restrained sick green and tiny ember-brown accents. Do not use magenta or pink in the character.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background, uniform edge to edge and throughout all spacing between cells.\nConstraints: background must contain no shadow, gradient, texture, floor plane, reflection, glow, fire, sparks, smoke, particles or lighting variation. No cast/contact shadows. No scenery, architecture, ground, extra character, duplicate outside the 30 cells, text, logo, watermark or UI. Historically grounded 1638 Japanese work clothing, no modern welding gear, no fantasy armor, no graphic gore.",
+      "generationTool": "OpenAI ImageGen built-in — un appel distinct"
+    },
+    {
+      "id": "mb-11-hatamoto-inazuma",
+      "name": "Hatamoto Inazuma",
+      "subtitle": "Retainer de l’éclair",
+      "role": "Parade et riposte",
+      "lore": [
+        "Inazuma avait juré de tenir le pavillon du shogun même si la garnison tombait.",
+        "Son serment survit à son esprit et sa garde fulgurante rejette toute attaque frontale."
+      ],
+      "stats": {
+        "hp": 285,
+        "damage": 30,
+        "speed": 1.2,
+        "posture": 145
+      },
+      "pattern": "Parade courte, riposte éclair et pas croisé qui punit les roulades précoces.",
+      "phases": [
+        {
+          "name": "Étendard fixe",
+          "health": "100–51 %",
+          "behaviour": "Riposte après une parade lisible."
+        },
+        {
+          "name": "Foudre tombée",
+          "health": "50–0 %",
+          "behaviour": "Parade mobile et double coupe."
+        }
+      ],
+      "weaponId": "tachi",
+      "nom": "Hatamoto Inazuma",
+      "gameplay": "285 PV, 30 dégâts, vitesse 1.2. Parade courte, riposte éclair et pas croisé qui punit les roulades précoces.",
+      "weapon": {
+        "id": "tachi",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/miniboss/mb-11-hatamoto-inazuma",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/miniboss/mb-11-hatamoto-inazuma/source-master.png",
+        "master": "assets/modular/characters/miniboss/mb-11-hatamoto-inazuma/master.png",
+        "sprite": "assets/modular/characters/miniboss/mb-11-hatamoto-inazuma/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/miniboss/mb-11-hatamoto-inazuma/sheets/idle.png",
+          "move": "assets/modular/characters/miniboss/mb-11-hatamoto-inazuma/sheets/move.png",
+          "attack": "assets/modular/characters/miniboss/mb-11-hatamoto-inazuma/sheets/attack.png",
+          "hurt": "assets/modular/characters/miniboss/mb-11-hatamoto-inazuma/sheets/hurt.png",
+          "death": "assets/modular/characters/miniboss/mb-11-hatamoto-inazuma/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/miniboss/mb-11-hatamoto-inazuma/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production animation master sprite sheet for one modular 2D miniboss in Yomi no Kage\nPrimary request: create exactly one original miniboss character, the \"Hatamoto Inazuma\", an infected elite retainer from Kan’ei-era Japan, 1638. He has a tall athletic build and proud upright posture, a compact black lacquer kabuto with a restrained silver zigzag crest, elegant deep-indigo dō-maru armor, narrow silver-edged shoulder guards, crisp aged-bone under-sleeves, lacquer-red lacing, a split white command sash integrated into the waist armor and restrained sick-green contamination visible through the eye slit and at the throat. His silhouette is precise, noble and fast, with no literal lightning and no graphic gore.\nAnimation layout: ONE SINGLE MASTER SHEET arranged as an exact invisible grid of 6 columns by 5 rows, exactly 30 equal cells, read left to right. Row 1 contains six coherent disciplined idle frames. Row 2 contains six coherent movement frames for a swift formal advance. Row 3 contains six coherent EMPTY-HANDED attack frames using a precise parry-like body turn, forearm deflection and straight palm strike, with no weapon or effect. Row 4 contains six coherent hurt/recoil frames. Row 5 contains six coherent death/collapse frames ending prone. Do not draw grid lines, cell borders, panels, labels, numbers or separators.\nCharacter consistency: every cell depicts the exact same single character, identical face, helmet, armor, sash, colors, proportions and scale. Strict orthographic side view facing LEFT in all 30 cells. Full body and feet visible in every cell, centered inside each invisible cell with generous internal padding, same ground baseline and camera height, no cropping, no overlap into neighboring cells.\nWeapon modularity: BOTH HANDS COMPLETELY EMPTY in every frame. Absolutely no weapon, katana, blade, polearm, bow, firearm, shield, lightning effect, tool, object, scabbard, holster or carried prop anywhere on the body or in the sheet.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering, readable at small gameplay scale.\nColor palette: ink black, deep indigo, muted silver, aged bone, lacquer red and restrained sick green. Do not use magenta or pink in the character.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background, uniform edge to edge and throughout all spacing between cells.\nConstraints: background must contain no shadow, gradient, texture, floor plane, reflection, glow, lightning, particles or lighting variation. No cast/contact shadows. No scenery, architecture, ground, extra character, duplicate outside the 30 cells, text, logo, watermark or UI. Historically grounded 1638 Japanese armor, no modern elements, no fantasy spikes, no graphic gore.",
+      "generationTool": "OpenAI ImageGen built-in — un appel distinct"
+    },
+    {
+      "id": "mb-12-gardien-masque-fer",
+      "name": "Gardien au Masque de Fer",
+      "subtitle": "Verrou vivant",
+      "role": "Mur et contrôle",
+      "lore": [
+        "Le gardien reçut l’ordre de ne lever la herse sous aucun prétexte.",
+        "Son masque riveté ne montre plus d’homme, seulement la patience d’une porte qui refuse de céder."
+      ],
+      "stats": {
+        "hp": 355,
+        "damage": 28,
+        "speed": 0.64,
+        "posture": 205
+      },
+      "pattern": "Repousse au sasumata, bloque les passages et projette Akio contre les limites de l’arène.",
+      "phases": [
+        {
+          "name": "Herse close",
+          "health": "100–56 %",
+          "behaviour": "Poussées lentes et garde totale."
+        },
+        {
+          "name": "Gonds arrachés",
+          "health": "55–0 %",
+          "behaviour": "Ruées courtes et balayage bas."
+        }
+      ],
+      "weaponId": "sasumata",
+      "nom": "Gardien au Masque de Fer",
+      "gameplay": "355 PV, 28 dégâts, vitesse 0.64. Repousse au sasumata, bloque les passages et projette Akio contre les limites de l’arène.",
+      "weapon": {
+        "id": "sasumata",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/miniboss/mb-12-gardien-masque-fer",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/miniboss/mb-12-gardien-masque-fer/source-master.png",
+        "master": "assets/modular/characters/miniboss/mb-12-gardien-masque-fer/master.png",
+        "sprite": "assets/modular/characters/miniboss/mb-12-gardien-masque-fer/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/miniboss/mb-12-gardien-masque-fer/sheets/idle.png",
+          "move": "assets/modular/characters/miniboss/mb-12-gardien-masque-fer/sheets/move.png",
+          "attack": "assets/modular/characters/miniboss/mb-12-gardien-masque-fer/sheets/attack.png",
+          "hurt": "assets/modular/characters/miniboss/mb-12-gardien-masque-fer/sheets/hurt.png",
+          "death": "assets/modular/characters/miniboss/mb-12-gardien-masque-fer/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/miniboss/mb-12-gardien-masque-fer/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production animation master sprite sheet for one modular 2D miniboss in Yomi no Kage\nPrimary request: create exactly one original miniboss character, the \"Gardien au Masque de Fer\", a plague-infected castle gate warden from Kan’ei-era Japan, 1638. He has a huge rectangular build, a plain riveted dark-iron full face plate with narrow eye slots, a flat-topped black kabuto, blocky layered indigo lamellar armor, very wide squared shoulder guards, a thick aged-bone neck wrap, lacquer-red reinforcement cords, heavy plated forearms and restrained sick-green contamination glowing faintly behind the eye slots. His silhouette is a walking gate, massive and defensive, with no spikes and no graphic gore.\nAnimation layout: ONE SINGLE MASTER SHEET arranged as an exact invisible grid of 6 columns by 5 rows, exactly 30 equal cells, read left to right. Row 1 contains six coherent immovable idle frames. Row 2 contains six coherent movement frames for a slow armored advance. Row 3 contains six coherent EMPTY-HANDED attack frames using a two-arm guard shove, body check and downward double-fist crush, with no shield or effect. Row 4 contains six coherent hurt/recoil frames. Row 5 contains six coherent death/collapse frames ending prone. Do not draw grid lines, cell borders, panels, labels, numbers or separators.\nCharacter consistency: every cell depicts the exact same single character, identical mask, helmet, armor, colors, proportions and scale. Strict orthographic side view facing LEFT in all 30 cells. Full body and feet visible in every cell, centered inside each invisible cell with generous internal padding, same ground baseline and camera height, no cropping, no overlap into neighboring cells.\nWeapon modularity: BOTH HANDS COMPLETELY EMPTY in every frame. Absolutely no shield, polearm, sasumata, weapon, blade, bow, firearm, tool, object, scabbard, holster or carried prop anywhere on the body or in the sheet.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering, readable at small gameplay scale.\nColor palette: dark iron, ink black, deep indigo, aged bone, lacquer red and restrained sick green. Do not use magenta or pink in the character.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background, uniform edge to edge and throughout all spacing between cells.\nConstraints: background must contain no shadow, gradient, texture, floor plane, reflection, glow, particles or lighting variation. No cast/contact shadows. No scenery, architecture, ground, extra character, duplicate outside the 30 cells, text, logo, watermark or UI. Historically grounded 1638 Japanese armor, no Western plate armor, no modern elements, no fantasy spikes, no graphic gore.",
+      "generationTool": "OpenAI ImageGen built-in — un appel distinct"
+    },
+    {
+      "id": "mb-13-komuso-grue-noire",
+      "name": "Komusō de la Grue Noire",
+      "subtitle": "Moine du souffle creux",
+      "role": "Onde et contrôle",
+      "lore": [
+        "Le komusō traversait les provinces en échangeant des airs contre un bol de riz.",
+        "La peste souffle maintenant sous son panier de paille et fait vibrer l’air autour de lui."
+      ],
+      "stats": {
+        "hp": 235,
+        "damage": 22,
+        "speed": 0.9,
+        "posture": 112
+      },
+      "pattern": "Impulsions sonores en cône, marche invulnérable brève et frappe de bâton rapprochée.",
+      "phases": [
+        {
+          "name": "Souffle vide",
+          "health": "100–51 %",
+          "behaviour": "Ondes espacées à hauteur variable."
+        },
+        {
+          "name": "Cri de grue",
+          "health": "50–0 %",
+          "behaviour": "Onde retour après chaque impulsion."
+        }
+      ],
+      "weaponId": "shakujo",
+      "nom": "Komusō de la Grue Noire",
+      "gameplay": "235 PV, 22 dégâts, vitesse 0.9. Impulsions sonores en cône, marche invulnérable brève et frappe de bâton rapprochée.",
+      "weapon": {
+        "id": "shakujo",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/miniboss/mb-13-komuso-grue-noire",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/miniboss/mb-13-komuso-grue-noire/source-master.png",
+        "master": "assets/modular/characters/miniboss/mb-13-komuso-grue-noire/master.png",
+        "sprite": "assets/modular/characters/miniboss/mb-13-komuso-grue-noire/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/miniboss/mb-13-komuso-grue-noire/sheets/idle.png",
+          "move": "assets/modular/characters/miniboss/mb-13-komuso-grue-noire/sheets/move.png",
+          "attack": "assets/modular/characters/miniboss/mb-13-komuso-grue-noire/sheets/attack.png",
+          "hurt": "assets/modular/characters/miniboss/mb-13-komuso-grue-noire/sheets/hurt.png",
+          "death": "assets/modular/characters/miniboss/mb-13-komuso-grue-noire/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/miniboss/mb-13-komuso-grue-noire/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production animation master sprite sheet for one modular 2D miniboss in Yomi no Kage\nPrimary request: create exactly one original miniboss character, the \"Komusō de la Grue Noire\", a plague-corrupted wandering flute monk from Kan’ei-era Japan, 1638, shown without his separately equipped instrument. He is tall and reed-thin, wearing a historically inspired woven tengai basket hood that fully encloses the head, a long ink-black monk robe with deep-indigo lining, wide sleeves whose angular hems evoke folded crane wings, an aged-bone stole, a narrow lacquer-red waist cord, straw sandals and restrained sick-green contamination visible only as small cracks of light within the basket weave and at the fingertips. His silhouette is quiet, vertical and uncanny, with no literal bird anatomy and no graphic gore.\nAnimation layout: ONE SINGLE MASTER SHEET arranged as an exact invisible grid of 6 columns by 5 rows, exactly 30 equal cells, read left to right. Row 1 contains six coherent still idle frames with subtle robe breathing. Row 2 contains six coherent movement frames for a slow gliding walk with grounded feet. Row 3 contains six coherent EMPTY-HANDED attack frames using a deep breath posture, sweeping sleeve turn and two-handed thrust, with no flute, sound wave or emitted effect. Row 4 contains six coherent hurt/recoil frames. Row 5 contains six coherent death/collapse frames ending prone. Do not draw grid lines, cell borders, panels, labels, numbers or separators.\nCharacter consistency: every cell depicts the exact same single character, identical basket hood, robe, stole, colors, proportions and scale. Strict orthographic side view facing LEFT in all 30 cells. Full body and feet visible in every cell, centered inside each invisible cell with generous internal padding, same ground baseline and camera height, no cropping, no overlap into neighboring cells.\nWeapon modularity: BOTH HANDS COMPLETELY EMPTY in every frame. Absolutely no shakuhachi, flute, instrument, staff, weapon, blade, polearm, bow, firearm, shield, tool, object, scabbard, pouch, holster or carried prop anywhere on the body or in the sheet.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering, readable at small gameplay scale.\nColor palette: ink black, deep indigo, aged bone, restrained lacquer red, straw brown and subtle sick green. Do not use magenta or pink in the character.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background, uniform edge to edge and throughout all spacing between cells.\nConstraints: background must contain no shadow, gradient, texture, floor plane, reflection, glow, sound waves, aura, particles or lighting variation. No cast/contact shadows. No scenery, architecture, ground, extra character, duplicate outside the 30 cells, text, logo, watermark or UI. Historically grounded 1638 Japanese clothing, no modern elements, no fantasy anatomy, no graphic gore.",
+      "generationTool": "OpenAI ImageGen built-in — un appel distinct"
+    },
+    {
+      "id": "mb-14-pirate-shioyake",
+      "name": "Pirate Shioyake",
+      "subtitle": "Raider des côtes brûlées",
+      "role": "Bretteur agile",
+      "lore": [
+        "Shioyake pillait les jonques de ravitaillement isolées par la quarantaine.",
+        "Sa peau salée s’est fendue sous la fièvre, mais son rire accompagne encore chaque abordage."
+      ],
+      "stats": {
+        "hp": 250,
+        "damage": 26,
+        "speed": 1.3,
+        "posture": 98
+      },
+      "pattern": "Glissade basse, coupe montante et recul bondissant avant une nouvelle approche.",
+      "phases": [
+        {
+          "name": "Pont glissant",
+          "health": "100–46 %",
+          "behaviour": "Approches basses et retraite rapide."
+        },
+        {
+          "name": "Abordage",
+          "health": "45–0 %",
+          "behaviour": "Saut croisé et trois coupes courtes."
+        }
+      ],
+      "weaponId": "wakizashi",
+      "nom": "Pirate Shioyake",
+      "gameplay": "250 PV, 26 dégâts, vitesse 1.3. Glissade basse, coupe montante et recul bondissant avant une nouvelle approche.",
+      "weapon": {
+        "id": "wakizashi",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/miniboss/mb-14-pirate-shioyake",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/miniboss/mb-14-pirate-shioyake/source-master.png",
+        "master": "assets/modular/characters/miniboss/mb-14-pirate-shioyake/master.png",
+        "sprite": "assets/modular/characters/miniboss/mb-14-pirate-shioyake/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/miniboss/mb-14-pirate-shioyake/sheets/idle.png",
+          "move": "assets/modular/characters/miniboss/mb-14-pirate-shioyake/sheets/move.png",
+          "attack": "assets/modular/characters/miniboss/mb-14-pirate-shioyake/sheets/attack.png",
+          "hurt": "assets/modular/characters/miniboss/mb-14-pirate-shioyake/sheets/hurt.png",
+          "death": "assets/modular/characters/miniboss/mb-14-pirate-shioyake/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/miniboss/mb-14-pirate-shioyake/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production animation master sprite sheet for one modular 2D miniboss in Yomi no Kage\nPrimary request: create exactly one original miniboss character, the \"Pirate Shioyake\", a plague-infected coastal raider from Kan’ei-era Japan, 1638. He has a short broad seafarer’s build, a salt-bleached bone-gray headband over rough tied hair, a weathered sleeveless indigo happi coat, asymmetrical black leather shoulder protection, rolled trousers, thick rope-colored calf wraps, a lacquer-red waist sash integrated as clothing, one scarred bare forearm and restrained sick-green contamination around the eyes and sea-salt-cracked skin. His silhouette is wide, rolling and aggressive, with no nautical fantasy clichés and no graphic gore.\nAnimation layout: ONE SINGLE MASTER SHEET arranged as an exact invisible grid of 6 columns by 5 rows, exactly 30 equal cells, read left to right. Row 1 contains six coherent rolling idle frames as if balancing on a deck. Row 2 contains six coherent movement frames for a quick low sailor’s run. Row 3 contains six coherent EMPTY-HANDED attack frames using a head feint, hook punch and driving knee, with no weapon or effect. Row 4 contains six coherent hurt/recoil frames. Row 5 contains six coherent death/collapse frames ending prone. Do not draw grid lines, cell borders, panels, labels, numbers or separators.\nCharacter consistency: every cell depicts the exact same single character, identical face, headband, coat, armor, colors, proportions and scale. Strict orthographic side view facing LEFT in all 30 cells. Full body and feet visible in every cell, centered inside each invisible cell with generous internal padding, same ground baseline and camera height, no cropping, no overlap into neighboring cells.\nWeapon modularity: BOTH HANDS COMPLETELY EMPTY in every frame. Absolutely no sword, blade, firearm, polearm, bow, shield, hook, rope, bottle, tool, object, scabbard, pouch, holster or carried prop anywhere on the body or in the sheet.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering, readable at small gameplay scale.\nColor palette: ink black, salt-faded deep indigo, aged bone, weathered lacquer red, dark brown and restrained sick green. Do not use magenta or pink in the character.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background, uniform edge to edge and throughout all spacing between cells.\nConstraints: background must contain no shadow, gradient, texture, floor plane, water, reflection, glow, spray, particles or lighting variation. No cast/contact shadows. No ship, scenery, architecture, ground, extra character, duplicate outside the 30 cells, text, logo, watermark or UI. Historically grounded 1638 Japanese coastal clothing, no European pirate hat, no modern elements, no fantasy anatomy, no graphic gore.",
+      "generationTool": "OpenAI ImageGen built-in — un appel distinct"
+    },
+    {
+      "id": "mb-15-kunoichi-veuve",
+      "name": "Kunoichi de la Veuve",
+      "subtitle": "Assassine au fil noir",
+      "role": "Pièges et combos",
+      "lore": [
+        "Elle posa des fils d’alarme autour des maisons où la fièvre avait emporté son clan.",
+        "Devenue infectée, elle tisse le même réseau pour offrir de nouvelles proies à la Veuve."
+      ],
+      "stats": {
+        "hp": 200,
+        "damage": 24,
+        "speed": 1.46,
+        "posture": 80
+      },
+      "pattern": "Pose une chaîne-piège, traverse la cible puis déclenche un retour qui ferme l’issue.",
+      "phases": [
+        {
+          "name": "Toile ouverte",
+          "health": "100–51 %",
+          "behaviour": "Un piège actif et attaques brèves."
+        },
+        {
+          "name": "Nœud de veuve",
+          "health": "50–0 %",
+          "behaviour": "Deux ancrages et traversée en retour."
+        }
+      ],
+      "weaponId": "manrikigusari",
+      "nom": "Kunoichi de la Veuve",
+      "gameplay": "200 PV, 24 dégâts, vitesse 1.46. Pose une chaîne-piège, traverse la cible puis déclenche un retour qui ferme l’issue.",
+      "weapon": {
+        "id": "manrikigusari",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/miniboss/mb-15-kunoichi-veuve",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/miniboss/mb-15-kunoichi-veuve/source-master.png",
+        "master": "assets/modular/characters/miniboss/mb-15-kunoichi-veuve/master.png",
+        "sprite": "assets/modular/characters/miniboss/mb-15-kunoichi-veuve/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/miniboss/mb-15-kunoichi-veuve/sheets/idle.png",
+          "move": "assets/modular/characters/miniboss/mb-15-kunoichi-veuve/sheets/move.png",
+          "attack": "assets/modular/characters/miniboss/mb-15-kunoichi-veuve/sheets/attack.png",
+          "hurt": "assets/modular/characters/miniboss/mb-15-kunoichi-veuve/sheets/hurt.png",
+          "death": "assets/modular/characters/miniboss/mb-15-kunoichi-veuve/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/miniboss/mb-15-kunoichi-veuve/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production animation master sprite sheet for one modular 2D miniboss in Yomi no Kage\nPrimary request: create exactly one original miniboss character, the \"Kunoichi de la Veuve\", a plague-infected covert assassin from Kan’ei-era Japan, 1638. She has a compact athletic build, black hair tied into two short angular loops, a fitted soot-black lower-face wrap, a sleeveless deep-indigo kosode over period mesh sleeves, short layered lacquer-red hip guards stitched with a subtle abstract web geometry, aged-bone hand and calf wraps, split-toe footwear and restrained sick-green contamination around one eye and along the left arm. Her silhouette is sharp, low and unmistakably feminine without sexualization, with no literal spider anatomy and no graphic gore.\nAnimation layout: ONE SINGLE MASTER SHEET arranged as an exact invisible grid of 6 columns by 5 rows, exactly 30 equal cells, read left to right. Row 1 contains six coherent poised idle frames. Row 2 contains six coherent movement frames for a fast low run. Row 3 contains six coherent EMPTY-HANDED attack frames using a spinning elbow, high kick and crouched recovery, with no emitted effect. Row 4 contains six coherent hurt/recoil frames. Row 5 contains six coherent death/collapse frames ending prone. Do not draw grid lines, cell borders, panels, labels, numbers or separators.\nCharacter consistency: every cell depicts the exact same single character, identical masked face, hair, clothing, armor, colors, proportions and scale. Strict orthographic side view facing LEFT in all 30 cells. Full body and feet visible in every cell, centered inside each invisible cell with generous internal padding, same ground baseline and camera height, no cropping, no overlap into neighboring cells.\nWeapon modularity: BOTH HANDS COMPLETELY EMPTY in every frame. Absolutely no blade, claw weapon, throwing star, chain, polearm, bow, firearm, shield, bomb, poison vial, tool, object, scabbard, pouch, holster or carried prop anywhere on the body or in the sheet.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering, readable at small gameplay scale.\nColor palette: ink black, deep indigo, lacquer red, aged bone and restrained sick green. Do not use magenta or pink in the character.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background, uniform edge to edge and throughout all spacing between cells.\nConstraints: background must contain no shadow, gradient, texture, floor plane, reflection, glow, web, particles or lighting variation. No cast/contact shadows. No scenery, architecture, ground, extra character, duplicate outside the 30 cells, text, logo, watermark or UI. Historically grounded 1638 Japanese covert clothing, no modern tactical gear, no fantasy anatomy, no graphic gore.",
+      "generationTool": "OpenAI ImageGen built-in — un appel distinct"
+    },
+    {
+      "id": "mb-16-yoriki-gashadokuro",
+      "name": "Yoriki Gashadokuro",
+      "subtitle": "Officier du magistrat",
+      "role": "Exécution et portée",
+      "lore": [
+        "Ce yoriki dressa les listes de condamnés lorsque la peur remplaça la justice.",
+        "Sa haute silhouette garde chaque nom et allonge sa lance comme une sentence sans appel."
+      ],
+      "stats": {
+        "hp": 295,
+        "damage": 33,
+        "speed": 0.86,
+        "posture": 150
+      },
+      "pattern": "Estoc très long, balayage de contrôle et exécution verticale sur cible à terre.",
+      "phases": [
+        {
+          "name": "Mandat noir",
+          "health": "100–56 %",
+          "behaviour": "Contrôle méthodique de la portée."
+        },
+        {
+          "name": "Sentence",
+          "health": "55–0 %",
+          "behaviour": "Estoc double puis frappe d’exécution."
+        }
+      ],
+      "weaponId": "jumonji-yari",
+      "nom": "Yoriki Gashadokuro",
+      "gameplay": "295 PV, 33 dégâts, vitesse 0.86. Estoc très long, balayage de contrôle et exécution verticale sur cible à terre.",
+      "weapon": {
+        "id": "jumonji-yari",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/miniboss/mb-16-yoriki-gashadokuro",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/miniboss/mb-16-yoriki-gashadokuro/source-master.png",
+        "master": "assets/modular/characters/miniboss/mb-16-yoriki-gashadokuro/master.png",
+        "sprite": "assets/modular/characters/miniboss/mb-16-yoriki-gashadokuro/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/miniboss/mb-16-yoriki-gashadokuro/sheets/idle.png",
+          "move": "assets/modular/characters/miniboss/mb-16-yoriki-gashadokuro/sheets/move.png",
+          "attack": "assets/modular/characters/miniboss/mb-16-yoriki-gashadokuro/sheets/attack.png",
+          "hurt": "assets/modular/characters/miniboss/mb-16-yoriki-gashadokuro/sheets/hurt.png",
+          "death": "assets/modular/characters/miniboss/mb-16-yoriki-gashadokuro/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/miniboss/mb-16-yoriki-gashadokuro/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production animation master sprite sheet for one modular 2D miniboss in Yomi no Kage\nPrimary request: create exactly one original miniboss character, the \"Yoriki Gashadokuro\", a plague-infected magistrate’s officer from Kan’ei-era Japan, 1638. He is extremely tall and gaunt, with a high black forehead guard, a severe aged-bone half mask, a long deep-indigo official coat split into narrow tails, close-fitting black lamellar torso plates painted with restrained bone-white rib geometry, lacquer-red rank cords, thin armored forearms and restrained sick-green contamination visible around the eye sockets and joints. His silhouette is skeletal through tailoring and paint only, with normal human anatomy, no exposed bones and no graphic gore.\nAnimation layout: ONE SINGLE MASTER SHEET arranged as an exact invisible grid of 6 columns by 5 rows, exactly 30 equal cells, read left to right. Row 1 contains six coherent rigid idle frames. Row 2 contains six coherent movement frames for a long measured stride. Row 3 contains six coherent EMPTY-HANDED attack frames using a long-reaching body lunge, downward two-hand chop and formal recovery, with no weapon or effect. Row 4 contains six coherent hurt/recoil frames. Row 5 contains six coherent death/collapse frames ending prone. Do not draw grid lines, cell borders, panels, labels, numbers or separators.\nCharacter consistency: every cell depicts the exact same single character, identical mask, forehead guard, coat, armor, colors, proportions and scale. Strict orthographic side view facing LEFT in all 30 cells. Full body and feet visible in every cell, centered inside each invisible cell with generous internal padding, same ground baseline and camera height, no cropping, no overlap into neighboring cells.\nWeapon modularity: BOTH HANDS COMPLETELY EMPTY in every frame. Absolutely no yari, spear, blade, polearm, bow, firearm, shield, arresting tool, rope, object, scabbard, pouch, holster or carried prop anywhere on the body or in the sheet.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering, readable at small gameplay scale.\nColor palette: ink black, deep indigo, aged bone, lacquer red and restrained sick green. Do not use magenta or pink in the character.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background, uniform edge to edge and throughout all spacing between cells.\nConstraints: background must contain no shadow, gradient, texture, floor plane, reflection, glow, particles or lighting variation. No cast/contact shadows. No scenery, architecture, ground, extra character, duplicate outside the 30 cells, text, logo, watermark or UI. Historically grounded 1638 Japanese official clothing and armor, no modern elements, no fantasy anatomy, no graphic gore.",
+      "generationTool": "OpenAI ImageGen built-in — un appel distinct"
+    },
+    {
+      "id": "mb-17-sumotori-namazu",
+      "name": "Sumotori Namazu",
+      "subtitle": "Champion du poisson-chat",
+      "role": "Choc et saisie",
+      "lore": [
+        "Namazu divertissait le domaine lors des fêtes de récolte avant la fermeture des routes.",
+        "La peste a transformé son shiko rituel en secousse capable de renverser une palissade."
+      ],
+      "stats": {
+        "hp": 370,
+        "damage": 35,
+        "speed": 0.72,
+        "posture": 210
+      },
+      "pattern": "Piétinement sismique, poussée de paume et saisie lente qui projette au loin.",
+      "phases": [
+        {
+          "name": "Cercle de sel",
+          "health": "100–61 %",
+          "behaviour": "Shiko et poussées frontales."
+        },
+        {
+          "name": "Séisme Namazu",
+          "health": "60–0 %",
+          "behaviour": "Deux secousses puis charge basse."
+        }
+      ],
+      "weaponId": "tetsubo",
+      "nom": "Sumotori Namazu",
+      "gameplay": "370 PV, 35 dégâts, vitesse 0.72. Piétinement sismique, poussée de paume et saisie lente qui projette au loin.",
+      "weapon": {
+        "id": "tetsubo",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/miniboss/mb-17-sumotori-namazu",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/miniboss/mb-17-sumotori-namazu/source-master.png",
+        "master": "assets/modular/characters/miniboss/mb-17-sumotori-namazu/master.png",
+        "sprite": "assets/modular/characters/miniboss/mb-17-sumotori-namazu/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/miniboss/mb-17-sumotori-namazu/sheets/idle.png",
+          "move": "assets/modular/characters/miniboss/mb-17-sumotori-namazu/sheets/move.png",
+          "attack": "assets/modular/characters/miniboss/mb-17-sumotori-namazu/sheets/attack.png",
+          "hurt": "assets/modular/characters/miniboss/mb-17-sumotori-namazu/sheets/hurt.png",
+          "death": "assets/modular/characters/miniboss/mb-17-sumotori-namazu/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/miniboss/mb-17-sumotori-namazu/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production animation master sprite sheet for one modular 2D miniboss in Yomi no Kage\nPrimary request: create exactly one original miniboss character, the \"Sumotori Namazu\", a plague-infected provincial sumo champion from Kan’ei-era Japan, 1638. He has an immense low pear-shaped body, a formal chonmage topknot, a deep-indigo mawashi with a short lacquer-red ceremonial front panel integrated into the garment, aged-bone wrist and ankle wraps, blackened protective shoulder patches from quarantine labor and restrained sick-green contamination mottling the eyes, neck and forearms. His silhouette is extremely broad and grounded like a catfish beneath still water, but he remains fully human with no fish anatomy and no graphic gore.\nAnimation layout: ONE SINGLE MASTER SHEET arranged as an exact invisible grid of 6 columns by 5 rows, exactly 30 equal cells, read left to right. Row 1 contains six coherent shiko-style idle frames with deep breathing. Row 2 contains six coherent movement frames for a heavy stomping charge. Row 3 contains six coherent EMPTY-HANDED attack frames using a sumo palm thrust, shoulder ram and downward body slam, with no shockwave effect. Row 4 contains six coherent hurt/recoil frames. Row 5 contains six coherent death/collapse frames ending prone. Do not draw grid lines, cell borders, panels, labels, numbers or separators.\nCharacter consistency: every cell depicts the exact same single character, identical face, topknot, garments, wraps, colors, proportions and scale. Strict orthographic side view facing LEFT in all 30 cells. Full body and feet visible in every cell, centered inside each invisible cell with generous internal padding, same ground baseline and camera height, no cropping, no overlap into neighboring cells.\nWeapon modularity: BOTH HANDS COMPLETELY EMPTY in every frame. Absolutely no tetsubō, club, weapon, blade, polearm, bow, firearm, shield, fan, tool, object, scabbard, pouch, holster or carried prop anywhere on the body or in the sheet.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering, readable at small gameplay scale.\nColor palette: ink black, deep indigo, aged bone, lacquer red, natural weathered skin and restrained sick green. Do not use magenta or pink in the character.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background, uniform edge to edge and throughout all spacing between cells.\nConstraints: background must contain no shadow, gradient, texture, floor plane, reflection, glow, water, dust, shockwave, particles or lighting variation. No cast/contact shadows. No arena, scenery, architecture, ground, extra character, duplicate outside the 30 cells, text, logo, watermark or UI. Historically grounded 1638 Japanese sumo clothing, no modern belt, no fantasy anatomy, no graphic gore.",
+      "generationTool": "OpenAI ImageGen built-in — un appel distinct"
+    },
+    {
+      "id": "mb-18-onmyoji-renard",
+      "name": "Onmyōji du Renard",
+      "subtitle": "Divinateur aux neuf feintes",
+      "role": "Illusions et affaiblissement",
+      "lore": [
+        "Le vieux onmyōji calcula l’heure exacte de la chute de Kurokawa sans prévenir ses habitants.",
+        "Il sert désormais le Yomi en multipliant de fausses ouvertures derrière son sourire de renard."
+      ],
+      "stats": {
+        "hp": 220,
+        "damage": 23,
+        "speed": 1.02,
+        "posture": 100
+      },
+      "pattern": "Feinte deux attaques, marque la garde puis révèle la seule frappe réelle au dernier instant.",
+      "phases": [
+        {
+          "name": "Trois queues",
+          "health": "100–51 %",
+          "behaviour": "Une feinte avant chaque attaque."
+        },
+        {
+          "name": "Neuf ombres",
+          "health": "50–0 %",
+          "behaviour": "Deux feintes et inversion de direction."
+        }
+      ],
+      "weaponId": "tessen-ouvert",
+      "nom": "Onmyōji du Renard",
+      "gameplay": "220 PV, 23 dégâts, vitesse 1.02. Feinte deux attaques, marque la garde puis révèle la seule frappe réelle au dernier instant.",
+      "weapon": {
+        "id": "tessen-ouvert",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/miniboss/mb-18-onmyoji-renard",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/miniboss/mb-18-onmyoji-renard/source-master.png",
+        "master": "assets/modular/characters/miniboss/mb-18-onmyoji-renard/master.png",
+        "sprite": "assets/modular/characters/miniboss/mb-18-onmyoji-renard/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/miniboss/mb-18-onmyoji-renard/sheets/idle.png",
+          "move": "assets/modular/characters/miniboss/mb-18-onmyoji-renard/sheets/move.png",
+          "attack": "assets/modular/characters/miniboss/mb-18-onmyoji-renard/sheets/attack.png",
+          "hurt": "assets/modular/characters/miniboss/mb-18-onmyoji-renard/sheets/hurt.png",
+          "death": "assets/modular/characters/miniboss/mb-18-onmyoji-renard/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/miniboss/mb-18-onmyoji-renard/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production animation master sprite sheet for one modular 2D miniboss in Yomi no Kage\nPrimary request: create exactly one original miniboss character, the \"Onmyōji du Renard\", a plague-corrupted court diviner from Kan’ei-era Japan, 1638. He has a slender elderly build, a tall folded ink-black eboshi cap, a restrained aged-bone fox half mask covering the upper face, layered deep-indigo kariginu-style robes with wide geometric sleeves, a lacquer-red inner collar and waist cord, black hakama, pale wrapped hands and restrained sick-green contamination tracing the mask eyeholes and fingertips. His silhouette is ceremonial, cunning and fully physical, with no literal fox ears, tail or graphic gore.\nAnimation layout: ONE SINGLE MASTER SHEET arranged as an exact invisible grid of 6 columns by 5 rows, exactly 30 equal cells, read left to right. Row 1 contains six coherent composed idle frames. Row 2 contains six coherent movement frames for a slow deliberate court stride. Row 3 contains six coherent EMPTY-HANDED attack frames using layered ritual hand signs, a sleeve sweep and two-handed forward release, with no visible magic effect. Row 4 contains six coherent hurt/recoil frames. Row 5 contains six coherent death/collapse frames ending prone. Do not draw grid lines, cell borders, panels, labels, numbers or separators.\nCharacter consistency: every cell depicts the exact same single character, identical mask, cap, robes, colors, proportions and scale. Strict orthographic side view facing LEFT in all 30 cells. Full body and feet visible in every cell, centered inside each invisible cell with generous internal padding, same ground baseline and camera height, no cropping, no overlap into neighboring cells.\nWeapon modularity: BOTH HANDS COMPLETELY EMPTY in every frame. Absolutely no fan, wand, ofuda, scroll, prayer beads, weapon, blade, polearm, bow, firearm, shield, tool, object, scabbard, pouch, holster or carried prop anywhere on the body or in the sheet.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering, readable at small gameplay scale.\nColor palette: ink black, deep indigo, aged bone, lacquer red and restrained sick green. Do not use magenta or pink in the character.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background, uniform edge to edge and throughout all spacing between cells.\nConstraints: background must contain no shadow, gradient, texture, floor plane, reflection, glow, aura, symbols, particles or lighting variation. No cast/contact shadows. No scenery, architecture, ground, extra character, duplicate outside the 30 cells, text, logo, watermark or UI. Historically grounded 1638 Japanese court clothing, no modern elements, no fantasy anatomy, no graphic gore.",
+      "generationTool": "OpenAI ImageGen built-in — un appel distinct"
+    },
+    {
+      "id": "mb-19-faucon-orage",
+      "name": "Faucon de l’Orage",
+      "subtitle": "Capitaine des crêtes",
+      "role": "Saut et plongeon",
+      "lore": [
+        "Le Faucon guidait les messagers par les crêtes lorsque les routes furent condamnées.",
+        "La foudre frappa son poste d’observation après sa contamination et grava sa dernière trajectoire."
+      ],
+      "stats": {
+        "hp": 255,
+        "damage": 30,
+        "speed": 1.36,
+        "posture": 108
+      },
+      "pattern": "Bond vertical, plongeon diagonal et balayage de nagamaki à la réception.",
+      "phases": [
+        {
+          "name": "Vent de crête",
+          "health": "100–51 %",
+          "behaviour": "Plongeons uniques depuis les hauteurs."
+        },
+        {
+          "name": "Orage fermé",
+          "health": "50–0 %",
+          "behaviour": "Faux plongeon puis attaque opposée."
+        }
+      ],
+      "weaponId": "nagamaki",
+      "nom": "Faucon de l’Orage",
+      "gameplay": "255 PV, 30 dégâts, vitesse 1.36. Bond vertical, plongeon diagonal et balayage de nagamaki à la réception.",
+      "weapon": {
+        "id": "nagamaki",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/miniboss/mb-19-faucon-orage",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/miniboss/mb-19-faucon-orage/source-master.png",
+        "master": "assets/modular/characters/miniboss/mb-19-faucon-orage/master.png",
+        "sprite": "assets/modular/characters/miniboss/mb-19-faucon-orage/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/miniboss/mb-19-faucon-orage/sheets/idle.png",
+          "move": "assets/modular/characters/miniboss/mb-19-faucon-orage/sheets/move.png",
+          "attack": "assets/modular/characters/miniboss/mb-19-faucon-orage/sheets/attack.png",
+          "hurt": "assets/modular/characters/miniboss/mb-19-faucon-orage/sheets/hurt.png",
+          "death": "assets/modular/characters/miniboss/mb-19-faucon-orage/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/miniboss/mb-19-faucon-orage/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production animation master sprite sheet for one modular 2D miniboss in Yomi no Kage\nPrimary request: create exactly one original miniboss character, the \"Faucon de l’Orage\", a plague-infected mountain scout captain from Kan’ei-era Japan, 1638. He has a lean long-legged build, a low swept-back black helmet with a modest beak-shaped brow plate, a narrow aged-bone lower-face guard, fitted deep-indigo lamellar armor, one long asymmetrical lacquer-red shoulder mantle cut into layered cloth points, close black sleeves, pale leg wraps and restrained sick-green contamination around the eyes and one shoulder seam. His silhouette is forward-leaning and aerodynamic through period armor tailoring only, with no wings, feathers, bird anatomy or graphic gore.\nAnimation layout: ONE SINGLE MASTER SHEET arranged as an exact invisible grid of 6 columns by 5 rows, exactly 30 equal cells, read left to right. Row 1 contains six coherent alert idle frames. Row 2 contains six coherent movement frames for a long bounding sprint. Row 3 contains six coherent EMPTY-HANDED attack frames using a rising leap, diving shoulder strike and low recovery, with no wind or lightning effect. Row 4 contains six coherent hurt/recoil frames. Row 5 contains six coherent death/collapse frames ending prone. Do not draw grid lines, cell borders, panels, labels, numbers or separators.\nCharacter consistency: every cell depicts the exact same single character, identical face guard, helmet, armor, mantle, colors, proportions and scale. Strict orthographic side view facing LEFT in all 30 cells. Full body and feet visible in every cell, centered inside each invisible cell with generous internal padding, same ground baseline and camera height, no cropping, no overlap into neighboring cells.\nWeapon modularity: BOTH HANDS COMPLETELY EMPTY in every frame. Absolutely no nagamaki, weapon, blade, polearm, bow, firearm, shield, feather, tool, object, scabbard, pouch, holster or carried prop anywhere on the body or in the sheet.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering, readable at small gameplay scale.\nColor palette: ink black, deep indigo, aged bone, lacquer red, cold gray and restrained sick green. Do not use magenta or pink in the character.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background, uniform edge to edge and throughout all spacing between cells.\nConstraints: background must contain no shadow, gradient, texture, floor plane, reflection, glow, wind trails, lightning, particles or lighting variation. No cast/contact shadows. No scenery, architecture, ground, extra character, duplicate outside the 30 cells, text, logo, watermark or UI. Historically grounded 1638 Japanese armor, no modern elements, no fantasy anatomy, no graphic gore.",
+      "generationTool": "OpenAI ImageGen built-in — un appel distinct"
+    },
+    {
+      "id": "mb-20-capitaine-byakko",
+      "name": "Capitaine Byakko",
+      "subtitle": "Commandant du Tigre blanc",
+      "role": "Parade et commandement",
+      "lore": [
+        "Byakko mena la dernière compagnie envoyée pour reprendre le château sans attendre les renforts.",
+        "Son armure ivoire porte les traces de toute l’unité, absorbée par la peste au pied des murailles."
+      ],
+      "stats": {
+        "hp": 390,
+        "damage": 37,
+        "speed": 1.12,
+        "posture": 220
+      },
+      "pattern": "Posture de commandement, parade haute, dash de tachi et onde de peur à mi-vie.",
+      "phases": [
+        {
+          "name": "Compagnie blanche",
+          "health": "100–61 %",
+          "behaviour": "Duel défensif et ordres de zone."
+        },
+        {
+          "name": "Dernier capitaine",
+          "health": "60–0 %",
+          "behaviour": "Dashs doublés et ripostes sans recul."
+        }
+      ],
+      "weaponId": "tachi",
+      "nom": "Capitaine Byakko",
+      "gameplay": "390 PV, 37 dégâts, vitesse 1.12. Posture de commandement, parade haute, dash de tachi et onde de peur à mi-vie.",
+      "weapon": {
+        "id": "tachi",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/miniboss/mb-20-capitaine-byakko",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/miniboss/mb-20-capitaine-byakko/source-master.png",
+        "master": "assets/modular/characters/miniboss/mb-20-capitaine-byakko/master.png",
+        "sprite": "assets/modular/characters/miniboss/mb-20-capitaine-byakko/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/miniboss/mb-20-capitaine-byakko/sheets/idle.png",
+          "move": "assets/modular/characters/miniboss/mb-20-capitaine-byakko/sheets/move.png",
+          "attack": "assets/modular/characters/miniboss/mb-20-capitaine-byakko/sheets/attack.png",
+          "hurt": "assets/modular/characters/miniboss/mb-20-capitaine-byakko/sheets/hurt.png",
+          "death": "assets/modular/characters/miniboss/mb-20-capitaine-byakko/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/miniboss/mb-20-capitaine-byakko/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production animation master sprite sheet for one modular 2D miniboss in Yomi no Kage\nPrimary request: create exactly one original miniboss character, the \"Capitaine Byakko\", a plague-infected shogunate assault captain from Kan’ei-era Japan, 1638. He has a broad athletic build, a compact aged-ivory lacquer kabuto with a restrained red crest, segmented bone-white dō-maru armor painted with sparse ink-black tiger-stripe geometry, deep-indigo underclothes, lacquer-red lacing, one heavier black shoulder plate, a stern menpō lowered beneath the face and restrained sick-green contamination at the eyes and armor seams. His silhouette is balanced, commanding and distinct from the existing daimyō, with no literal tiger anatomy and no graphic gore.\nAnimation layout: ONE SINGLE MASTER SHEET arranged as an exact invisible grid of 6 columns by 5 rows, exactly 30 equal cells, read left to right. Row 1 contains six coherent commanding idle frames. Row 2 contains six coherent movement frames for a powerful disciplined advance. Row 3 contains six coherent EMPTY-HANDED attack frames using a guarded step, crushing forearm strike and tiger-like low pounce performed with normal human hands, with no effect. Row 4 contains six coherent hurt/recoil frames. Row 5 contains six coherent death/collapse frames ending prone. Do not draw grid lines, cell borders, panels, labels, numbers or separators.\nCharacter consistency: every cell depicts the exact same single character, identical face, helmet, armor, colors, proportions and scale. Strict orthographic side view facing LEFT in all 30 cells. Full body and feet visible in every cell, centered inside each invisible cell with generous internal padding, same ground baseline and camera height, no cropping, no overlap into neighboring cells.\nWeapon modularity: BOTH HANDS COMPLETELY EMPTY in every frame. Absolutely no katana, weapon, blade, polearm, bow, firearm, shield, claw weapon, tool, object, scabbard, holster or carried prop anywhere on the body or in the sheet.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering, readable at small gameplay scale.\nColor palette: aged ivory, ink black, deep indigo, lacquer red, dark iron and restrained sick green. Do not use magenta or pink in the character.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background, uniform edge to edge and throughout all spacing between cells.\nConstraints: background must contain no shadow, gradient, texture, floor plane, reflection, glow, claw trails, particles or lighting variation. No cast/contact shadows. No scenery, architecture, ground, extra character, duplicate outside the 30 cells, text, logo, watermark or UI. Historically grounded 1638 Japanese armor, no modern elements, no fantasy anatomy, no resemblance to a named existing franchise character, no graphic gore.",
+      "generationTool": "OpenAI ImageGen built-in — un appel distinct"
+    }
+  ]
+}

@@ -1,0 +1,868 @@
+{
+  "schema": 1,
+  "category": "regular",
+  "count": 20,
+  "generationTool": "OpenAI ImageGen built-in",
+  "generationPolicy": "Un appel ImageGen distinct par personnage. Les armes, outils et accessoires de combat restent des sprites séparés.",
+  "animationStandard": {
+    "masterGrid": {
+      "columns": 6,
+      "rows": 5,
+      "totalPoses": 30
+    },
+    "rows": [
+      "idle",
+      "move",
+      "attack",
+      "hurt",
+      "death"
+    ],
+    "framesPerRow": 6,
+    "facing": "left",
+    "weaponsBakedIntoBody": false,
+    "sourceBackground": "#ff00ff",
+    "finalFormat": "PNG RGBA"
+  },
+  "entries": [
+    {
+      "id": "r01-nureta-fisher",
+      "name": "Pêcheur de Nureta",
+      "subtitle": "Harceleur côtier",
+      "lore": [
+        "Il relevait les filets de Nureta quand les premières barques contaminées ont dérivé jusqu'au rivage.",
+        "La fièvre du Yomi l'a laissé errer entre les quais, guidé par le bruit de l'eau et des pas."
+      ],
+      "stats": {
+        "hp": 46,
+        "damage": 9,
+        "speed": 0.95,
+        "posture": 24
+      },
+      "pattern": "Avance par à-coups, feinte une retraite puis balaie à courte portée avec son harpon séparé.",
+      "weaponId": "kikuchi-yari",
+      "weaponRoleOriginal": "weapon-harpoon",
+      "nom": "Pêcheur de Nureta",
+      "role": "Harceleur côtier",
+      "gameplay": "46 PV, 9 dégâts, vitesse 0.95. Avance par à-coups, feinte une retraite puis balaie à courte portée avec son harpon séparé.",
+      "weapon": {
+        "id": "kikuchi-yari",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/regular/r01-nureta-fisher",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/regular/r01-nureta-fisher/source-master.png",
+        "masterAlpha": "assets/modular/characters/regular/r01-nureta-fisher/master-alpha.png",
+        "master": "assets/modular/characters/regular/r01-nureta-fisher/master.png",
+        "sprite": "assets/modular/characters/regular/r01-nureta-fisher/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/regular/r01-nureta-fisher/sheets/idle.png",
+          "move": "assets/modular/characters/regular/r01-nureta-fisher/sheets/move.png",
+          "attack": "assets/modular/characters/regular/r01-nureta-fisher/sheets/attack.png",
+          "hurt": "assets/modular/characters/regular/r01-nureta-fisher/sheets/hurt.png",
+          "death": "assets/modular/characters/regular/r01-nureta-fisher/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/regular/r01-nureta-fisher/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original enemy identity, the Nureta Fisher: an infected coastal fisherman from Kan'ei Japan, 1638, lean adult man with a weathered conical sedge hat, short dark indigo work coat, rolled trousers, rope belt, straw sandals, salt-stained fabrics, pallid skin and subtle sick-green eyes. No gore.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical character scale and camera in every cell, consistent baseline, generous padding, nothing crosses a cell boundary. Rows top-to-bottom: row 1 six-frame idle breathing; row 2 six-frame left-facing walk cycle; row 3 six-frame empty-handed attack motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns are sequential animation phases from left to right.\nCharacter invariants: same face, hat, clothing, proportions and colors in all 30 cells; pure lateral side view facing left only; never front-facing, right-facing, or rear-facing. Every pose is fully visible head-to-toe.\nStyle/medium: polished authentic 16-bit pixel art, large crisp square pixels, hard pixel clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette, no antialiasing, no painterly softness.\nScene/backdrop: one continuous perfectly flat solid #ff00ff chroma-key background.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. No weapon, tool, fishing gear, prop, object, bag, basket, sheath, scabbard or accessory held or attached; weapon sprites will be layered separately later.\nAvoid: no text, labels, numbers, arrows, logos, watermark, frame, panel border, cell outline, drawn grid line, scenery, ground, shadow, gradient, texture, glow, particles, smoke, blood, extra character, duplicate outside the 30 required poses, or magenta/pink on the character."
+    },
+    {
+      "id": "r02-sekisho-messenger",
+      "name": "Messager du Sekisho",
+      "subtitle": "Coureur d'interception",
+      "lore": [
+        "Ce jeune courrier devait porter l'ordre de fermer les barrières du poste de contrôle.",
+        "Mordu avant d'atteindre Kurokawa, il répète encore sa course sans jamais livrer le message."
+      ],
+      "stats": {
+        "hp": 38,
+        "damage": 8,
+        "speed": 1.35,
+        "posture": 18
+      },
+      "pattern": "Traverse rapidement l'écran, dépasse le samouraï puis revient avec une attaque de tantō.",
+      "weaponId": "tanto",
+      "weaponRoleOriginal": "weapon-tanto-checkpoint",
+      "nom": "Messager du Sekisho",
+      "role": "Coureur d'interception",
+      "gameplay": "38 PV, 8 dégâts, vitesse 1.35. Traverse rapidement l'écran, dépasse le samouraï puis revient avec une attaque de tantō.",
+      "weapon": {
+        "id": "tanto",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/regular/r02-sekisho-messenger",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/regular/r02-sekisho-messenger/source-master.png",
+        "masterAlpha": "assets/modular/characters/regular/r02-sekisho-messenger/master-alpha.png",
+        "master": "assets/modular/characters/regular/r02-sekisho-messenger/master.png",
+        "sprite": "assets/modular/characters/regular/r02-sekisho-messenger/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/regular/r02-sekisho-messenger/sheets/idle.png",
+          "move": "assets/modular/characters/regular/r02-sekisho-messenger/sheets/move.png",
+          "attack": "assets/modular/characters/regular/r02-sekisho-messenger/sheets/attack.png",
+          "hurt": "assets/modular/characters/regular/r02-sekisho-messenger/sheets/hurt.png",
+          "death": "assets/modular/characters/regular/r02-sekisho-messenger/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/regular/r02-sekisho-messenger/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original enemy identity, the Sekisho Messenger: an infected checkpoint courier from Kan'ei Japan, 1638, wiry young adult man with a low folded travel hood, torn brown-and-indigo dochugi coat, cloth gaiters, rope fastenings, straw sandals, a small lacquer-red checkpoint badge sewn flat onto the chest, pallid skin and subtle sick-green eyes. No gore.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical character scale and camera in every cell, consistent baseline, generous padding, nothing crosses a cell boundary. Rows top-to-bottom: row 1 six-frame idle breathing; row 2 six-frame left-facing running walk cycle; row 3 six-frame empty-handed attack motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns are sequential animation phases from left to right.\nCharacter invariants: same face, hood, clothing, proportions and colors in all 30 cells; pure lateral side view facing left only; never front-facing, right-facing, or rear-facing. Every pose is fully visible head-to-toe.\nStyle/medium: polished authentic 16-bit pixel art, large crisp square pixels, hard pixel clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette, no antialiasing, no painterly softness.\nScene/backdrop: one continuous perfectly flat solid #ff00ff chroma-key background.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. No weapon, scroll, document, prop, object, satchel, bag, sheath, scabbard or accessory held or attached; weapon sprites will be layered separately later.\nAvoid: no text, labels, numbers, arrows, logos, watermark, frame, panel border, cell outline, drawn grid line, scenery, ground, shadow, gradient, texture, glow, particles, smoke, blood, extra character, duplicate outside the 30 required poses, or magenta/pink on the character."
+    },
+    {
+      "id": "r03-kurokawa-miner",
+      "name": "Mineur de Kurokawa",
+      "subtitle": "Briseur lourd",
+      "lore": [
+        "Les galeries de cuivre furent condamnées trop tard et plusieurs équipes restèrent sous la montagne.",
+        "Ce mineur remonte désormais vers la lumière en frappant tout obstacle comme une paroi à abattre."
+      ],
+      "stats": {
+        "hp": 74,
+        "damage": 15,
+        "speed": 0.72,
+        "posture": 42
+      },
+      "pattern": "Télégraphie un coup vertical puissant qui brise la garde mais le laisse vulnérable après l'impact.",
+      "weaponId": "hachiwari",
+      "weaponRoleOriginal": "weapon-miner-pick",
+      "nom": "Mineur de Kurokawa",
+      "role": "Briseur lourd",
+      "gameplay": "74 PV, 15 dégâts, vitesse 0.72. Télégraphie un coup vertical puissant qui brise la garde mais le laisse vulnérable après l'impact.",
+      "weapon": {
+        "id": "hachiwari",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/regular/r03-kurokawa-miner",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/regular/r03-kurokawa-miner/source-master.png",
+        "masterAlpha": "assets/modular/characters/regular/r03-kurokawa-miner/master-alpha.png",
+        "master": "assets/modular/characters/regular/r03-kurokawa-miner/master.png",
+        "sprite": "assets/modular/characters/regular/r03-kurokawa-miner/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/regular/r03-kurokawa-miner/sheets/idle.png",
+          "move": "assets/modular/characters/regular/r03-kurokawa-miner/sheets/move.png",
+          "attack": "assets/modular/characters/regular/r03-kurokawa-miner/sheets/attack.png",
+          "hurt": "assets/modular/characters/regular/r03-kurokawa-miner/sheets/hurt.png",
+          "death": "assets/modular/characters/regular/r03-kurokawa-miner/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/regular/r03-kurokawa-miner/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original enemy identity, the Kurokawa Miner: an infected copper-mine laborer from Kan'ei Japan, 1638, compact muscular man with a tied hachimaki, soot-black sleeveless work vest over an indigo underlayer, patched momohiki trousers, cloth foot wraps, grime-dark skin patches and subtle sick-green eyes. No gore.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical character scale and camera in every cell, consistent baseline, generous padding, nothing crosses a cell boundary. Rows top-to-bottom: row 1 six-frame idle breathing; row 2 six-frame heavy left-facing walk cycle; row 3 six-frame empty-handed overhead attack motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns are sequential animation phases from left to right.\nCharacter invariants: same face, headband, clothing, proportions and colors in all 30 cells; pure lateral side view facing left only; never front-facing, right-facing, or rear-facing. Every pose is fully visible head-to-toe.\nStyle/medium: polished authentic 16-bit pixel art, large crisp square pixels, hard pixel clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette, no antialiasing, no painterly softness.\nScene/backdrop: one continuous perfectly flat solid #ff00ff chroma-key background.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. No weapon, pick, lamp, tool, prop, object, bag, basket, sheath, scabbard or accessory held or attached; weapon sprites will be layered separately later.\nAvoid: no text, labels, numbers, arrows, logos, watermark, frame, panel border, cell outline, drawn grid line, scenery, ground, shadow, gradient, texture, glow, particles, smoke, blood, extra character, duplicate outside the 30 required poses, or magenta/pink on the character."
+    },
+    {
+      "id": "r04-chaya-servant",
+      "name": "Servante du Chaya",
+      "subtitle": "Assaillante vive",
+      "lore": [
+        "Elle servait le thé aux voyageurs de la route orientale lorsque les réfugiés ont forcé les portes.",
+        "Son dernier geste de cuisine est devenu une série de tailles rapides et désordonnées."
+      ],
+      "stats": {
+        "hp": 40,
+        "damage": 10,
+        "speed": 1.22,
+        "posture": 20
+      },
+      "pattern": "Enchaîne deux pas courts et une taille rapide, puis recule avant la riposte.",
+      "weaponId": "ono",
+      "weaponRoleOriginal": "weapon-kitchen-cleaver",
+      "nom": "Servante du Chaya",
+      "role": "Assaillante vive",
+      "gameplay": "40 PV, 10 dégâts, vitesse 1.22. Enchaîne deux pas courts et une taille rapide, puis recule avant la riposte.",
+      "weapon": {
+        "id": "ono",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/regular/r04-chaya-servant",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/regular/r04-chaya-servant/source-master.png",
+        "masterAlpha": "assets/modular/characters/regular/r04-chaya-servant/master-alpha.png",
+        "master": "assets/modular/characters/regular/r04-chaya-servant/master.png",
+        "sprite": "assets/modular/characters/regular/r04-chaya-servant/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/regular/r04-chaya-servant/sheets/idle.png",
+          "move": "assets/modular/characters/regular/r04-chaya-servant/sheets/move.png",
+          "attack": "assets/modular/characters/regular/r04-chaya-servant/sheets/attack.png",
+          "hurt": "assets/modular/characters/regular/r04-chaya-servant/sheets/hurt.png",
+          "death": "assets/modular/characters/regular/r04-chaya-servant/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/regular/r04-chaya-servant/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original enemy identity, the Chaya Servant: an infected roadside tea-house worker from Kan'ei Japan, 1638, slim adult woman with a simple tied black bun, faded bone-white kosode, short dark-indigo apron, muted lacquer-red obi, practical leggings, tabi and sandals, pallid face and subtle sick-green eyes. No gore.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical character scale and camera in every cell, consistent baseline, generous padding, nothing crosses a cell boundary. Rows top-to-bottom: row 1 six-frame idle breathing; row 2 six-frame left-facing quick walk cycle; row 3 six-frame empty-handed slashing attack motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns are sequential animation phases from left to right.\nCharacter invariants: same face, hair, clothing, proportions and colors in all 30 cells; pure lateral side view facing left only; never front-facing, right-facing, or rear-facing. Every pose is fully visible head-to-toe.\nStyle/medium: polished authentic 16-bit pixel art, large crisp square pixels, hard pixel clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette, no antialiasing, no painterly softness.\nScene/backdrop: one continuous perfectly flat solid #ff00ff chroma-key background.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. No weapon, tray, cup, kitchen tool, prop, object, pouch, sheath, scabbard or accessory held or attached; weapon sprites will be layered separately later.\nAvoid: no text, labels, numbers, arrows, logos, watermark, frame, panel border, cell outline, drawn grid line, scenery, ground, shadow, gradient, texture, glow, particles, smoke, blood, extra character, duplicate outside the 30 required poses, or magenta/pink on the character."
+    },
+    {
+      "id": "r05-kome-porter",
+      "name": "Porteur de riz",
+      "subtitle": "Colosse de proximité",
+      "lore": [
+        "Il transportait les réserves du grenier communal lorsque la quarantaine affamée s'est changée en émeute.",
+        "Son dos rompu supporte encore une force brutale que le virus a rendue insensible à la douleur."
+      ],
+      "stats": {
+        "hp": 82,
+        "damage": 16,
+        "speed": 0.68,
+        "posture": 48
+      },
+      "pattern": "Encaisse une attaque légère, avance lentement et répond par un large coup de gourdin.",
+      "weaponId": "kanabo",
+      "weaponRoleOriginal": "weapon-wood-club",
+      "nom": "Porteur de riz",
+      "role": "Colosse de proximité",
+      "gameplay": "82 PV, 16 dégâts, vitesse 0.68. Encaisse une attaque légère, avance lentement et répond par un large coup de gourdin.",
+      "weapon": {
+        "id": "kanabo",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/regular/r05-kome-porter",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/regular/r05-kome-porter/source-master.png",
+        "masterAlpha": "assets/modular/characters/regular/r05-kome-porter/master-alpha.png",
+        "master": "assets/modular/characters/regular/r05-kome-porter/master.png",
+        "sprite": "assets/modular/characters/regular/r05-kome-porter/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/regular/r05-kome-porter/sheets/idle.png",
+          "move": "assets/modular/characters/regular/r05-kome-porter/sheets/move.png",
+          "attack": "assets/modular/characters/regular/r05-kome-porter/sheets/attack.png",
+          "hurt": "assets/modular/characters/regular/r05-kome-porter/sheets/hurt.png",
+          "death": "assets/modular/characters/regular/r05-kome-porter/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/regular/r05-kome-porter/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original enemy identity, the Kome Porter: an infected rice-store porter from Kan'ei Japan, 1638, broad middle-aged man with shaved pate and short side hair, sleeveless rough indigo happi, rope belt, patched knee trousers, forearm wraps, straw sandals, pale contaminated skin and subtle sick-green eyes. No gore.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical character scale and camera in every cell, consistent baseline, generous padding, nothing crosses a cell boundary. Rows top-to-bottom: row 1 six-frame idle breathing; row 2 six-frame lumbering left-facing walk cycle; row 3 six-frame empty-handed club-swing attack motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns are sequential animation phases from left to right.\nCharacter invariants: same face, hair, clothing, proportions and colors in all 30 cells; pure lateral side view facing left only; never front-facing, right-facing, or rear-facing. Every pose is fully visible head-to-toe.\nStyle/medium: polished authentic 16-bit pixel art, large crisp square pixels, hard pixel clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette, no antialiasing, no painterly softness.\nScene/backdrop: one continuous perfectly flat solid #ff00ff chroma-key background.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. No weapon, rice bale, carrying pole, tool, prop, object, bag, basket, sheath, scabbard or accessory held or attached; weapon sprites will be layered separately later.\nAvoid: no text, labels, numbers, arrows, logos, watermark, frame, panel border, cell outline, drawn grid line, scenery, ground, shadow, gradient, texture, glow, particles, smoke, blood, extra character, duplicate outside the 30 required poses, or magenta/pink on the character."
+    },
+    {
+      "id": "r06-yama-woodcutter",
+      "name": "Bûcheron des montagnes",
+      "subtitle": "Frappeur vertical",
+      "lore": [
+        "Il vivait dans les cèdres au-dessus du village et ignorait les cloches de quarantaine.",
+        "La contamination l'a ramené vers les chemins avec la patience mécanique d'un homme qui fend du bois."
+      ],
+      "stats": {
+        "hp": 66,
+        "damage": 17,
+        "speed": 0.82,
+        "posture": 36
+      },
+      "pattern": "Lève sa hache au-dessus de la tête, poursuit un instant la cible puis frappe le sol.",
+      "weaponId": "ono",
+      "weaponRoleOriginal": "weapon-woodcutter-axe",
+      "nom": "Bûcheron des montagnes",
+      "role": "Frappeur vertical",
+      "gameplay": "66 PV, 17 dégâts, vitesse 0.82. Lève sa hache au-dessus de la tête, poursuit un instant la cible puis frappe le sol.",
+      "weapon": {
+        "id": "ono",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/regular/r06-yama-woodcutter",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/regular/r06-yama-woodcutter/source-master.png",
+        "masterAlpha": "assets/modular/characters/regular/r06-yama-woodcutter/master-alpha.png",
+        "master": "assets/modular/characters/regular/r06-yama-woodcutter/master.png",
+        "sprite": "assets/modular/characters/regular/r06-yama-woodcutter/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/regular/r06-yama-woodcutter/sheets/idle.png",
+          "move": "assets/modular/characters/regular/r06-yama-woodcutter/sheets/move.png",
+          "attack": "assets/modular/characters/regular/r06-yama-woodcutter/sheets/attack.png",
+          "hurt": "assets/modular/characters/regular/r06-yama-woodcutter/sheets/hurt.png",
+          "death": "assets/modular/characters/regular/r06-yama-woodcutter/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/regular/r06-yama-woodcutter/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original enemy identity, the Yama Woodcutter: an infected mountain woodcutter from Kan'ei Japan, 1638, tall sinewy man with loose topknot, weathered dark-brown sleeveless coat over indigo work clothes, bark-colored forearm wraps, patched trousers, straw sandals, pallid skin and subtle sick-green eyes. No gore.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical character scale and camera in every cell, consistent baseline, generous padding, nothing crosses a cell boundary. Rows top-to-bottom: row 1 six-frame idle breathing; row 2 six-frame left-facing trudging walk cycle; row 3 six-frame empty-handed chopping attack motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns are sequential animation phases left to right.\nCharacter invariants: same face, hair, clothing, proportions and colors in all 30 cells; pure lateral side view facing left only; never front-facing, right-facing, or rear-facing; every pose fully visible head-to-toe.\nStyle/medium: polished authentic 16-bit pixel art, large crisp square pixels, hard pixel clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette, no antialiasing or painterly softness.\nScene/backdrop: one continuous perfectly flat solid #ff00ff chroma-key background.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. No weapon, axe, wood, rope coil, tool, prop, object, pack, sheath, scabbard or accessory held or attached; weapon sprites will be layered separately later.\nAvoid: no text, labels, numbers, arrows, logo, watermark, frame, panel border, cell outline, drawn grid line, scenery, ground, shadow, gradient, texture, glow, particles, smoke, blood, extra character, or magenta/pink on the character."
+    },
+    {
+      "id": "r07-shio-worker",
+      "name": "Saunière",
+      "subtitle": "Balayeuse de zone",
+      "lore": [
+        "Le sel collé à ses vêtements a ralenti les premiers signes de la souillure sans l'arrêter.",
+        "Elle protège encore les bassins abandonnés comme si chaque intrus menaçait la récolte."
+      ],
+      "stats": {
+        "hp": 48,
+        "damage": 10,
+        "speed": 0.9,
+        "posture": 26
+      },
+      "pattern": "Garde une distance moyenne et effectue un balayage bas qui punit les esquives tardives.",
+      "weaponId": "sodegarami",
+      "weaponRoleOriginal": "weapon-salt-rake",
+      "nom": "Saunière",
+      "role": "Balayeuse de zone",
+      "gameplay": "48 PV, 10 dégâts, vitesse 0.9. Garde une distance moyenne et effectue un balayage bas qui punit les esquives tardives.",
+      "weapon": {
+        "id": "sodegarami",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/regular/r07-shio-worker",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/regular/r07-shio-worker/source-master.png",
+        "masterAlpha": "assets/modular/characters/regular/r07-shio-worker/master-alpha.png",
+        "master": "assets/modular/characters/regular/r07-shio-worker/master.png",
+        "sprite": "assets/modular/characters/regular/r07-shio-worker/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/regular/r07-shio-worker/sheets/idle.png",
+          "move": "assets/modular/characters/regular/r07-shio-worker/sheets/move.png",
+          "attack": "assets/modular/characters/regular/r07-shio-worker/sheets/attack.png",
+          "hurt": "assets/modular/characters/regular/r07-shio-worker/sheets/hurt.png",
+          "death": "assets/modular/characters/regular/r07-shio-worker/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/regular/r07-shio-worker/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original enemy identity, the Shio Worker: an infected salt-pan laborer from Kan'ei Japan, 1638, gaunt adult woman with tightly wrapped indigo headcloth, sun-bleached short kosode, layered bone-white apron panels, rolled dark trousers, bare forearms, tabi sandals, salt-crusted fabric edges, pale skin and subtle sick-green eyes. No gore.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical character scale and camera in every cell, consistent baseline, generous padding, nothing crosses a cell boundary. Rows top-to-bottom: row 1 six-frame idle breathing; row 2 six-frame left-facing shuffling walk cycle; row 3 six-frame empty-handed sweeping attack motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns are sequential animation phases left to right.\nCharacter invariants: same face, headcloth, clothing, proportions and colors in all 30 cells; pure lateral side view facing left only; never front-facing, right-facing, or rear-facing; every pose fully visible head-to-toe.\nStyle/medium: polished authentic 16-bit pixel art, large crisp square pixels, hard pixel clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette, no antialiasing or painterly softness.\nScene/backdrop: one continuous perfectly flat solid #ff00ff chroma-key background.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. No weapon, rake, salt basket, pole, tool, prop, object, pack, sheath, scabbard or accessory held or attached; weapon sprites will be layered separately later.\nAvoid: no text, labels, numbers, arrows, logo, watermark, frame, panel border, cell outline, drawn grid line, scenery, ground, shadow, gradient, texture, glow, particles, smoke, blood, extra character, or magenta/pink on the character."
+    },
+    {
+      "id": "r08-kawara-roofer",
+      "name": "Couvreur de Kawara",
+      "subtitle": "Bondisseur agile",
+      "lore": [
+        "Il réparait les tuiles du château quand les gardes ont verrouillé les cours intérieures.",
+        "Son corps infecté conserve l'équilibre d'un artisan habitué aux pentes les plus dangereuses."
+      ],
+      "stats": {
+        "hp": 44,
+        "damage": 11,
+        "speed": 1.28,
+        "posture": 22
+      },
+      "pattern": "Bondit au-dessus d'une attaque basse et retombe avec un coup de marteau très court.",
+      "weaponId": "otsuchi",
+      "weaponRoleOriginal": "weapon-kawara-hammer",
+      "nom": "Couvreur de Kawara",
+      "role": "Bondisseur agile",
+      "gameplay": "44 PV, 11 dégâts, vitesse 1.28. Bondit au-dessus d'une attaque basse et retombe avec un coup de marteau très court.",
+      "weapon": {
+        "id": "otsuchi",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/regular/r08-kawara-roofer",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/regular/r08-kawara-roofer/source-master.png",
+        "masterAlpha": "assets/modular/characters/regular/r08-kawara-roofer/master-alpha.png",
+        "master": "assets/modular/characters/regular/r08-kawara-roofer/master.png",
+        "sprite": "assets/modular/characters/regular/r08-kawara-roofer/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/regular/r08-kawara-roofer/sheets/idle.png",
+          "move": "assets/modular/characters/regular/r08-kawara-roofer/sheets/move.png",
+          "attack": "assets/modular/characters/regular/r08-kawara-roofer/sheets/attack.png",
+          "hurt": "assets/modular/characters/regular/r08-kawara-roofer/sheets/hurt.png",
+          "death": "assets/modular/characters/regular/r08-kawara-roofer/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/regular/r08-kawara-roofer/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original enemy identity, the Kawara Roofer: an infected castle-roof artisan from Kan'ei Japan, 1638, agile compact man with tied hachimaki, faded lacquer-red sleeveless hanten over deep-indigo shirt, reinforced knee trousers, cloth wrist wraps, split-toe tabi and rope sandals, gray dust stains and subtle sick-green eyes. No gore.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical character scale and camera in every cell, consistent baseline, generous padding, nothing crosses a cell boundary. Rows top-to-bottom: row 1 six-frame idle breathing; row 2 six-frame nimble left-facing walk cycle; row 3 six-frame empty-handed hammering attack motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns are sequential animation phases left to right.\nCharacter invariants: same face, headband, clothing, proportions and colors in all 30 cells; pure lateral side view facing left only; never front-facing, right-facing, or rear-facing; every pose fully visible head-to-toe.\nStyle/medium: polished authentic 16-bit pixel art, large crisp square pixels, hard pixel clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette, no antialiasing or painterly softness.\nScene/backdrop: one continuous perfectly flat solid #ff00ff chroma-key background.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. No weapon, hammer, tile, rope, tool, prop, object, bag, sheath, scabbard or accessory held or attached; weapon sprites will be layered separately later.\nAvoid: no text, labels, numbers, arrows, logo, watermark, frame, panel border, cell outline, drawn grid line, scenery, ground, shadow, gradient, texture, glow, particles, smoke, blood, extra character, or magenta/pink on the character."
+    },
+    {
+      "id": "r09-haka-digger",
+      "name": "Fossoyeur de Haka",
+      "subtitle": "Piqueur tenace",
+      "lore": [
+        "Il creusa des tombes jusqu'à ce que les morts fussent plus nombreux que les vivants.",
+        "La terre de Kurokawa couvre encore ses manches tandis qu'il cherche une fosse pour chaque voyageur."
+      ],
+      "stats": {
+        "hp": 58,
+        "damage": 12,
+        "speed": 0.78,
+        "posture": 34
+      },
+      "pattern": "Se baisse sous les attaques hautes puis allonge une poussée de pelle difficile à interrompre.",
+      "weaponId": "su-yari",
+      "weaponRoleOriginal": "weapon-grave-spade",
+      "nom": "Fossoyeur de Haka",
+      "role": "Piqueur tenace",
+      "gameplay": "58 PV, 12 dégâts, vitesse 0.78. Se baisse sous les attaques hautes puis allonge une poussée de pelle difficile à interrompre.",
+      "weapon": {
+        "id": "su-yari",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/regular/r09-haka-digger",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/regular/r09-haka-digger/source-master.png",
+        "masterAlpha": "assets/modular/characters/regular/r09-haka-digger/master-alpha.png",
+        "master": "assets/modular/characters/regular/r09-haka-digger/master.png",
+        "sprite": "assets/modular/characters/regular/r09-haka-digger/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/regular/r09-haka-digger/sheets/idle.png",
+          "move": "assets/modular/characters/regular/r09-haka-digger/sheets/move.png",
+          "attack": "assets/modular/characters/regular/r09-haka-digger/sheets/attack.png",
+          "hurt": "assets/modular/characters/regular/r09-haka-digger/sheets/hurt.png",
+          "death": "assets/modular/characters/regular/r09-haka-digger/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/regular/r09-haka-digger/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original enemy identity, the Haka Digger: an infected cemetery laborer from Kan'ei Japan, 1638, stooped elderly man with sparse tied gray hair, soot-black hooded shoulder cloth, faded indigo kosode, rope belt, earth-stained leggings, straw sandals, aged bone-pale skin and subtle sick-green eyes. No gore.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical character scale and camera in every cell, consistent baseline, generous padding, nothing crosses a cell boundary. Rows top-to-bottom: row 1 six-frame idle breathing; row 2 six-frame hunched left-facing walk cycle; row 3 six-frame empty-handed digging thrust attack motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns are sequential animation phases left to right.\nCharacter invariants: same face, hair, clothing, proportions and colors in all 30 cells; pure lateral side view facing left only; never front-facing, right-facing, or rear-facing; every pose fully visible head-to-toe.\nStyle/medium: polished authentic 16-bit pixel art, large crisp square pixels, hard pixel clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette, no antialiasing or painterly softness.\nScene/backdrop: one continuous perfectly flat solid #ff00ff chroma-key background.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. No weapon, spade, lantern, grave marker, tool, prop, object, bag, sheath, scabbard or accessory held or attached; weapon sprites will be layered separately later.\nAvoid: no text, labels, numbers, arrows, logo, watermark, frame, panel border, cell outline, drawn grid line, scenery, ground, shadow, gradient, texture, glow, particles, smoke, blood, extra character, or magenta/pink on the character."
+    },
+    {
+      "id": "r10-hikeshi-watchman",
+      "name": "Veilleur Hikeshi",
+      "subtitle": "Contrôle frontal",
+      "lore": [
+        "Le veilleur donna l'alarme pendant l'incendie du quartier sud avant de disparaître dans la fumée.",
+        "Son manteau ignifugé porte encore la suie de cette nuit et le signe rouge de sa brigade."
+      ],
+      "stats": {
+        "hp": 72,
+        "damage": 14,
+        "speed": 0.8,
+        "posture": 44
+      },
+      "pattern": "Utilise un crochet à longue portée pour attirer le joueur avant un coup d'épaule.",
+      "weaponId": "kama-yari",
+      "weaponRoleOriginal": "weapon-fire-hook",
+      "nom": "Veilleur Hikeshi",
+      "role": "Contrôle frontal",
+      "gameplay": "72 PV, 14 dégâts, vitesse 0.8. Utilise un crochet à longue portée pour attirer le joueur avant un coup d'épaule.",
+      "weapon": {
+        "id": "kama-yari",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/regular/r10-hikeshi-watchman",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/regular/r10-hikeshi-watchman/source-master.png",
+        "masterAlpha": "assets/modular/characters/regular/r10-hikeshi-watchman/master-alpha.png",
+        "master": "assets/modular/characters/regular/r10-hikeshi-watchman/master.png",
+        "sprite": "assets/modular/characters/regular/r10-hikeshi-watchman/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/regular/r10-hikeshi-watchman/sheets/idle.png",
+          "move": "assets/modular/characters/regular/r10-hikeshi-watchman/sheets/move.png",
+          "attack": "assets/modular/characters/regular/r10-hikeshi-watchman/sheets/attack.png",
+          "hurt": "assets/modular/characters/regular/r10-hikeshi-watchman/sheets/hurt.png",
+          "death": "assets/modular/characters/regular/r10-hikeshi-watchman/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/regular/r10-hikeshi-watchman/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original enemy identity, the Hikeshi Watchman: an infected town fire-brigade watchman from Kan'ei Japan, 1638, sturdy adult man with close-cropped hair, thick dark-indigo quilted hikeshi coat with a simple flat red geometric crest sewn into the chest, short trousers, heavy wrist wraps, tabi boots, smoke-blackened hems and subtle sick-green eyes. No gore.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical character scale and camera in every cell, consistent baseline, generous padding, nothing crosses a cell boundary. Rows top-to-bottom: row 1 six-frame idle breathing; row 2 six-frame left-facing march cycle; row 3 six-frame empty-handed hook-swing attack motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns are sequential animation phases left to right.\nCharacter invariants: same face, hair, coat, proportions and colors in all 30 cells; pure lateral side view facing left only; never front-facing, right-facing, or rear-facing; every pose fully visible head-to-toe.\nStyle/medium: polished authentic 16-bit pixel art, large crisp square pixels, hard pixel clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette, no antialiasing or painterly softness.\nScene/backdrop: one continuous perfectly flat solid #ff00ff chroma-key background.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. No weapon, fire hook, matoi standard, bucket, tool, prop, object, pack, sheath, scabbard or accessory held or attached; weapon sprites will be layered separately later.\nAvoid: no text, labels, numbers, arrows, logo, watermark, frame, panel border, cell outline, drawn grid line, scenery, ground, shadow, gradient, texture, glow, particles, smoke, blood, extra character, or magenta/pink on the character."
+    },
+    {
+      "id": "r11-nohara-ronin",
+      "name": "Rōnin des plaines",
+      "subtitle": "Duelliste errant",
+      "lore": [
+        "Sans maître ni fief, il accepta de protéger une caravane de réfugiés contre quelques sacs de riz.",
+        "La caravane ne passa jamais Kurokawa et sa lame ébréchée cherche depuis un dernier duel."
+      ],
+      "stats": {
+        "hp": 70,
+        "damage": 18,
+        "speed": 1.05,
+        "posture": 38
+      },
+      "pattern": "Attend l'engagement, pare une attaque prévisible puis répond par une taille précise.",
+      "weaponId": "tachi",
+      "weaponRoleOriginal": "weapon-chipped-uchigatana",
+      "nom": "Rōnin des plaines",
+      "role": "Duelliste errant",
+      "gameplay": "70 PV, 18 dégâts, vitesse 1.05. Attend l'engagement, pare une attaque prévisible puis répond par une taille précise.",
+      "weapon": {
+        "id": "tachi",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/regular/r11-nohara-ronin",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/regular/r11-nohara-ronin/source-master.png",
+        "masterAlpha": "assets/modular/characters/regular/r11-nohara-ronin/master-alpha.png",
+        "master": "assets/modular/characters/regular/r11-nohara-ronin/master.png",
+        "sprite": "assets/modular/characters/regular/r11-nohara-ronin/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/regular/r11-nohara-ronin/sheets/idle.png",
+          "move": "assets/modular/characters/regular/r11-nohara-ronin/sheets/move.png",
+          "attack": "assets/modular/characters/regular/r11-nohara-ronin/sheets/attack.png",
+          "hurt": "assets/modular/characters/regular/r11-nohara-ronin/sheets/hurt.png",
+          "death": "assets/modular/characters/regular/r11-nohara-ronin/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/regular/r11-nohara-ronin/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original enemy identity, the Nohara Ronin: an infected masterless warrior from Kan'ei Japan, 1638, lean scarred man with loose unkempt topknot, torn charcoal haori over faded indigo kimono, lacquer-red sash, split hakama, cloth gaiters and straw sandals, pallid skin and subtle sick-green eyes. He is completely disarmed. No gore.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical scale and camera, consistent baseline, generous padding, nothing crosses cell boundaries. Rows top-to-bottom: row 1 six-frame idle; row 2 six-frame left-facing walk; row 3 six-frame empty-handed sword-swing body motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns are sequential phases left to right.\nCharacter invariants: same face, hair, clothing, proportions and colors in all 30 cells; pure lateral view facing left only; never front, right or rear; every pose fully visible head-to-toe.\nStyle/medium: polished authentic 16-bit pixel art, large crisp square pixels, hard clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette, no antialiasing or softness.\nScene/backdrop: one continuous perfectly flat solid #ff00ff chroma-key background.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. Absolutely no sword, weapon, sheath, scabbard, belt blade, armor accessory, prop, object, bag or item held or attached; weapon sprites will be layered separately.\nAvoid: no text, labels, numbers, arrows, logo, watermark, frame, border, cell outline, grid line, scenery, ground, shadow, gradient, texture, glow, particles, smoke, blood, extra character or magenta/pink on the character."
+    },
+    {
+      "id": "r12-miya-porter",
+      "name": "Porteuse de Miya",
+      "subtitle": "Lancière de sanctuaire",
+      "lore": [
+        "Elle portait les coffres votifs entre les bâtiments du sanctuaire avant l'arrivée des pèlerins malades.",
+        "Les cordes rouges de sa tenue sont devenues le dernier repère des survivants perdus dans la brume."
+      ],
+      "stats": {
+        "hp": 56,
+        "damage": 13,
+        "speed": 1,
+        "posture": 30
+      },
+      "pattern": "Avance en garde compacte et délivre une série de deux poussées de bâton.",
+      "weaponId": "bo",
+      "weaponRoleOriginal": "weapon-shrine-staff",
+      "nom": "Porteuse de Miya",
+      "role": "Lancière de sanctuaire",
+      "gameplay": "56 PV, 13 dégâts, vitesse 1. Avance en garde compacte et délivre une série de deux poussées de bâton.",
+      "weapon": {
+        "id": "bo",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/regular/r12-miya-porter",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/regular/r12-miya-porter/source-master.png",
+        "masterAlpha": "assets/modular/characters/regular/r12-miya-porter/master-alpha.png",
+        "master": "assets/modular/characters/regular/r12-miya-porter/master.png",
+        "sprite": "assets/modular/characters/regular/r12-miya-porter/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/regular/r12-miya-porter/sheets/idle.png",
+          "move": "assets/modular/characters/regular/r12-miya-porter/sheets/move.png",
+          "attack": "assets/modular/characters/regular/r12-miya-porter/sheets/attack.png",
+          "hurt": "assets/modular/characters/regular/r12-miya-porter/sheets/hurt.png",
+          "death": "assets/modular/characters/regular/r12-miya-porter/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/regular/r12-miya-porter/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original enemy identity, the Miya Porter: an infected shrine porter from Kan'ei Japan, 1638, strong young woman with braided black hair tied close, bone-white work kosode under a short deep-indigo sleeveless over-vest, muted red cords stitched flat across the torso, cropped trousers, white leg wraps and straw sandals, pale skin and subtle sick-green eyes. No gore.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical scale and camera, consistent baseline, generous padding, nothing crosses cell boundaries. Rows top-to-bottom: row 1 six-frame idle; row 2 six-frame left-facing walk; row 3 six-frame empty-handed staff-thrust body motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns are sequential phases left to right.\nCharacter invariants: same face, hair, clothing, proportions and colors in all 30 cells; pure lateral view facing left only; never front, right or rear; every pose fully visible head-to-toe.\nStyle/medium: polished authentic 16-bit pixel art, large crisp square pixels, hard clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette, no antialiasing or softness.\nScene/backdrop: one continuous perfectly flat solid #ff00ff chroma-key background.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. No shrine object, portable altar, staff, weapon, rope coil, prop, object, pack, sheath, scabbard or item held or attached; weapon sprites will be layered separately.\nAvoid: no text, labels, numbers, arrows, logo, watermark, frame, border, cell outline, grid line, scenery, ground, shadow, gradient, texture, glow, particles, smoke, blood, extra character or magenta/pink on the character."
+    },
+    {
+      "id": "r13-yakushi-apprentice",
+      "name": "Apprenti Yakushi",
+      "subtitle": "Attaquant toxique",
+      "lore": [
+        "L'apprenti triait les remèdes de son maître lorsque les symptômes inconnus ont submergé l'officine.",
+        "Ses manches tachées portent un mélange de plantes utiles et de résidus désormais contaminés."
+      ],
+      "stats": {
+        "hp": 42,
+        "damage": 9,
+        "speed": 1.08,
+        "posture": 20
+      },
+      "pattern": "Pique vite avec son couteau médical et applique une faible accumulation de souillure.",
+      "weaponId": "tanto",
+      "weaponRoleOriginal": "weapon-medicine-knife",
+      "nom": "Apprenti Yakushi",
+      "role": "Attaquant toxique",
+      "gameplay": "42 PV, 9 dégâts, vitesse 1.08. Pique vite avec son couteau médical et applique une faible accumulation de souillure.",
+      "weapon": {
+        "id": "tanto",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/regular/r13-yakushi-apprentice",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/regular/r13-yakushi-apprentice/source-master.png",
+        "masterAlpha": "assets/modular/characters/regular/r13-yakushi-apprentice/master-alpha.png",
+        "master": "assets/modular/characters/regular/r13-yakushi-apprentice/master.png",
+        "sprite": "assets/modular/characters/regular/r13-yakushi-apprentice/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/regular/r13-yakushi-apprentice/sheets/idle.png",
+          "move": "assets/modular/characters/regular/r13-yakushi-apprentice/sheets/move.png",
+          "attack": "assets/modular/characters/regular/r13-yakushi-apprentice/sheets/attack.png",
+          "hurt": "assets/modular/characters/regular/r13-yakushi-apprentice/sheets/hurt.png",
+          "death": "assets/modular/characters/regular/r13-yakushi-apprentice/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/regular/r13-yakushi-apprentice/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original enemy identity, the Yakushi Apprentice: an infected apothecary assistant from Kan'ei Japan, 1638, narrow-shouldered young man with folded bone-white head towel, dark-indigo wrap coat, gray apron panel, muted lacquer-red sleeve ties, fitted trousers, tabi and sandals, medicinal stains on cloth, pale skin and subtle sick-green eyes. No gore.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical scale and camera, consistent baseline, generous padding, nothing crosses cell boundaries. Rows top-to-bottom: row 1 six-frame idle; row 2 six-frame left-facing cautious walk; row 3 six-frame empty-handed short-blade attack body motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns are sequential phases left to right.\nCharacter invariants: same face, head towel, clothing, proportions and colors in all 30 cells; pure lateral view facing left only; never front, right or rear; every pose fully visible head-to-toe.\nStyle/medium: polished authentic 16-bit pixel art, large crisp square pixels, hard clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette, no antialiasing or softness.\nScene/backdrop: one continuous perfectly flat solid #ff00ff chroma-key background.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. No medicine bottle, knife, herb, pouch, weapon, tool, prop, object, bag, sheath, scabbard or item held or attached; weapon sprites will be layered separately.\nAvoid: no text, labels, numbers, arrows, logo, watermark, frame, border, cell outline, grid line, scenery, ground, shadow, gradient, texture, glow, particles, smoke, blood, extra character or magenta/pink on the character."
+    },
+    {
+      "id": "r14-kaido-bandit",
+      "name": "Bandite du Kaidō",
+      "subtitle": "Embusqueuse rapide",
+      "lore": [
+        "Elle rançonnait les voyageurs bien avant que la route ne soit coupée par le shogunat.",
+        "La peste a effacé sa prudence mais pas son instinct pour attaquer depuis les angles morts."
+      ],
+      "stats": {
+        "hp": 52,
+        "damage": 14,
+        "speed": 1.3,
+        "posture": 24
+      },
+      "pattern": "Entre en sprint, glisse derrière la cible et frappe immédiatement dans le dos.",
+      "weaponId": "tachi",
+      "weaponRoleOriginal": "weapon-bandit-katana",
+      "nom": "Bandite du Kaidō",
+      "role": "Embusqueuse rapide",
+      "gameplay": "52 PV, 14 dégâts, vitesse 1.3. Entre en sprint, glisse derrière la cible et frappe immédiatement dans le dos.",
+      "weapon": {
+        "id": "tachi",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/regular/r14-kaido-bandit",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/regular/r14-kaido-bandit/source-master.png",
+        "masterAlpha": "assets/modular/characters/regular/r14-kaido-bandit/master-alpha.png",
+        "master": "assets/modular/characters/regular/r14-kaido-bandit/master.png",
+        "sprite": "assets/modular/characters/regular/r14-kaido-bandit/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/regular/r14-kaido-bandit/sheets/idle.png",
+          "move": "assets/modular/characters/regular/r14-kaido-bandit/sheets/move.png",
+          "attack": "assets/modular/characters/regular/r14-kaido-bandit/sheets/attack.png",
+          "hurt": "assets/modular/characters/regular/r14-kaido-bandit/sheets/hurt.png",
+          "death": "assets/modular/characters/regular/r14-kaido-bandit/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/regular/r14-kaido-bandit/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original enemy identity, the Kaido Bandit: an infected highway outlaw from Kan'ei Japan, 1638, wiry adult woman with ragged dark hood exposing a side braid, asymmetrical brown-and-indigo patchwork jacket, lacquer-red waist wrap, tight trousers, forearm bindings and straw sandals, gaunt pale face and subtle sick-green eyes. No gore.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical scale and camera, consistent baseline, generous padding, nothing crosses cell boundaries. Rows top-to-bottom: row 1 six-frame idle; row 2 six-frame fast left-facing walk; row 3 six-frame empty-handed katana-slash body motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns are sequential phases left to right.\nCharacter invariants: same face, braid, hood, clothing, proportions and colors in all 30 cells; pure lateral view facing left only; never front, right or rear; every pose fully visible head-to-toe.\nStyle/medium: polished authentic 16-bit pixel art, large crisp square pixels, hard clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette, no antialiasing or softness.\nScene/backdrop: one continuous perfectly flat solid #ff00ff chroma-key background.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. No blade, weapon, sheath, scabbard, loot, rope, pouch, prop, object, bag or item held or attached; weapon sprites will be layered separately.\nAvoid: no text, labels, numbers, arrows, logo, watermark, frame, border, cell outline, grid line, scenery, ground, shadow, gradient, texture, glow, particles, smoke, blood, extra character or magenta/pink on the character."
+    },
+    {
+      "id": "r15-oku-servant",
+      "name": "Servante de l'Oku",
+      "subtitle": "Bretteuse disciplinée",
+      "lore": [
+        "Cette intendante connaissait chaque porte dérobée des appartements intérieurs du daimyō.",
+        "Même infectée, elle défend les seuils interdits avec la retenue glaciale de l'étiquette du château."
+      ],
+      "stats": {
+        "hp": 62,
+        "damage": 15,
+        "speed": 1.02,
+        "posture": 34
+      },
+      "pattern": "Protège un seuil, effectue une parade courte puis dégaine son wakizashi en contre.",
+      "weaponId": "wakizashi",
+      "weaponRoleOriginal": "weapon-wakizashi",
+      "nom": "Servante de l'Oku",
+      "role": "Bretteuse disciplinée",
+      "gameplay": "62 PV, 15 dégâts, vitesse 1.02. Protège un seuil, effectue une parade courte puis dégaine son wakizashi en contre.",
+      "weapon": {
+        "id": "wakizashi",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/regular/r15-oku-servant",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/regular/r15-oku-servant/source-master.png",
+        "masterAlpha": "assets/modular/characters/regular/r15-oku-servant/master-alpha.png",
+        "master": "assets/modular/characters/regular/r15-oku-servant/master.png",
+        "sprite": "assets/modular/characters/regular/r15-oku-servant/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/regular/r15-oku-servant/sheets/idle.png",
+          "move": "assets/modular/characters/regular/r15-oku-servant/sheets/move.png",
+          "attack": "assets/modular/characters/regular/r15-oku-servant/sheets/attack.png",
+          "hurt": "assets/modular/characters/regular/r15-oku-servant/sheets/hurt.png",
+          "death": "assets/modular/characters/regular/r15-oku-servant/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/regular/r15-oku-servant/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original enemy identity, the Oku Servant: an infected attendant from the inner rooms of a Kan'ei-era castle, Japan 1638, composed middle-aged woman with formal low black bun, layered aged-bone kosode, deep-indigo sleeveless uchikake cut short for work, narrow lacquer-red obi, dark hakama trousers, white tabi, pale skin and subtle sick-green eyes. No gore.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical scale and camera, consistent baseline, generous padding, nothing crosses cell boundaries. Rows top-to-bottom: row 1 six-frame idle; row 2 six-frame controlled left-facing walk; row 3 six-frame empty-handed wakizashi-slash body motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns are sequential phases left to right.\nCharacter invariants: same face, hair, clothing, proportions and colors in all 30 cells; pure lateral view facing left only; never front, right or rear; every pose fully visible head-to-toe.\nStyle/medium: polished authentic 16-bit pixel art, large crisp square pixels, hard clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette, no antialiasing or softness.\nScene/backdrop: one continuous perfectly flat solid #ff00ff chroma-key background.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. No blade, weapon, tray, fan, prop, object, purse, bag, sheath, scabbard or item held or attached; weapon sprites will be layered separately.\nAvoid: no text, labels, numbers, arrows, logo, watermark, frame, border, cell outline, grid line, scenery, ground, shadow, gradient, texture, glow, particles, smoke, blood, extra character or magenta/pink on the character."
+    },
+    {
+      "id": "r16-kusari-prisoner",
+      "name": "Prisonnier aux chaînes",
+      "subtitle": "Contrôle circulaire",
+      "lore": [
+        "Il s'échappa des cellules pendant que les geôliers brûlaient les registres de quarantaine.",
+        "Ses liens furent brisés mais ses bras répètent encore le mouvement circulaire des chaînes."
+      ],
+      "stats": {
+        "hp": 60,
+        "damage": 12,
+        "speed": 0.92,
+        "posture": 32
+      },
+      "pattern": "Fait tourner une chaîne sur une large zone puis la ramène brusquement vers lui.",
+      "weaponId": "manrikigusari",
+      "weaponRoleOriginal": "weapon-iron-chain",
+      "nom": "Prisonnier aux chaînes",
+      "role": "Contrôle circulaire",
+      "gameplay": "60 PV, 12 dégâts, vitesse 0.92. Fait tourner une chaîne sur une large zone puis la ramène brusquement vers lui.",
+      "weapon": {
+        "id": "manrikigusari",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/regular/r16-kusari-prisoner",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/regular/r16-kusari-prisoner/source-master.png",
+        "masterAlpha": "assets/modular/characters/regular/r16-kusari-prisoner/master-alpha.png",
+        "master": "assets/modular/characters/regular/r16-kusari-prisoner/master.png",
+        "sprite": "assets/modular/characters/regular/r16-kusari-prisoner/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/regular/r16-kusari-prisoner/sheets/idle.png",
+          "move": "assets/modular/characters/regular/r16-kusari-prisoner/sheets/move.png",
+          "attack": "assets/modular/characters/regular/r16-kusari-prisoner/sheets/attack.png",
+          "hurt": "assets/modular/characters/regular/r16-kusari-prisoner/sheets/hurt.png",
+          "death": "assets/modular/characters/regular/r16-kusari-prisoner/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/regular/r16-kusari-prisoner/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original enemy identity, the Kusari Prisoner: an infected escaped prisoner from Kan'ei Japan, 1638, gaunt adult man with shaved head and uneven stubble, rough ash-bone prison kosode marked only by torn seams, short dark-indigo trousers, broad cloth wrist bands, bare calves and rope sandals, bruised pallid skin and subtle sick-green eyes. No chains are visible. No gore.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical scale and camera, consistent baseline, generous padding, nothing crosses cell boundaries. Rows top-to-bottom: row 1 six-frame idle; row 2 six-frame left-facing staggered walk; row 3 six-frame empty-handed chain-swing body motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns are sequential phases left to right.\nCharacter invariants: same face, clothing, proportions and colors in all cells; pure lateral view facing left only; every pose fully visible head-to-toe.\nStyle/medium: polished authentic 16-bit pixel art, crisp large square pixels, hard clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette.\nScene/backdrop: one continuous perfectly flat solid #ff00ff chroma-key background.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. No chain, shackle, collar, weapon, tool, prop, object, bag, sheath, scabbard or attached item; weapon sprite will be layered separately.\nAvoid: no text, labels, number, logo, watermark, frame, border, cell outline, grid line, scenery, ground, shadow, gradient, texture, glow, particles, smoke, blood, extra character, front/right/rear view or magenta/pink on character."
+    },
+    {
+      "id": "r17-umaya-groom",
+      "name": "Palefrenier d'Umaya",
+      "subtitle": "Harceleur à distance",
+      "lore": [
+        "Le garçon d'écurie libéra les chevaux du château avant que les portes ne se referment.",
+        "Il erre maintenant dans les cours vides en appelant des montures qui ne reviendront pas."
+      ],
+      "stats": {
+        "hp": 36,
+        "damage": 8,
+        "speed": 1.38,
+        "posture": 16
+      },
+      "pattern": "Reste mobile, frappe avec une cravache et recule dès que le joueur réduit la distance.",
+      "weaponId": "chigiriki",
+      "weaponRoleOriginal": "weapon-horse-crop",
+      "nom": "Palefrenier d'Umaya",
+      "role": "Harceleur à distance",
+      "gameplay": "36 PV, 8 dégâts, vitesse 1.38. Reste mobile, frappe avec une cravache et recule dès que le joueur réduit la distance.",
+      "weapon": {
+        "id": "chigiriki",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/regular/r17-umaya-groom",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/regular/r17-umaya-groom/source-master.png",
+        "masterAlpha": "assets/modular/characters/regular/r17-umaya-groom/master-alpha.png",
+        "master": "assets/modular/characters/regular/r17-umaya-groom/master.png",
+        "sprite": "assets/modular/characters/regular/r17-umaya-groom/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/regular/r17-umaya-groom/sheets/idle.png",
+          "move": "assets/modular/characters/regular/r17-umaya-groom/sheets/move.png",
+          "attack": "assets/modular/characters/regular/r17-umaya-groom/sheets/attack.png",
+          "hurt": "assets/modular/characters/regular/r17-umaya-groom/sheets/hurt.png",
+          "death": "assets/modular/characters/regular/r17-umaya-groom/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/regular/r17-umaya-groom/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original enemy identity, the Umaya Groom: an infected castle stable hand from Kan'ei Japan, 1638, lanky teenage boy with messy tied hair, short brown work jacket over deep-indigo shirt, lacquer-red waist cord, reinforced shoulder cloth sewn flat, cropped trousers, leg wraps and straw sandals, pale skin and subtle sick-green eyes. No gore.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical scale and camera, consistent baseline, generous padding, nothing crosses cell boundaries. Rows top-to-bottom: row 1 six-frame idle; row 2 six-frame quick left-facing walk; row 3 six-frame empty-handed whip-swing body motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns are sequential phases left to right.\nCharacter invariants: same face, hair, clothing, proportions and colors in all cells; pure lateral view facing left only; every pose fully visible head-to-toe.\nStyle/medium: polished authentic 16-bit pixel art, crisp large square pixels, hard clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette.\nScene/backdrop: one continuous perfectly flat solid #ff00ff chroma-key background.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. No whip, horse gear, brush, rope, weapon, tool, prop, object, bag, sheath, scabbard or attached item; weapon sprite will be layered separately.\nAvoid: no text, labels, number, logo, watermark, frame, border, cell outline, grid line, scenery, animal, ground, shadow, gradient, texture, glow, particles, smoke, blood, extra character, front/right/rear view or magenta/pink on character."
+    },
+    {
+      "id": "r18-washi-maker",
+      "name": "Fabricante de washi",
+      "subtitle": "Tailleuse fragile",
+      "lore": [
+        "Elle fabriquait le papier destiné aux avis officiels annonçant la fermeture de Kurokawa.",
+        "Les fibres pâles collées à sa robe flottent encore lorsqu'elle reproduit les gestes de son métier."
+      ],
+      "stats": {
+        "hp": 45,
+        "damage": 11,
+        "speed": 0.88,
+        "posture": 22
+      },
+      "pattern": "Prépare une coupe horizontale de couteau de bambou et recule après chaque frappe.",
+      "weaponId": "wakizashi",
+      "weaponRoleOriginal": "weapon-bamboo-knife",
+      "nom": "Fabricante de washi",
+      "role": "Tailleuse fragile",
+      "gameplay": "45 PV, 11 dégâts, vitesse 0.88. Prépare une coupe horizontale de couteau de bambou et recule après chaque frappe.",
+      "weapon": {
+        "id": "wakizashi",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/regular/r18-washi-maker",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/regular/r18-washi-maker/source-master.png",
+        "masterAlpha": "assets/modular/characters/regular/r18-washi-maker/master-alpha.png",
+        "master": "assets/modular/characters/regular/r18-washi-maker/master.png",
+        "sprite": "assets/modular/characters/regular/r18-washi-maker/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/regular/r18-washi-maker/sheets/idle.png",
+          "move": "assets/modular/characters/regular/r18-washi-maker/sheets/move.png",
+          "attack": "assets/modular/characters/regular/r18-washi-maker/sheets/attack.png",
+          "hurt": "assets/modular/characters/regular/r18-washi-maker/sheets/hurt.png",
+          "death": "assets/modular/characters/regular/r18-washi-maker/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/regular/r18-washi-maker/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original enemy identity, the Washi Maker: an infected handmade-paper artisan from Kan'ei Japan, 1638, elderly woman with gray hair tied under a simple indigo kerchief, rolled bone-white kosode sleeves, dark blue apron robe, muted red waist band, calf wraps and sandals, fibrous pale stains on clothing and subtle sick-green eyes. No gore.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical scale and camera, consistent baseline, generous padding, nothing crosses cell boundaries. Rows top-to-bottom: row 1 six-frame idle; row 2 six-frame hunched left-facing walk; row 3 six-frame empty-handed bamboo-knife body motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns are sequential phases left to right.\nCharacter invariants: same face, kerchief, clothing, proportions and colors in all cells; pure lateral view facing left only; every pose fully visible head-to-toe.\nStyle/medium: polished authentic 16-bit pixel art, crisp large square pixels, hard clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette.\nScene/backdrop: one continuous perfectly flat solid #ff00ff chroma-key background.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. No knife, paper sheet, mould, bucket, weapon, tool, prop, object, bag, sheath, scabbard or attached item; weapon sprite will be layered separately.\nAvoid: no text, labels, number, logo, watermark, frame, border, cell outline, grid line, scenery, ground, shadow, gradient, texture, glow, particles, smoke, blood, extra character, front/right/rear view or magenta/pink on character."
+    },
+    {
+      "id": "r19-kago-bearer",
+      "name": "Porteur de kago",
+      "subtitle": "Fantassin de poussée",
+      "lore": [
+        "Il porta des familles nobles hors du quartier infecté jusqu'à l'effondrement du pont.",
+        "Ses épaules puissantes continuent de pousser un fardeau invisible à travers les ruelles."
+      ],
+      "stats": {
+        "hp": 88,
+        "damage": 17,
+        "speed": 0.74,
+        "posture": 52
+      },
+      "pattern": "Charge avec une longue perche et repousse fortement la cible sans changer de direction.",
+      "weaponId": "bo",
+      "weaponRoleOriginal": "weapon-carrying-pole",
+      "nom": "Porteur de kago",
+      "role": "Fantassin de poussée",
+      "gameplay": "88 PV, 17 dégâts, vitesse 0.74. Charge avec une longue perche et repousse fortement la cible sans changer de direction.",
+      "weapon": {
+        "id": "bo",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/regular/r19-kago-bearer",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/regular/r19-kago-bearer/source-master.png",
+        "masterAlpha": "assets/modular/characters/regular/r19-kago-bearer/master-alpha.png",
+        "master": "assets/modular/characters/regular/r19-kago-bearer/master.png",
+        "sprite": "assets/modular/characters/regular/r19-kago-bearer/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/regular/r19-kago-bearer/sheets/idle.png",
+          "move": "assets/modular/characters/regular/r19-kago-bearer/sheets/move.png",
+          "attack": "assets/modular/characters/regular/r19-kago-bearer/sheets/attack.png",
+          "hurt": "assets/modular/characters/regular/r19-kago-bearer/sheets/hurt.png",
+          "death": "assets/modular/characters/regular/r19-kago-bearer/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/regular/r19-kago-bearer/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original enemy identity, the Kago Bearer: an infected palanquin bearer from Kan'ei Japan, 1638, very tall powerful man with shaved pate and short queue, sleeveless deep-indigo happi, thick shoulder padding integrated into the cloth, lacquer-red waist ties, loose work trousers, shin wraps and straw sandals, pallid skin and subtle sick-green eyes. No gore.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical scale and camera, consistent baseline, generous padding, nothing crosses cell boundaries. Rows top-to-bottom: row 1 six-frame idle; row 2 six-frame heavy left-facing walk; row 3 six-frame empty-handed pole-thrust body motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns are sequential phases left to right.\nCharacter invariants: same face, hair, clothing, proportions and colors in all cells; pure lateral view facing left only; every pose fully visible head-to-toe.\nStyle/medium: polished authentic 16-bit pixel art, crisp large square pixels, hard clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette.\nScene/backdrop: one continuous perfectly flat solid #ff00ff chroma-key background.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. No palanquin, pole, cargo, rope, weapon, tool, prop, object, bag, sheath, scabbard or attached item; weapon sprite will be layered separately.\nAvoid: no text, labels, number, logo, watermark, frame, border, cell outline, grid line, scenery, ground, shadow, gradient, texture, glow, particles, smoke, blood, extra character, front/right/rear view or magenta/pink on character."
+    },
+    {
+      "id": "r20-komuso-wanderer",
+      "name": "Errant Komusō",
+      "subtitle": "Sentinelle aveugle",
+      "lore": [
+        "Le moine itinérant entra dans la province avant l'interdiction de circuler et refusa de retirer son tengai.",
+        "Il paraît aveugle mais tourne toujours son panier de bambou vers le moindre souffle."
+      ],
+      "stats": {
+        "hp": 64,
+        "damage": 13,
+        "speed": 0.9,
+        "posture": 36
+      },
+      "pattern": "Écoute immobile, localise le joueur en mouvement puis exécute une poussée soudaine.",
+      "weaponId": "jo",
+      "weaponRoleOriginal": "weapon-shakuhachi-staff",
+      "nom": "Errant Komusō",
+      "role": "Sentinelle aveugle",
+      "gameplay": "64 PV, 13 dégâts, vitesse 0.9. Écoute immobile, localise le joueur en mouvement puis exécute une poussée soudaine.",
+      "weapon": {
+        "id": "jo",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/regular/r20-komuso-wanderer",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/regular/r20-komuso-wanderer/source-master.png",
+        "masterAlpha": "assets/modular/characters/regular/r20-komuso-wanderer/master-alpha.png",
+        "master": "assets/modular/characters/regular/r20-komuso-wanderer/master.png",
+        "sprite": "assets/modular/characters/regular/r20-komuso-wanderer/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/regular/r20-komuso-wanderer/sheets/idle.png",
+          "move": "assets/modular/characters/regular/r20-komuso-wanderer/sheets/move.png",
+          "attack": "assets/modular/characters/regular/r20-komuso-wanderer/sheets/attack.png",
+          "hurt": "assets/modular/characters/regular/r20-komuso-wanderer/sheets/hurt.png",
+          "death": "assets/modular/characters/regular/r20-komuso-wanderer/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/regular/r20-komuso-wanderer/frames"
+      },
+      "prompt": "Use case: stylized-concept\nAsset type: production modular enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original enemy identity, the Komuso Wanderer: an infected itinerant komusō monk from Kan'ei Japan, 1638, slender adult figure wearing a historically grounded woven tengai basket hat fully covering the face, dark-indigo monk robes, aged-bone shoulder layer, muted lacquer-red cord, split leggings, white tabi and straw sandals; a faint sick-green glow shows only through two narrow basket gaps. No gore.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical scale and camera, consistent baseline, generous padding, nothing crosses cell boundaries. Rows top-to-bottom: row 1 six-frame idle; row 2 six-frame gliding left-facing walk; row 3 six-frame empty-handed flute-staff thrust body motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns are sequential phases left to right.\nCharacter invariants: same basket hat, clothing, proportions and colors in all cells; pure lateral view facing left only; every pose fully visible head-to-toe.\nStyle/medium: polished authentic 16-bit pixel art, crisp large square pixels, hard clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette.\nScene/backdrop: one continuous perfectly flat solid #ff00ff chroma-key background.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. No shakuhachi, staff, weapon, instrument, tool, prop, object, bag, sheath, scabbard or attached item other than worn clothing and tengai hat; weapon sprite will be layered separately.\nAvoid: no text, labels, number, logo, watermark, frame, border, cell outline, grid line, scenery, ground, shadow, gradient, texture, glow aura, particles, smoke, blood, extra character, front/right/rear view or magenta/pink on character."
+    }
+  ]
+}

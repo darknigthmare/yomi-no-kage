@@ -1,0 +1,166 @@
+{
+  "schema": 1,
+  "source": "assets/modular/weapons/atlases/ranged.png",
+  "grid": {
+    "columns": 4,
+    "rows": 3
+  },
+  "sprites": [
+    {
+      "id": "yumi-daikyu",
+      "file": "yumi-daikyu.png",
+      "sourceCell": [
+        0,
+        0
+      ],
+      "size": [
+        58,
+        358
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "yumi-hankyu",
+      "file": "yumi-hankyu.png",
+      "sourceCell": [
+        1,
+        0
+      ],
+      "size": [
+        59,
+        231
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "tanegashima-teppo",
+      "file": "tanegashima-teppo.png",
+      "sourceCell": [
+        2,
+        0
+      ],
+      "size": [
+        450,
+        82
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "tanegashima-cavalerie",
+      "file": "tanegashima-cavalerie.png",
+      "sourceCell": [
+        3,
+        0
+      ],
+      "size": [
+        278,
+        81
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "bajozutsu",
+      "file": "bajozutsu.png",
+      "sourceCell": [
+        0,
+        1
+      ],
+      "size": [
+        216,
+        92
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "kusarigama",
+      "file": "kusarigama.png",
+      "sourceCell": [
+        1,
+        1
+      ],
+      "size": [
+        197,
+        212
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "chigiriki",
+      "file": "chigiriki.png",
+      "sourceCell": [
+        2,
+        1
+      ],
+      "size": [
+        253,
+        206
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "manrikigusari",
+      "file": "manrikigusari.png",
+      "sourceCell": [
+        3,
+        1
+      ],
+      "size": [
+        257,
+        194
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "bo",
+      "file": "bo.png",
+      "sourceCell": [
+        0,
+        2
+      ],
+      "size": [
+        385,
+        187
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "jo",
+      "file": "jo.png",
+      "sourceCell": [
+        1,
+        2
+      ],
+      "size": [
+        245,
+        130
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "uchine",
+      "file": "uchine.png",
+      "sourceCell": [
+        2,
+        2
+      ],
+      "size": [
+        215,
+        134
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "tessen-ouvert",
+      "file": "tessen-ouvert.png",
+      "sourceCell": [
+        3,
+        2
+      ],
+      "size": [
+        303,
+        201
+      ],
+      "nonEmpty": true
+    }
+  ]
+}

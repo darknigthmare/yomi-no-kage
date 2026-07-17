@@ -1,0 +1,166 @@
+{
+  "schema": 1,
+  "source": "assets/modular/environments/bamboo-shrine/platforms/source/atlas-alpha.png",
+  "grid": {
+    "columns": 4,
+    "rows": 3
+  },
+  "sprites": [
+    {
+      "id": "sol-pierre-centre",
+      "file": "sol-pierre-centre.png",
+      "sourceCell": [
+        0,
+        0
+      ],
+      "size": [
+        290,
+        105
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "sol-pierre-gauche",
+      "file": "sol-pierre-gauche.png",
+      "sourceCell": [
+        1,
+        0
+      ],
+      "size": [
+        254,
+        121
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "sol-pierre-droite",
+      "file": "sol-pierre-droite.png",
+      "sourceCell": [
+        2,
+        0
+      ],
+      "size": [
+        253,
+        121
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "sol-mousse-fissure",
+      "file": "sol-mousse-fissure.png",
+      "sourceCell": [
+        3,
+        0
+      ],
+      "size": [
+        280,
+        97
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "plateforme-bambou-longue",
+      "file": "plateforme-bambou-longue.png",
+      "sourceCell": [
+        0,
+        1
+      ],
+      "size": [
+        433,
+        187
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "plateforme-bambou-courte",
+      "file": "plateforme-bambou-courte.png",
+      "sourceCell": [
+        1,
+        1
+      ],
+      "size": [
+        218,
+        187
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "plateforme-racine",
+      "file": "plateforme-racine.png",
+      "sourceCell": [
+        2,
+        1
+      ],
+      "size": [
+        303,
+        227
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "plateforme-torii",
+      "file": "plateforme-torii.png",
+      "sourceCell": [
+        3,
+        1
+      ],
+      "size": [
+        345,
+        185
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "marche-pierre",
+      "file": "marche-pierre.png",
+      "sourceCell": [
+        0,
+        2
+      ],
+      "size": [
+        266,
+        171
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "pente-mousse",
+      "file": "pente-mousse.png",
+      "sourceCell": [
+        1,
+        2
+      ],
+      "size": [
+        290,
+        171
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "bord-bassin",
+      "file": "bord-bassin.png",
+      "sourceCell": [
+        2,
+        2
+      ],
+      "size": [
+        284,
+        95
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "fosse-spores",
+      "file": "fosse-spores.png",
+      "sourceCell": [
+        3,
+        2
+      ],
+      "size": [
+        325,
+        137
+      ],
+      "nonEmpty": true
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "category": "legacy",
+  "count": 6,
+  "generationTool": "OpenAI ImageGen built-in",
+  "animationStandard": {
+    "rows": ["idle", "move", "attack", "hurt", "death"],
+    "framesPerRow": 6,
+    "weaponsBakedIntoBody": false
+  },
+  "entries": [
+    {
+      "id": "01-shibito-villager",
+      "name": "Shibito des rizières",
+      "subtitle": "Infecté villageois",
+      "folder": "assets/modular/characters/legacy/01-shibito-villager",
+      "weaponRole": "faucille",
+      "lore": "La contagion a gagné les hameaux par les canaux d'irrigation. Ces morts gardent les gestes de leur ancien métier.",
+      "gameplay": "Fantassin commun qui titube puis cherche à encercler Akio.",
+      "prompt": "Preserve the referenced Shibito villager identity in a 16-bit modular atlas. Thirty isolated right-facing poses, 6 by 5: idle, stumble, empty-handed melee, hurt, collapse. No sickle, tool or prop. Flat #ff00ff background."
+    },
+    {
+      "id": "02-ashigaru-revenant",
+      "name": "Ashigaru revenant",
+      "subtitle": "Fantassin discipliné",
+      "folder": "assets/modular/characters/legacy/02-ashigaru-revenant",
+      "weaponRole": "yari",
+      "lore": "Tombé au dernier barrage de la route d'Edo, ce fantassin répète encore sa formation après la mort.",
+      "gameplay": "Contrôle la distance et garde ses deux mains libres pour recevoir un yari séparé.",
+      "prompt": "Preserve the referenced undead ashigaru, indigo jingasa and tatami armor in a 16-bit modular atlas. Thirty isolated right-facing poses, 6 by 5: idle, march, empty-handed two-hand thrust, hurt, collapse. No yari or weapon. Flat #ff00ff background."
+    },
+    {
+      "id": "03-kegare-sohei",
+      "name": "Sōhei du Kegare",
+      "subtitle": "Moine guerrier infecté",
+      "folder": "assets/modular/characters/legacy/03-kegare-sohei",
+      "weaponRole": "naginata",
+      "lore": "Les gardiens de Kurotaki servent désormais la souillure qu'ils voulaient purifier.",
+      "gameplay": "Élite mobile préparée pour une naginata interchangeable.",
+      "prompt": "Preserve the referenced corrupted Sōhei identity in a 16-bit modular atlas. Thirty isolated right-facing poses, 6 by 5: prayer idle, run, empty-handed polearm sweep, hurt, collapse. No naginata or weapon. Flat #ff00ff background."
+    },
+    {
+      "id": "04-onryo-miko",
+      "name": "Miko onryō",
+      "subtitle": "Desservante spectrale",
+      "folder": "assets/modular/characters/legacy/04-onryo-miko",
+      "weaponRole": "cloche et ofuda",
+      "lore": "La desservante de Tsukikage appelle maintenant les morts avec des prières inversées.",
+      "gameplay": "Soutien occulte dont les accessoires rituels restent des sprites séparés.",
+      "prompt": "Preserve the referenced ghostly shrine-maiden identity in a 16-bit modular atlas. Thirty isolated right-facing poses, 6 by 5: ritual idle, glide, empty-handed curse casting, hurt, collapse. No bell, ofuda or prop. Flat #ff00ff background."
+    },
+    {
+      "id": "05-kabuto-brute",
+      "name": "Brute au kabuto",
+      "subtitle": "Infecté lourd",
+      "folder": "assets/modular/characters/legacy/05-kabuto-brute",
+      "weaponRole": "kanabō",
+      "lore": "Son armure a contenu la morsure et emprisonné la chose éveillée sous son kabuto.",
+      "gameplay": "Mur blindé préparé pour un kanabō interchangeable.",
+      "prompt": "Preserve the referenced huge Kabuto Brute and battered armor in a 16-bit modular atlas. Thirty isolated right-facing poses, 6 by 5: heavy idle, lumber, empty-handed overhead smash, hurt, collapse. No kanabō or weapon. Flat #ff00ff background."
+    },
+    {
+      "id": "06-daimyo-corrupted",
+      "name": "Daimyō corrompu",
+      "subtitle": "Seigneur infecté",
+      "folder": "assets/modular/characters/legacy/06-daimyo-corrupted",
+      "weaponRole": "tachi",
+      "lore": "Le seigneur de Kurokawa protège le foyer de la peste jusque dans la mort.",
+      "gameplay": "Boss historique du prototype, désormais animé sur cinq planches et prêt pour un tachi séparé.",
+      "prompt": "Preserve the referenced corrupted Daimyō, ornate black-and-crimson armor and regal menace in a 16-bit modular atlas. Thirty isolated right-facing poses, 6 by 5: regal idle, armored rush, empty-handed two-hand slash, hurt, death. No tachi, katana, scabbard or prop. Flat #ff00ff background."
+    }
+  ]
+}

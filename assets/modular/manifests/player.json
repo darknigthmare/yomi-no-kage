@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "category": "player",
+  "count": 1,
+  "generationTool": "OpenAI ImageGen built-in",
+  "animationStandard": {
+    "rows": ["idle", "move", "attack", "hurt", "death"],
+    "framesPerRow": 6,
+    "weaponsBakedIntoBody": false
+  },
+  "entries": [
+    {
+      "id": "akio",
+      "name": "Akio",
+      "subtitle": "Samouraï envoyé par le shogun",
+      "folder": "assets/modular/characters/player/akio",
+      "weaponId": "01-kurokage",
+      "lore": "Akio reçoit l'ordre d'endiguer la peste du Yomi avant qu'elle ne gagne Edo. Son armure noire à laçage rouge porte le croissant de son clan.",
+      "gameplay": "Héros jouable. Cinq planches modulaires de six images : repos, déplacement, attaque, dégâts et mort.",
+      "prompt": "Create a production-ready 16-bit pixel-art master animation atlas preserving Akio's exact black-and-red samurai identity. Exactly 30 isolated right-facing full-body poses in 6 columns and 5 rows: idle, run, empty-handed sword-grip attack, hurt and death. No weapon, scabbard, prop, text or grid. Flat solid #ff00ff background, crisp nearest-neighbor pixel clusters, generous gutters."
+    }
+  ]
+}

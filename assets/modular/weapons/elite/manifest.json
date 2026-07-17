@@ -1,0 +1,166 @@
+{
+  "schema": 1,
+  "source": "assets/modular/weapons/atlases/elite.png",
+  "grid": {
+    "columns": 4,
+    "rows": 3
+  },
+  "sprites": [
+    {
+      "id": "odachi",
+      "file": "odachi.png",
+      "sourceCell": [
+        0,
+        0
+      ],
+      "size": [
+        358,
+        311
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "tachi",
+      "file": "tachi.png",
+      "sourceCell": [
+        1,
+        0
+      ],
+      "size": [
+        304,
+        258
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "wakizashi",
+      "file": "wakizashi.png",
+      "sourceCell": [
+        2,
+        0
+      ],
+      "size": [
+        224,
+        187
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "tanto",
+      "file": "tanto.png",
+      "sourceCell": [
+        3,
+        0
+      ],
+      "size": [
+        156,
+        152
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "jitte",
+      "file": "jitte.png",
+      "sourceCell": [
+        0,
+        1
+      ],
+      "size": [
+        246,
+        243
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "hachiwari",
+      "file": "hachiwari.png",
+      "sourceCell": [
+        1,
+        1
+      ],
+      "size": [
+        266,
+        239
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "tessen-ferme",
+      "file": "tessen-ferme.png",
+      "sourceCell": [
+        2,
+        1
+      ],
+      "size": [
+        320,
+        202
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "naginata-lourde",
+      "file": "naginata-lourde.png",
+      "sourceCell": [
+        3,
+        1
+      ],
+      "size": [
+        315,
+        292
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "shakujo",
+      "file": "shakujo.png",
+      "sourceCell": [
+        0,
+        2
+      ],
+      "size": [
+        265,
+        272
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "otsuchi",
+      "file": "otsuchi.png",
+      "sourceCell": [
+        1,
+        2
+      ],
+      "size": [
+        274,
+        283
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "bokuto",
+      "file": "bokuto.png",
+      "sourceCell": [
+        2,
+        2
+      ],
+      "size": [
+        273,
+        275
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "kikuchi-yari",
+      "file": "kikuchi-yari.png",
+      "sourceCell": [
+        3,
+        2
+      ],
+      "size": [
+        316,
+        299
+      ],
+      "nonEmpty": true
+    }
+  ]
+}

@@ -1,0 +1,166 @@
+{
+  "schema": 1,
+  "source": "assets/modular/environments/kurokawa/platforms/source/atlas-alpha.png",
+  "grid": {
+    "columns": 4,
+    "rows": 3
+  },
+  "sprites": [
+    {
+      "id": "sol-terre-centre",
+      "file": "sol-terre-centre.png",
+      "sourceCell": [
+        0,
+        0
+      ],
+      "size": [
+        293,
+        148
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "sol-terre-gauche",
+      "file": "sol-terre-gauche.png",
+      "sourceCell": [
+        1,
+        0
+      ],
+      "size": [
+        262,
+        151
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "sol-terre-droite",
+      "file": "sol-terre-droite.png",
+      "sourceCell": [
+        2,
+        0
+      ],
+      "size": [
+        256,
+        150
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "sol-terre-fissure",
+      "file": "sol-terre-fissure.png",
+      "sourceCell": [
+        3,
+        0
+      ],
+      "size": [
+        291,
+        150
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "plateforme-bois-longue",
+      "file": "plateforme-bois-longue.png",
+      "sourceCell": [
+        0,
+        1
+      ],
+      "size": [
+        396,
+        121
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "plateforme-bois-courte",
+      "file": "plateforme-bois-courte.png",
+      "sourceCell": [
+        1,
+        1
+      ],
+      "size": [
+        216,
+        118
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "plateforme-toit-tuile",
+      "file": "plateforme-toit-tuile.png",
+      "sourceCell": [
+        2,
+        1
+      ],
+      "size": [
+        245,
+        113
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "plateforme-chaume",
+      "file": "plateforme-chaume.png",
+      "sourceCell": [
+        3,
+        1
+      ],
+      "size": [
+        331,
+        115
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "bord-pierre",
+      "file": "bord-pierre.png",
+      "sourceCell": [
+        0,
+        2
+      ],
+      "size": [
+        327,
+        93
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "marche-bois",
+      "file": "marche-bois.png",
+      "sourceCell": [
+        1,
+        2
+      ],
+      "size": [
+        216,
+        183
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "pente-terre",
+      "file": "pente-terre.png",
+      "sourceCell": [
+        2,
+        2
+      ],
+      "size": [
+        342,
+        187
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "fosse-cendre",
+      "file": "fosse-cendre.png",
+      "sourceCell": [
+        3,
+        2
+      ],
+      "size": [
+        326,
+        151
+      ],
+      "nonEmpty": true
+    }
+  ]
+}

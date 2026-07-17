@@ -1,0 +1,159 @@
+:root {
+  --ink: #080a0e;
+  --night: #10141d;
+  --panel: #151923;
+  --line: #34333a;
+  --bone: #eadbb8;
+  --muted: #8d8b88;
+  --red: #b52c35;
+  --ember: #e78239;
+  --sick: #86b85a;
+  font-family: "Courier New", "Yu Gothic", monospace;
+  color: var(--bone);
+  background: var(--ink);
+}
+
+* { box-sizing: border-box; }
+html { min-height: 100%; background: var(--ink); }
+body { min-height: 100vh; margin: 0; background: linear-gradient(#090b11, #11131a 55%, #090a0e); }
+a { color: inherit; }
+
+.gallery-hero {
+  min-height: 56vh;
+  padding: 1.2rem clamp(1rem, 5vw, 5rem) 3.5rem;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #3e2728;
+  background:
+    linear-gradient(90deg, rgba(4, 5, 8, 0.96), rgba(4, 5, 8, 0.72) 45%, rgba(4, 5, 8, 0.2)),
+    linear-gradient(0deg, #090b11, transparent 55%),
+    url("assets/kage-no-eki-key-art.png") center 48% / cover;
+}
+
+nav { display: flex; justify-content: space-between; color: #aaa18e; font-size: 0.68rem; letter-spacing: 0.15em; }
+nav a { color: #e7d6af; text-decoration: none; }
+.hero-copy { width: min(46rem, 88%); margin-top: auto; }
+.eyebrow { margin: 0; color: var(--ember); font-size: 0.68rem; font-weight: 900; letter-spacing: 0.2em; text-transform: uppercase; }
+h1 { margin: 0.35rem 0 0; color: #d2383e; font: 900 clamp(3rem, 8vw, 7rem)/0.83 Georgia, serif; letter-spacing: -0.07em; text-shadow: 4px 5px 0 #260a10; }
+.hero-copy > p:not(.eyebrow) { max-width: 38rem; color: #c3bdaF; font-family: Georgia, serif; line-height: 1.6; }
+.stats { display: flex; gap: 1px; width: fit-content; margin-top: 1.4rem; background: #4c4040; }
+.stats span { min-width: 6.5rem; padding: 0.7rem 1rem; background: rgba(11, 13, 18, 0.86); }
+.stats b, .stats small { display: block; }
+.stats b { color: #fff0c7; font-size: 1.45rem; }
+.stats small { color: #79797d; font-size: 0.55rem; letter-spacing: 0.1em; }
+
+main { width: min(94%, 92rem); margin: 0 auto; padding: 2rem 0 5rem; }
+.toolbar { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.8rem 0; background: rgba(9, 11, 17, 0.93); backdrop-filter: blur(8px); }
+.filters { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.filter {
+  padding: 0.55rem 0.8rem;
+  border: 1px solid #45444b;
+  background: #161922;
+  color: #9f9c94;
+  cursor: pointer;
+  font: 900 0.65rem/1 "Courier New", monospace;
+  letter-spacing: 0.08em;
+}
+.filter[aria-pressed="true"] { border-color: #d34646; background: #81232c; color: #fff1d0; }
+#result-count { color: #6f7075; font-size: 0.65rem; }
+
+.asset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr)); gap: 1rem; }
+.asset-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  box-shadow: 5px 6px 0 rgba(0, 0, 0, 0.32);
+  cursor: pointer;
+}
+.asset-card:hover { border-color: #835049; translate: 0 -2px; }
+.asset-card:focus-visible { outline: 3px solid var(--sick); outline-offset: 3px; }
+.asset-visual {
+  position: relative;
+  display: grid;
+  min-height: 15rem;
+  place-items: center;
+  overflow: hidden;
+  background:
+    linear-gradient(45deg, #10131a 25%, transparent 25%, transparent 75%, #10131a 75%),
+    linear-gradient(45deg, #10131a 25%, #191d27 25%, #191d27 75%, #10131a 75%);
+  background-position: 0 0, 8px 8px;
+  background-size: 16px 16px;
+}
+.asset-visual img { display: block; width: 100%; height: 15rem; object-fit: contain; image-rendering: pixelated; transition: scale 180ms steps(4); }
+.asset-card:hover img { scale: 1.035; }
+.asset-card[data-type="environment"] .asset-visual img,
+.asset-card[data-type="environment-layer"] .asset-visual img { object-fit: cover; }
+.asset-card[data-type="environment"] .asset-visual,
+.asset-card[data-type="environment-layer"] .asset-visual { background: #0a0c11; }
+.asset-index { position: absolute; top: 0.6rem; left: 0.6rem; padding: 0.25rem 0.35rem; background: rgba(5, 6, 9, 0.8); color: #d9c59d; font-size: 0.58rem; }
+.asset-copy { min-height: 8.8rem; padding: 1rem; border-top: 1px solid #302f35; }
+.asset-copy .eyebrow { font-size: 0.54rem; }
+.asset-copy h2 { margin: 0.35rem 0 0; color: #eee0c0; font: 700 1.2rem/1.1 Georgia, serif; }
+.asset-copy .subtitle { margin: 0.3rem 0 0.7rem; color: #a42e35; font-size: 0.65rem; font-weight: 900; }
+.asset-copy p:last-child { margin: 0; color: #8c8983; font-family: Georgia, serif; font-size: 0.78rem; line-height: 1.45; }
+.empty-state { padding: 5rem 1rem; color: #777; text-align: center; }
+
+dialog {
+  width: min(92vw, 75rem);
+  max-height: 88vh;
+  padding: 0;
+  overflow: hidden;
+  border: 2px solid #705047;
+  background: #11141c;
+  color: var(--bone);
+  box-shadow: 15px 18px 0 rgba(0, 0, 0, 0.6);
+}
+dialog::backdrop { background: rgba(2, 3, 5, 0.86); backdrop-filter: blur(4px); }
+dialog[open] { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(18rem, 0.7fr); }
+.dialog-visual { display: grid; min-height: 65vh; place-items: center; overflow: hidden; background: #080a0f; }
+.dialog-visual img { width: 100%; height: min(78vh, 52rem); object-fit: contain; image-rendering: pixelated; }
+.dialog-copy { padding: clamp(1.3rem, 3vw, 2.5rem); overflow: auto; }
+.dialog-copy h2 { margin: 0.4rem 0 0; font: 700 clamp(1.8rem, 4vw, 3.4rem)/0.95 Georgia, serif; }
+.dialog-copy .subtitle { color: #d44b48; font-weight: 900; }
+.dialog-copy > p:not(.eyebrow, .subtitle) { color: #aaa69e; font-family: Georgia, serif; line-height: 1.7; }
+.dialog-animations { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 1rem 0; }
+.dialog-animations[hidden] { display: none; }
+.dialog-animations button {
+  padding: 0.48rem 0.58rem;
+  border: 1px solid #4a484c;
+  background: #191c25;
+  color: #aaa59b;
+  cursor: pointer;
+  font: 900 0.58rem/1 "Courier New", monospace;
+}
+.dialog-animations button:hover,
+.dialog-animations button[aria-pressed="true"] { border-color: #d34646; color: #fff0cb; background: #6e2028; }
+.dialog-frames { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.3rem; margin: -0.35rem 0 1rem; }
+.dialog-frames[hidden] { display: none; }
+.dialog-frames button {
+  position: relative;
+  min-width: 0;
+  aspect-ratio: 1;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #383840;
+  background: #090b10;
+  cursor: pointer;
+}
+.dialog-frames img { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; }
+.dialog-frames span { position: absolute; right: 2px; bottom: 2px; padding: 1px 3px; background: #080a0edb; color: #d8c9a8; font-size: 0.5rem; }
+.dialog-frames button:hover { border-color: #d34646; }
+.dialog-copy dl div { padding: 0.8rem 0; border-top: 1px solid #34343a; }
+.dialog-copy dt { color: #6f7176; font-size: 0.58rem; letter-spacing: 0.15em; }
+.dialog-copy dd { margin: 0.25rem 0 0; color: #d9cfb7; font-size: 0.74rem; line-height: 1.5; overflow-wrap: anywhere; }
+.dialog-close { position: absolute; z-index: 2; top: 0.7rem; right: 0.7rem; width: 2.5rem; height: 2.5rem; border: 1px solid #6e6761; background: #151820; color: white; cursor: pointer; font-size: 1.5rem; }
+
+footer { display: flex; justify-content: space-between; gap: 1rem; padding: 1.4rem clamp(1rem, 5vw, 5rem); border-top: 1px solid #2c2d33; color: #66686d; font-size: 0.62rem; }
+footer a { color: #a99674; }
+
+@media (max-width: 720px) {
+  .gallery-hero { min-height: 68vh; background-position: 63% center; }
+  .hero-copy { width: 100%; }
+  .stats span { min-width: 0; }
+  .toolbar { align-items: flex-start; flex-direction: column; }
+  dialog[open] { display: block; overflow: auto; }
+  .dialog-visual { min-height: 38vh; }
+  .dialog-visual img { height: 42vh; }
+  nav span, footer span { display: none; }
+}

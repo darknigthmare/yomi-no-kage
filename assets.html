@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#080a0e" />
+    <title>Yomi no Kage — Artbook & arsenal</title>
+    <link rel="stylesheet" href="assets-gallery.css" />
+  </head>
+  <body>
+    <header class="gallery-hero">
+      <nav>
+        <a href="index.html">← JOUER</a>
+        <span>ARCHIVES DU SHOGUN · 1638</span>
+      </nav>
+      <div class="hero-copy">
+        <p class="eyebrow">PACK D'ASSETS OPENAI</p>
+        <h1>YOMI NO KAGE</h1>
+        <p>Personnages, arsenal, bestiaire et lieux de la peste de Kurokawa.</p>
+        <div id="collection-stats" class="stats" aria-live="polite"></div>
+      </div>
+    </header>
+
+    <main>
+      <section class="toolbar" aria-label="Filtres du catalogue">
+        <div id="filters" class="filters"></div>
+        <p id="result-count"></p>
+      </section>
+      <section id="asset-grid" class="asset-grid" aria-live="polite"></section>
+      <p id="empty-state" class="empty-state" hidden>Aucun asset dans cette catégorie.</p>
+    </main>
+
+    <dialog id="asset-dialog">
+      <button id="dialog-close" class="dialog-close" type="button" aria-label="Fermer">×</button>
+      <div class="dialog-visual"><img id="dialog-image" alt="" /></div>
+      <div class="dialog-copy">
+        <p id="dialog-type" class="eyebrow"></p>
+        <h2 id="dialog-title"></h2>
+        <p id="dialog-subtitle" class="subtitle"></p>
+        <div id="dialog-animations" class="dialog-animations" aria-label="Planches d'animation"></div>
+        <div id="dialog-frames" class="dialog-frames" aria-label="Frames individuelles"></div>
+        <p id="dialog-lore"></p>
+        <dl>
+          <div><dt>USAGE</dt><dd id="dialog-gameplay"></dd></div>
+          <div><dt id="dialog-weapon-label">ARME SÉPARÉE</dt><dd id="dialog-weapon"></dd></div>
+          <div><dt>GÉNÉRATION</dt><dd id="dialog-generation"></dd></div>
+          <div><dt>FICHIER</dt><dd id="dialog-file"></dd></div>
+        </dl>
+      </div>
+    </dialog>
+
+    <footer>
+      <span>Direction visuelle : pixel-art 16-bit · Japon Kan'ei · horreur féodale</span>
+      <a href="assets/modular/README.md">STANDARD MODULAIRE</a>
+    </footer>
+
+    <script src="assets-gallery.js?v=20260717-3"></script>
+  </body>
+</html>

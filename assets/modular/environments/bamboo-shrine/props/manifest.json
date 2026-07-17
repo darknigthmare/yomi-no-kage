@@ -1,0 +1,166 @@
+{
+  "schema": 1,
+  "source": "assets/modular/environments/bamboo-shrine/props/source/atlas-alpha.png",
+  "grid": {
+    "columns": 4,
+    "rows": 3
+  },
+  "sprites": [
+    {
+      "id": "grand-torii",
+      "file": "grand-torii.png",
+      "sourceCell": [
+        0,
+        0
+      ],
+      "size": [
+        344,
+        309
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "petit-torii",
+      "file": "petit-torii.png",
+      "sourceCell": [
+        1,
+        0
+      ],
+      "size": [
+        229,
+        222
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "sanctuaire-rural",
+      "file": "sanctuaire-rural.png",
+      "sourceCell": [
+        2,
+        0
+      ],
+      "size": [
+        314,
+        296
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "lanterne-pierre",
+      "file": "lanterne-pierre.png",
+      "sourceCell": [
+        3,
+        0
+      ],
+      "size": [
+        131,
+        270
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "bassin-purification",
+      "file": "bassin-purification.png",
+      "sourceCell": [
+        0,
+        1
+      ],
+      "size": [
+        259,
+        184
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "bambous-hauts",
+      "file": "bambous-hauts.png",
+      "sourceCell": [
+        1,
+        1
+      ],
+      "size": [
+        256,
+        271
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "bambous-coupes",
+      "file": "bambous-coupes.png",
+      "sourceCell": [
+        2,
+        1
+      ],
+      "size": [
+        292,
+        175
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "pont-bois",
+      "file": "pont-bois.png",
+      "sourceCell": [
+        3,
+        1
+      ],
+      "size": [
+        360,
+        180
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "barriere-rituelle",
+      "file": "barriere-rituelle.png",
+      "sourceCell": [
+        0,
+        2
+      ],
+      "size": [
+        291,
+        208
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "racines-contaminees",
+      "file": "racines-contaminees.png",
+      "sourceCell": [
+        1,
+        2
+      ],
+      "size": [
+        342,
+        242
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "cloche-sanctuaire",
+      "file": "cloche-sanctuaire.png",
+      "sourceCell": [
+        2,
+        2
+      ],
+      "size": [
+        259,
+        274
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "autel-purification",
+      "file": "autel-purification.png",
+      "sourceCell": [
+        3,
+        2
+      ],
+      "size": [
+        223,
+        248
+      ],
+      "nonEmpty": true
+    }
+  ]
+}

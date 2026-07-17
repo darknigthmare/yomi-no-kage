@@ -1,0 +1,166 @@
+{
+  "schema": 1,
+  "source": "assets/modular/environments/daimyo-castle/platforms/source/atlas-alpha.png",
+  "grid": {
+    "columns": 4,
+    "rows": 3
+  },
+  "sprites": [
+    {
+      "id": "sol-tatami-centre",
+      "file": "sol-tatami-centre.png",
+      "sourceCell": [
+        0,
+        0
+      ],
+      "size": [
+        320,
+        156
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "sol-tatami-gauche",
+      "file": "sol-tatami-gauche.png",
+      "sourceCell": [
+        1,
+        0
+      ],
+      "size": [
+        268,
+        168
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "sol-tatami-droite",
+      "file": "sol-tatami-droite.png",
+      "sourceCell": [
+        2,
+        0
+      ],
+      "size": [
+        264,
+        168
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "sol-tatami-souille",
+      "file": "sol-tatami-souille.png",
+      "sourceCell": [
+        3,
+        0
+      ],
+      "size": [
+        306,
+        156
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "plateforme-cedre-longue",
+      "file": "plateforme-cedre-longue.png",
+      "sourceCell": [
+        0,
+        1
+      ],
+      "size": [
+        399,
+        181
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "plateforme-cedre-courte",
+      "file": "plateforme-cedre-courte.png",
+      "sourceCell": [
+        1,
+        1
+      ],
+      "size": [
+        218,
+        181
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "plateforme-poutre",
+      "file": "plateforme-poutre.png",
+      "sourceCell": [
+        2,
+        1
+      ],
+      "size": [
+        312,
+        190
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "plateforme-toit-tuile",
+      "file": "plateforme-toit-tuile.png",
+      "sourceCell": [
+        3,
+        1
+      ],
+      "size": [
+        329,
+        193
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "marche-chateau",
+      "file": "marche-chateau.png",
+      "sourceCell": [
+        0,
+        2
+      ],
+      "size": [
+        192,
+        180
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "pente-decombres",
+      "file": "pente-decombres.png",
+      "sourceCell": [
+        1,
+        2
+      ],
+      "size": [
+        365,
+        203
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "bord-pierre",
+      "file": "bord-pierre.png",
+      "sourceCell": [
+        2,
+        2
+      ],
+      "size": [
+        308,
+        136
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "fosse-racines",
+      "file": "fosse-racines.png",
+      "sourceCell": [
+        3,
+        2
+      ],
+      "size": [
+        327,
+        185
+      ],
+      "nonEmpty": true
+    }
+  ]
+}

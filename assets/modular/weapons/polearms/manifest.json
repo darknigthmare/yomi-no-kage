@@ -1,0 +1,166 @@
+{
+  "schema": 1,
+  "source": "assets/modular/weapons/atlases/polearms.png",
+  "grid": {
+    "columns": 4,
+    "rows": 3
+  },
+  "sprites": [
+    {
+      "id": "su-yari",
+      "file": "su-yari.png",
+      "sourceCell": [
+        0,
+        0
+      ],
+      "size": [
+        326,
+        277
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "jumonji-yari",
+      "file": "jumonji-yari.png",
+      "sourceCell": [
+        1,
+        0
+      ],
+      "size": [
+        320,
+        281
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "kama-yari",
+      "file": "kama-yari.png",
+      "sourceCell": [
+        2,
+        0
+      ],
+      "size": [
+        323,
+        279
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "naginata",
+      "file": "naginata.png",
+      "sourceCell": [
+        3,
+        0
+      ],
+      "size": [
+        337,
+        287
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "nagamaki",
+      "file": "nagamaki.png",
+      "sourceCell": [
+        0,
+        1
+      ],
+      "size": [
+        324,
+        272
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "ono",
+      "file": "ono.png",
+      "sourceCell": [
+        1,
+        1
+      ],
+      "size": [
+        314,
+        241
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "masakari",
+      "file": "masakari.png",
+      "sourceCell": [
+        2,
+        1
+      ],
+      "size": [
+        341,
+        251
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "kanabo",
+      "file": "kanabo.png",
+      "sourceCell": [
+        3,
+        1
+      ],
+      "size": [
+        314,
+        251
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "tetsubo",
+      "file": "tetsubo.png",
+      "sourceCell": [
+        0,
+        2
+      ],
+      "size": [
+        319,
+        258
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "sasumata",
+      "file": "sasumata.png",
+      "sourceCell": [
+        1,
+        2
+      ],
+      "size": [
+        333,
+        281
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "sodegarami",
+      "file": "sodegarami.png",
+      "sourceCell": [
+        2,
+        2
+      ],
+      "size": [
+        311,
+        273
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "tsukubo",
+      "file": "tsukubo.png",
+      "sourceCell": [
+        3,
+        2
+      ],
+      "size": [
+        308,
+        260
+      ],
+      "nonEmpty": true
+    }
+  ]
+}

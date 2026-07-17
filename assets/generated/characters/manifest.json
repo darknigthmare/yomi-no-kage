@@ -1,0 +1,41 @@
+{
+  "collection": "Yomi no Kage — Akio",
+  "generator": "OpenAI imagegen intégré",
+  "character": {
+    "id": "akio",
+    "name": "Akio",
+    "age": 28,
+    "role": "Samouraï mandaté par le shogun pour purifier Kurokawa",
+    "visual_identity": "Armure dō-maru noire à laçage rouge, sous-robe indigo, sash couleur os, maedate en croissant et cicatrice discrète sur la joue."
+  },
+  "assets": [
+    {
+      "id": "akio-character-sheet",
+      "file": "akio-character-sheet.png",
+      "source": "../sources/characters/akio-character-sheet-source.png",
+      "dimensions": [1787, 880],
+      "background": "transparent",
+      "usage": ["référence principale", "portrait de sélection", "source de sprites 2D"],
+      "prompt": {
+        "asset_type": "main character turnaround and side-scroller sprite reference sheet",
+        "request": "Akio, le même samouraï original en quatre vues complètes : face, trois-quarts, profil de combat et attaque au katana.",
+        "style": "pixel-art 16-bit original, pixels nets, palette encre/indigo/laque rouge/os/acier",
+        "constraints": "Japon Kan'ei 1638, même identité et même tenue, fond chroma #ff00ff uniforme, aucun texte, décor, logo, filigrane ou armure moderne."
+      }
+    },
+    {
+      "id": "akio-fps-katana",
+      "file": "akio-fps-katana.png",
+      "source": "../sources/characters/akio-fps-katana-source.png",
+      "dimensions": [1625, 968],
+      "background": "transparent",
+      "usage": ["overlay d'arme FPS", "animation d'attaque", "écran d'équipement"],
+      "prompt": {
+        "asset_type": "first-person katana weapon overlay",
+        "request": "Les deux avant-bras blindés d'Akio tenant son katana, vus à la première personne, lame diagonale du bas droit vers le centre haut.",
+        "style": "pixel-art 16-bit original compatible raycasting rétro",
+        "constraints": "Une paire de mains cohérente et un seul katana, fond chroma #ff00ff uniforme, aucun corps, visage, décor, ennemi, texte, logo ou filigrane."
+      }
+    }
+  ]
+}

@@ -1,0 +1,393 @@
+{
+  "pack": "Yomi no Kage — Accessoires et textures du fléau",
+  "version": 1,
+  "langue": "fr",
+  "date_generation": "2026-07-17",
+  "outil": "OpenAI imagegen intégré",
+  "mode_generation": "Un appel imagegen distinct par atlas, puis détourage local avec le helper chroma-key du skill imagegen",
+  "direction_artistique": {
+    "epoque": "Japon, ère Kan'ei, 1638",
+    "style": "Pixel art 16-bit haute finition, gros pixels nets",
+    "palette": [
+      "noir d'encre",
+      "indigo profond",
+      "rouge laque",
+      "ivoire os",
+      "vert maladif",
+      "orange braise"
+    ],
+    "cle_chroma": "#ff00ff"
+  },
+  "atlases": [
+    {
+      "id": "props-feudal-atlas",
+      "nom": "Accessoires du Japon contaminé",
+      "type": "atlas_accessoires_transparent",
+      "usage": "Décoration des niveaux 2D et FPS, points d'intérêt, éléments de collision et indices narratifs.",
+      "lore": "Ces objets ordinaires témoignent de la vie interrompue par l'épidémie. Les accessoires de culte et les foyers infectés marquent la progression de la souillure depuis les villages jusqu'aux sanctuaires.",
+      "grille": {
+        "colonnes": 4,
+        "lignes": 3,
+        "largeur_atlas": 1536,
+        "hauteur_atlas": 1024,
+        "ordre": "lecture gauche vers droite, puis haut vers bas",
+        "note": "Les rectangles logiques incluent les gouttières transparentes afin de préserver l'espacement."
+      },
+      "paths": {
+        "source_chroma": "assets/generated/props/props-feudal-atlas-source.png",
+        "final_transparent": "assets/generated/props/props-feudal-atlas.png"
+      },
+      "validation_alpha": {
+        "mode": "RGBA",
+        "coins_transparents": true,
+        "pixels_transparents": 1107933,
+        "pixels_partiellement_transparents": 21133,
+        "pixels_opaques": 443798,
+        "couverture_non_vide_pourcent": 29.56,
+        "pixels_de_frange_magenta_detectes": 0,
+        "bord_source": "#ff00ff uniforme"
+      },
+      "tiles": [
+        {
+          "id": "prop-torii",
+          "index": 0,
+          "ligne": 0,
+          "colonne": 0,
+          "tile": {
+            "x": 0,
+            "y": 0,
+            "largeur": 384,
+            "hauteur": 341
+          },
+          "usage": "Portail de seuil, obstacle haut ou entrée de sanctuaire.",
+          "lore": "Sa laque écaillée matérialise la frontière entre les terres encore humaines et les lieux contaminés."
+        },
+        {
+          "id": "prop-lanterne-pierre",
+          "index": 1,
+          "ligne": 0,
+          "colonne": 1,
+          "tile": {
+            "x": 384,
+            "y": 0,
+            "largeur": 384,
+            "hauteur": 341
+          },
+          "usage": "Repère de chemin et support de lumière froide.",
+          "lore": "Les lanternes couvertes de mousse jalonnaient les routes de pèlerinage avant la quarantaine."
+        },
+        {
+          "id": "prop-autel-cedre",
+          "index": 2,
+          "ligne": 0,
+          "colonne": 2,
+          "tile": {
+            "x": 768,
+            "y": 0,
+            "largeur": 384,
+            "hauteur": 341
+          },
+          "usage": "Objectif de purification, point d'interaction ou décor de sanctuaire.",
+          "lore": "Un petit autel rural abandonné dont les offrandes ont disparu pendant la fuite."
+        },
+        {
+          "id": "prop-bambous-coupes",
+          "index": 3,
+          "ligne": 0,
+          "colonne": 3,
+          "tile": {
+            "x": 1152,
+            "y": 0,
+            "largeur": 384,
+            "hauteur": 341
+          },
+          "usage": "Couverture basse, barrière naturelle ou silhouette de premier plan.",
+          "lore": "Ces tiges fraîchement coupées montrent que les gardiens ont tenté d'ouvrir une voie avant d'être dépassés."
+        },
+        {
+          "id": "prop-tonneau-sake",
+          "index": 4,
+          "ligne": 1,
+          "colonne": 0,
+          "tile": {
+            "x": 0,
+            "y": 341,
+            "largeur": 384,
+            "hauteur": 341
+          },
+          "usage": "Conteneur destructible, réserve ou obstacle.",
+          "lore": "Une réserve sans marque provenant des entrepôts du village, désormais abandonnée aux cendres."
+        },
+        {
+          "id": "prop-caisse-provisions",
+          "index": 5,
+          "ligne": 1,
+          "colonne": 1,
+          "tile": {
+            "x": 384,
+            "y": 341,
+            "largeur": 384,
+            "hauteur": 341
+          },
+          "usage": "Conteneur de butin, plateforme basse ou obstacle.",
+          "lore": "Les hommes du shogun utilisaient ces caisses anonymes pour acheminer riz, huile et bandages vers la quarantaine."
+        },
+        {
+          "id": "prop-kakemono-vierge",
+          "index": 6,
+          "ligne": 1,
+          "colonne": 2,
+          "tile": {
+            "x": 768,
+            "y": 341,
+            "largeur": 384,
+            "hauteur": 341
+          },
+          "usage": "Décor intérieur personnalisable sans texte généré.",
+          "lore": "Un rouleau volontairement vierge, prêt à recevoir un motif ou un indice ajouté par le jeu."
+        },
+        {
+          "id": "prop-brasero",
+          "index": 7,
+          "ligne": 1,
+          "colonne": 3,
+          "tile": {
+            "x": 1152,
+            "y": 341,
+            "largeur": 384,
+            "hauteur": 341
+          },
+          "usage": "Source de lumière, danger de proximité ou point de repos.",
+          "lore": "Les braises entretenues par les sentinelles restent l'une des rares défenses efficaces contre les spores."
+        },
+        {
+          "id": "prop-cloture-bambou",
+          "index": 8,
+          "ligne": 2,
+          "colonne": 0,
+          "tile": {
+            "x": 0,
+            "y": 682,
+            "largeur": 384,
+            "hauteur": 342
+          },
+          "usage": "Limite de niveau, élément répétable ou obstacle cassable.",
+          "lore": "Une clôture paysanne ligaturée à la corde, trop fragile pour contenir les infectés."
+        },
+        {
+          "id": "prop-cloche-bronze",
+          "index": 9,
+          "ligne": 2,
+          "colonne": 1,
+          "tile": {
+            "x": 384,
+            "y": 682,
+            "largeur": 384,
+            "hauteur": 342
+          },
+          "usage": "Déclencheur sonore, alarme ou objectif rituel.",
+          "lore": "Son timbre lourd appelle les survivants, mais peut aussi attirer les morts affamés."
+        },
+        {
+          "id": "prop-cadavre-couvert",
+          "index": 10,
+          "ligne": 2,
+          "colonne": 2,
+          "tile": {
+            "x": 768,
+            "y": 682,
+            "largeur": 384,
+            "hauteur": 342
+          },
+          "usage": "Indice environnemental non graphique et obstacle bas.",
+          "lore": "La toile funéraire improvisée respecte la dignité des victimes sans montrer la violence de leur mort."
+        },
+        {
+          "id": "prop-foyer-infecte",
+          "index": 11,
+          "ligne": 2,
+          "colonne": 3,
+          "tile": {
+            "x": 1152,
+            "y": 682,
+            "largeur": 384,
+            "hauteur": 342
+          },
+          "usage": "Objectif à détruire ou purifier, générateur d'ennemis et source de lumière maladive.",
+          "lore": "Ce nœud de racines et de bulbes est un relais du fléau. Tant qu'il survit, les spores continuent d'ensemencer les morts."
+        }
+      ],
+      "prompt_imagegen": [
+        "Use case: stylized-concept",
+        "Asset type: transparent-ready game prop sprite atlas source",
+        "Primary request: one atlas containing exactly 12 separate feudal-Japanese horror game props, each shown once and isolated, arranged as a strict 4-column by 3-row grid with wide empty gutters and no grid lines",
+        "Scene/backdrop: perfectly flat solid #ff00ff chroma-key background covering the entire canvas; one uniform exact color with no shadow, gradient, texture, vignette, floor plane, horizon, reflection or lighting variation",
+        "Subject: exactly these 12 props, in reading order, no substitutions and no duplicates: 1 weathered lacquer-red torii gate; 2 mossy stone lantern; 3 small cedar shrine altar with blank surfaces; 4 compact cluster of cut bamboo stalks; 5 bound wooden sake barrel with no marks; 6 old wooden supply crate with no marks; 7 rolled hanging kakemono scroll completely blank with absolutely no writing or symbol; 8 iron brazier with a small contained ember flame; 9 short weathered bamboo-and-wood fence segment; 10 small bronze temple bell with plain surface; 11 human-sized corpse fully covered by a bone-colored cloth, non-graphic, no body parts visible; 12 sickly infected nest/focus made from roots, fungal bulbs and restrained green pustules, no gore",
+        "Style/medium: premium 16-bit pixel-art game sprites, chunky square pixels, crisp hard edges and silhouettes, limited-color dithering, hand-authored sprite-sheet finish, consistent three-quarter side view, consistent scale appropriate for environment set dressing; no smooth painting, no 3D render",
+        "Composition/framing: landscape atlas, strict 4x3 arrangement, one centered prop per invisible cell, all props fully visible with generous padding, no touching or overlap between props, no cast shadows, no labels, no borders, no panels, no decorative ground tiles",
+        "Lighting/mood: restrained feudal horror, simple readable sprite lighting",
+        "Color palette: ink black, deep indigo, lacquer red, bone ivory, sickly green, ember orange, weathered brown; do not use magenta or #ff00ff anywhere in any prop",
+        "Materials/textures: cedar, bamboo, granite, iron, bronze, cloth, fungus",
+        "Constraints: Japan Kan'ei era, year 1638; exactly 12 isolated props; background must remain perfectly uniform #ff00ff even in all gutters and corners; crisp pixel edges; no characters, zombies or exposed gore; no text, writing, kanji, symbols, UI, grid lines, frame, logo or watermark; no shadows, glows or particles spilling onto the magenta background"
+      ]
+    },
+    {
+      "id": "fps-wall-texture-atlas",
+      "nom": "Textures du donjon FPS",
+      "type": "atlas_textures_transparent",
+      "usage": "Textures murales et de sol pour le raycaster FPS, avec lecture frontale et contraste cohérent avec le château du daimyō.",
+      "lore": "La progression matérielle raconte la contamination : bois brûlé des villages, sanctuaires profanés, puis murs du château gagnés par les mêmes racines malades.",
+      "grille": {
+        "colonnes": 4,
+        "lignes": 2,
+        "largeur_atlas": 1536,
+        "hauteur_atlas": 1024,
+        "largeur_cellule": 384,
+        "hauteur_cellule": 512,
+        "ordre": "lecture gauche vers droite, puis haut vers bas",
+        "note": "Chaque cellule contient une tuile carrée centrée et une gouttière transparente."
+      },
+      "paths": {
+        "source_chroma": "assets/generated/props/fps-wall-texture-atlas-source.png",
+        "final_transparent": "assets/generated/props/fps-wall-texture-atlas.png"
+      },
+      "validation_alpha": {
+        "mode": "RGBA",
+        "coins_transparents": true,
+        "pixels_transparents": 616433,
+        "pixels_partiellement_transparents": 13903,
+        "pixels_opaques": 942528,
+        "couverture_non_vide_pourcent": 60.81,
+        "pixels_de_frange_magenta_detectes": 0,
+        "bord_source": "#ff00ff uniforme"
+      },
+      "tiles": [
+        {
+          "id": "texture-bois-brule",
+          "index": 0,
+          "ligne": 0,
+          "colonne": 0,
+          "tile": {
+            "x": 0,
+            "y": 0,
+            "largeur": 384,
+            "hauteur": 512
+          },
+          "usage": "mur",
+          "lore": "Des planches de cèdre noircies semblables aux façades de Kurokawa."
+        },
+        {
+          "id": "texture-shoji-dechire",
+          "index": 1,
+          "ligne": 0,
+          "colonne": 1,
+          "tile": {
+            "x": 384,
+            "y": 0,
+            "largeur": 384,
+            "hauteur": 512
+          },
+          "usage": "mur",
+          "lore": "Le papier arraché laisse passer la lune et révèle les pièces désertées."
+        },
+        {
+          "id": "texture-pierre-humide",
+          "index": 2,
+          "ligne": 0,
+          "colonne": 2,
+          "tile": {
+            "x": 768,
+            "y": 0,
+            "largeur": 384,
+            "hauteur": 512
+          },
+          "usage": "mur ou soubassement",
+          "lore": "Les blocs des fondations retiennent l'humidité qui nourrit les spores."
+        },
+        {
+          "id": "texture-tatami-souille",
+          "index": 3,
+          "ligne": 0,
+          "colonne": 3,
+          "tile": {
+            "x": 1152,
+            "y": 0,
+            "largeur": 384,
+            "hauteur": 512
+          },
+          "usage": "sol",
+          "lore": "Des nattes piétinées pendant la fermeture précipitée du château."
+        },
+        {
+          "id": "texture-platre-fissure",
+          "index": 4,
+          "ligne": 1,
+          "colonne": 0,
+          "tile": {
+            "x": 0,
+            "y": 512,
+            "largeur": 384,
+            "hauteur": 512
+          },
+          "usage": "mur",
+          "lore": "Le plâtre à la chaux cède et dévoile son lattis de bambou."
+        },
+        {
+          "id": "texture-palissade",
+          "index": 5,
+          "ligne": 1,
+          "colonne": 1,
+          "tile": {
+            "x": 384,
+            "y": 512,
+            "largeur": 384,
+            "hauteur": 512
+          },
+          "usage": "mur extérieur",
+          "lore": "Une défense de fortune dressée pour compartimenter les quartiers infectés."
+        },
+        {
+          "id": "texture-mur-chateau",
+          "index": 6,
+          "ligne": 1,
+          "colonne": 2,
+          "tile": {
+            "x": 768,
+            "y": 512,
+            "largeur": 384,
+            "hauteur": 512
+          },
+          "usage": "mur intérieur",
+          "lore": "La géométrie sombre des poutres marque les appartements fortifiés du daimyō."
+        },
+        {
+          "id": "texture-sanctuaire-contamine",
+          "index": 7,
+          "ligne": 1,
+          "colonne": 3,
+          "tile": {
+            "x": 1152,
+            "y": 512,
+            "largeur": 384,
+            "hauteur": 512
+          },
+          "usage": "mur spécial ou porte organique",
+          "lore": "La laque vermillon a été fendue par les racines du foyer infecté."
+        }
+      ],
+      "prompt_imagegen": [
+        "Use case: stylized-concept",
+        "Asset type: transparent-ready retro FPS wall-and-floor texture atlas source",
+        "Primary request: one atlas containing exactly 8 separate square environment texture swatches for a Doom-style raycast dungeon, arranged as a strict 4-column by 2-row grid with wide empty gutters and no grid lines",
+        "Scene/backdrop: perfectly flat solid #ff00ff chroma-key background covering the entire canvas; one uniform exact color with no shadow, gradient, texture, vignette, floor plane, horizon, reflection or lighting variation",
+        "Subject: exactly these 8 square texture tiles, all equal size and in reading order, no substitutions and no duplicates: 1 charred Japanese cedar planks; 2 torn blank shoji paper over dark wooden lattice; 3 damp moss-streaked foundation stone blocks; 4 stained and soiled woven tatami floor; 5 cracked bone-colored lime plaster over subtle bamboo lath; 6 weathered vertical timber palisade; 7 dark daimyo-castle wall with black cedar beams and aged plaster panels; 8 contaminated rural shrine wall with flaking lacquer-red cedar and restrained sick-green infected roots",
+        "Style/medium: premium 16-bit pixel-art material textures, chunky square pixels, crisp hard-edged clusters, limited-color dithering, hand-authored Doom-like game texture finish; flat orthographic front view, no smooth painting, no 3D render",
+        "Composition/framing: landscape atlas, strict 4x2 arrangement; eight equal, perfectly square texture swatches centered in invisible cells; generous uninterrupted #ff00ff gutters on every side; each tile visually fills its square and has straight clean square edges; no touching, overlap, labels, borders, frames, bevels or drop shadows; no perspective",
+        "Lighting/mood: neutral diffuse sprite lighting so textures remain readable in an FPS engine",
+        "Color palette: ink black, deep indigo, lacquer red, bone ivory, sickly green, ember-brown accents; do not use magenta or #ff00ff anywhere inside any tile",
+        "Materials/textures: cedar grain, paper fibers, wet granite, woven rush, lime plaster, bamboo lath, lacquer, infected roots",
+        "Constraints: Japan Kan'ei era, year 1638; exactly 8 isolated equal square tiles; background and all gutters must remain perfectly uniform #ff00ff; each texture should be repeat-friendly with no central object or directional light hotspot; no objects projecting beyond tile edges; no text, writing, kanji, symbols, UI, numbers, grid lines, frame, logo or watermark"
+      ]
+    }
+  ]
+}

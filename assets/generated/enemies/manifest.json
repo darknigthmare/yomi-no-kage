@@ -1,0 +1,187 @@
+{
+  "pack": "Yomi no Kage — Bestiaire de la peste",
+  "version": 1,
+  "epoque": "Ère Kan’ei, 1638",
+  "directionArtistique": {
+    "style": "Pixel art 16-bit haute finition, gros pixels nets, vue 3/4 latérale orientée vers la gauche.",
+    "palette": [
+      "noir d’encre",
+      "indigo profond",
+      "rouge laqué",
+      "os vieilli",
+      "vert maladif discret"
+    ],
+    "format": "PNG RGBA 1254 × 1254, fond transparent",
+    "modeGeneration": "ImageGen OpenAI intégré, une génération distincte par ennemi, puis détourage chroma-key local."
+  },
+  "unitesStatistiques": {
+    "pointsDeVie": "points",
+    "degats": "points par attaque réussie",
+    "vitesse": "pixels par seconde suggérés",
+    "echelleAffichage": "multiplicateur par rapport à un ennemi standard"
+  },
+  "ennemis": [
+    {
+      "id": "01-shibito-villager",
+      "nom": "Shibito des rizières",
+      "role": "Fantassin commun et pression de groupe",
+      "statistiquesSuggerees": {
+        "pointsDeVie": 38,
+        "degats": 8,
+        "vitesse": 46,
+        "echelleAffichage": 1.0
+      },
+      "pattern": "Titube vers le joueur, accélère à courte portée, puis exécute un large coup de faucille annoncé par un bref recul du bras. Se montre peu dangereux seul mais cherche à encercler en groupe.",
+      "lore": [
+        "Le virus du Yomi a gagné les hameaux par les canaux d’irrigation avant que les cloches d’alarme ne puissent sonner.",
+        "Ces paysans morts conservent le réflexe de saisir leurs outils, mais ne reconnaissent plus ni famille ni maître."
+      ],
+      "paths": {
+        "sourceChroma": "../sources/enemies/01-shibito-villager-source.png",
+        "pngTransparent": "./01-shibito-villager.png"
+      },
+      "validationAlpha": {
+        "canalRGBA": true,
+        "coinsTransparents": true,
+        "alphaMaxBordure": 0,
+        "couvertureSujetPourcent": 21.19
+      },
+      "promptFinal": "Use case: stylized-concept\nAsset type: production-ready enemy character sprite source for a 2D side-scrolling pixel-art game\nPrimary request: Create exactly one undead Japanese villager (shibito) from the Kan'ei era, year 1638, recently infected by a zombie plague. Worn indigo kosode, patched work trousers, rope belt, straw sandals, one broken farming sickle held low. Subtle sick-green contamination in the eyes and small skin patches; exhausted predatory posture; no graphic gore.\nSubject: one full-body character only, isolated, head-to-toe visible; readable gameplay silhouette; three-quarter lateral view facing left; feet planted; compact pose suitable for an enemy sprite.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately large crisp square pixels, hard pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering.\nComposition/framing: square canvas, character centered with generous clear padding on all sides, full body occupies about 72% of height, no cropping.\nColor palette: ink black, deep indigo, lacquer red accents, aged bone, subtle sick green. Do not use magenta or pink in the subject.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background.\nConstraints: the background must be exactly one uniform #ff00ff color with no shadows, gradients, texture, floor plane, reflections, glow, particles, weather, or lighting variation. Crisp closed silhouette. No cast shadow or contact shadow. No extra character, prop pile, scenery, frame, UI, text, letters, logo, or watermark. Historically grounded Edo-period clothing; no modern objects; no fantasy armor. No graphic gore."
+    },
+    {
+      "id": "02-ashigaru-revenant",
+      "nom": "Ashigaru revenant",
+      "role": "Contrôle de distance et verrouillage de couloir",
+      "statistiquesSuggerees": {
+        "pointsDeVie": 62,
+        "degats": 14,
+        "vitesse": 40,
+        "echelleAffichage": 1.0
+      },
+      "pattern": "Maintient la pointe du yari face au joueur, recule si la distance devient trop courte, puis déclenche une estocade longue en deux temps. Sa garde peut être brisée par une parade parfaite ou une attaque plongeante.",
+      "lore": [
+        "Ce fantassin est tombé en tenant le dernier barrage dressé sur la route d’Edo.",
+        "La peste a préservé sa discipline, si bien que son cadavre répète encore les formations apprises sous les cris du gunso."
+      ],
+      "paths": {
+        "sourceChroma": "../sources/enemies/02-ashigaru-revenant-source.png",
+        "pngTransparent": "./02-ashigaru-revenant.png"
+      },
+      "validationAlpha": {
+        "canalRGBA": true,
+        "coinsTransparents": true,
+        "alphaMaxBordure": 0,
+        "couvertureSujetPourcent": 21.9
+      },
+      "promptFinal": "Use case: stylized-concept\nAsset type: production-ready enemy character sprite source for a 2D side-scrolling pixel-art game\nPrimary request: Create exactly one undead ashigaru foot soldier from Kan'ei-era Japan, year 1638, revived by a zombie plague. He wears a practical dark indigo jingasa helmet and battered lacquered tatami armor over period clothing, and grips one long yari spear in both hands angled diagonally but fully contained inside the canvas. Subtle sick-green contamination in eyes and gaps of the armor; disciplined but unnatural forward stance; no graphic gore.\nSubject: one full-body character only, isolated, head-to-toe visible; strong readable gameplay silhouette; three-quarter lateral view facing left; compact battle-ready pose suitable for an enemy sprite.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately large crisp square pixels, hard pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering.\nComposition/framing: square canvas, character centered with generous clear padding, full figure and complete yari visible with no cropping, no element touching canvas edges.\nColor palette: ink black, deep indigo, lacquer red, aged bone, subtle sick green. Do not use magenta or pink in the subject.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background.\nConstraints: background exactly uniform #ff00ff; no shadows, gradients, texture, floor, reflections, glow, particles, or lighting variation. Crisp closed silhouette. No cast/contact shadow. No other character, scenery, frame, UI, text, logo, or watermark. Historically grounded 1638 equipment, no firearm, no modern item, no oversized fantasy armor. No graphic gore."
+    },
+    {
+      "id": "03-kegare-sohei",
+      "nom": "Sōhei du Kegare",
+      "role": "Élite mobile et balayage de zone",
+      "statistiquesSuggerees": {
+        "pointsDeVie": 88,
+        "degats": 18,
+        "vitesse": 52,
+        "echelleAffichage": 1.05
+      },
+      "pattern": "Alterner une avancée prudente et un balayage circulaire de naginata couvrant l’avant et le dos. Après deux balayages, plante l’arme au sol et bondit vers le joueur, offrant une courte fenêtre de riposte à l’atterrissage.",
+      "lore": [
+        "Les gardiens du temple de Kurotaki ont tenté de purifier les premiers malades par le feu et la prière.",
+        "Leur volonté n’a pas disparu avec leur souffle, mais elle sert désormais la souillure qu’ils voulaient contenir."
+      ],
+      "paths": {
+        "sourceChroma": "../sources/enemies/03-kegare-sohei-source.png",
+        "pngTransparent": "./03-kegare-sohei.png"
+      },
+      "validationAlpha": {
+        "canalRGBA": true,
+        "coinsTransparents": true,
+        "alphaMaxBordure": 0,
+        "couvertureSujetPourcent": 26.91
+      },
+      "promptFinal": "Use case: stylized-concept\nAsset type: production-ready enemy character sprite source for a 2D side-scrolling pixel-art game\nPrimary request: Create exactly one corrupted sōhei warrior monk from Kan'ei-era Japan, year 1638, infected by a zombie plague. Layered bone-white and soot-dark monk robes under light lamellar pieces, a period head cowl, prayer beads, and one naginata held in a controlled low diagonal guard, all fully visible. Subtle sick-green contamination in the eyes and small exposed skin patches; solemn relentless posture; no graphic gore.\nSubject: one full-body character only, isolated, head-to-toe visible; strong readable gameplay silhouette distinct from a samurai; three-quarter lateral view facing left; compact combat pose suitable for an enemy sprite.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately large crisp square pixels, hard pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering.\nComposition/framing: square canvas, character centered with generous padding, complete naginata visible and no cropping, no element touching canvas edges.\nColor palette: ink black, deep indigo, lacquer red accents, aged bone, subtle sick green. Do not use magenta or pink in the subject.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background.\nConstraints: background exactly uniform #ff00ff; no shadows, gradients, texture, floor, reflections, glow, particles, smoke, or lighting variation. Crisp closed silhouette. No cast/contact shadow. No other character, scenery, frame, UI, text, letters, logo, or watermark. Historically grounded 1638 clothing and weapon, no modern item, no oversized fantasy armor. No graphic gore."
+    },
+    {
+      "id": "04-onryo-miko",
+      "nom": "Miko onryō",
+      "role": "Soutien occulte et affaiblissement",
+      "statistiquesSuggerees": {
+        "pointsDeVie": 54,
+        "degats": 11,
+        "vitesse": 34,
+        "echelleAffichage": 1.0
+      },
+      "pattern": "Reste derrière les autres infectés, agite sa cloche pour renforcer brièvement leur vitesse, puis lance un ofuda maudit en ligne droite. La détruire interrompt immédiatement les bonus actifs et laisse les ennemis proches étourdis.",
+      "lore": [
+        "La desservante du sanctuaire de Tsukikage a fermé les portes pour empêcher la contamination d’atteindre les pèlerins.",
+        "Sa cloche appelle maintenant les morts, tandis que les prières tracées sur ses ofuda se lisent à l’envers."
+      ],
+      "paths": {
+        "sourceChroma": "../sources/enemies/04-onryo-miko-source.png",
+        "pngTransparent": "./04-onryo-miko.png"
+      },
+      "validationAlpha": {
+        "canalRGBA": true,
+        "coinsTransparents": true,
+        "alphaMaxBordure": 0,
+        "couvertureSujetPourcent": 29.25
+      },
+      "promptFinal": "Use case: stylized-concept\nAsset type: production-ready enemy character sprite source for a 2D side-scrolling pixel-art game\nPrimary request: Create exactly one infected onryō miko, a fallen shrine priestess from Kan'ei-era Japan, year 1638. Period white kosode and faded lacquer-red hakama, simple tied black hair, one cracked ritual bell in one hand and one folded ofuda in the other. Pallid undead face, subtle sick-green eyes and contamination stains. Spectral in identity but entirely opaque and solid: simple closed silhouette, no floating hair mass, no smoke, mist, aura, translucency, glow, detached particles, or trailing ribbons. No graphic gore.\nSubject: one full-body character only, isolated, head-to-toe visible; readable gameplay silhouette; three-quarter lateral view facing left; restrained forward stance suitable for an enemy sprite.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately large crisp square pixels, hard pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering.\nComposition/framing: square canvas, centered with generous clear padding, full body and both small props visible, no cropping or edge contact.\nColor palette: ink black, deep indigo shadows, lacquer red, aged bone/white, subtle sick green. Do not use magenta or pink in the subject.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background.\nConstraints: background exactly uniform #ff00ff with no shadows, gradients, texture, floor, reflections, glow, particles, weather, or lighting variation. Crisp closed opaque silhouette. No cast/contact shadow. No scenery, frame, UI, extra character, text, letters, logo, or watermark. Historically grounded 1638 miko garments, no modern item. No graphic gore."
+    },
+    {
+      "id": "05-kabuto-brute",
+      "nom": "Brute au kabuto",
+      "role": "Mur blindé et briseur de garde",
+      "statistiquesSuggerees": {
+        "pointsDeVie": 165,
+        "degats": 27,
+        "vitesse": 25,
+        "echelleAffichage": 1.12
+      },
+      "pattern": "Avance sans broncher sous les attaques légères, lève son kanabō avec une longue anticipation, puis frappe le sol en créant une onde courte. Son dos est vulnérable pendant la récupération, et une parade parfaite fissure définitivement une section de son armure.",
+      "lore": [
+        "Ce samouraï était chargé de garder les réserves de poudre du château lorsque les portes intérieures furent rompues.",
+        "Son armure a contenu la morsure, mais elle a aussi emprisonné la chose qui s’éveille désormais sous le kabuto."
+      ],
+      "paths": {
+        "sourceChroma": "../sources/enemies/05-kabuto-brute-source.png",
+        "pngTransparent": "./05-kabuto-brute.png"
+      },
+      "validationAlpha": {
+        "canalRGBA": true,
+        "coinsTransparents": true,
+        "alphaMaxBordure": 0,
+        "couvertureSujetPourcent": 34.7
+      },
+      "promptFinal": "Use case: stylized-concept\nAsset type: production-ready elite enemy character sprite source for a 2D side-scrolling pixel-art game\nPrimary request: Create exactly one Kabuto Brute, an undead heavy samurai from Kan'ei-era Japan, year 1638, transformed by a zombie plague. Broad massive frame in battered black-and-indigo lamellar dō armor with lacquer-red lacing, heavy kabuto with a modest period crest, menpō hanging damaged below the face, and one oversized but historically plausible iron-studded kanabō held low across the body. Subtle sick-green eyes and contamination showing only through armor gaps. Slow, crushing, intimidating stance; no graphic gore.\nSubject: one full-body character only, isolated, head-to-toe visible; very broad readable elite silhouette; three-quarter lateral view facing left; compact stable pose suitable for an enemy sprite.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately large crisp square pixels, hard pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering.\nComposition/framing: square canvas, centered with generous clear padding, entire figure and kanabō visible, no cropping or edge contact.\nColor palette: ink black, deep indigo, lacquer red, aged bone, subtle sick green. Do not use magenta or pink in the subject.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background.\nConstraints: background exactly uniform #ff00ff with no shadows, gradients, texture, floor, reflections, glow, particles, or lighting variation. Crisp closed silhouette. No cast/contact shadow. No scenery, frame, UI, extra character, text, logo, or watermark. Historically grounded 1638 armor; no modern object, no Western plate armor, no exaggerated fantasy spikes. No graphic gore."
+    },
+    {
+      "id": "06-daimyo-corrupted",
+      "nom": "Daimyō corrompu",
+      "role": "Boss de fin de chapitre à trois phases",
+      "statistiquesSuggerees": {
+        "pointsDeVie": 520,
+        "degats": 34,
+        "vitesse": 38,
+        "echelleAffichage": 1.25
+      },
+      "pattern": "Phase 1 : enchaîne deux tailles de tachi et une parade punitive. Phase 2 à 65 % de vie : libère une onde de contamination et ajoute une charge blindée. Phase 3 à 30 % : alterne téléportation courte derrière le joueur, frappe verticale et invocation limitée de deux Shibito ; chaque combo complet ouvre une fenêtre de riposte.",
+      "lore": [
+        "Le daimyō a fait sceller la forteresse pour contenir l’épidémie, puis a ordonné que nul survivant ne puisse en sortir.",
+        "Il règne encore au centre du château, persuadé que la voix du virus est celle de ses ancêtres venus légitimer un règne éternel."
+      ],
+      "paths": {
+        "sourceChroma": "../sources/enemies/06-daimyo-corrupted-source.png",
+        "pngTransparent": "./06-daimyo-corrupted.png"
+      },
+      "validationAlpha": {
+        "canalRGBA": true,
+        "coinsTransparents": true,
+        "alphaMaxBordure": 0,
+        "couvertureSujetPourcent": 23.88
+      },
+      "promptFinal": "Use case: stylized-concept\nAsset type: production-ready final boss character sprite source for a 2D side-scrolling pixel-art game\nPrimary request: Create exactly one corrupted daimyō boss from Kan'ei-era Japan, year 1638, sovereign host of a zombie plague. Imposing black iron and deep lacquer-red lamellar armor, layered jinbaori remnants, intimidating kabuto with two large period-inspired horn crests, grim menpō, one long tachi drawn and held diagonally downward in both hands. Sick-green contamination glows subtly through the eyes and armor seams; regal, deliberate, overwhelming stance; no graphic gore.\nSubject: one full-body character only, isolated, head-to-toe visible; unmistakable boss silhouette broader and approximately 25 percent visually larger than a standard enemy; three-quarter lateral view facing left; stable combat pose.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately large crisp square pixels, hard pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering.\nComposition/framing: square canvas, boss centered, complete horn crests, feet, and tachi fully visible; figure occupies about 88 percent of canvas height while preserving a clean margin; absolutely no cropping or edge contact.\nColor palette: dominant ink black and lacquer red, deep indigo shadows, aged bone, subtle sick green. Do not use magenta or pink in the subject.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background.\nConstraints: background exactly uniform #ff00ff with no shadows, gradients, texture, floor, reflections, glow, particles, smoke, or lighting variation. Crisp closed silhouette. No cast/contact shadow. No throne, banner, scenery, frame, UI, extra character, text, letters, logo, or watermark. Historically grounded 1638 armor proportions; no modern object, no Western armor, no excessive fantasy spikes. No graphic gore."
+    }
+  ]
+}

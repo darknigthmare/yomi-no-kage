@@ -1,0 +1,166 @@
+{
+  "schema": 1,
+  "source": "assets/modular/environments/daimyo-castle/props/source/atlas-alpha.png",
+  "grid": {
+    "columns": 4,
+    "rows": 3
+  },
+  "sprites": [
+    {
+      "id": "tour-chateau",
+      "file": "tour-chateau.png",
+      "sourceCell": [
+        0,
+        0
+      ],
+      "size": [
+        268,
+        305
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "porte-chateau",
+      "file": "porte-chateau.png",
+      "sourceCell": [
+        1,
+        0
+      ],
+      "size": [
+        342,
+        284
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "mur-shoji",
+      "file": "mur-shoji.png",
+      "sourceCell": [
+        2,
+        0
+      ],
+      "size": [
+        311,
+        260
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "pilier-cedre",
+      "file": "pilier-cedre.png",
+      "sourceCell": [
+        3,
+        0
+      ],
+      "size": [
+        125,
+        290
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "brasero-fer",
+      "file": "brasero-fer.png",
+      "sourceCell": [
+        0,
+        1
+      ],
+      "size": [
+        163,
+        236
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "porte-laquee",
+      "file": "porte-laquee.png",
+      "sourceCell": [
+        1,
+        1
+      ],
+      "size": [
+        309,
+        245
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "armure-vide",
+      "file": "armure-vide.png",
+      "sourceCell": [
+        2,
+        1
+      ],
+      "size": [
+        183,
+        288
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "ratelier-vide",
+      "file": "ratelier-vide.png",
+      "sourceCell": [
+        3,
+        1
+      ],
+      "size": [
+        267,
+        244
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "paravent-dechire",
+      "file": "paravent-dechire.png",
+      "sourceCell": [
+        0,
+        2
+      ],
+      "size": [
+        308,
+        231
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "escalier-bois",
+      "file": "escalier-bois.png",
+      "sourceCell": [
+        1,
+        2
+      ],
+      "size": [
+        223,
+        245
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "alcove-tatami",
+      "file": "alcove-tatami.png",
+      "sourceCell": [
+        2,
+        2
+      ],
+      "size": [
+        288,
+        272
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "racines-donjon",
+      "file": "racines-donjon.png",
+      "sourceCell": [
+        3,
+        2
+      ],
+      "size": [
+        359,
+        282
+      ],
+      "nonEmpty": true
+    }
+  ]
+}

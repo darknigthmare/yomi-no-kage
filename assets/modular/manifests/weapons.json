@@ -1,0 +1,760 @@
+{
+  "schema": 1,
+  "category": "weapons",
+  "count": 48,
+  "legacyKatanaCount": 10,
+  "totalAvailable": 58,
+  "generationTool": "OpenAI ImageGen built-in",
+  "generationPolicy": "Un appel ImageGen distinct par atlas de douze armes, puis détourage et découpage 4 × 3.",
+  "anchorConvention": {
+    "unit": "normalized",
+    "origin": "top-left",
+    "range": [
+      0,
+      1
+    ],
+    "meaning": "Point de prise ou de fixation dans le PNG final détouré."
+  },
+  "rotationConvention": {
+    "unit": "degrees",
+    "positive": "clockwise"
+  },
+  "packs": [
+    {
+      "id": "polearms",
+      "name": "Armes d’hast et outils de capture",
+      "count": 12,
+      "source": "assets/modular/weapons/sources/polearms-imagegen-raw.png",
+      "atlas": "assets/modular/weapons/atlases/polearms.png",
+      "prompt": "Create one original 16-bit pixel-art WEAPON ATLAS of historically grounded late-feudal Japanese polearms and battlefield tools for a samurai-versus-zombie game. STRICT technical layout: exactly 4 columns × 3 rows = exactly 12 equal cells, aligned to a regular invisible grid; exactly one complete isolated weapon centered in each cell; generous uniform empty gutters; nothing crossing a cell boundary; no extra items. Draw every long weapon in a consistent clean left-to-right side-view orientation, slightly diagonal only if needed to fit, fully visible from butt to tip. Entire background and gutters perfectly flat, uniform, exact chroma-key magenta #ff00ff. No grid lines, borders, frames, panels, shadows, hands, people, blood, labels, numbers, text, Japanese writing, logos, watermark, UI, sheaths, stands, or scenery. Crisp hard-edged 16-bit pixel art, accurate wood/iron construction, subdued steel, dark wood and wrapped-grip palette, consistent game-sprite scale, no antialias fringe. Exact contents in reading order left-to-right, top-to-bottom: row 1: (1) straight su-yari spear, (2) jumonji-yari with symmetrical cross-shaped side blades, (3) kama-yari with one hooked side blade, (4) classic curved-blade naginata. Row 2: (5) nagamaki long-handled blade, (6) compact Japanese ono axe, (7) heavier masakari war axe, (8) studded wooden kanabo club. Row 3: (9) iron tetsubo club, (10) sasumata forked capture pole, (11) sodegarami sleeve-entangling barbed pole, (12) tsukubo push-capture pole. Original sprite designs, no existing-game likeness."
+    },
+    {
+      "id": "ranged",
+      "name": "Tir, chaînes et bâtons",
+      "count": 12,
+      "source": "assets/modular/weapons/sources/ranged-imagegen-raw.png",
+      "atlas": "assets/modular/weapons/atlases/ranged.png",
+      "prompt": "Create one original 16-bit pixel-art WEAPON ATLAS of historically grounded late-feudal Japanese ranged, flexible and staff weapons for a samurai-versus-zombie game. STRICT technical layout: exactly 4 columns × 3 rows = exactly 12 equal cells on an invisible regular grid; exactly one complete isolated weapon centered in each cell; generous uniform empty gutters; nothing crossing cell boundaries; no extra items. Long rigid weapons should be shown in clean left-to-right side view; chains must be fully coiled within their own cell; bows fully visible with their string and no arrow. Entire background and gutters perfectly flat, uniform, exact chroma-key magenta #ff00ff. No grid lines, borders, frames, panels, cast shadows, hands, people, blood, labels, numbers, text, Japanese writing, logos, watermark, UI, stands, scenery, ammunition piles, smoke, or muzzle flash. Crisp hard-edged 16-bit pixel art, accurate dark wood, iron, brass, rope and wrapped grips, consistent game-sprite scale, no antialias fringe. Exact contents in reading order left-to-right, top-to-bottom: row 1: (1) asymmetrical long yumi daikyu bow, (2) compact hankyu short bow, (3) full-length tanegashima matchlock arquebus, (4) shorter cavalry tanegashima matchlock. Row 2: (5) compact bajozutsu matchlock pistol, (6) kusarigama sickle with its chain and one weight, (7) chigiriki flail staff with short chain and weighted head, (8) manrikigusari chain fully coiled with one weight at each end. Row 3: (9) long bo staff, (10) shorter jo staff, (11) compact uchine throwing dart with short cord, (12) open iron tessen war fan. Original sprite designs, no existing-game likeness."
+    },
+    {
+      "id": "elite",
+      "name": "Arsenal d’élite",
+      "count": 12,
+      "source": "assets/modular/weapons/sources/elite-imagegen-raw.png",
+      "atlas": "assets/modular/weapons/atlases/elite.png",
+      "prompt": "Create one original 16-bit pixel-art WEAPON ATLAS of elite and specialist weapons fitting fictional late-feudal Japan for a samurai-versus-zombie game. STRICT technical layout: exactly 4 columns × 3 rows = exactly 12 equal cells on an invisible regular grid; exactly one complete isolated weapon centered in each cell; generous uniform empty gutters; nothing crossing cell boundaries; no extra items. Draw long weapons in a consistent lower-left to upper-right side-view angle, fully visible; short weapons centered at comparable visual scale. Entire background and gutters perfectly flat, uniform, exact chroma-key magenta #ff00ff. No grid lines, borders, frames, panels, cast shadows, hands, people, blood, labels, numbers, text, Japanese writing, logos, watermark, UI, sheaths, stands, or scenery. Crisp hard-edged 16-bit pixel art, plausible forged steel, iron, dark wood and wrapped-grip construction, no glowing magic, no antialias fringe. Exact contents in reading order left-to-right, top-to-bottom: row 1: (1) very long curved odachi, (2) elegant curved tachi, (3) short wakizashi, (4) compact straight-backed tanto. Row 2: (5) iron jitte with one side prong, (6) compact hachiwari helmet-breaker with hook, (7) closed reinforced iron tessen war fan, (8) heavy broad-bladed naginata. Row 3: (9) monk shakujo ring staff with a few metal rings and no writing, (10) large wooden otsuchi war mallet, (11) plain hardwood bokuto training sword, (12) straight narrow kikuchi-yari spear. Original sprite designs, no existing-game likeness."
+    },
+    {
+      "id": "giant",
+      "name": "Composants détachables des géants",
+      "count": 12,
+      "source": "assets/modular/weapons/sources/giant-imagegen-raw.png",
+      "atlas": "assets/modular/weapons/atlases/giant.png",
+      "prompt": "Create one original 16-bit pixel-art ATLAS of OVERSIZED DETACHABLE BOSS WEAPONS AND COMPONENTS for a plague-horror game in fictional late-feudal Japan. These items are separate sprites and must never include or fuse with a character. STRICT technical layout: exactly 4 columns × 3 rows = exactly 12 equal cells on an invisible regular grid; exactly one complete isolated oversized item centered in each cell; generous uniform empty gutters; nothing crossing cell boundaries; no extra items. Show long items fully visible in side view, slightly diagonal only to fit. Entire background and gutters perfectly flat, uniform, exact chroma-key magenta #ff00ff. No grid lines, borders, frames, panels, cast shadows, hands, people, body parts, blood, labels, numbers, text, Japanese writing, logos, watermark, UI, stands, or scenery. Crisp hard-edged 16-bit pixel art, heavy plausible wood/iron/rope/stone construction, weathered plague-era palette, no glowing magic, no antialias fringe. Exact contents in reading order left-to-right, top-to-bottom: row 1: (1) giant iron-banded castle gate beam used as a club, (2) detachable heavy ox yoke fitted with blunt iron side blades, (3) giant bundled-bamboo battering ram, (4) huge temple bell flail with short thick chain and wooden haft. Row 2: (5) massive river anchor with rope-wrapped grip, (6) enormous sealed bronze spore censer on a chain with no smoke, (7) giant oval beetle-carapace ram shield as a detached shell plate, (8) pair of giant iron manacles joined by one heavy chain, fully contained. Row 3: (9) colossal quarry sledgehammer with stone head and iron bands, (10) oversized worn nodachi with black-red wrapped grip, (11) enormous taiko drum mallet with padded leather head, (12) giant rectangular wooden siege pavise shield with iron bands and no crest. Original sprite designs, no existing-game likeness."
+    }
+  ],
+  "entries": [
+    {
+      "id": "su-yari",
+      "file": "assets/modular/weapons/polearms/su-yari.png",
+      "name": "Su-yari",
+      "lore": "La lance droite standard des barrages d’ashigaru autour de Kurokawa.",
+      "gameplay": "Estoc rapide, longue portée et faible arc vertical.",
+      "anchor": [
+        0.24,
+        0.78
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "jumonji-yari",
+      "file": "assets/modular/weapons/polearms/jumonji-yari.png",
+      "name": "Jūmonji-yari",
+      "lore": "Ses lames latérales furent forgées pour retenir les assaillants aux portes du château.",
+      "gameplay": "Accroche, stoppe les charges et contrôle un large couloir.",
+      "anchor": [
+        0.24,
+        0.78
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "kama-yari",
+      "file": "assets/modular/weapons/polearms/kama-yari.png",
+      "name": "Kama-yari",
+      "lore": "Une lance à crochet employée par les gardes pour désarçonner ou ouvrir une armure.",
+      "gameplay": "Attire une cible légère et expose les points faibles blindés.",
+      "anchor": [
+        0.24,
+        0.78
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "naginata",
+      "file": "assets/modular/weapons/polearms/naginata.png",
+      "name": "Naginata",
+      "lore": "L’arme de garde des sōhei du sanctuaire avant leur contamination.",
+      "gameplay": "Grands balayages, excellente défense contre les groupes.",
+      "anchor": [
+        0.24,
+        0.78
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "nagamaki",
+      "file": "assets/modular/weapons/polearms/nagamaki.png",
+      "name": "Nagamaki",
+      "lore": "Une longue lame réservée aux suivants capables de rompre une ligne compacte.",
+      "gameplay": "Coups lourds, portée intermédiaire et forte rupture de posture.",
+      "anchor": [
+        0.23,
+        0.78
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "ono",
+      "file": "assets/modular/weapons/polearms/ono.png",
+      "name": "Ono",
+      "lore": "Hache des bûcherons réquisitionnés pour dresser les palissades de quarantaine.",
+      "gameplay": "Attaque courte, dégâts élevés aux éléments de bois.",
+      "anchor": [
+        0.25,
+        0.76
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "masakari",
+      "file": "assets/modular/weapons/polearms/masakari.png",
+      "name": "Masakari",
+      "lore": "Une hache lourde de l’arsenal du daimyō, renforcée pour le combat.",
+      "gameplay": "Brise-garde lent avec dégâts d’armure importants.",
+      "anchor": [
+        0.24,
+        0.77
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "kanabo",
+      "file": "assets/modular/weapons/polearms/kanabo.png",
+      "name": "Kanabō",
+      "lore": "Massue cloutée récupérée sur une brute au kabuto.",
+      "gameplay": "Étourdit et repousse, mais consomme beaucoup d’endurance.",
+      "anchor": [
+        0.25,
+        0.78
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "tetsubo",
+      "file": "assets/modular/weapons/polearms/tetsubo.png",
+      "name": "Tetsubō",
+      "lore": "Barre de fer destinée aux gardes les plus massifs du château.",
+      "gameplay": "Très lente, excellente contre les carapaces et les portes.",
+      "anchor": [
+        0.25,
+        0.78
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "sasumata",
+      "file": "assets/modular/weapons/polearms/sasumata.png",
+      "name": "Sasumata",
+      "lore": "Outil de capture des postes de ville, réemployé pour contenir les infectés.",
+      "gameplay": "Immobilise brièvement sans infliger de lourds dégâts.",
+      "anchor": [
+        0.22,
+        0.79
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "sodegarami",
+      "file": "assets/modular/weapons/polearms/sodegarami.png",
+      "name": "Sodegarami",
+      "lore": "Ses crochets saisissaient autrefois les manches des suspects en fuite.",
+      "gameplay": "Arrache les protections légères et interrompt une attaque.",
+      "anchor": [
+        0.23,
+        0.79
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "tsukubo",
+      "file": "assets/modular/weapons/polearms/tsukubo.png",
+      "name": "Tsukubō",
+      "lore": "Perche de poussée conservée dans les maisons de garde de Kurokawa.",
+      "gameplay": "Repousse plusieurs ennemis et crée de l’espace.",
+      "anchor": [
+        0.23,
+        0.79
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "yumi-daikyu",
+      "file": "assets/modular/weapons/ranged/yumi-daikyu.png",
+      "name": "Yumi daikyū",
+      "lore": "Grand arc asymétrique d’un archer au service direct du daimyō.",
+      "gameplay": "Tir chargé puissant, cadence lente et grande portée.",
+      "anchor": [
+        0.7018,
+        0.4426
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "yumi-hankyu",
+      "file": "assets/modular/weapons/ranged/yumi-hankyu.png",
+      "name": "Yumi hankyū",
+      "lore": "Arc court des chasseurs qui surveillaient la bambouseraie.",
+      "gameplay": "Tirs rapides, dégâts modérés et bonne mobilité.",
+      "anchor": [
+        0.7241,
+        0.5
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "tanegashima-teppo",
+      "file": "assets/modular/weapons/ranged/tanegashima-teppo.png",
+      "name": "Tanegashima teppō",
+      "lore": "Arquebuse à mèche stockée dans la tour de guet de Kurokawa.",
+      "gameplay": "Très gros impact, fumée révélatrice et rechargement long.",
+      "anchor": [
+        0.3528,
+        0.5707
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "tanegashima-cavalerie",
+      "file": "assets/modular/weapons/ranged/tanegashima-cavalerie.png",
+      "name": "Tanegashima de cavalerie",
+      "lore": "Version raccourcie portée par les messagers armés du bakufu.",
+      "gameplay": "Moins précise mais utilisable en déplacement.",
+      "anchor": [
+        0.32,
+        0.62
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "bajozutsu",
+      "file": "assets/modular/weapons/ranged/bajozutsu.png",
+      "name": "Bajōzutsu",
+      "lore": "Petit pistolet à mèche réservé aux combats dans les couloirs du château.",
+      "gameplay": "Décharge rapprochée, recul fort et unique tir avant recharge.",
+      "anchor": [
+        0.2,
+        0.7
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "kusarigama",
+      "file": "assets/modular/weapons/ranged/kusarigama.png",
+      "name": "Kusarigama",
+      "lore": "Faucille à chaîne des éclaireurs chargés de traverser les rizières infestées.",
+      "gameplay": "Alterner entaille courte et capture à moyenne portée.",
+      "anchor": [
+        0.28,
+        0.42
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "chigiriki",
+      "file": "assets/modular/weapons/ranged/chigiriki.png",
+      "name": "Chigiriki",
+      "lore": "Fléau compact caché parmi les bâtons des gardes en civil.",
+      "gameplay": "Frappe imprévisible, bon étourdissement et récupération lente.",
+      "anchor": [
+        0.34,
+        0.68
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "manrikigusari",
+      "file": "assets/modular/weapons/ranged/manrikigusari.png",
+      "name": "Manrikigusari",
+      "lore": "Chaîne lestée portée discrètement par les agents du château.",
+      "gameplay": "Enroule une cible légère ou frappe autour d’une garde.",
+      "anchor": [
+        0.16,
+        0.8
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "bo",
+      "file": "assets/modular/weapons/ranged/bo.png",
+      "name": "Bō",
+      "lore": "Bâton long des pèlerins qui tentaient encore d’atteindre le sanctuaire.",
+      "gameplay": "Enchaînements rapides, portée sûre et dégâts non tranchants.",
+      "anchor": [
+        0.2967,
+        0.6535
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "jo",
+      "file": "assets/modular/weapons/ranged/jo.png",
+      "name": "Jō",
+      "lore": "Bâton court des patrouilles civiles de Kurokawa.",
+      "gameplay": "Parades faciles, coups rapides et faible allonge.",
+      "anchor": [
+        0.34,
+        0.62
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "uchine",
+      "file": "assets/modular/weapons/ranged/uchine.png",
+      "name": "Uchine",
+      "lore": "Trait court d’urgence conservé à la ceinture des archers.",
+      "gameplay": "Projectile récupérable qui interrompt les petites cibles.",
+      "anchor": [
+        0.38,
+        0.66
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "tessen-ouvert",
+      "file": "assets/modular/weapons/ranged/tessen-ouvert.png",
+      "name": "Tessen ouvert",
+      "lore": "Éventail de guerre d’un officier qui commandait sans dégainer son sabre.",
+      "gameplay": "Parade de projectiles et balayage court.",
+      "anchor": [
+        0.5,
+        0.89
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "odachi",
+      "file": "assets/modular/weapons/elite/odachi.png",
+      "name": "Ōdachi",
+      "lore": "Très longue lame cérémonielle sortie de l’armurerie lors du siège sanitaire.",
+      "gameplay": "Arc immense, dégâts élevés et engagement très lent.",
+      "anchor": [
+        0.1857,
+        0.8212
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "tachi",
+      "file": "assets/modular/weapons/elite/tachi.png",
+      "name": "Tachi",
+      "lore": "Lame élégante portée par les cavaliers du domaine avant la fermeture des routes.",
+      "gameplay": "Coupe mobile équilibrée, bonus lors des attaques lancées.",
+      "anchor": [
+        0.16,
+        0.84
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "wakizashi",
+      "file": "assets/modular/weapons/elite/wakizashi.png",
+      "name": "Wakizashi",
+      "lore": "Lame courte adaptée aux pièces étroites et aux couloirs du donjon.",
+      "gameplay": "Très rapide, faible portée et excellente contre-attaque.",
+      "anchor": [
+        0.25,
+        0.78
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "tanto",
+      "file": "assets/modular/weapons/elite/tanto.png",
+      "name": "Tantō",
+      "lore": "Poignard de dernier recours porté sous l’armure.",
+      "gameplay": "Finition rapprochée et fort multiplicateur sur point faible.",
+      "anchor": [
+        0.28,
+        0.74
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "jitte",
+      "file": "assets/modular/weapons/elite/jitte.png",
+      "name": "Jitte",
+      "lore": "Insigne martial d’un officier chargé d’arrêter les contrebandiers de remèdes.",
+      "gameplay": "Coince une lame, facilite la parade et inflige peu de dégâts.",
+      "anchor": [
+        0.25,
+        0.76
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "hachiwari",
+      "file": "assets/modular/weapons/elite/hachiwari.png",
+      "name": "Hachiwari",
+      "lore": "Brise-casque court forgé pour ouvrir les protections rigides.",
+      "gameplay": "Dégâts de posture élevés contre ennemis en armure.",
+      "anchor": [
+        0.24,
+        0.77
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "tessen-ferme",
+      "file": "assets/modular/weapons/elite/tessen-ferme.png",
+      "name": "Tessen renforcé",
+      "lore": "Éventail ferré d’un conseiller du daimyō, conçu pour rester discret.",
+      "gameplay": "Parade compacte, contre rapide et faible portée.",
+      "anchor": [
+        0.5,
+        0.88
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "naginata-lourde",
+      "file": "assets/modular/weapons/elite/naginata-lourde.png",
+      "name": "Naginata lourde",
+      "lore": "Une variante de garde aux ferrures épaisses, destinée à tenir une porte.",
+      "gameplay": "Balayage lent, repousse fortement les groupes.",
+      "anchor": [
+        0.1879,
+        0.8557
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "shakujo",
+      "file": "assets/modular/weapons/elite/shakujo.png",
+      "name": "Shakujō",
+      "lore": "Bâton annelé d’un moine itinérant disparu près des fosses de quarantaine.",
+      "gameplay": "Les anneaux signalent les attaques et perturbent brièvement les infectés sensibles au son.",
+      "anchor": [
+        0.23,
+        0.8
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "otsuchi",
+      "file": "assets/modular/weapons/elite/otsuchi.png",
+      "name": "Ōtsuchi",
+      "lore": "Grand maillet employé pour réparer les portes avant de servir à les défendre.",
+      "gameplay": "Onde de choc courte, excellent recul et cadence très lente.",
+      "anchor": [
+        0.3004,
+        0.7411
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "bokuto",
+      "file": "assets/modular/weapons/elite/bokuto.png",
+      "name": "Bokutō",
+      "lore": "Sabre d’entraînement abandonné dans le dōjō du château.",
+      "gameplay": "Arme légère non tranchante, idéale pour l’étourdissement.",
+      "anchor": [
+        0.27,
+        0.76
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "kikuchi-yari",
+      "file": "assets/modular/weapons/elite/kikuchi-yari.png",
+      "name": "Kikuchi-yari",
+      "lore": "Lance étroite et droite conservée parmi les armes anciennes du domaine.",
+      "gameplay": "Estocs précis, faible balayage et fort bonus sur point faible.",
+      "anchor": [
+        0.2271,
+        0.8094
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "poutre-massue-kurogane",
+      "file": "assets/modular/weapons/giant/poutre-massue-kurogane.png",
+      "name": "Poutre-massue de Kurogane",
+      "lore": "Une traverse arrachée à la porte noire et cerclée de ferrures.",
+      "gameplay": "Équipement détachable du Gardien Kurogane, brise les plateformes.",
+      "anchor": [
+        0.2,
+        0.82
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "joug-tranchant-aka-ushi",
+      "file": "assets/modular/weapons/giant/joug-tranchant-aka-ushi.png",
+      "name": "Joug tranchant d’Aka-Ushi",
+      "lore": "Le joug de quarantaine a été renforcé de lames grossières par les convoyeurs.",
+      "gameplay": "Se fixe au cou du boss et élargit sa zone de charge.",
+      "anchor": [
+        0.5,
+        0.45
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "belier-bambou-take-mori",
+      "file": "assets/modular/weapons/giant/belier-bambou-take-mori.png",
+      "name": "Bélier de bambou de Take-Mori",
+      "lore": "Des troncs liés pour fermer la route du sanctuaire, désormais portés comme un bélier.",
+      "gameplay": "Équipement à deux mains, charge rectiligne et destruction du décor.",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "fleau-cloche-enjin",
+      "file": "assets/modular/weapons/giant/fleau-cloche-enjin.png",
+      "name": "Fléau-cloche d’Enjin",
+      "lore": "Une cloche de temple arrachée à son support et liée à un manche calciné.",
+      "gameplay": "Le manche s’ancre à la main, la cloche produit un large impact retardé.",
+      "anchor": [
+        0.83,
+        0.7
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "ancre-riviere-numa",
+      "file": "assets/modular/weapons/giant/ancre-riviere-numa.png",
+      "name": "Ancre fluviale de Numa",
+      "lore": "L’ancre du domaine noyé porte encore les cordes de la digue rompue.",
+      "gameplay": "Traction de cible, balayage lourd et point d’appui au sol.",
+      "anchor": [
+        0.6306,
+        0.2875
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "encensoir-spores-kinoko",
+      "file": "assets/modular/weapons/giant/encensoir-spores-kinoko.png",
+      "name": "Encensoir à spores de Kinoko-Haha",
+      "lore": "Un encensoir scellé avec les poudres de quarantaine du sanctuaire.",
+      "gameplay": "Émet des zones de spores lorsque le sceau est brisé.",
+      "anchor": [
+        0.77,
+        0.88
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "bouclier-carapace-shiro",
+      "file": "assets/modular/weapons/giant/bouclier-carapace-shiro.png",
+      "name": "Plaque de carapace de Shiro-Kabuto",
+      "lore": "Une plaque dorsale détachable durcie comme une armure de siège.",
+      "gameplay": "Bouclier dorsal destructible qui bloque les attaques hautes.",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "chaines-menottes-nuno",
+      "file": "assets/modular/weapons/giant/chaines-menottes-nuno.png",
+      "name": "Menottes du Nuno-Kyojin",
+      "lore": "Les entraves du charnier sont restées liées lorsque le titan s’est relevé.",
+      "gameplay": "Ancrage double aux poignets, tirage et balayage de chaîne.",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "marteau-carriere-ganseki",
+      "file": "assets/modular/weapons/giant/marteau-carriere-ganseki.png",
+      "name": "Marteau de carrière de Ganseki",
+      "lore": "Une masse de pierre cerclée de fer, taillée pour fendre le schiste.",
+      "gameplay": "Frappes lentes, dégâts de terrain et rupture d’armure.",
+      "anchor": [
+        0.2305,
+        0.82
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "nodachi-geant-yomi",
+      "file": "assets/modular/weapons/giant/nodachi-geant-yomi.png",
+      "name": "Nodachi géant du Yomi",
+      "lore": "La lame d’apparat du régent a été reforgée pour ses nouvelles proportions.",
+      "gameplay": "Arme de phase finale, très longue portée et fenêtre d’ouverture après combo.",
+      "anchor": [
+        0.84,
+        0.14
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "maillet-tambour-geant",
+      "file": "assets/modular/weapons/giant/maillet-tambour-geant.png",
+      "name": "Maillet de grand taiko",
+      "lore": "Le maillet du tambour d’alarme, assez lourd pour un géant.",
+      "gameplay": "Composant de boss ou piège d’arène, fort recul sans tranchant.",
+      "anchor": [
+        0.24,
+        0.82
+      ],
+      "defaultRotation": 0
+    },
+    {
+      "id": "pavois-siege-geant",
+      "file": "assets/modular/weapons/giant/pavois-siege-geant.png",
+      "name": "Pavois de siège géant",
+      "lore": "Une porte secondaire renforcée et détournée en protection mobile.",
+      "gameplay": "Bouclier de boss destructible, ancrage central et couverture totale.",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "defaultRotation": 0
+    }
+  ],
+  "legacyKatanas": {
+    "manifest": "assets/generated/weapons/manifest.json",
+    "note": "Les dix sabres ImageGen existants restent valides et sont ajoutés au registre sans être comptés dans les 48 armes modulaires ci-dessus.",
+    "entries": [
+      {
+        "id": "01-kurokage",
+        "file": "assets/generated/weapons/01-kurokage.png",
+        "name": "Kurokage",
+        "lore": "Sabre d’un messager du bakufu chargé d’avertir le shogun.",
+        "gameplay": "Furtivité et dégâts dans le dos.",
+        "anchor": [
+          0.18,
+          0.3
+        ],
+        "defaultRotation": 0
+      },
+      {
+        "id": "02-shogun-no-in",
+        "file": "assets/generated/weapons/02-shogun-no-in.png",
+        "name": "Shōgun no In",
+        "lore": "Lame de présentation attestant l’ordre d’éradication venu d’Edo.",
+        "gameplay": "Résolution et résistance après parade parfaite.",
+        "anchor": [
+          0.18,
+          0.3
+        ],
+        "defaultRotation": 0
+      },
+      {
+        "id": "03-hinezumi",
+        "file": "assets/generated/weapons/03-hinezumi.png",
+        "name": "Hinezumi",
+        "lore": "Retrouvé sous les poutres d’un relais incendié.",
+        "gameplay": "Vitesse d’attaque après esquive parfaite.",
+        "anchor": [
+          0.18,
+          0.3
+        ],
+        "defaultRotation": 0
+      },
+      {
+        "id": "04-shirogane",
+        "file": "assets/generated/weapons/04-shirogane.png",
+        "name": "Shirogane",
+        "lore": "Lame de Mino sortie de son coffre lorsque les morts forcèrent le domaine.",
+        "gameplay": "Parade élargie et dégâts aux armures.",
+        "anchor": [
+          0.18,
+          0.3
+        ],
+        "defaultRotation": 0
+      },
+      {
+        "id": "05-yomibane",
+        "file": "assets/generated/weapons/05-yomibane.png",
+        "name": "Yomibane",
+        "lore": "Sabre funéraire des gardiens qui brûlaient les contaminés.",
+        "gameplay": "Récupère de la résolution lors d’une exécution.",
+        "anchor": [
+          0.18,
+          0.3
+        ],
+        "defaultRotation": 0
+      },
+      {
+        "id": "06-kegare-kiri",
+        "file": "assets/generated/weapons/06-kegare-kiri.png",
+        "name": "Kegare-kiri",
+        "lore": "Lame réparée par plusieurs survivants après les premiers assauts.",
+        "gameplay": "Bonus contre infectés lourds et membres mutés.",
+        "anchor": [
+          0.18,
+          0.3
+        ],
+        "defaultRotation": 0
+      },
+      {
+        "id": "07-takekaze",
+        "file": "assets/generated/weapons/07-takekaze.png",
+        "name": "Takekaze",
+        "lore": "Sabre rural conçu pour être réparé loin des grandes forges.",
+        "gameplay": "Réduit le coût des attaques légères et esquives.",
+        "anchor": [
+          0.18,
+          0.3
+        ],
+        "defaultRotation": 0
+      },
+      {
+        "id": "08-raijin-no-tsume",
+        "file": "assets/generated/weapons/08-raijin-no-tsume.png",
+        "name": "Raijin no Tsume",
+        "lore": "Lame d’Echizen dont le hamon anguleux nourrit la légende.",
+        "gameplay": "Dégâts de posture accrus sur attaque lourde.",
+        "anchor": [
+          0.18,
+          0.3
+        ],
+        "defaultRotation": 0
+      },
+      {
+        "id": "09-akatsuki",
+        "file": "assets/generated/weapons/09-akatsuki.png",
+        "name": "Akatsuki",
+        "lore": "Porté lors de la reprise d’une forteresse contaminée à l’aube.",
+        "gameplay": "Bonus de dégâts à haute santé.",
+        "anchor": [
+          0.18,
+          0.3
+        ],
+        "defaultRotation": 0
+      },
+      {
+        "id": "10-mujo",
+        "file": "assets/generated/weapons/10-mujo.png",
+        "name": "Mujō",
+        "lore": "Vieux sabre réparé, passé entre les mains de rōnin oubliés.",
+        "gameplay": "Bonus de parade lorsque la santé est basse.",
+        "anchor": [
+          0.18,
+          0.3
+        ],
+        "defaultRotation": 0
+      }
+    ]
+  }
+}
