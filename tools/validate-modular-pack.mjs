@@ -27,7 +27,10 @@ const report = {
   environmentPlatforms: 0,
   fpsCharacterSheets: 0,
   fpsCharacterFramePngs: 0,
-  fpsPlayerWeaponSheets: 0,
+  fpsPlayerViewSheets: 0,
+  fpsPlayerViewFramePngs: 0,
+  fpsPlayerWeaponSprites: 0,
+  staleFpsWeaponSets: 0,
 };
 
 function assert(condition, message) {
@@ -49,6 +52,12 @@ function walkFiles(directory) {
     const fullPath = path.join(directory, entry.name);
     return entry.isDirectory() ? walkFiles(fullPath) : [fullPath];
   });
+}
+
+function pngSize(filePath) {
+  const buffer = fs.readFileSync(filePath);
+  if (buffer.length < 24 || buffer.toString("ascii", 1, 4) !== "PNG") return null;
+  return { width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20) };
 }
 
 for (const [category, expectedCount] of Object.entries(expectedCategories)) {
@@ -133,16 +142,57 @@ if (fs.existsSync(registryPath)) {
   }
   const loreKatanas = (registry?.weapons || []).filter((weapon) =>
     /^\d{2}-/.test(String(weapon.id || "")) && String(weapon.file || "").startsWith("assets/generated/weapons/"));
+  report.staleFpsWeaponSets = (registry?.weapons || [])
+    .filter((weapon) => weapon.fpsAnimations).length;
+  assert(
+    report.staleFpsWeaponSets === 0,
+    `anciens composites FPS d'arme encore référencés: ${report.staleFpsWeaponSets}`,
+  );
+  const player = (registry?.characters || []).find((entry) => entry.category === "player");
+  for (const animation of animationNames) {
+    const sheetPath = path.join(root, player?.fpsAnimations?.[animation] || "");
+    assert(fs.existsSync(sheetPath), `player/akio: planche FPS ${animation} absente`);
+    if (fs.existsSync(sheetPath)) {
+      report.fpsPlayerViewSheets += 1;
+      const size = pngSize(sheetPath);
+      assert(
+        size?.width === 1440 && size?.height === 160,
+        `player/akio: planche FPS ${animation} doit faire 1440x160`,
+      );
+    }
+    const frames = player?.fpsFrames?.[animation] || [];
+    assert(frames.length === 6, `player/akio: FPS ${animation} n'a pas 6 frames`);
+    for (const frame of frames) {
+      const framePath = path.join(root, frame);
+      assert(fs.existsSync(framePath), `player/akio: frame FPS absente ${frame}`);
+      if (fs.existsSync(framePath)) {
+        report.fpsPlayerViewFramePngs += 1;
+        const size = pngSize(framePath);
+        assert(
+          size?.width === 240 && size?.height === 160,
+          `player/akio: frame FPS ${frame} doit faire 240x160`,
+        );
+      }
+    }
+  }
   for (const weapon of loreKatanas) {
-    for (const animation of animationNames) {
-      const sheetPath = path.join(root, weapon.fpsAnimations?.[animation] || "");
-      assert(fs.existsSync(sheetPath), `${weapon.id}: planche FPS joueur ${animation} absente`);
-      if (fs.existsSync(sheetPath)) report.fpsPlayerWeaponSheets += 1;
+    const spritePath = path.join(root, weapon.fpsSprite || "");
+    assert(fs.existsSync(spritePath), `${weapon.id}: sprite FPS d'arme séparé absent`);
+    assert(!weapon.fpsAnimations, `${weapon.id}: conserve des composites bras/arme obsolètes`);
+    if (fs.existsSync(spritePath)) {
+      report.fpsPlayerWeaponSprites += 1;
+      const size = pngSize(spritePath);
+      assert(
+        size && size.width <= 640 && size.height <= 160,
+        `${weapon.id}: sprite FPS d'arme hors format 640x160 maximum`,
+      );
     }
   }
   assert(report.fpsCharacterSheets === 480, `planches FPS ennemis: ${report.fpsCharacterSheets}, 480 attendues`);
   assert(report.fpsCharacterFramePngs === 2880, `frames FPS ennemis: ${report.fpsCharacterFramePngs}, 2880 attendues`);
-  assert(report.fpsPlayerWeaponSheets === 50, `planches FPS joueur/armes: ${report.fpsPlayerWeaponSheets}, 50 attendues`);
+  assert(report.fpsPlayerViewSheets === 5, `planches FPS joueur: ${report.fpsPlayerViewSheets}, 5 attendues`);
+  assert(report.fpsPlayerViewFramePngs === 30, `frames FPS joueur: ${report.fpsPlayerViewFramePngs}, 30 attendues`);
+  assert(report.fpsPlayerWeaponSprites === 10, `sprites FPS d'arme: ${report.fpsPlayerWeaponSprites}, 10 attendus`);
 }
 
 report.errors = errors;

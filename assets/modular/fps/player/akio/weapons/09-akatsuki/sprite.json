@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "view": "first-person-weapon",
+  "weaponId": "09-akatsuki",
+  "file": "weapon.png",
+  "source": "assets/generated/weapons/09-akatsuki.png",
+  "sourceCrop": [
+    17,
+    295,
+    1502,
+    402
+  ],
+  "gripAnchor": [
+    0.26,
+    0.52
+  ],
+  "detachedAccessoriesRemoved": true,
+  "renderOrder": "behind-body",
+  "weaponsBakedIntoBody": false,
+  "alphaMode": "binary"
+}

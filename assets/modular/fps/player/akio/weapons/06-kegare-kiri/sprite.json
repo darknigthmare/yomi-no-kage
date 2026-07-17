@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "view": "first-person-weapon",
+  "weaponId": "06-kegare-kiri",
+  "file": "weapon.png",
+  "source": "assets/generated/weapons/06-kegare-kiri.png",
+  "sourceCrop": [
+    35,
+    214,
+    1702,
+    433
+  ],
+  "gripAnchor": [
+    0.26,
+    0.52
+  ],
+  "detachedAccessoriesRemoved": true,
+  "renderOrder": "behind-body",
+  "weaponsBakedIntoBody": false,
+  "alphaMode": "binary"
+}

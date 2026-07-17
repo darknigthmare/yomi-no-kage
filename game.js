@@ -12,7 +12,14 @@
   const H = canvas.height;
   const TAU = Math.PI * 2;
   const FOV = Math.PI / 3;
-  const ASSET_VERSION = "20260717-6";
+  const ASSET_VERSION = "20260717-9";
+  const PLAYER_ATTACK_DURATION = 0.34;
+  const PLAYER_ATTACK_ACTIVE_AT = 0.38;
+  const PLAYER_HURT_DURATION = 0.72;
+  const PLAYER_DEATH_DURATION = 0.9;
+  const ENEMY_HURT_DURATION = 0.34;
+  const ENEMY_DEATH_DURATION = 0.78;
+  const SIDE_ENEMY_BASELINE_OFFSET = 4;
   const KATANA_IDS = [
     "01-kurokage", "02-shogun-no-in", "03-hinezumi", "04-shirogane", "05-yomibane",
     "06-kegare-kiri", "07-takekaze", "08-raijin-no-tsume", "09-akatsuki", "10-mujo",
@@ -22,17 +29,111 @@
     "KEGARE-KIRI", "TAKEKAZE", "RAIJIN NO TSUME", "AKATSUKI", "MUJO",
   ];
   const KATANA_WEAPON_META = [
-    { crop: [52, 197, 1713, 450], anchor: [0.08, 0.58], sideRotation: -0.58, fpsRotation: -0.86 },
-    { crop: [55, 144, 2061, 444], anchor: [0.08, 0.58], sideRotation: -0.54, fpsRotation: -0.82 },
-    { crop: [80, 112, 2013, 519], anchor: [0.08, 0.6], sideRotation: -0.52, fpsRotation: -0.8 },
-    { crop: [36, 171, 1757, 509], anchor: [0.08, 0.59], sideRotation: -0.56, fpsRotation: -0.84 },
-    { crop: [60, 149, 1810, 507], anchor: [0.08, 0.6], sideRotation: -0.56, fpsRotation: -0.84 },
-    { crop: [35, 214, 1702, 433], anchor: [0.08, 0.57], sideRotation: -0.6, fpsRotation: -0.88 },
-    { crop: [50, 186, 1731, 516], anchor: [0.08, 0.6], sideRotation: -0.55, fpsRotation: -0.83 },
-    { crop: [65, 127, 1965, 497], anchor: [0.08, 0.6], sideRotation: -0.54, fpsRotation: -0.82 },
-    { crop: [17, 295, 1502, 402], anchor: [0.08, 0.58], sideRotation: -0.62, fpsRotation: -0.9 },
-    { crop: [54, 127, 2062, 469], anchor: [0.08, 0.59], sideRotation: -0.55, fpsRotation: -0.83 },
+    { anchor: [0.26, 0.52], sideRotation: -0.58, fpsRotation: -0.86 },
+    { anchor: [0.26, 0.52], sideRotation: -0.54, fpsRotation: -0.82 },
+    { anchor: [0.26, 0.52], sideRotation: -0.52, fpsRotation: -0.8 },
+    { anchor: [0.26, 0.52], sideRotation: -0.56, fpsRotation: -0.84 },
+    { anchor: [0.26, 0.52], sideRotation: -0.56, fpsRotation: -0.84 },
+    { anchor: [0.26, 0.52], sideRotation: -0.6, fpsRotation: -0.88 },
+    { anchor: [0.26, 0.52], sideRotation: -0.55, fpsRotation: -0.83 },
+    { anchor: [0.26, 0.52], sideRotation: -0.54, fpsRotation: -0.82 },
+    { anchor: [0.26, 0.52], sideRotation: -0.62, fpsRotation: -0.9 },
+    { anchor: [0.26, 0.52], sideRotation: -0.55, fpsRotation: -0.83 },
   ];
+  const SIDE_ENTRANCES = [
+    {
+      x: 900,
+      blockX: 862,
+      interactionRange: 58,
+      mission: 0,
+      label: "SANCTUAIRE CONTAMINÉ",
+      prompt: "E — FRANCHIR LE TORII",
+    },
+    {
+      x: 2190,
+      blockX: 2148,
+      interactionRange: 66,
+      mission: 1,
+      label: "DONJON DE KUROKAWA",
+      prompt: "E — OUVRIR LA PORTE",
+    },
+  ];
+  const SIDE_PLATFORM_LAYOUTS = [
+    [
+      { x: 180, y: 245, w: 118, h: 9 }, { x: 395, y: 218, w: 105, h: 9 },
+      { x: 650, y: 246, w: 95, h: 9 }, { x: 1120, y: 235, w: 130, h: 9 },
+      { x: 1450, y: 206, w: 105, h: 9 }, { x: 1710, y: 244, w: 120, h: 9 },
+      { x: 1990, y: 225, w: 105, h: 9 },
+    ],
+    [
+      { x: 1110, y: 246, w: 105, h: 9 }, { x: 1325, y: 219, w: 112, h: 9 },
+      { x: 1545, y: 245, w: 118, h: 9 }, { x: 1770, y: 210, w: 104, h: 9 },
+      { x: 1925, y: 244, w: 105, h: 9 },
+    ],
+  ];
+  const SPIRIT_IMPACT_IDS = new Set([
+    "04-onryo-miko",
+    "s04-onibi-adept",
+    "s11-biwa-revenant",
+    "s12-shikigami-scribe",
+    "s16-kage-mai-dancer",
+    "s18-yomi-herald",
+    "s20-mekura-oracle",
+    "mb-04-miko-tsukikage",
+    "mb-18-onmyoji-renard",
+    "boss-09-maitre-noh-utsuro",
+    "boss-18-pretresse-cendres-suzaku",
+    "giant-10-yomi-no-kanrei",
+  ]);
+  const ARMOR_IMPACT_IDS = new Set([
+    "02-ashigaru-revenant",
+    "03-kegare-sohei",
+    "05-kabuto-brute",
+    "06-daimyo-corrupted",
+    "s06-oni-men-executioner",
+    "s08-gomon-jailer",
+    "s10-hatamoto-fallen",
+    "s15-teppo-corpsman",
+    "s17-kurohata-bearer",
+  ]);
+  const FPS_WALL_TILES = [
+    [26, 82, 344, 344],
+    [406, 82, 344, 344],
+    [786, 82, 344, 344],
+    [1166, 82, 344, 344],
+    [26, 560, 344, 344],
+    [406, 560, 344, 344],
+    [786, 560, 344, 344],
+    [1166, 560, 344, 344],
+  ];
+  const FPS_VIEWMODEL_RECT = { x: 80, y: 40, width: 480, height: 320 };
+  const FPS_PLAYER_WEAPON_MOUNTS = {
+    idle: [
+      [0.52, 0.51, -1.78, 0.94, 1], [0.51, 0.52, -1.76, 0.95, 1],
+      [0.51, 0.52, -1.79, 0.95, 1], [0.50, 0.50, -1.81, 0.94, 1],
+      [0.50, 0.52, -1.77, 0.95, 1], [0.51, 0.52, -1.80, 0.94, 1],
+    ],
+    move: [
+      [0.44, 0.57, -1.83, 0.93, 1], [0.37, 0.58, -1.76, 0.94, 1],
+      [0.35, 0.59, -1.71, 0.95, 1], [0.35, 0.57, -1.76, 0.94, 1],
+      [0.38, 0.59, -1.82, 0.93, 1], [0.37, 0.61, -1.78, 0.94, 1],
+    ],
+    attack: [
+      [0.46, 0.64, -1.96, 0.92, 1], [0.50, 0.61, -1.70, 0.96, 1],
+      [0.52, 0.64, -1.38, 1.00, 1], [0.56, 0.39, -0.95, 1.04, 1],
+      [0.59, 0.65, -0.43, 1.08, 1], [0.56, 0.75, 0.08, 1.00, 1],
+    ],
+    hurt: [
+      [0.36, 0.59, -2.04, 0.94, 1], [0.34, 0.58, -2.25, 0.92, 0.90],
+      [0.28, 0.57, -2.48, 0.88, 0.72], [0.37, 0.59, -2.62, 0.84, 0.50],
+      [0.40, 0.57, -2.08, 0.90, 0.72], [0.38, 0.58, -1.80, 0.94, 1],
+    ],
+    death: [
+      [0.42, 0.54, -1.78, 0.92, 1], [0.48, 0.60, -1.18, 0.90, 0.86],
+      [0.55, 0.78, -0.58, 0.86, 0.66], [0.62, 0.95, -0.10, 0.82, 0.42],
+      [0.68, 1.04, 0.28, 0.76, 0.18], [0.72, 1.18, 0.46, 0.72, 0],
+    ],
+  };
   const WEAPON_MOUNTS = {
     side: {
       idle: { x: -0.18, y: -0.5, scale: 0.6, rotation: -0.38 },
@@ -93,11 +194,18 @@
   const bitmapAssets = {
     akioSheet: loadBitmap("assets/generated/characters/akio-character-sheet.png"),
     akioModular: loadAnimationSet("assets/modular/characters/player/akio"),
-    akioFpsKatana: loadBitmap("assets/generated/characters/akio-fps-katana.png"),
-    weapons: KATANA_IDS.map((id) => loadBitmap(`assets/generated/weapons/${id}.png`)),
+    akioFpsBody: loadAnimationSet("assets/modular/fps/player/akio/body"),
+    // Les mêmes lames détourées servent aux deux perspectives. Les anciennes
+    // sources générées contenaient encore, pour sept sabres, un morceau de
+    // fourreau dans le crop 2D.
+    weapons: KATANA_IDS.map((id) =>
+      loadBitmap(`assets/modular/fps/player/akio/weapons/${id}/weapon.png`)),
+    fpsPlayerWeapons: KATANA_IDS.map((id) =>
+      loadBitmap(`assets/modular/fps/player/akio/weapons/${id}/weapon.png`)),
     sideBackgrounds: [
       loadBitmap("assets/generated/environments/01-kurokawa-burning-village.png"),
       loadBitmap("assets/generated/environments/02-bamboo-shrine.png"),
+      loadBitmap("assets/generated/environments/03-daimyo-castle-interior.png"),
     ],
     parallaxBackgrounds: [
       loadParallaxSet("assets/modular/environments/kurokawa"),
@@ -118,18 +226,27 @@
         ledge: loadBitmap("assets/modular/environments/daimyo-castle/platforms/plateforme-cedre-longue.png"),
       },
     ],
+    sideEntrances: [
+      loadBitmap("assets/modular/environments/bamboo-shrine/props/grand-torii.png"),
+      loadBitmap("assets/modular/environments/daimyo-castle/props/porte-chateau.png"),
+    ],
+    fpsWallAtlas: loadBitmap("assets/generated/props/fps-wall-texture-atlas.png"),
+    fpsAltars: [
+      loadBitmap("assets/modular/environments/bamboo-shrine/props/autel-purification.png"),
+      loadBitmap("assets/modular/environments/daimyo-castle/props/racines-donjon.png"),
+    ],
     worldProps: [
       loadPropSet("assets/modular/environments/kurokawa", [
         { file: "minka-chaume-brulee", x: 42, width: 175 },
-        { file: "barriere-village", x: 220, width: 86, layer: "front", bottomY: 306 },
+        { file: "barriere-village", x: 220, width: 86, layer: "front" },
         { file: "tour-guet-kurokawa", x: 315, width: 82 },
         { file: "minka-tuiles-intacte", x: 535, width: 175 },
-        { file: "foyer-incendie", x: 760, width: 76, layer: "front", bottomY: 307 },
+        { file: "foyer-incendie", x: 760, width: 76, layer: "front" },
         { file: "kura-entrepot-riz", x: 1010, width: 145 },
-        { file: "charrette-cassee", x: 1325, width: 74, layer: "front", bottomY: 306 },
-        { file: "puits-pierre", x: 1570, width: 54, layer: "front", bottomY: 306 },
+        { file: "charrette-cassee", x: 1325, width: 74, layer: "front" },
+        { file: "puits-pierre", x: 1570, width: 54, layer: "front" },
         { file: "minka-chaume-brulee", x: 1810, width: 175 },
-        { file: "autel-route", x: 2085, width: 64, layer: "front", bottomY: 306 },
+        { file: "autel-route", x: 2040, width: 58, layer: "front" },
         { file: "tour-guet-kurokawa", x: 2250, width: 82 },
       ]),
       loadPropSet("assets/modular/environments/bamboo-shrine", [
@@ -137,25 +254,24 @@
         { file: "sanctuaire-rural", x: 425, width: 190 },
         { file: "grand-torii", x: 840, width: 150 },
         { file: "petit-torii", x: 1085, width: 86 },
-        { file: "pont-bois", x: 1210, width: 175, layer: "front", bottomY: 307 },
-        { file: "bassin-purification", x: 1485, width: 65, layer: "front", bottomY: 306 },
-        { file: "lanterne-pierre", x: 1660, width: 36, layer: "front", bottomY: 306 },
-        { file: "barriere-rituelle", x: 1740, width: 96, layer: "front", bottomY: 306 },
-        { file: "bambous-coupes", x: 1870, width: 92, layer: "front", bottomY: 306 },
-        { file: "autel-purification", x: 2175, width: 88, layer: "front", bottomY: 306 },
+        { file: "pont-bois", x: 1210, width: 175, layer: "front" },
+        { file: "bassin-purification", x: 1485, width: 65, layer: "front" },
+        { file: "lanterne-pierre", x: 1660, width: 36, layer: "front" },
+        { file: "barriere-rituelle", x: 1740, width: 96, layer: "front" },
+        { file: "bambous-coupes", x: 1870, width: 92, layer: "front" },
+        { file: "autel-purification", x: 2050, width: 78, layer: "front" },
       ]),
       loadPropSet("assets/modular/environments/daimyo-castle", [
-        { file: "tour-chateau", x: 28, width: 166 },
-        { file: "porte-chateau", x: 320, width: 210 },
-        { file: "mur-shoji", x: 610, width: 185 },
-        { file: "pilier-cedre", x: 860, width: 58 },
-        { file: "brasero-fer", x: 1030, width: 54, layer: "front", bottomY: 306 },
-        { file: "porte-laquee", x: 1168, width: 176 },
-        { file: "armure-vide", x: 1450, width: 62, layer: "front", bottomY: 306 },
-        { file: "ratelier-vide", x: 1605, width: 104, layer: "front", bottomY: 306 },
-        { file: "paravent-dechire", x: 1845, width: 138, layer: "front", bottomY: 306 },
-        { file: "escalier-bois", x: 2060, width: 104, layer: "front", bottomY: 306 },
-        { file: "racines-donjon", x: 2250, width: 146, layer: "front", bottomY: 308 },
+        { file: "tour-chateau", x: 990, width: 180 },
+        { file: "mur-shoji", x: 1215, width: 190 },
+        { file: "alcove-tatami", x: 1450, width: 175 },
+        { file: "porte-laquee", x: 1705, width: 170 },
+        { file: "pilier-cedre", x: 1910, width: 48 },
+        { file: "brasero-fer", x: 1270, width: 38, layer: "front" },
+        { file: "armure-vide", x: 1515, width: 42, layer: "front" },
+        { file: "paravent-dechire", x: 1760, width: 105, layer: "front" },
+        { file: "ratelier-vide", x: 1960, width: 85, layer: "front" },
+        { file: "racines-donjon", x: 2045, width: 80, layer: "front" },
       ]),
     ],
     enemies: [
@@ -245,40 +361,32 @@
   }
 
   function buildRegistryWorldProps(environments) {
-    const zones = ["kurokawa", "bamboo-shrine", "daimyo-castle"];
-    const layout = [
-      { x: 48, width: 170, layer: "back", bottomY: 300 },
-      { x: 260, width: 135, layer: "back", bottomY: 300 },
-      { x: 470, width: 175, layer: "back", bottomY: 300 },
-      { x: 720, width: 78, layer: "front", bottomY: 306 },
-      { x: 920, width: 62, layer: "front", bottomY: 306 },
-      { x: 1095, width: 70, layer: "front", bottomY: 306 },
-      { x: 1280, width: 92, layer: "front", bottomY: 306 },
-      { x: 1475, width: 92, layer: "front", bottomY: 306 },
-      { x: 1685, width: 86, layer: "front", bottomY: 306 },
-      { x: 1885, width: 82, layer: "front", bottomY: 306 },
-      { x: 2085, width: 76, layer: "front", bottomY: 306 },
-      { x: 2265, width: 118, layer: "back", bottomY: 300 },
-    ];
-    const nextProps = zones.map((zone) =>
-      environments
-        .filter((entry) => entry.type === "prop" && String(entry.file || "").includes(`/environments/${zone}/props/`))
-        .slice(0, layout.length)
-        .map((entry, index) => ({
-          ...layout[index],
-          id: entry.id,
-          file: entry.file.split("/").pop().replace(/\.png$/, ""),
-          image: loadBitmap(entry.file),
-        })),
+    // Le registre décrit les assets disponibles, pas leur mise en scène.
+    // L'ancien code prenait les douze premiers fichiers alphabétiques et
+    // appliquait les mêmes tailles à une maison, un puits et un autel. Les
+    // layouts ci-dessus restent donc la source de vérité spatiale.
+    document.body.dataset.rosterProps = String(
+      environments.filter((entry) => entry.type === "prop").length,
     );
-    nextProps.forEach((props, index) => {
-      if (props.length) bitmapAssets.worldProps[index] = props;
-    });
+  }
+
+  function impactMaterialForEntry(entry, enemy = null) {
+    const id = String(entry?.id || "");
+    if (SPIRIT_IMPACT_IDS.has(id)) return "spirit";
+    if (
+      ARMOR_IMPACT_IDS.has(id)
+      || entry?.category === "miniboss"
+      || entry?.category === "boss"
+      || entry?.category === "giant"
+      || enemy?.boss
+    ) return "armor";
+    return "flesh";
   }
 
   function equipRosterEntry(enemy, entry, weaponIndex) {
     if (!entry) return;
     enemy.modularEntry = entry;
+    enemy.impactMaterial = impactMaterialForEntry(entry, enemy);
     const modularWeapons = modularRoster.weapons.filter((weapon) =>
       String(weapon.file || "").startsWith("assets/modular/weapons/"),
     );
@@ -311,9 +419,10 @@
       let combatIndex = 0;
       mission.enemies.forEach((enemy) => {
         if (enemy.boss) {
-          const bossPool = missionIndex === state.fps.missions.length - 1
-            ? (giants.length ? giants : bosses)
-            : bosses;
+          // Les géants restent réservés aux futures arènes extérieures : dans
+          // ce donjon étroit leur hauteur dépassait trois murs et leur
+          // collision restait celle d'un zombie ordinaire.
+          const bossPool = bosses.length ? bosses : giants;
           if (bossPool.length) {
             equipRosterEntry(enemy, bossPool[missionIndex % bossPool.length], 40 + missionIndex);
           }
@@ -453,10 +562,17 @@
       startedAt: 0,
       elapsed: 0,
       invulnerable: 0,
+      hurtTimer: 0,
+      deathTimer: 0,
       attackTimer: 0,
       attackCooldown: 0,
+      attackHitApplied: false,
+      playerStagger: 0,
       shake: 0,
       hitStop: 0,
+      hitConfirm: 0,
+      hitConfirmMaterial: "flesh",
+      hitConfirmPoint: { x: W / 2, y: H / 2 },
       transition: 0,
       transitionLabel: "",
       weaponIndex: 0,
@@ -477,15 +593,23 @@
       player: { x: 56, y: 272, vx: 0, vy: 0, w: 15, h: 27, facing: 1, grounded: true },
       enemies: enemyXs.map((x, i) => ({
         x,
-        y: 275,
+        y: 276,
         w: 16,
         h: 24,
         hp: i > 6 ? 3 : 2,
         maxHp: i > 6 ? 3 : 2,
         dead: false,
+        dying: false,
         facing: -1,
         attack: 0,
+        attackDuration: 0.56,
+        attackCooldown: i * 0.1,
+        attackHitApplied: false,
+        hurtTimer: 0,
+        deathTimer: 0,
+        knockbackVx: 0,
         flash: 0,
+        impactMaterial: "flesh",
         seed: i * 13.7,
       })),
       projectiles: [],
@@ -495,25 +619,24 @@
         { x: 1320, y: 266, kind: "health", taken: false },
         { x: 1790, y: 266, kind: "ammo", taken: false },
       ],
-      platforms: [
-        { x: 180, y: 245, w: 118, h: 9 }, { x: 395, y: 218, w: 105, h: 9 },
-        { x: 650, y: 246, w: 95, h: 9 }, { x: 1120, y: 235, w: 130, h: 9 },
-        { x: 1450, y: 206, w: 105, h: 9 }, { x: 1710, y: 244, w: 120, h: 9 },
-        { x: 1990, y: 225, w: 105, h: 9 },
-      ],
     };
   }
 
   function makeFpsMission(index) {
     const def = FPS_DEFS[index];
     const enemies = def.enemies.map((entry, i) => ({
-      x: entry[0], y: entry[1], hp: 4, maxHp: 4, dead: false, attack: i * 0.12, flash: 0, boss: false,
+      x: entry[0], y: entry[1], hp: 4, maxHp: 4, dead: false, dying: false,
+      attack: 0, attackDuration: 0.68, attackCooldown: i * 0.12, attackHitApplied: false,
+      hurtTimer: 0, deathTimer: 0, knockbackX: 0, knockbackY: 0,
+      flash: 0, boss: false, impactMaterial: "flesh",
       spriteIndex: i % 5,
     }));
     if (def.boss) {
       enemies.push({
-        x: def.boss[0], y: def.boss[1], hp: 18, maxHp: 18, dead: false,
-        attack: 0, flash: 0, boss: true, spriteIndex: 5,
+        x: def.boss[0], y: def.boss[1], hp: 18, maxHp: 18, dead: false, dying: false,
+        attack: 0, attackDuration: 0.92, attackCooldown: 0.4, attackHitApplied: false,
+        hurtTimer: 0, deathTimer: 0, knockbackX: 0, knockbackY: 0,
+        flash: 0, boss: true, spriteIndex: 5, impactMaterial: "armor",
       });
     }
     return {
@@ -542,6 +665,36 @@
     while (angle > Math.PI) angle -= TAU;
     while (angle < -Math.PI) angle += TAU;
     return angle;
+  }
+
+  function currentSideEnvironmentIndex() {
+    return game.chapter === 0 ? 0 : 2;
+  }
+
+  function currentSidePlatforms() {
+    return SIDE_PLATFORM_LAYOUTS[game.chapter] || SIDE_PLATFORM_LAYOUTS[0];
+  }
+
+  function currentSideEntrance() {
+    return SIDE_ENTRANCES[game.chapter] || SIDE_ENTRANCES[0];
+  }
+
+  function isNearSideEntrance(rangeScale = 1) {
+    if (game.mode !== "side") return false;
+    const entrance = currentSideEntrance();
+    const p = game.side.player;
+    const centerX = p.x + p.w / 2;
+    const feetY = p.y + p.h;
+    return Math.abs(centerX - entrance.x) <= entrance.interactionRange * rangeScale
+      && Math.abs(feetY - 300) <= 12;
+  }
+
+  function isEnemyAlive(enemy) {
+    return Boolean(enemy && !enemy.dead && !enemy.dying && enemy.hp > 0);
+  }
+
+  function isEnemyVisible(enemy) {
+    return Boolean(enemy && !enemy.dead);
   }
 
   function playAudio(method, ...args) {
@@ -613,6 +766,10 @@
   function update(dt) {
     game.elapsed = (performance.now() - game.startedAt) / 1000;
     game.invulnerable = Math.max(0, game.invulnerable - dt);
+    game.hurtTimer = Math.max(0, game.hurtTimer - dt);
+    game.playerStagger = Math.max(0, game.playerStagger - dt);
+    game.hitConfirm = Math.max(0, game.hitConfirm - dt);
+    const previousAttackTimer = game.attackTimer;
     game.attackTimer = Math.max(0, game.attackTimer - dt);
     game.attackCooldown = Math.max(0, game.attackCooldown - dt);
     game.shake = Math.max(0, game.shake - dt * 22);
@@ -620,6 +777,14 @@
     if (game.hitStop > 0) {
       game.hitStop -= dt;
       return;
+    }
+
+    if (
+      previousAttackTimer > 0
+      && !game.attackHitApplied
+      && 1 - game.attackTimer / PLAYER_ATTACK_DURATION >= PLAYER_ATTACK_ACTIVE_AT
+    ) {
+      resolvePlayerAttack();
     }
 
     if (game.mode === "side") updateSide(dt);
@@ -632,28 +797,38 @@
     const p = side.player;
     const left = key("a") || key("ArrowLeft");
     const right = key("d") || key("ArrowRight");
-    const sprint = key("Shift") && game.stamina > 1 && (left || right);
+    const controlsLocked = game.transition > 0.05 || game.playerStagger > 0;
+    const sprint = !controlsLocked && key("Shift") && game.stamina > 1 && (left || right);
     const speed = sprint ? 178 : 112;
-    const dir = (right ? 1 : 0) - (left ? 1 : 0);
+    const dir = controlsLocked ? 0 : (right ? 1 : 0) - (left ? 1 : 0);
 
     if (sprint) game.stamina = Math.max(0, game.stamina - 28 * dt);
     else game.stamina = Math.min(100, game.stamina + 19 * dt);
 
-    p.vx = approach(p.vx, dir * speed, (dir ? 760 : 980) * dt);
+    p.vx = approach(
+      p.vx,
+      dir * speed,
+      (game.playerStagger > 0 ? 240 : (dir ? 760 : 980)) * dt,
+    );
     if (dir) p.facing = dir;
-    if (input.jumpQueued && p.grounded) {
+    if (!controlsLocked && input.jumpQueued && p.grounded) {
       p.vy = -235;
       p.grounded = false;
     }
     input.jumpQueued = false;
 
     p.x = clamp(p.x + p.vx * dt, 6, side.width - p.w - 6);
+    const entrance = currentSideEntrance();
+    if (p.x > entrance.blockX) {
+      p.x = entrance.blockX;
+      if (p.vx > 0) p.vx = 0;
+    }
     const previousBottom = p.y + p.h;
     p.vy += 590 * dt;
     p.y += p.vy * dt;
     p.grounded = false;
 
-    const surfaces = [{ x: 0, y: 300, w: side.width, h: 60 }, ...side.platforms];
+    const surfaces = [{ x: 0, y: 300, w: side.width, h: 60 }, ...currentSidePlatforms()];
     for (const platform of surfaces) {
       const overlapsX = p.x + p.w > platform.x && p.x < platform.x + platform.w;
       if (p.vy >= 0 && overlapsX && previousBottom <= platform.y + 5 && p.y + p.h >= platform.y) {
@@ -670,25 +845,82 @@
     updateSidePickups();
     updateParticles(side.particles, dt);
     side.cameraX = clamp(approach(side.cameraX, p.x - W * 0.32, 520 * dt), 0, side.width - W);
+  }
 
-    if (game.chapter === 0 && p.x > 885) enterFps(0, true);
-    if (game.chapter === 1 && p.x > 2170) enterFps(1, true);
+  function sideEnemyCombatProfile(enemy) {
+    const elite = enemy.maxHp >= 3;
+    return {
+      speed: elite ? 22 : 29,
+      damage: elite ? 16 : 11,
+      attackDuration: elite ? 0.64 : 0.56,
+      activeAt: elite ? 0.54 : 0.48,
+      recovery: elite ? 0.68 : 0.82,
+      reach: elite ? 22 : 18,
+    };
+  }
+
+  function canOccupySideEnemy(enemy, candidateX) {
+    const candidateCenter = candidateX + enemy.w / 2;
+    return game.side.enemies.every((other) => {
+      if (other === enemy || !isEnemyVisible(other)) return true;
+      const otherCenter = other.x + other.w / 2;
+      const spacing = (enemy.w + other.w) / 2 + 5;
+      return Math.abs(candidateCenter - otherCenter) >= spacing;
+    });
   }
 
   function updateSideEnemies(dt) {
     const p = game.side.player;
     for (const enemy of game.side.enemies) {
       if (enemy.dead) continue;
-      enemy.attack = Math.max(0, enemy.attack - dt);
       enemy.flash = Math.max(0, enemy.flash - dt);
+      enemy.hurtTimer = Math.max(0, enemy.hurtTimer - dt);
+      enemy.attackCooldown = Math.max(0, enemy.attackCooldown - dt);
+      enemy.knockbackVx = approach(enemy.knockbackVx, 0, 420 * dt);
+      if (Math.abs(enemy.knockbackVx) > 0.1) {
+        const candidateX = clamp(enemy.x + enemy.knockbackVx * dt, 8, game.side.width - enemy.w - 8);
+        if (canOccupySideEnemy(enemy, candidateX)) enemy.x = candidateX;
+      }
+
+      if (enemy.dying) {
+        enemy.deathTimer = Math.max(0, enemy.deathTimer - dt);
+        if (enemy.deathTimer <= 0) enemy.dead = true;
+        continue;
+      }
+      if (enemy.hurtTimer > 0) {
+        enemy.attack = 0;
+        continue;
+      }
+
+      const profile = sideEnemyCombatProfile(enemy);
+      if (enemy.attack > 0) {
+        enemy.attack = Math.max(0, enemy.attack - dt);
+        const progress = 1 - enemy.attack / enemy.attackDuration;
+        if (!enemy.attackHitApplied && progress >= profile.activeAt) {
+          enemy.attackHitApplied = true;
+          const dx = p.x + p.w / 2 - (enemy.x + enemy.w / 2);
+          if (Math.abs(dx) <= profile.reach + 6 && Math.abs(p.y - enemy.y) < 55) {
+            const damaged = damagePlayer(profile.damage, {
+              mode: "side",
+              direction: Math.sign(dx) || enemy.facing,
+            });
+            if (damaged) playAudio("playZombie");
+          }
+        }
+        continue;
+      }
+
       const dx = p.x - enemy.x;
       if (Math.abs(dx) < 190 && Math.abs(p.y - enemy.y) < 55) {
         enemy.facing = Math.sign(dx) || enemy.facing;
-        if (Math.abs(dx) > 18) enemy.x += enemy.facing * (enemy.hp === 3 ? 22 : 29) * dt;
-        else if (enemy.attack <= 0) {
-          enemy.attack = 1.05;
-          damagePlayer(enemy.hp === 3 ? 16 : 11);
-          playAudio("playZombie");
+        if (Math.abs(dx) > profile.reach) {
+          const candidateX = enemy.x + enemy.facing * profile.speed * dt;
+          if (canOccupySideEnemy(enemy, candidateX)) enemy.x = candidateX;
+        } else if (enemy.attackCooldown <= 0 && game.transition <= 0.05) {
+          enemy.attackDuration = profile.attackDuration;
+          enemy.attack = profile.attackDuration;
+          enemy.attackHitApplied = false;
+          enemy.attackCooldown = profile.attackDuration + profile.recovery;
         }
       }
     }
@@ -700,7 +932,7 @@
       projectile.x += projectile.vx * dt;
       projectile.life -= dt;
       for (const enemy of side.enemies) {
-        if (enemy.dead || projectile.dead) continue;
+        if (!isEnemyAlive(enemy) || projectile.dead) continue;
         if (Math.abs(projectile.x - (enemy.x + enemy.w / 2)) < 13 && Math.abs(projectile.y - (enemy.y + 10)) < 19) {
           projectile.dead = true;
           hitEnemy(enemy, 3, "side");
@@ -727,9 +959,14 @@
   function updateFps(dt) {
     const mission = currentMission();
     const p = mission.player;
-    const forward = (key("w") || key("ArrowUp") ? 1 : 0) - (key("s") || key("ArrowDown") ? 1 : 0);
-    const strafe = (key("d") ? 1 : 0) - (key("a") ? 1 : 0);
-    const turning = (key("ArrowRight") ? 1 : 0) - (key("ArrowLeft") ? 1 : 0);
+    const controlsLocked = game.transition > 0.05 || game.playerStagger > 0;
+    const forward = controlsLocked
+      ? 0
+      : (key("w") || key("ArrowUp") ? 1 : 0) - (key("s") || key("ArrowDown") ? 1 : 0);
+    const strafe = controlsLocked ? 0 : (key("d") ? 1 : 0) - (key("a") ? 1 : 0);
+    const turning = controlsLocked
+      ? 0
+      : (key("ArrowRight") ? 1 : 0) - (key("ArrowLeft") ? 1 : 0);
     const sprint = key("Shift") && game.stamina > 1 && (forward || strafe);
     const speed = (sprint ? 3.55 : 2.25) * dt;
 
@@ -748,8 +985,8 @@
 
   function moveFpsPlayer(mission, dx, dy) {
     const p = mission.player;
-    if (isWalkable(mission.map, p.x + dx, p.y, 0.19)) p.x += dx;
-    if (isWalkable(mission.map, p.x, p.y + dy, 0.19)) p.y += dy;
+    if (canOccupyFps(mission, p.x + dx, p.y, 0.19, null)) p.x += dx;
+    if (canOccupyFps(mission, p.x, p.y + dy, 0.19, null)) p.y += dy;
   }
 
   function isWalkable(map, x, y, radius = 0) {
@@ -761,26 +998,102 @@
     });
   }
 
+  function fpsEnemyRadius(enemy) {
+    if (enemy?.modularEntry?.category === "giant") return 0.55;
+    return enemy?.boss ? 0.34 : 0.22;
+  }
+
+  function canOccupyFps(mission, x, y, radius, movingEnemy) {
+    if (!isWalkable(mission.map, x, y, radius)) return false;
+    return mission.enemies.every((other) => {
+      if (other === movingEnemy || !isEnemyAlive(other)) return true;
+      const minimum = radius + fpsEnemyRadius(other);
+      return Math.hypot(x - other.x, y - other.y) >= minimum;
+    });
+  }
+
+  function fpsEnemyCombatProfile(enemy) {
+    if (enemy.boss) {
+      return {
+        speed: 0.7,
+        damage: 19,
+        attackDuration: 0.92,
+        activeAt: 0.58,
+        recovery: 0.72,
+        reach: 0.96,
+      };
+    }
+    return {
+      speed: 0.92,
+      damage: 10,
+      attackDuration: 0.68,
+      activeAt: 0.5,
+      recovery: 0.86,
+      reach: 0.72,
+    };
+  }
+
   function updateFpsEnemies(mission, dt) {
     const p = mission.player;
     for (const enemy of mission.enemies) {
       if (enemy.dead) continue;
-      enemy.attack = Math.max(0, enemy.attack - dt);
       enemy.flash = Math.max(0, enemy.flash - dt);
+      enemy.hurtTimer = Math.max(0, enemy.hurtTimer - dt);
+      enemy.attackCooldown = Math.max(0, enemy.attackCooldown - dt);
+      enemy.knockbackX = approach(enemy.knockbackX, 0, 2.8 * dt);
+      enemy.knockbackY = approach(enemy.knockbackY, 0, 2.8 * dt);
+      if (Math.hypot(enemy.knockbackX, enemy.knockbackY) > 0.01) {
+        const nx = enemy.x + enemy.knockbackX * dt;
+        const ny = enemy.y + enemy.knockbackY * dt;
+        const radius = fpsEnemyRadius(enemy);
+        if (canOccupyFps(mission, nx, enemy.y, radius, enemy)) enemy.x = nx;
+        if (canOccupyFps(mission, enemy.x, ny, radius, enemy)) enemy.y = ny;
+      }
+
+      if (enemy.dying) {
+        enemy.deathTimer = Math.max(0, enemy.deathTimer - dt);
+        if (enemy.deathTimer <= 0) enemy.dead = true;
+        continue;
+      }
+      if (enemy.hurtTimer > 0) {
+        enemy.attack = 0;
+        continue;
+      }
+
+      const profile = fpsEnemyCombatProfile(enemy);
       const dx = p.x - enemy.x;
       const dy = p.y - enemy.y;
       const dist = Math.hypot(dx, dy);
+      if (enemy.attack > 0) {
+        enemy.attack = Math.max(0, enemy.attack - dt);
+        const progress = 1 - enemy.attack / enemy.attackDuration;
+        if (!enemy.attackHitApplied && progress >= profile.activeAt) {
+          enemy.attackHitApplied = true;
+          if (dist <= profile.reach + 0.12 && lineOfSight(mission, enemy.x, enemy.y, p.x, p.y)) {
+            const damaged = damagePlayer(profile.damage, {
+              mode: "fps",
+              sourceX: enemy.x,
+              sourceY: enemy.y,
+            });
+            if (damaged) playAudio("playZombie");
+          }
+        }
+        continue;
+      }
+
       if (dist < (enemy.boss ? 11 : 8) && lineOfSight(mission, enemy.x, enemy.y, p.x, p.y)) {
-        if (dist > (enemy.boss ? 0.9 : 0.7)) {
-          const pace = (enemy.boss ? 0.72 : 0.92) * dt;
+        if (dist > profile.reach) {
+          const pace = profile.speed * dt;
           const nx = enemy.x + (dx / dist) * pace;
           const ny = enemy.y + (dy / dist) * pace;
-          if (isWalkable(mission.map, nx, enemy.y, 0.18)) enemy.x = nx;
-          if (isWalkable(mission.map, enemy.x, ny, 0.18)) enemy.y = ny;
-        } else if (enemy.attack <= 0) {
-          enemy.attack = enemy.boss ? 0.72 : 1.08;
-          damagePlayer(enemy.boss ? 19 : 10);
-          playAudio("playZombie");
+          const radius = fpsEnemyRadius(enemy);
+          if (canOccupyFps(mission, nx, enemy.y, radius, enemy)) enemy.x = nx;
+          if (canOccupyFps(mission, enemy.x, ny, radius, enemy)) enemy.y = ny;
+        } else if (enemy.attackCooldown <= 0) {
+          enemy.attackDuration = profile.attackDuration;
+          enemy.attack = profile.attackDuration;
+          enemy.attackHitApplied = false;
+          enemy.attackCooldown = profile.attackDuration + profile.recovery;
         }
       }
     }
@@ -797,26 +1110,46 @@
   }
 
   function performAttack() {
-    if (game.status !== "playing" || game.attackCooldown > 0) return;
-    game.attackCooldown = 0.32;
-    game.attackTimer = 0.28;
+    if (
+      game.status !== "playing"
+      || game.attackCooldown > 0
+      || game.transition > 0.05
+      || game.playerStagger > 0
+    ) return;
+    game.attackCooldown = 0.4;
+    game.attackTimer = PLAYER_ATTACK_DURATION;
+    game.attackHitApplied = false;
     playAudio("playKatana");
+  }
+
+  function resolvePlayerAttack() {
+    if (game.attackHitApplied || game.status !== "playing") return;
+    game.attackHitApplied = true;
     if (game.mode === "side") {
       const p = game.side.player;
       const targets = game.side.enemies
-        .filter((e) => !e.dead && Math.abs((e.x + e.w / 2) - (p.x + p.w / 2)) < 47 && Math.abs(e.y - p.y) < 42)
+        .filter((e) => isEnemyAlive(e) && Math.abs((e.x + e.w / 2) - (p.x + p.w / 2)) < 47 && Math.abs(e.y - p.y) < 42)
         .filter((e) => Math.sign(e.x - p.x) === p.facing || Math.abs(e.x - p.x) < 16)
         .sort((a, b) => Math.abs(a.x - p.x) - Math.abs(b.x - p.x));
-      targets.slice(0, 2).forEach((enemy) => hitEnemy(enemy, 2, "side"));
+      targets.slice(0, 2).forEach((enemy) => hitEnemy(enemy, 2, {
+        mode: "side",
+        direction: p.facing,
+      }));
     } else {
       const mission = currentMission();
       const target = nearestFpsTarget(mission, 1.65, 0.48);
-      if (target) hitEnemy(target, target.boss ? 2 : 3, "fps");
+      if (target) hitEnemy(target, target.boss ? 2 : 3, { mode: "fps" });
     }
   }
 
   function performRanged() {
-    if (game.status !== "playing" || game.attackCooldown > 0 || game.ammo <= 0) {
+    if (
+      game.status !== "playing"
+      || game.attackCooldown > 0
+      || game.transition > 0.05
+      || game.playerStagger > 0
+      || game.ammo <= 0
+    ) {
       if (game.ammo <= 0) announce("PLUS D'OFUDA");
       return;
     }
@@ -829,35 +1162,112 @@
     } else {
       const mission = currentMission();
       const target = nearestFpsTarget(mission, 12, 0.15);
-      if (target) hitEnemy(target, target.boss ? 3 : 4, "fps");
-      mission.particles.push({ x: W / 2, y: H / 2, vx: 0, vy: 0, life: 0.18, max: 0.18, color: "#fff1a8", screen: true });
+      if (target) hitEnemy(target, target.boss ? 3 : 4, { mode: "fps", ranged: true });
+      mission.particles.push({
+        x: W / 2,
+        y: H / 2,
+        vx: 0,
+        vy: 0,
+        gravity: 0,
+        life: 0.18,
+        max: 0.18,
+        color: "#fff1a8",
+        screen: true,
+        kind: "flash",
+      });
     }
   }
 
   function nearestFpsTarget(mission, maxDistance, maxAngle) {
     const p = mission.player;
     return mission.enemies
-      .filter((e) => !e.dead)
+      .filter(isEnemyAlive)
       .map((e) => ({ enemy: e, dist: Math.hypot(e.x - p.x, e.y - p.y), angle: Math.abs(normalizeAngle(Math.atan2(e.y - p.y, e.x - p.x) - p.angle)) }))
       .filter((entry) => entry.dist <= maxDistance && entry.angle <= maxAngle && lineOfSight(mission, p.x, p.y, entry.enemy.x, entry.enemy.y))
       .sort((a, b) => a.angle - b.angle || a.dist - b.dist)[0]?.enemy || null;
   }
 
-  function hitEnemy(enemy, damage, mode) {
-    enemy.hp -= damage;
-    enemy.flash = 0.13;
-    game.shake = Math.max(game.shake, 3.2);
-    game.hitStop = 0.035;
-    game.score += 25;
-    playAudio("playImpact");
+  function fpsImpactPoint(enemy) {
+    const mission = currentMission();
+    const p = mission.player;
+    const dx = enemy.x - p.x;
+    const dy = enemy.y - p.y;
+    const distance = Math.max(0.2, Math.hypot(dx, dy));
+    const relativeAngle = normalizeAngle(Math.atan2(dy, dx) - p.angle);
+    const giantBoss = enemy.modularEntry?.category === "giant";
+    const worldHeight = giantBoss ? 1.7 : (enemy.boss ? 1.28 : 0.92);
+    const projection = projectFpsEntity(distance, relativeAngle, worldHeight, 1);
+    return {
+      x: clamp(projection.screenX, 8, W - 8),
+      y: clamp(projection.top + projection.height * 0.42, 12, H - 18),
+    };
+  }
+
+  function spawnImpactParticles(enemy, material, mode) {
     const particles = mode === "side" ? game.side.particles : currentMission().particles;
-    const px = mode === "side" ? enemy.x + enemy.w / 2 : W / 2;
-    const py = mode === "side" ? enemy.y + 8 : H / 2;
-    for (let i = 0; i < 7; i++) {
-      particles.push({ x: px, y: py, vx: (Math.random() - 0.5) * 75, vy: -20 - Math.random() * 60, life: 0.32 + Math.random() * 0.3, max: 0.62, color: i % 3 ? "#8f1d29" : "#d73a40", screen: mode === "fps" });
+    const point = mode === "side"
+      ? { x: enemy.x + enemy.w / 2, y: enemy.y + 8 }
+      : fpsImpactPoint(enemy);
+    const palette = material === "armor"
+      ? ["#fff4b0", "#e9b84f", "#ffffff"]
+      : material === "spirit"
+        ? ["#b9e7b0", "#719c76", "#d9d7c5"]
+        : ["#8f1d29", "#d73a40", "#5b101c"];
+    const count = material === "armor" ? 11 : material === "spirit" ? 12 : 9;
+    for (let i = 0; i < count; i++) {
+      const angle = -Math.PI * (0.12 + Math.random() * 0.76);
+      const speed = material === "armor" ? 75 + Math.random() * 115 : 35 + Math.random() * 80;
+      particles.push({
+        x: point.x,
+        y: point.y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        gravity: material === "spirit" ? -18 : material === "armor" ? 95 : 150,
+        drag: material === "spirit" ? 0.92 : 0.98,
+        life: 0.28 + Math.random() * 0.34,
+        max: 0.62,
+        color: palette[i % palette.length],
+        screen: mode === "fps",
+        kind: material === "armor" ? "spark" : material === "spirit" ? "ash" : "blood",
+      });
+    }
+    game.hitConfirm = 0.18;
+    game.hitConfirmMaterial = material;
+    game.hitConfirmPoint = point;
+  }
+
+  function hitEnemy(enemy, damage, options = {}) {
+    if (!isEnemyAlive(enemy)) return false;
+    const normalized = typeof options === "string" ? { mode: options } : options;
+    const mode = normalized.mode || game.mode;
+    const material = enemy.impactMaterial || impactMaterialForEntry(enemy.modularEntry, enemy);
+    enemy.hp = Math.max(0, enemy.hp - damage);
+    enemy.flash = material === "armor" ? 0.2 : 0.15;
+    enemy.hurtTimer = ENEMY_HURT_DURATION;
+    enemy.attack = 0;
+    enemy.attackHitApplied = false;
+    game.shake = Math.max(game.shake, material === "armor" ? 4.8 : 3.8);
+    game.hitStop = material === "armor" ? 0.055 : 0.042;
+    game.score += 25;
+    playAudio("playImpact", material);
+    spawnImpactParticles(enemy, material, mode);
+    if (mode === "side") {
+      const direction = normalized.direction || Math.sign(enemy.x - game.side.player.x) || 1;
+      enemy.knockbackVx = direction * (material === "armor" ? 75 : 125);
+    } else {
+      const p = currentMission().player;
+      const dx = enemy.x - p.x;
+      const dy = enemy.y - p.y;
+      const length = Math.max(0.01, Math.hypot(dx, dy));
+      const force = material === "armor" ? 0.7 : 1.15;
+      enemy.knockbackX = dx / length * force;
+      enemy.knockbackY = dy / length * force;
     }
     if (enemy.hp <= 0) {
-      enemy.dead = true;
+      enemy.dying = true;
+      enemy.deathTimer = ENEMY_DEATH_DURATION;
+      enemy.hurtTimer = 0;
+      enemy.attack = 0;
       game.kills += 1;
       game.score += enemy.boss ? 1500 : 180;
       if (enemy.boss) {
@@ -865,28 +1275,50 @@
         announce(`${bossName} TOMBE — PURIFIEZ L'AUTEL`);
       }
     }
+    return true;
   }
 
-  function damagePlayer(amount) {
-    if (game.invulnerable > 0 || game.status !== "playing") return;
+  function damagePlayer(amount, source = {}) {
+    if (game.invulnerable > 0 || game.status !== "playing") return false;
     game.health = Math.max(0, game.health - amount);
-    game.invulnerable = 0.72;
+    game.invulnerable = PLAYER_HURT_DURATION;
+    game.hurtTimer = PLAYER_HURT_DURATION;
+    game.playerStagger = 0.24;
     game.shake = 8;
+    playAudio("playPlayerHurt");
+    if (source.mode === "side") {
+      const p = game.side.player;
+      p.vx = (source.direction || -p.facing || -1) * 125;
+      p.vy = -105;
+      p.grounded = false;
+    }
     dom.damage.classList.remove("hit");
     void dom.damage.offsetWidth;
     dom.damage.classList.add("hit");
-    if (game.health <= 0) finishGame(false);
+    if (game.health <= 0) {
+      game.status = "dying";
+      game.deathTimer = PLAYER_DEATH_DURATION;
+      game.hurtTimer = 0;
+      input.keys.clear();
+      document.body.dataset.state = "dying";
+      document.exitPointerLock?.();
+    }
+    return true;
   }
 
   function interact() {
     if (game.status !== "playing") return;
     if (game.mode === "side") {
-      const gate = game.chapter === 0 ? 900 : 2190;
-      if (Math.abs(game.side.player.x - gate) < 80) enterFps(game.chapter, true);
+      const entrance = currentSideEntrance();
+      if (isNearSideEntrance()) {
+        enterFps(entrance.mission, false);
+      } else {
+        announce("APPROCHEZ-VOUS DE L'ENTRÉE");
+      }
       return;
     }
     const mission = currentMission();
-    const remaining = mission.enemies.filter((e) => !e.dead).length;
+    const remaining = mission.enemies.filter(isEnemyAlive).length;
     const distance = Math.hypot(mission.player.x - mission.altar.x, mission.player.y - mission.altar.y);
     if (distance > 1.35) {
       announce(remaining ? `${remaining} INFECTÉ${remaining > 1 ? "S" : ""} RÔDE${remaining > 1 ? "NT" : ""} ENCORE` : "APPROCHEZ L'AUTEL");
@@ -906,7 +1338,14 @@
         applyRosterToGame(game);
         game.ammo = Math.min(12, game.ammo + 3);
         game.health = Math.min(100, game.health + 18);
-        game.side.player.x = 1045;
+        Object.assign(game.side.player, {
+          x: 1045,
+          y: 273,
+          vx: 0,
+          vy: 0,
+          facing: 1,
+          grounded: true,
+        });
         returnToSide(true);
         announce("PREMIER SCEAU POSÉ — LE DONJON VOUS ATTEND");
       } else {
@@ -917,12 +1356,23 @@
 
   function switchMode() {
     if (game.status !== "playing" || game.transition > 0.25) return;
-    if (game.mode === "side") enterFps(game.chapter, false);
-    else returnToSide(false);
+    if (game.mode === "side") {
+      if (isNearSideEntrance()) interact();
+      else announce("APPROCHEZ D'UNE ENTRÉE ET APPUYEZ SUR E");
+      return;
+    }
+    if (!currentMission().purified) {
+      announce("SCELLEZ LE FOYER AVANT DE REPARTIR");
+      return;
+    }
+    returnToSide(false);
   }
 
   function enterFps(index, automatic) {
     if (game.status !== "playing") return;
+    input.keys.clear();
+    game.side.player.vx = 0;
+    game.side.player.vy = 0;
     game.fps.current = clamp(index, 0, 1);
     game.mode = "fps";
     game.invulnerable = Math.max(game.invulnerable, 2.2);
@@ -937,7 +1387,11 @@
   }
 
   function returnToSide(automatic) {
+    input.keys.clear();
     game.mode = "side";
+    game.invulnerable = Math.max(game.invulnerable, 1);
+    game.side.player.vx = 0;
+    game.side.player.vy = 0;
     game.transition = 0.85;
     game.transitionLabel = automatic ? "LE MONDE DES VIVANTS VOUS RAPPELLE" : "PAS DE CÔTÉ";
     document.body.classList.remove("fps-mode");
@@ -971,7 +1425,9 @@
     for (const p of particles) {
       p.x += p.vx * dt;
       p.y += p.vy * dt;
-      if (!p.screen) p.vy += 150 * dt;
+      p.vx *= p.drag ?? 1;
+      p.vy *= p.drag ?? 1;
+      p.vy += (p.gravity ?? (p.screen ? 0 : 150)) * dt;
       p.life -= dt;
     }
     for (let i = particles.length - 1; i >= 0; i--) if (particles[i].life <= 0) particles.splice(i, 1);
@@ -996,22 +1452,21 @@
     ctx.save();
     ctx.translate(-cam, 0);
     drawVillage(side);
-    if (!hasModularChapterProps()) {
-      drawTorii(900, 185, false);
-      drawTorii(2190, 174, true);
-    }
-    for (const platform of side.platforms) drawPlatform(platform);
+    drawSideEntranceWorld();
+    for (const platform of currentSidePlatforms()) drawPlatform(platform);
     for (const item of side.pickups) if (!item.taken) drawPickup(item);
     for (const projectile of side.projectiles) drawOfuda(projectile.x, projectile.y, Math.sign(projectile.vx));
-    for (const enemy of side.enemies) if (!enemy.dead) drawZombie2d(enemy);
+    for (const enemy of side.enemies) if (isEnemyVisible(enemy)) drawZombie2d(enemy);
     drawSamurai2d(side.player);
     drawModularWorldProps("front");
     drawWorldParticles(side.particles);
     ctx.restore();
 
-    const gateX = game.chapter === 0 ? 900 : 2190;
+    drawSideEntrancePrompt(cam);
+    drawHitConfirm(cam);
+    const gateX = currentSideEntrance().x;
     const sx = gateX - cam;
-    if (sx > 20 && sx < W - 20) {
+    if (sx > 20 && sx < W - 20 && !isNearSideEntrance()) {
       ctx.fillStyle = "#f0d9a4";
       ctx.font = "bold 9px monospace";
       ctx.textAlign = "center";
@@ -1019,8 +1474,47 @@
     }
   }
 
+  function drawSideEntranceWorld() {
+    const entrance = currentSideEntrance();
+    const image = bitmapAssets.sideEntrances[game.chapter];
+    const width = game.chapter === 0 ? 166 : 214;
+    const near = isNearSideEntrance(1.18);
+    ctx.save();
+    if (near) {
+      ctx.shadowColor = game.chapter === 0
+        ? "rgba(121, 215, 158, .8)"
+        : "rgba(222, 174, 93, .78)";
+      ctx.shadowBlur = 14;
+    }
+    if (!drawGroundedWorldSprite(image, entrance.x - width / 2, 300, width)) {
+      drawTorii(entrance.x, game.chapter === 0 ? 185 : 174, game.chapter !== 0);
+    }
+    ctx.restore();
+  }
+
+  function drawSideEntrancePrompt(cam) {
+    if (!isNearSideEntrance()) return;
+    const entrance = currentSideEntrance();
+    const screenX = entrance.x - cam;
+    if (screenX < 18 || screenX > W - 18) return;
+    const panelWidth = 230;
+    const panelY = 80;
+    ctx.fillStyle = "rgba(7, 10, 13, .9)";
+    ctx.fillRect(Math.round(screenX - panelWidth / 2), panelY, panelWidth, 37);
+    ctx.strokeStyle = "#e7cf91";
+    ctx.strokeRect(Math.round(screenX - panelWidth / 2) + 0.5, panelY + 0.5, panelWidth - 1, 36);
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#f0d9a4";
+    ctx.font = "bold 9px monospace";
+    ctx.fillText(entrance.label, screenX, panelY + 14);
+    ctx.fillStyle = "#fff0b5";
+    ctx.font = "bold 10px monospace";
+    ctx.fillText(entrance.prompt, screenX, panelY + 28);
+  }
+
   function drawSideBackdrop(cam) {
-    const parallax = bitmapAssets.parallaxBackgrounds[game.chapter];
+    const environmentIndex = currentSideEnvironmentIndex();
+    const parallax = bitmapAssets.parallaxBackgrounds[environmentIndex];
     if (parallax && bitmapReady(parallax.sky)) {
       drawParallaxLayer(parallax.sky, cam, 0);
       drawParallaxLayer(parallax.far, cam, 0.035);
@@ -1031,7 +1525,7 @@
       return;
     }
 
-    const generatedBackdrop = bitmapAssets.sideBackgrounds[game.chapter];
+    const generatedBackdrop = bitmapAssets.sideBackgrounds[environmentIndex];
     if (bitmapReady(generatedBackdrop)) {
       ctx.drawImage(generatedBackdrop, 0, 0, W, H);
       // Léger voile d'encre : les silhouettes de gameplay restent lisibles
@@ -1043,7 +1537,7 @@
         const y = 155 + ((i * 37) % 120);
         ctx.fillStyle = game.chapter === 0
           ? (i % 3 ? "#bd4b2f" : "#f09a3a")
-          : (i % 3 ? "#6daa63" : "#b8d17a");
+          : (i % 3 ? "#8e7768" : "#c6a878");
         ctx.fillRect(Math.floor(x), Math.floor(y), i % 4 === 0 ? 2 : 1, 2);
       }
       return;
@@ -1074,7 +1568,9 @@
     for (let i = 0; i < 22; i++) {
       const x = (i * 97 + performance.now() * (5 + (i % 4))) % (W + 80) - 40;
       const y = 150 + ((i * 37) % 125);
-      ctx.fillStyle = i % 3 ? "#bd4b2f" : "#f09a3a";
+      ctx.fillStyle = game.chapter === 0
+        ? (i % 3 ? "#bd4b2f" : "#f09a3a")
+        : (i % 3 ? "#8e7768" : "#c6a878");
       ctx.fillRect(Math.floor(x), Math.floor(y), i % 4 === 0 ? 2 : 1, 2);
     }
   }
@@ -1093,42 +1589,130 @@
     }
   }
 
+  const opaqueBoundsCache = new WeakMap();
+
+  function opaqueBoundsForImage(image) {
+    if (!bitmapReady(image)) return null;
+    if (opaqueBoundsCache.has(image)) return opaqueBoundsCache.get(image);
+
+    const fallback = {
+      x: 4,
+      y: 4,
+      w: Math.max(1, image.naturalWidth - 8),
+      h: Math.max(1, image.naturalHeight - 8),
+    };
+    let bounds = fallback;
+    try {
+      const sampleScale = Math.min(1, 256 / Math.max(image.naturalWidth, image.naturalHeight));
+      const sampleWidth = Math.max(1, Math.round(image.naturalWidth * sampleScale));
+      const sampleHeight = Math.max(1, Math.round(image.naturalHeight * sampleScale));
+      const sampler = document.createElement("canvas");
+      sampler.width = sampleWidth;
+      sampler.height = sampleHeight;
+      const samplerCtx = sampler.getContext("2d", { willReadFrequently: true });
+      samplerCtx.imageSmoothingEnabled = false;
+      samplerCtx.drawImage(image, 0, 0, sampleWidth, sampleHeight);
+      const pixels = samplerCtx.getImageData(0, 0, sampleWidth, sampleHeight).data;
+      let minX = sampleWidth, minY = sampleHeight, maxX = -1, maxY = -1;
+      for (let y = 0; y < sampleHeight; y++) {
+        for (let x = 0; x < sampleWidth; x++) {
+          if (pixels[(y * sampleWidth + x) * 4 + 3] < 18) continue;
+          minX = Math.min(minX, x);
+          minY = Math.min(minY, y);
+          maxX = Math.max(maxX, x);
+          maxY = Math.max(maxY, y);
+        }
+      }
+      if (maxX >= minX && maxY >= minY) {
+        const inverseScale = 1 / sampleScale;
+        const pad = Math.ceil(inverseScale);
+        const x = Math.max(0, Math.floor(minX * inverseScale) - pad);
+        const y = Math.max(0, Math.floor(minY * inverseScale) - pad);
+        const right = Math.min(image.naturalWidth, Math.ceil((maxX + 1) * inverseScale) + pad);
+        const bottom = Math.min(image.naturalHeight, Math.ceil((maxY + 1) * inverseScale) + pad);
+        bounds = { x, y, w: Math.max(1, right - x), h: Math.max(1, bottom - y) };
+      }
+    } catch (_) {
+      // Sous file:// certains navigateurs interdisent la lecture alpha. Le
+      // petit crop de secours retire quand même la bordure des exports.
+    }
+    opaqueBoundsCache.set(image, bounds);
+    return bounds;
+  }
+
+  function drawOpaqueBitmap(image, x, y, width, height) {
+    const bounds = opaqueBoundsForImage(image);
+    if (!bounds) return false;
+    ctx.drawImage(
+      image,
+      bounds.x,
+      bounds.y,
+      bounds.w,
+      bounds.h,
+      Math.round(x),
+      Math.round(y),
+      Math.round(width),
+      Math.round(height),
+    );
+    return true;
+  }
+
+  function drawGroundedWorldSprite(image, x, groundY, visibleWidth) {
+    const bounds = opaqueBoundsForImage(image);
+    if (!bounds) return false;
+    const visibleHeight = Math.max(1, visibleWidth * bounds.h / bounds.w);
+    drawOpaqueBitmap(image, x, groundY - visibleHeight, visibleWidth, visibleHeight);
+    return { width: visibleWidth, height: visibleHeight };
+  }
+
   function drawTiledWorldSprite(image, x, y, width, height) {
-    if (!bitmapReady(image)) return false;
-    const tileWidth = Math.max(8, Math.round(image.naturalWidth / image.naturalHeight * height));
+    const bounds = opaqueBoundsForImage(image);
+    if (!bounds) return false;
+    const tileWidth = Math.max(8, Math.round(bounds.w / bounds.h * height));
     ctx.save();
     ctx.beginPath();
     ctx.rect(x, y, width, height);
     ctx.clip();
     for (let tileX = x; tileX < x + width; tileX += tileWidth) {
-      ctx.drawImage(image, Math.round(tileX), y, tileWidth, height);
+      ctx.drawImage(
+        image,
+        bounds.x,
+        bounds.y,
+        bounds.w,
+        bounds.h,
+        Math.round(tileX),
+        y,
+        tileWidth,
+        height,
+      );
     }
     ctx.restore();
     return true;
   }
 
   function drawModularWorldProps(layer = "back") {
-    const props = bitmapAssets.worldProps[game.chapter] || [];
+    const props = bitmapAssets.worldProps[currentSideEnvironmentIndex()] || [];
     let drawn = false;
     for (const prop of props) {
       if ((prop.layer || "back") !== layer) continue;
       if (!bitmapReady(prop.image)) continue;
-      const height = Math.round(prop.width * prop.image.naturalHeight / prop.image.naturalWidth);
       const bottomY = prop.bottomY ?? 300;
-      ctx.drawImage(prop.image, prop.x, bottomY - height, prop.width, height);
+      drawGroundedWorldSprite(prop.image, prop.x, bottomY, prop.width);
       drawn = true;
     }
     return drawn;
   }
 
   function hasModularChapterProps() {
-    return (bitmapAssets.worldProps[game.chapter] || []).some((prop) => bitmapReady(prop.image));
+    return (bitmapAssets.worldProps[currentSideEnvironmentIndex()] || [])
+      .some((prop) => bitmapReady(prop.image));
   }
 
   function drawVillage(side) {
-    const hasGeneratedBackdrop = bitmapReady(bitmapAssets.parallaxBackgrounds[game.chapter]?.sky)
-      || bitmapReady(bitmapAssets.sideBackgrounds[game.chapter]);
-    const tiles = bitmapAssets.platformTiles[game.chapter];
+    const environmentIndex = currentSideEnvironmentIndex();
+    const hasGeneratedBackdrop = bitmapReady(bitmapAssets.parallaxBackgrounds[environmentIndex]?.sky)
+      || bitmapReady(bitmapAssets.sideBackgrounds[environmentIndex]);
+    const tiles = bitmapAssets.platformTiles[environmentIndex];
     const hasBackProps = drawModularWorldProps("back");
     ctx.fillStyle = hasGeneratedBackdrop ? "rgba(16, 14, 19, .72)" : "#161219";
     ctx.fillRect(0, 300, side.width, 60);
@@ -1195,7 +1779,7 @@
   }
 
   function drawPlatform(p) {
-    const tile = bitmapAssets.platformTiles[game.chapter]?.ledge;
+    const tile = bitmapAssets.platformTiles[currentSideEnvironmentIndex()]?.ledge;
     if (drawTiledWorldSprite(tile, p.x, p.y, p.w, p.h)) return;
     ctx.fillStyle = "#382d28"; ctx.fillRect(p.x, p.y, p.w, p.h);
     ctx.fillStyle = "#655044"; ctx.fillRect(p.x, p.y, p.w, 3);
@@ -1234,12 +1818,18 @@
   }
 
   function drawWeaponImage(image, options) {
+    const visible = opaqueBoundsForImage(image) || {
+      x: 0,
+      y: 0,
+      w: image.naturalWidth,
+      h: image.naturalHeight,
+    };
     const {
-      crop = [0, 0, image.naturalWidth, image.naturalHeight],
       anchor = [0.16, 0.5],
       maxDimension = 44,
       widthBias = 1,
     } = options;
+    const crop = options.crop || [visible.x, visible.y, visible.w, visible.h];
     const [sx, sy, sw, sh] = crop;
     const sourceMax = Math.max(sw, sh, 1);
     const drawWidth = sw / sourceMax * maxDimension * widthBias;
@@ -1269,7 +1859,7 @@
       : [0.16, 0.5];
     const attacking = animation === "attack";
     const attackPhase = attacking
-      ? clamp(1 - enemy.attack / (enemy.boss ? 0.72 : 1.08), 0, 1)
+      ? clamp(1 - enemy.attack / Math.max(0.01, enemy.attackDuration || 0.68), 0, 1)
       : 0;
     ctx.save();
     ctx.translate(spriteSize * mount.x, spriteSize * mount.y);
@@ -1290,12 +1880,11 @@
     const equippedWeapon = bitmapAssets.weapons[game.weaponIndex];
     if (!bitmapReady(equippedWeapon)) return;
     const meta = KATANA_WEAPON_META[game.weaponIndex] || KATANA_WEAPON_META[0];
-    const progress = attacking ? clamp(1 - game.attackTimer / 0.28, 0, 1) : 0;
+    const progress = attacking ? clamp(1 - game.attackTimer / PLAYER_ATTACK_DURATION, 0, 1) : 0;
     ctx.save();
     ctx.translate(attacking ? 6 : -5, attacking ? -33 : -25);
     ctx.rotate(attacking ? -1.36 + progress * 1.74 : meta.sideRotation);
     drawWeaponImage(equippedWeapon, {
-      crop: meta.crop,
       anchor: meta.anchor,
       maxDimension: attacking ? 58 : 48,
       widthBias: 1.08,
@@ -1306,7 +1895,8 @@
   function drawProceduralHeldWeapon(attacking) {
     ctx.save();
     ctx.translate(attacking ? 6 : -7, attacking ? 13 : 19);
-    ctx.rotate(attacking ? -1.15 + (0.28 - game.attackTimer) * 5.2 : -0.78);
+    const progress = attacking ? clamp(1 - game.attackTimer / PLAYER_ATTACK_DURATION, 0, 1) : 0;
+    ctx.rotate(attacking ? -1.15 + progress * 1.46 : -0.78);
     ctx.fillStyle = "#a5a7ad";
     ctx.fillRect(0, -1, attacking ? 30 : 25, 2);
     ctx.fillStyle = "#f4e7c3";
@@ -1314,30 +1904,97 @@
     ctx.restore();
   }
 
-  function drawFpsSelectedWeapon() {
-    const fpsWeapon = fpsWeaponSetForWeapon(weaponEntryForCurrentKatana());
+  function fpsPlayerPose() {
     const moving = key("w") || key("s") || key("a") || key("d") || key("ArrowUp") || key("ArrowDown");
-    const animation = game.attackTimer > 0
-      ? "attack"
-      : (game.invulnerable > 0 && game.invulnerable < 0.72 ? "hurt" : (moving ? "move" : "idle"));
+    if (game.status === "dying" || game.health <= 0) {
+      const progress = clamp(1 - game.deathTimer / PLAYER_DEATH_DURATION, 0, 0.999);
+      return { animation: "death", frame: Math.min(5, Math.floor(progress * 6)), moving: false };
+    }
+    if (game.hurtTimer > 0) {
+      const progress = clamp(1 - game.hurtTimer / PLAYER_HURT_DURATION, 0, 0.999);
+      return { animation: "hurt", frame: Math.min(5, Math.floor(progress * 6)), moving: false };
+    }
+    if (game.attackTimer > 0) {
+      const progress = clamp(1 - game.attackTimer / PLAYER_ATTACK_DURATION, 0, 0.999);
+      return { animation: "attack", frame: Math.min(5, Math.floor(progress * 6)), moving: false };
+    }
+    const animation = moving ? "move" : "idle";
+    return {
+      animation,
+      frame: Math.floor(performance.now() / (moving ? 95 : 165)) % 6,
+      moving,
+    };
+  }
+
+  function drawFpsWeaponSprite(image, animation, frame) {
+    if (!bitmapReady(image)) return false;
+    const mount = FPS_PLAYER_WEAPON_MOUNTS[animation]?.[frame]
+      || FPS_PLAYER_WEAPON_MOUNTS.idle[0];
+    const [mountX, mountY, rotation, scale, alpha] = mount;
+    if (alpha <= 0) return true;
+    const drawWidth = Math.round(260 * scale);
+    const drawHeight = Math.max(1, Math.round(drawWidth * image.naturalHeight / image.naturalWidth));
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.translate(
+      Math.round(FPS_VIEWMODEL_RECT.x + FPS_VIEWMODEL_RECT.width * mountX),
+      Math.round(FPS_VIEWMODEL_RECT.y + FPS_VIEWMODEL_RECT.height * mountY),
+    );
+    ctx.rotate(rotation);
+    ctx.drawImage(
+      image,
+      Math.round(-drawWidth * 0.26),
+      Math.round(-drawHeight * 0.52),
+      drawWidth,
+      drawHeight,
+    );
+    ctx.restore();
+    return true;
+  }
+
+  function drawFpsSelectedWeapon() {
+    const pose = fpsPlayerPose();
+    const selectedFpsWeapon = bitmapAssets.fpsPlayerWeapons[game.weaponIndex];
+    if (
+      modularAnimationReady(bitmapAssets.akioFpsBody, pose.animation)
+      && bitmapReady(selectedFpsWeapon)
+    ) {
+      drawFpsWeaponSprite(
+        selectedFpsWeapon,
+        pose.animation,
+        pose.frame,
+      );
+      drawAnimationSprite(
+        bitmapAssets.akioFpsBody,
+        pose.animation,
+        pose.frame,
+        FPS_VIEWMODEL_RECT.x,
+        FPS_VIEWMODEL_RECT.y,
+        FPS_VIEWMODEL_RECT.width,
+        FPS_VIEWMODEL_RECT.height,
+      );
+      return true;
+    }
+
+    // Compatibilité avec les anciens registres pendant le chargement.
+    const fpsWeapon = fpsWeaponSetForWeapon(weaponEntryForCurrentKatana());
+    const { animation, frame } = pose;
     if (modularAnimationReady(fpsWeapon, animation)) {
-      const frame = game.attackTimer > 0
-        ? Math.min(5, Math.floor(clamp(1 - game.attackTimer / 0.28, 0, 0.999) * 6))
-        : Math.floor(performance.now() / (moving ? 95 : 165)) % 6;
-      drawAnimationSprite(fpsWeapon, animation, frame, W - 310, H - 160, 288, 192);
+      drawAnimationSprite(fpsWeapon, animation, frame, 80, 40, 480, 320);
       return true;
     }
 
     const equippedWeapon = bitmapAssets.weapons[game.weaponIndex];
     if (!bitmapReady(equippedWeapon)) return false;
     const meta = KATANA_WEAPON_META[game.weaponIndex] || KATANA_WEAPON_META[0];
-    const progress = game.attackTimer > 0 ? clamp(1 - game.attackTimer / 0.28, 0, 1) : 0;
+    const progress = game.attackTimer > 0
+      ? clamp(1 - game.attackTimer / PLAYER_ATTACK_DURATION, 0, 1)
+      : 0;
     const swing = Math.sin(progress * Math.PI);
     ctx.save();
     ctx.translate(W * (0.76 - swing * 0.12), H * (0.87 - swing * 0.08));
     ctx.rotate(meta.fpsRotation - swing * 0.82 + progress * 0.24);
     drawWeaponImage(equippedWeapon, {
-      crop: meta.crop,
       anchor: meta.anchor,
       maxDimension: 410 + swing * 58,
       widthBias: 1.05,
@@ -1386,19 +2043,41 @@
     const flip = p.facing;
 
     const moving = Math.abs(p.vx) > 8 && p.grounded;
-    const animation = game.attackTimer > 0
-      ? "attack"
-      : (game.invulnerable > 0 && game.invulnerable < 0.72 ? "hurt" : (moving ? "move" : "idle"));
+    const dying = game.status === "dying" || game.health <= 0;
+    const animation = dying
+      ? "death"
+      : (game.hurtTimer > 0
+        ? "hurt"
+        : (game.attackTimer > 0 ? "attack" : (moving ? "move" : "idle")));
     if (modularAnimationReady(bitmapAssets.akioModular, animation)) {
-      const frame = game.attackTimer > 0
-        ? Math.min(5, Math.floor((1 - game.attackTimer / 0.28) * 6))
-        : Math.floor(performance.now() / (moving ? 95 : 165)) % 6;
+      let frame;
+      if (animation === "death") {
+        frame = Math.min(5, Math.floor(clamp(
+          1 - game.deathTimer / PLAYER_DEATH_DURATION,
+          0,
+          0.999,
+        ) * 6));
+      } else if (animation === "hurt") {
+        frame = Math.min(5, Math.floor(clamp(
+          1 - game.hurtTimer / PLAYER_HURT_DURATION,
+          0,
+          0.999,
+        ) * 6));
+      } else if (animation === "attack") {
+        frame = Math.min(5, Math.floor(clamp(
+          1 - game.attackTimer / PLAYER_ATTACK_DURATION,
+          0,
+          0.999,
+        ) * 6));
+      } else {
+        frame = Math.floor(performance.now() / (moving ? 95 : 165)) % 6;
+      }
       ctx.save();
       ctx.translate(x + p.w / 2, y + p.h);
       ctx.scale(flip, 1);
       if (game.invulnerable > 0 && Math.floor(game.invulnerable * 18) % 2) ctx.globalAlpha = 0.35;
       drawAnimationSprite(bitmapAssets.akioModular, animation, frame, -35, -63, 70, 63);
-      drawEquippedKatana(game.attackTimer > 0);
+      if (animation !== "death") drawEquippedKatana(animation === "attack");
       ctx.restore();
       return;
     }
@@ -1439,22 +2118,47 @@
     const spriteIndex = Math.abs(Math.round(e.seed / 13.7)) % 5;
     const modularEnemy = animationSetForEnemy(e, spriteIndex);
     const distanceToPlayer = Math.abs(game.side.player.x - e.x);
-    const animation = e.flash > 0
-      ? "hurt"
-      : (e.attack > 0.73 ? "attack" : (distanceToPlayer < 190 && distanceToPlayer > 18 ? "move" : "idle"));
+    const dying = Boolean(e.dying || e.hp <= 0);
+    const moving = distanceToPlayer < 190 && distanceToPlayer > 18;
+    const animation = dying
+      ? "death"
+      : (e.hurtTimer > 0 || e.flash > 0
+        ? "hurt"
+        : (e.attack > 0 ? "attack" : (moving ? "move" : "idle")));
     if (modularAnimationReady(modularEnemy, animation)) {
       const elite = spriteIndex === 4;
       const size = elite ? 76 : 66;
-      const frame = animation === "attack"
-        ? Math.min(5, Math.floor(clamp((1.05 - e.attack) / 0.32, 0, 0.999) * 6))
-        : Math.floor((performance.now() + e.seed * 53) / (animation === "move" ? 110 : 175)) % 6;
+      let frame;
+      if (animation === "death") {
+        frame = Math.min(5, Math.floor(clamp(
+          1 - (e.deathTimer || 0) / ENEMY_DEATH_DURATION,
+          0,
+          0.999,
+        ) * 6));
+      } else if (animation === "hurt") {
+        frame = Math.min(5, Math.floor(clamp(
+          1 - (e.hurtTimer || 0) / ENEMY_HURT_DURATION,
+          0,
+          0.999,
+        ) * 6));
+      } else if (animation === "attack") {
+        frame = Math.min(5, Math.floor(clamp(
+          1 - e.attack / Math.max(0.01, e.attackDuration || 0.56),
+          0,
+          0.999,
+        ) * 6));
+      } else {
+        frame = Math.floor(
+          (performance.now() + e.seed * 53) / (animation === "move" ? 110 : 175),
+        ) % 6;
+      }
       ctx.save();
-      ctx.translate(x + e.w / 2, y + e.h);
+      ctx.translate(x + e.w / 2, y + e.h + SIDE_ENEMY_BASELINE_OFFSET);
       // Les masters ennemis regardent vers la gauche, contrairement à Akio.
       ctx.scale(e.facing < 0 ? 1 : -1, 1);
       if (e.flash > 0) ctx.filter = "brightness(2.2) saturate(.2)";
       drawAnimationSprite(modularEnemy, animation, frame, -size / 2, -size, size, size);
-      drawEnemyWeapon(e, animation, size);
+      if (animation !== "death") drawEnemyWeapon(e, animation, size);
       ctx.restore();
       return;
     }
@@ -1464,17 +2168,29 @@
       const elite = spriteIndex === 4;
       const size = elite ? 62 : 54;
       ctx.save();
-      ctx.translate(x + e.w / 2, y + e.h);
+      ctx.translate(x + e.w / 2, y + e.h + SIDE_ENEMY_BASELINE_OFFSET);
       // Les planches sources regardent à gauche ; on inverse seulement quand
       // l'IA se retourne vers la droite.
       ctx.scale(e.facing < 0 ? 1 : -1, 1);
       if (e.flash > 0) ctx.filter = "brightness(2.2) saturate(.2)";
+      if (dying) {
+        const deathProgress = clamp(1 - (e.deathTimer || 0) / ENEMY_DEATH_DURATION, 0, 1);
+        ctx.globalAlpha = 1 - deathProgress * 0.35;
+        ctx.rotate(-deathProgress * 0.75);
+        ctx.translate(0, deathProgress * 10);
+      }
       ctx.drawImage(generatedEnemy, -size / 2, -size, size, size);
       ctx.restore();
       return;
     }
 
     ctx.save(); ctx.translate(x + e.w / 2, y); ctx.scale(e.facing, 1);
+    if (dying) {
+      const deathProgress = clamp(1 - (e.deathTimer || 0) / ENEMY_DEATH_DURATION, 0, 1);
+      ctx.globalAlpha = 1 - deathProgress * 0.45;
+      ctx.rotate(-e.facing * deathProgress * 0.82);
+      ctx.translate(0, deathProgress * 8);
+    }
     ctx.fillStyle = e.flash > 0 ? "#fff0c8" : "#17151a"; ctx.fillRect(-7, 20, 5, 4); ctx.fillRect(3, 20, 5, 4);
     ctx.fillStyle = e.flash > 0 ? "#fff0c8" : e.hp === 3 ? "#582528" : "#3b3530"; ctx.fillRect(-7, 9, 14, 13);
     ctx.fillStyle = e.flash > 0 ? "#fff" : "#73905b"; ctx.fillRect(-5, 2, 10, 8); ctx.fillRect(5, 11, 8, 3);
@@ -1498,12 +2214,105 @@
     ctx.restore();
   }
 
-  function drawWorldParticles(particles) {
-    for (const p of particles) {
-      ctx.globalAlpha = clamp(p.life / p.max, 0, 1);
-      ctx.fillStyle = p.color; ctx.fillRect(Math.round(p.x), Math.round(p.y), 3, 3);
+  function drawParticleMark(p, screen = false) {
+    const alpha = clamp(p.life / Math.max(0.001, p.max || p.life || 1), 0, 1);
+    const size = Math.max(1, p.size || (screen ? 5 : 3));
+    const material = p.material
+      || (p.kind === "spark" ? "armor" : (p.kind === "ash" || p.kind === "wisp" ? "spirit" : "flesh"));
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.translate(Math.round(p.x), Math.round(p.y));
+
+    if (p.text || p.kind === "text") {
+      ctx.fillStyle = p.color || "#fff1c2";
+      ctx.font = `bold ${Math.max(8, size * 3)}px monospace`;
+      ctx.textAlign = "center";
+      ctx.fillText(p.text || "", 0, 0);
+      ctx.restore();
+      return;
     }
-    ctx.globalAlpha = 1;
+
+    if (p.kind === "flash") {
+      ctx.strokeStyle = p.color || "#fff1a8";
+      ctx.lineWidth = Math.max(1, size / 3);
+      ctx.strokeRect(-size, -size, size * 2, size * 2);
+      ctx.restore();
+      return;
+    }
+
+    if (material === "armor" || p.kind === "spark") {
+      const trailX = clamp(-(p.vx || 0) * 0.035, -size * 4, size * 4);
+      const trailY = clamp(-(p.vy || 0) * 0.035, -size * 4, size * 4);
+      ctx.strokeStyle = p.color || "#ffd47a";
+      ctx.lineWidth = Math.max(1, size * 0.45);
+      ctx.beginPath();
+      ctx.moveTo(trailX, trailY);
+      ctx.lineTo(0, 0);
+      ctx.stroke();
+      ctx.fillStyle = "#fff3b2";
+      ctx.fillRect(-1, -1, 3, 3);
+      ctx.restore();
+      return;
+    }
+
+    if (material === "spirit" || p.kind === "wisp") {
+      ctx.globalCompositeOperation = "screen";
+      ctx.fillStyle = p.color || "#80e6d0";
+      ctx.fillRect(-size / 2, -size, size, size * 2);
+      ctx.fillRect(-size, -size / 2, size * 2, size);
+      ctx.fillStyle = "rgba(224, 255, 241, .8)";
+      ctx.fillRect(-1, -1, 2, 2);
+      ctx.restore();
+      return;
+    }
+
+    ctx.fillStyle = p.color || "#a51f2d";
+    ctx.fillRect(-size / 2, -size / 2, size, size);
+    if (size >= 4) {
+      ctx.fillStyle = "rgba(255, 113, 103, .55)";
+      ctx.fillRect(-size / 2, -size / 2, Math.max(1, size / 3), Math.max(1, size / 3));
+    }
+    ctx.restore();
+  }
+
+  function drawWorldParticles(particles) {
+    for (const p of particles) drawParticleMark(p, false);
+  }
+
+  function drawHitConfirm(cameraX = 0) {
+    if (game.hitConfirm <= 0) return;
+    const material = game.hitConfirmMaterial || "flesh";
+    const point = game.hitConfirmPoint || { x: W / 2, y: H / 2 };
+    const x = game.mode === "side" ? point.x - cameraX : point.x;
+    const y = point.y;
+    if (x < -24 || x > W + 24 || y < -24 || y > H + 24) return;
+    const life = clamp(game.hitConfirm / 0.24, 0, 1);
+    const spread = 5 + (1 - life) * 5;
+    const length = material === "armor" ? 7 : 5;
+    const color = material === "armor"
+      ? "#ffd36d"
+      : (material === "spirit" ? "#7cebd1" : "#f3d6ba");
+    ctx.save();
+    ctx.globalAlpha = 0.35 + life * 0.65;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = material === "armor" ? 2 : 1;
+    ctx.beginPath();
+    ctx.moveTo(x - spread - length, y - spread - length);
+    ctx.lineTo(x - spread, y - spread);
+    ctx.moveTo(x + spread + length, y - spread - length);
+    ctx.lineTo(x + spread, y - spread);
+    ctx.moveTo(x - spread - length, y + spread + length);
+    ctx.lineTo(x - spread, y + spread);
+    ctx.moveTo(x + spread + length, y + spread + length);
+    ctx.lineTo(x + spread, y + spread);
+    ctx.stroke();
+    if (material === "spirit") {
+      ctx.strokeRect(Math.round(x - 2.5), Math.round(y - 2.5), 5, 5);
+    } else if (material === "armor") {
+      ctx.fillStyle = "#fff1ac";
+      ctx.fillRect(Math.round(x - 1), Math.round(y - 1), 3, 3);
+    }
+    ctx.restore();
   }
 
   function castRay(mission, angle) {
@@ -1522,6 +2331,138 @@
     return { dist: 20, x, y, cell: "1", texture: 0 };
   }
 
+  function drawFpsFloorGuides(player) {
+    ctx.save();
+    ctx.globalAlpha = 0.18;
+    ctx.strokeStyle = game.fps.current === 0 ? "#b87656" : "#9c7b72";
+    ctx.lineWidth = 1;
+    for (let row = 1; row <= 7; row++) {
+      const ratio = row / 7;
+      const y = H / 2 + Math.pow(ratio, 1.75) * H / 2;
+      ctx.beginPath();
+      ctx.moveTo(0, Math.round(y) + 0.5);
+      ctx.lineTo(W, Math.round(y) + 0.5);
+      ctx.stroke();
+    }
+    const headingOffset = normalizeAngle(player.angle) / TAU * 96;
+    for (let x = -W; x <= W * 2; x += 64) {
+      const floorX = x - headingOffset;
+      ctx.beginPath();
+      ctx.moveTo(W / 2, H / 2);
+      ctx.lineTo(floorX, H);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function fpsWallTileIndex(hit) {
+    const distanceToVerticalEdge = Math.min(
+      Math.abs(hit.x - Math.floor(hit.x)),
+      Math.abs(Math.ceil(hit.x) - hit.x),
+    );
+    const distanceToHorizontalEdge = Math.min(
+      Math.abs(hit.y - Math.floor(hit.y)),
+      Math.abs(Math.ceil(hit.y) - hit.y),
+    );
+    const vertical = distanceToVerticalEdge < distanceToHorizontalEdge;
+    const variation = Math.abs(Math.floor(hit.x) + Math.floor(hit.y)) % 2;
+    return (game.fps.current * 4 + (vertical ? 0 : 1) + variation * 2) % FPS_WALL_TILES.length;
+  }
+
+  function drawFpsWallColumn(hit, columnX, top, wallHeight, corrected) {
+    const atlas = bitmapAssets.fpsWallAtlas;
+    if (bitmapReady(atlas)) {
+      const [tileX, tileY, tileWidth, tileHeight] = FPS_WALL_TILES[fpsWallTileIndex(hit)];
+      const texture = Math.abs(hit.texture % 1);
+      const sourceX = tileX + clamp(Math.floor(texture * tileWidth), 0, tileWidth - 1);
+      ctx.drawImage(
+        atlas,
+        sourceX,
+        tileY,
+        1,
+        tileHeight,
+        columnX,
+        top,
+        2,
+        Math.ceil(wallHeight),
+      );
+      const fogAlpha = clamp((corrected - 2.2) / 15, 0, 0.78);
+      if (fogAlpha > 0) {
+        ctx.fillStyle = `rgba(7, 7, 11, ${fogAlpha})`;
+        ctx.fillRect(columnX, top, 2, Math.ceil(wallHeight));
+      }
+      return;
+    }
+
+    const fog = clamp(1 - corrected / 15, 0.18, 1);
+    const stripe = Math.floor(hit.texture * 8) % 2;
+    const base = game.fps.current === 0 ? [84, 60, 54] : [66, 49, 58];
+    ctx.fillStyle = `rgb(${Math.floor(base[0] * fog + stripe * 9)},${Math.floor(base[1] * fog)},${Math.floor(base[2] * fog)})`;
+    ctx.fillRect(columnX, top, 2, Math.ceil(wallHeight));
+  }
+
+  function projectFpsEntity(distance, angle, worldHeight = 1, aspect = 1) {
+    const corrected = Math.max(0.12, distance * Math.cos(angle));
+    const projection = H / corrected;
+    const screenX = W / 2 + Math.tan(angle) * (W / 2) / Math.tan(FOV / 2);
+    const groundY = H / 2 + projection / 2;
+    const height = clamp(projection * worldHeight, 8, H * 2.2);
+    return {
+      corrected,
+      screenX,
+      groundY,
+      height,
+      width: height * aspect,
+      top: groundY - height,
+    };
+  }
+
+  function clipBillboardToDepth(left, width, corrected, tolerance = 0.22) {
+    const firstRay = clamp(Math.floor(left / 2), 0, 319);
+    const lastRay = clamp(Math.ceil((left + width) / 2), 0, 319);
+    let visible = false;
+    ctx.beginPath();
+    for (let ray = firstRay; ray <= lastRay; ray++) {
+      if (corrected > game.fps.zBuffer[ray] + tolerance) continue;
+      ctx.rect(ray * 2, -2, 2, H + 4);
+      visible = true;
+    }
+    if (visible) ctx.clip();
+    return visible;
+  }
+
+  function fpsEnemyAnimation(enemy, corrected) {
+    if (enemy.dying || enemy.hp <= 0) return "death";
+    if (enemy.hurtTimer > 0 || enemy.flash > 0) return "hurt";
+    if (enemy.attack > 0) return "attack";
+    return corrected > 3.2 ? "move" : "idle";
+  }
+
+  function fpsEnemyAnimationFrame(enemy, animation, spriteIndex) {
+    if (animation === "death") {
+      return Math.min(5, Math.floor(clamp(
+        1 - (enemy.deathTimer || 0) / ENEMY_DEATH_DURATION,
+        0,
+        0.999,
+      ) * 6));
+    }
+    if (animation === "hurt") {
+      return Math.min(5, Math.floor(clamp(
+        1 - (enemy.hurtTimer || 0) / ENEMY_HURT_DURATION,
+        0,
+        0.999,
+      ) * 6));
+    }
+    if (animation === "attack") {
+      return Math.min(5, Math.floor(clamp(
+        1 - enemy.attack / Math.max(0.01, enemy.attackDuration || 0.68),
+        0,
+        0.999,
+      ) * 6));
+    }
+    return Math.floor((performance.now() + spriteIndex * 113) / (animation === "move" ? 105 : 155)) % 6;
+  }
+
   function drawFps() {
     const mission = currentMission();
     const p = mission.player;
@@ -1531,21 +2472,17 @@
     const floor = ctx.createLinearGradient(0, H / 2, 0, H);
     floor.addColorStop(0, "#49302b"); floor.addColorStop(1, "#100e12");
     ctx.fillStyle = floor; ctx.fillRect(0, H / 2, W, H / 2);
+    drawFpsFloorGuides(p);
 
     const rays = 320;
     for (let i = 0; i < rays; i++) {
       const rayAngle = p.angle - FOV / 2 + (i / rays) * FOV;
       const hit = castRay(mission, rayAngle);
       const corrected = Math.max(0.08, hit.dist * Math.cos(rayAngle - p.angle));
-      mission === currentMission();
       game.fps.zBuffer[i] = corrected;
       const wallH = Math.min(H * 1.8, H / corrected);
       const top = Math.floor(H / 2 - wallH / 2);
-      const fog = clamp(1 - corrected / 15, 0.18, 1);
-      const stripe = Math.floor(hit.texture * 8) % 2;
-      const base = game.fps.current === 0 ? [84, 60, 54] : [66, 49, 58];
-      ctx.fillStyle = `rgb(${Math.floor(base[0] * fog + stripe * 9)},${Math.floor(base[1] * fog)},${Math.floor(base[2] * fog)})`;
-      ctx.fillRect(i * 2, top, 2, Math.ceil(wallH));
+      drawFpsWallColumn(hit, i * 2, top, wallH, corrected);
       if (i % 8 === 0) {
         ctx.fillStyle = `rgba(10,8,10,${0.22 + corrected / 35})`;
         ctx.fillRect(i * 2, top, 1, Math.ceil(wallH));
@@ -1554,7 +2491,7 @@
 
     drawFpsAltar(mission);
     const visible = mission.enemies
-      .filter((e) => !e.dead)
+      .filter(isEnemyVisible)
       .map((e) => ({ e, dist: Math.hypot(e.x - p.x, e.y - p.y), angle: normalizeAngle(Math.atan2(e.y - p.y, e.x - p.x) - p.angle) }))
       .filter((o) => Math.abs(o.angle) < FOV * 0.72)
       .sort((a, b) => b.dist - a.dist);
@@ -1562,11 +2499,100 @@
 
     drawFpsParticles(mission.particles);
     drawFpsWeapon();
+    drawHitConfirm();
     drawCrosshair();
     drawMiniMap(mission);
   }
 
   function drawFpsEnemy(enemy, distance, angle) {
+    const giantBoss = enemy.modularEntry?.category === "giant";
+    const worldHeight = giantBoss ? 1.9 : (enemy.boss ? 1.55 : 1.14);
+    const projection = projectFpsEntity(distance, angle, worldHeight, 1);
+    const left = projection.screenX - projection.width / 2;
+    if (left > W || left + projection.width < 0) return;
+
+    const spriteIndex = enemy.spriteIndex ?? (enemy.boss ? 5 : 0);
+    const fpsEnemy = fpsAnimationSetForRosterEntry(enemy.modularEntry);
+    const modularEnemy = fpsEnemy || animationSetForEnemy(enemy, spriteIndex);
+    const animation = fpsEnemyAnimation(enemy, projection.corrected);
+    const frame = fpsEnemyAnimationFrame(enemy, animation, spriteIndex);
+
+    ctx.save();
+    if (!clipBillboardToDepth(left, projection.width, projection.corrected)) {
+      ctx.restore();
+      return;
+    }
+
+    const shadowWidth = projection.width * (giantBoss ? 0.58 : 0.42);
+    ctx.fillStyle = "rgba(0, 0, 0, .48)";
+    ctx.fillRect(
+      Math.round(projection.screenX - shadowWidth / 2),
+      Math.round(projection.groundY - Math.max(2, projection.height * 0.025)),
+      Math.round(shadowWidth),
+      Math.max(2, Math.round(projection.height * 0.05)),
+    );
+
+    if (enemy.flash > 0) ctx.filter = "brightness(2.25) saturate(.28)";
+    if (modularAnimationReady(modularEnemy, animation)) {
+      drawAnimationSprite(
+        modularEnemy,
+        animation,
+        frame,
+        Math.round(left),
+        Math.round(projection.top),
+        Math.round(projection.width),
+        Math.round(projection.height),
+      );
+      if (animation !== "death") {
+        ctx.save();
+        ctx.translate(projection.screenX, projection.groundY);
+        drawEnemyWeapon(enemy, animation, projection.height, true);
+        ctx.restore();
+      }
+      ctx.restore();
+      return;
+    }
+
+    const generatedEnemy = bitmapAssets.enemies[spriteIndex];
+    if (bitmapReady(generatedEnemy)) {
+      ctx.save();
+      if (animation === "death") {
+        const deathProgress = clamp(1 - (enemy.deathTimer || 0) / ENEMY_DEATH_DURATION, 0, 1);
+        ctx.globalAlpha = 1 - deathProgress * 0.35;
+        ctx.translate(projection.screenX, projection.groundY);
+        ctx.rotate(-deathProgress * 0.62);
+        ctx.translate(-projection.screenX, -projection.groundY);
+      }
+      ctx.drawImage(
+        generatedEnemy,
+        Math.round(left),
+        Math.round(projection.top),
+        Math.round(projection.width),
+        Math.round(projection.height),
+      );
+      ctx.restore();
+      ctx.restore();
+      return;
+    }
+
+    const unit = Math.max(1, Math.floor(projection.height / 16));
+    const x = Math.round(projection.screenX - unit * 8);
+    const y = Math.round(projection.groundY - unit * 16);
+    ctx.fillStyle = enemy.flash > 0 ? "#fff5dc" : enemy.boss ? "#6c1e28" : "#272329";
+    ctx.fillRect(x + unit * 4, y + unit * 7, unit * 8, unit * 8);
+    ctx.fillRect(x + unit * 2, y + unit * 8, unit * 3, unit * 7);
+    ctx.fillRect(x + unit * 11, y + unit * 8, unit * 3, unit * 7);
+    ctx.fillStyle = enemy.flash > 0 ? "#fff" : "#728d58";
+    ctx.fillRect(x + unit * 5, y + unit * 2, unit * 6, unit * 6);
+    ctx.fillStyle = enemy.boss ? "#15141b" : "#514235";
+    ctx.fillRect(x + unit * 4, y + unit, unit * 8, unit * 3);
+    ctx.fillStyle = "#c5ee69";
+    ctx.fillRect(x + unit * 6, y + unit * 4, unit, unit);
+    ctx.fillRect(x + unit * 9, y + unit * 4, unit, unit);
+    ctx.restore();
+  }
+
+  function drawFpsEnemyLegacy(enemy, distance, angle) {
     const corrected = distance * Math.cos(angle);
     const giantBoss = enemy.modularEntry?.category === "giant";
     const size = clamp(
@@ -1609,7 +2635,10 @@
         Math.round(spriteSize),
       );
       ctx.save();
-      ctx.translate(screenX, H / 2);
+      // Les points de prise FPS sont exprimés depuis le bas du viewmodel.
+      // Le sprite, lui, est centré autour de H / 2 : ce décalage replace
+      // l'arme dans la main au lieu de la faire flotter au-dessus de la tête.
+      ctx.translate(screenX, H / 2 + spriteSize * 0.46);
       drawEnemyWeapon(enemy, modularAnimation, spriteSize, true);
       ctx.restore();
       ctx.restore();
@@ -1662,6 +2691,73 @@
 
   function drawFpsAltar(mission) {
     const p = mission.player;
+    const dx = mission.altar.x - p.x;
+    const dy = mission.altar.y - p.y;
+    const distance = Math.hypot(dx, dy);
+    const angle = normalizeAngle(Math.atan2(dy, dx) - p.angle);
+    if (Math.abs(angle) > FOV * 0.7 || distance < 0.2) return;
+
+    const image = bitmapAssets.fpsAltars[game.fps.current];
+    const bounds = opaqueBoundsForImage(image);
+    const aspect = bounds ? bounds.w / bounds.h : 0.9;
+    const worldHeight = game.fps.current === 0 ? 0.72 : 1.02;
+    const projection = projectFpsEntity(distance, angle, worldHeight, aspect);
+    const left = projection.screenX - projection.width / 2;
+
+    ctx.save();
+    if (!clipBillboardToDepth(left, projection.width, projection.corrected, 0.16)) {
+      ctx.restore();
+      return;
+    }
+    ctx.fillStyle = "rgba(0, 0, 0, .46)";
+    ctx.fillRect(
+      Math.round(projection.screenX - projection.width * 0.32),
+      Math.round(projection.groundY - Math.max(2, projection.height * 0.025)),
+      Math.round(projection.width * 0.64),
+      Math.max(2, Math.round(projection.height * 0.05)),
+    );
+
+    if (!mission.purified) {
+      const pulse = 0.22 + Math.sin(performance.now() / 170) * 0.06;
+      ctx.shadowColor = game.fps.current === 0
+        ? "rgba(116, 232, 152, .9)"
+        : "rgba(178, 70, 95, .85)";
+      ctx.shadowBlur = Math.max(5, projection.height * pulse);
+    }
+    if (bounds) {
+      drawOpaqueBitmap(
+        image,
+        left,
+        projection.top,
+        projection.width,
+        projection.height,
+      );
+    } else {
+      ctx.fillStyle = "#1b1518";
+      ctx.fillRect(left, projection.top + projection.height * 0.42, projection.width, projection.height * 0.58);
+      ctx.fillStyle = mission.purified ? "#6bd1c4" : "#8fc45a";
+      ctx.fillRect(
+        left + projection.width * 0.18,
+        projection.top + projection.height * 0.2,
+        projection.width * 0.64,
+        projection.height * 0.24,
+      );
+    }
+    if (mission.purified) {
+      ctx.globalAlpha = 0.42;
+      ctx.fillStyle = "#baf4df";
+      ctx.fillRect(
+        projection.screenX - Math.max(1, projection.width * 0.03),
+        projection.top,
+        Math.max(2, projection.width * 0.06),
+        projection.height * 0.72,
+      );
+    }
+    ctx.restore();
+  }
+
+  function drawFpsAltarLegacy(mission) {
+    const p = mission.player;
     const dx = mission.altar.x - p.x, dy = mission.altar.y - p.y;
     const distance = Math.hypot(dx, dy);
     const angle = normalizeAngle(Math.atan2(dy, dx) - p.angle);
@@ -1677,21 +2773,11 @@
   }
 
   function drawFpsWeapon() {
-    const swing = game.attackTimer > 0 ? Math.sin((1 - game.attackTimer / 0.28) * Math.PI) : 0;
+    const swing = game.attackTimer > 0
+      ? Math.sin((1 - game.attackTimer / PLAYER_ATTACK_DURATION) * Math.PI)
+      : 0;
 
     if (drawFpsSelectedWeapon()) return;
-
-    if (bitmapReady(bitmapAssets.akioFpsKatana)) {
-      ctx.save();
-      ctx.translate(W * 0.78, H * 0.96);
-      ctx.rotate(swing * 0.7);
-      ctx.translate(-W * 0.78, -H * 0.96);
-      // Recadrage du sujet transparent pour préserver le grand mouvement de
-      // lame sans masquer le viseur ou la lecture du couloir.
-      ctx.drawImage(bitmapAssets.akioFpsKatana, 470, 0, 1035, 968, 214 - swing * 92, 0 + swing * 54, 385, 360);
-      ctx.restore();
-      return;
-    }
 
     ctx.save();
     ctx.translate(W * 0.72 - swing * 170, H * 0.72 - swing * 95);
@@ -1724,10 +2810,8 @@
   function drawFpsParticles(particles) {
     for (const p of particles) {
       if (!p.screen) continue;
-      ctx.globalAlpha = clamp(p.life / p.max, 0, 1);
-      ctx.fillStyle = p.color; ctx.fillRect(p.x - 3, p.y - 3, 6, 6);
+      drawParticleMark(p, true);
     }
-    ctx.globalAlpha = 1;
   }
 
   function drawTransition() {
@@ -1756,8 +2840,10 @@
     dom.score.textContent = game.kills;
     dom.mode.textContent = game.mode === "side" ? "VUE LATÉRALE" : "VUE SUBJECTIVE";
     dom.hint.textContent = game.mode === "side"
-      ? "A/D avancer · ESPACE sauter · J katana · K ofuda"
-      : "W/S avancer · A/D esquiver · SOURIS tourner · E sceller";
+      ? (isNearSideEntrance()
+        ? `${currentSideEntrance().prompt} · J katana · K ofuda`
+        : "A/D avancer · ESPACE sauter · J katana · K ofuda · E entrer")
+      : "W/S avancer · A/D esquiver · SOURIS tourner · J katana · K ofuda · E sceller";
     dom.objective.textContent = objectiveText();
 
     const mission = game.mode === "fps" ? currentMission() : null;
@@ -1770,7 +2856,11 @@
   }
 
   function objectiveText() {
-    if (game.mode === "side") return game.chapter === 0 ? "Atteindre le torii contaminé" : "Prendre d'assaut le donjon de Kurokawa";
+    if (game.mode === "side") {
+      return game.chapter === 0
+        ? "Atteindre le torii contaminé puis appuyer sur E"
+        : "Atteindre la porte du donjon puis appuyer sur E";
+    }
     const mission = currentMission();
     const remaining = mission.enemies.filter((e) => !e.dead).length;
     if (remaining) return game.fps.current === 1 ? `Abattre le daimyō et ses gardes (${remaining})` : `Purifier le sanctuaire (${remaining})`;
@@ -1781,6 +2871,11 @@
     const dt = Math.min(0.033, Math.max(0, (now - lastTime) / 1000));
     lastTime = now;
     if (game.status === "playing") update(dt);
+    else if (game.status === "dying") {
+      game.deathTimer = Math.max(0, game.deathTimer - dt);
+      game.shake = Math.max(0, game.shake - dt * 22);
+      if (game.deathTimer <= 0) finishGame(false);
+    }
     draw();
     rafId = requestAnimationFrame(frame);
   }
@@ -1897,19 +2992,69 @@
       player2d: { ...game.side.player },
       playerFps: { ...currentMission().player },
       fpsRemaining: currentMission().enemies.filter((e) => !e.dead).length,
+      nearEntrance: isNearSideEntrance(),
+      entrance: { ...currentSideEntrance() },
+      attackTimer: game.attackTimer,
+      hitConfirm: game.hitConfirm,
     }),
     debug: {
       setMode: (mode) => mode === "fps" ? enterFps(game.chapter, false) : returnToSide(false),
       setHealth: (health) => { game.health = clamp(Number(health), 0, 100); },
-      warpToGate: () => { game.side.player.x = game.chapter === 0 ? 882 : 2165; },
-      clearFps: () => { currentMission().enemies.forEach((e) => { e.dead = true; }); },
+      step: (dt = 1 / 60) => {
+        if (game.status === "playing") update(clamp(Number(dt) || 0, 0, 0.25));
+        return window.KageGame.getState();
+      },
+      setPlayer2d: (patch = {}) => { Object.assign(game.side.player, patch); },
+      setSideEnemy: (index, patch = {}) => {
+        const enemy = game.side.enemies[clamp(Number(index) || 0, 0, game.side.enemies.length - 1)];
+        Object.assign(enemy, patch);
+        return { ...enemy };
+      },
+      warpToGate: () => {
+        const entrance = currentSideEntrance();
+        game.side.player.x = entrance.blockX - 4;
+        game.side.player.y = 273;
+        game.side.player.vx = 0;
+        game.side.player.vy = 0;
+        game.side.player.grounded = true;
+      },
+      clearFps: () => {
+        currentMission().enemies.forEach((enemy) => {
+          enemy.hp = 0;
+          enemy.dying = false;
+          enemy.dead = true;
+          enemy.attack = 0;
+        });
+      },
       warpToAltar: () => { const m = currentMission(); m.player.x = m.altar.x; m.player.y = m.altar.y; },
+      combatSnapshot: () => ({
+        player: {
+          health: game.health,
+          hurtTimer: game.hurtTimer,
+          stagger: game.playerStagger,
+        },
+        sideEnemies: game.side.enemies.map((enemy) => ({
+          hp: enemy.hp,
+          maxHp: enemy.maxHp,
+          dying: enemy.dying,
+          dead: enemy.dead,
+          hurtTimer: enemy.hurtTimer,
+          material: enemy.impactMaterial,
+        })),
+        particles: game.mode === "side"
+          ? game.side.particles.map((particle) => particle.kind)
+          : currentMission().particles.map((particle) => particle.kind),
+        hitConfirmMaterial: game.hitConfirmMaterial,
+      }),
       assetStatus: () => ({
         akio: bitmapReady(bitmapAssets.akioSheet),
         akioModular: Object.fromEntries(
           MODULAR_ANIMATIONS.map((animation) => [animation, modularAnimationReady(bitmapAssets.akioModular, animation)]),
         ),
-        katanaFps: bitmapReady(bitmapAssets.akioFpsKatana),
+        akioFpsBody: Object.fromEntries(
+          MODULAR_ANIMATIONS.map((animation) => [animation, modularAnimationReady(bitmapAssets.akioFpsBody, animation)]),
+        ),
+        fpsPlayerWeapons: bitmapAssets.fpsPlayerWeapons.map(bitmapReady),
         weapons: bitmapAssets.weapons.map(bitmapReady),
         backgrounds: bitmapAssets.sideBackgrounds.map(bitmapReady),
         parallaxBackgrounds: bitmapAssets.parallaxBackgrounds.map((set) =>
@@ -1941,9 +3086,37 @@
   loadModularRoster();
   if (typeof location !== "undefined") {
     const preview = new URLSearchParams(location.search).get("preview");
-    if (preview === "kurokawa" || preview === "bamboo") {
+    const previewModes = new Set([
+      "kurokawa",
+      "bamboo",
+      "gate-kurokawa",
+      "gate-castle",
+      "fps-kurokawa",
+      "fps-castle",
+    ]);
+    if (previewModes.has(preview)) {
       startGame();
-      game.chapter = preview === "bamboo" ? 1 : 0;
+      const castlePreview = preview === "bamboo"
+        || preview === "gate-castle"
+        || preview === "fps-castle";
+      game.chapter = castlePreview ? 1 : 0;
+      applyRosterToGame(game);
+      if (preview?.startsWith("gate-")) {
+        game.invulnerable = 999;
+        const entrance = currentSideEntrance();
+        Object.assign(game.side.player, {
+          x: entrance.blockX - 4,
+          y: 273,
+          vx: 0,
+          vy: 0,
+          grounded: true,
+        });
+        game.side.cameraX = clamp(entrance.x - W * 0.66, 0, game.side.width - W);
+      } else if (preview?.startsWith("fps-")) {
+        game.invulnerable = 999;
+        enterFps(game.chapter, false);
+        game.transition = 0;
+      }
       updateHud();
     }
   }

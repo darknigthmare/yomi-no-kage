@@ -49,6 +49,41 @@
     return labels[type] || type.toUpperCase();
   }
 
+  function previewFile(asset) {
+    return asset.animations?.idle || asset.file;
+  }
+
+  function showSheetFrame(imageElement, sheetPath, frameIndex, alt) {
+    const sheet = new Image();
+    sheet.onload = () => {
+      const sourceX = Math.round(frameIndex * sheet.naturalWidth / 6);
+      const sourceRight = Math.round((frameIndex + 1) * sheet.naturalWidth / 6);
+      const canvas = document.createElement("canvas");
+      canvas.width = sourceRight - sourceX;
+      canvas.height = sheet.naturalHeight;
+      const context = canvas.getContext("2d");
+      context.imageSmoothingEnabled = false;
+      context.drawImage(
+        sheet,
+        sourceX,
+        0,
+        canvas.width,
+        sheet.naturalHeight,
+        0,
+        0,
+        canvas.width,
+        sheet.naturalHeight,
+      );
+      imageElement.src = canvas.toDataURL("image/png");
+      imageElement.alt = alt;
+    };
+    sheet.onerror = () => {
+      imageElement.src = sheetPath;
+      imageElement.alt = alt;
+    };
+    sheet.src = sheetPath;
+  }
+
   function renderFilters() {
     const types = ["all", ...new Set(catalog.map((asset) => asset.type))];
     filters.innerHTML = types.map((type) => `
@@ -90,7 +125,7 @@
         tabindex="0" role="button" aria-label="Voir ${escapeHtml(asset.name)}">
         <div class="asset-visual">
           <span class="asset-index">${String(index + 1).padStart(2, "0")}</span>
-          <img src="${escapeHtml(asset.file)}" alt="${escapeHtml(asset.name)}" loading="lazy" />
+          <img src="${escapeHtml(previewFile(asset))}" alt="${escapeHtml(asset.name)}" loading="lazy" />
         </div>
         <div class="asset-copy">
           <p class="eyebrow">${escapeHtml(typeLabel(asset.type))}</p>
@@ -118,7 +153,7 @@
     const dialogImage = document.getElementById("dialog-image");
     const animationPicker = document.getElementById("dialog-animations");
     const framePicker = document.getElementById("dialog-frames");
-    dialogImage.src = asset.file;
+    dialogImage.src = previewFile(asset);
     dialogImage.alt = asset.name;
     document.getElementById("dialog-type").textContent = typeLabel(asset.type);
     document.getElementById("dialog-title").textContent = asset.name;
@@ -140,24 +175,29 @@
       weaponValue.textContent = "Sprite autonome et repositionnable";
     }
     document.getElementById("dialog-generation").textContent = asset.generationTool || "OpenAI ImageGen built-in";
-    document.getElementById("dialog-file").textContent = asset.file;
+    document.getElementById("dialog-file").textContent = previewFile(asset);
     const animations = Object.entries(asset.animations || {});
     animationPicker.hidden = animations.length === 0;
     framePicker.hidden = true;
     framePicker.innerHTML = "";
     const renderFrames = (animation) => {
-      const frames = asset.frames?.[animation] || [];
-      framePicker.hidden = frames.length === 0;
-      framePicker.innerHTML = frames.map((frame, index) => `
-        <button type="button" data-frame="${escapeHtml(frame)}" aria-label="Frame ${index + 1}">
-          <img src="${escapeHtml(frame)}" alt="" loading="lazy" />
+      const sheetPath = asset.animations?.[animation];
+      framePicker.hidden = !sheetPath;
+      framePicker.innerHTML = sheetPath ? Array.from({ length: 6 }, (_, index) => `
+        <button type="button" data-frame-index="${index}" aria-label="Frame ${index + 1}">
+          <i class="frame-slice" aria-hidden="true"
+            style="background-image:url('${escapeHtml(sheetPath)}');background-position:${index * 20}% center"></i>
           <span>${String(index + 1).padStart(2, "0")}</span>
         </button>
-      `).join("");
-      framePicker.querySelectorAll("[data-frame]").forEach((button) => {
+      `).join("") : "";
+      framePicker.querySelectorAll("[data-frame-index]").forEach((button) => {
         button.addEventListener("click", () => {
-          dialogImage.src = button.dataset.frame;
-          dialogImage.alt = `${asset.name} — ${animationLabels[animation] || animation}`;
+          showSheetFrame(
+            dialogImage,
+            sheetPath,
+            Number(button.dataset.frameIndex),
+            `${asset.name} — ${animationLabels[animation] || animation}`,
+          );
         });
       });
     };
@@ -173,6 +213,12 @@
         renderFrames(button.dataset.animation);
       });
     });
+    if (animations.length) {
+      const initialAnimation = animations[0][0];
+      animationPicker.querySelector(`[data-animation="${initialAnimation}"]`)
+        ?.setAttribute("aria-pressed", "true");
+      renderFrames(initialAnimation);
+    }
     dialog.showModal();
   }
 

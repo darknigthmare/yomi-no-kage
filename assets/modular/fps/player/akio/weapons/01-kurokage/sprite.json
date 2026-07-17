@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "view": "first-person-weapon",
+  "weaponId": "01-kurokage",
+  "file": "weapon.png",
+  "source": "assets/generated/weapons/01-kurokage.png",
+  "sourceCrop": [
+    52,
+    197,
+    1713,
+    450
+  ],
+  "gripAnchor": [
+    0.26,
+    0.52
+  ],
+  "detachedAccessoriesRemoved": true,
+  "renderOrder": "behind-body",
+  "weaponsBakedIntoBody": false,
+  "alphaMode": "binary"
+}

@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "view": "first-person-weapon",
+  "weaponId": "05-yomibane",
+  "file": "weapon.png",
+  "source": "assets/generated/weapons/05-yomibane.png",
+  "sourceCrop": [
+    60,
+    149,
+    1810,
+    507
+  ],
+  "gripAnchor": [
+    0.26,
+    0.52
+  ],
+  "detachedAccessoriesRemoved": true,
+  "renderOrder": "behind-body",
+  "weaponsBakedIntoBody": false,
+  "alphaMode": "binary"
+}

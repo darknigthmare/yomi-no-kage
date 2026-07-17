@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "view": "first-person-weapon",
+  "weaponId": "07-takekaze",
+  "file": "weapon.png",
+  "source": "assets/generated/weapons/07-takekaze.png",
+  "sourceCrop": [
+    50,
+    186,
+    1731,
+    516
+  ],
+  "gripAnchor": [
+    0.26,
+    0.52
+  ],
+  "detachedAccessoriesRemoved": true,
+  "renderOrder": "behind-body",
+  "weaponsBakedIntoBody": false,
+  "alphaMode": "binary"
+}

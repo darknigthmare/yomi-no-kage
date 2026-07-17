@@ -13,6 +13,7 @@ from PIL import Image
 
 
 ANIMATIONS = ("idle", "move", "attack", "hurt", "death")
+GROUND_BASELINE = 1.0
 
 
 def boundaries(length: int, count: int) -> list[int]:
@@ -424,7 +425,15 @@ def normalize_character_grid(
             if (target_width, target_height) != pose.size:
                 pose = pose.resize((target_width, target_height), Image.Resampling.NEAREST)
             target_x = cell_x0 + (cell_width - target_width) // 2
-            target_y = y0 + max(0, round(cell_height * 0.94) - target_height)
+            # Les personnages sont rendus avec le bas de leur cellule posé sur
+            # le plancher du monde. Toute marge transparente sous les pieds se
+            # transforme donc directement en flottement à l'écran. Aligner la
+            # silhouette sur la baseline inférieure garde le pivot stable pour
+            # toutes les poses, y compris les animations de chute.
+            target_y = y0 + max(
+                0,
+                round(cell_height * GROUND_BASELINE) - target_height,
+            )
             normalized.alpha_composite(pose, (target_x, target_y))
 
     return normalized, diagnostics
@@ -469,6 +478,11 @@ def split_character(source: Path, output: Path, columns: int = 6) -> dict:
         "schema": 1,
         "master": "master.png",
         "grid": {"columns": columns, "rows": len(ANIMATIONS)},
+        "groundAnchor": {
+            "normalized": [0.5, GROUND_BASELINE],
+            "baseline": "bottom-edge",
+            "transparentPaddingBelowFeet": 0,
+        },
         "normalization": normalization,
         "animations": frame_records,
         "weaponMount": {

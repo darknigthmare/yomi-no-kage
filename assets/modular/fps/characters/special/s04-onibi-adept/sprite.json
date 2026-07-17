@@ -1,8 +1,16 @@
 {
+  "schema": 2,
   "view": "fps",
   "columns": 6,
   "rows": 1,
   "frameWidth": 96,
   "frameHeight": 128,
-  "sourceCharacter": "special/s04-onibi-adept"
+  "sourceCharacter": "special/s04-onibi-adept",
+  "sourceView": "OpenAI detailed 2D master, normalized as Doom billboard",
+  "groundAnchor": [
+    0.5,
+    1.0
+  ],
+  "alphaMode": "straight-transparent",
+  "chromaKey": null
 }

@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "view": "first-person-weapon",
+  "weaponId": "08-raijin-no-tsume",
+  "file": "weapon.png",
+  "source": "assets/generated/weapons/08-raijin-no-tsume.png",
+  "sourceCrop": [
+    65,
+    127,
+    1965,
+    497
+  ],
+  "gripAnchor": [
+    0.26,
+    0.52
+  ],
+  "detachedAccessoriesRemoved": true,
+  "renderOrder": "behind-body",
+  "weaponsBakedIntoBody": false,
+  "alphaMode": "binary"
+}

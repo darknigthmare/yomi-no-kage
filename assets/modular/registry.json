@@ -91,127 +91,294 @@
       "generationTool": "OpenAI ImageGen built-in",
       "manifest": "assets/modular/manifests/player.json",
       "fpsAnimations": {
-        "idle": "assets/modular/fps/characters/player/akio/sheets/idle.png",
-        "move": "assets/modular/fps/characters/player/akio/sheets/move.png",
-        "attack": "assets/modular/fps/characters/player/akio/sheets/attack.png",
-        "hurt": "assets/modular/fps/characters/player/akio/sheets/hurt.png",
-        "death": "assets/modular/fps/characters/player/akio/sheets/death.png"
+        "idle": "assets/modular/fps/player/akio/body/sheets/idle.png",
+        "move": "assets/modular/fps/player/akio/body/sheets/move.png",
+        "attack": "assets/modular/fps/player/akio/body/sheets/attack.png",
+        "hurt": "assets/modular/fps/player/akio/body/sheets/hurt.png",
+        "death": "assets/modular/fps/player/akio/body/sheets/death.png"
       },
       "fpsFrames": {
         "idle": [
-          "assets/modular/fps/characters/player/akio/frames/idle/00.png",
-          "assets/modular/fps/characters/player/akio/frames/idle/01.png",
-          "assets/modular/fps/characters/player/akio/frames/idle/02.png",
-          "assets/modular/fps/characters/player/akio/frames/idle/03.png",
-          "assets/modular/fps/characters/player/akio/frames/idle/04.png",
-          "assets/modular/fps/characters/player/akio/frames/idle/05.png"
+          "assets/modular/fps/player/akio/body/frames/idle/00.png",
+          "assets/modular/fps/player/akio/body/frames/idle/01.png",
+          "assets/modular/fps/player/akio/body/frames/idle/02.png",
+          "assets/modular/fps/player/akio/body/frames/idle/03.png",
+          "assets/modular/fps/player/akio/body/frames/idle/04.png",
+          "assets/modular/fps/player/akio/body/frames/idle/05.png"
         ],
         "move": [
-          "assets/modular/fps/characters/player/akio/frames/move/00.png",
-          "assets/modular/fps/characters/player/akio/frames/move/01.png",
-          "assets/modular/fps/characters/player/akio/frames/move/02.png",
-          "assets/modular/fps/characters/player/akio/frames/move/03.png",
-          "assets/modular/fps/characters/player/akio/frames/move/04.png",
-          "assets/modular/fps/characters/player/akio/frames/move/05.png"
+          "assets/modular/fps/player/akio/body/frames/move/00.png",
+          "assets/modular/fps/player/akio/body/frames/move/01.png",
+          "assets/modular/fps/player/akio/body/frames/move/02.png",
+          "assets/modular/fps/player/akio/body/frames/move/03.png",
+          "assets/modular/fps/player/akio/body/frames/move/04.png",
+          "assets/modular/fps/player/akio/body/frames/move/05.png"
         ],
         "attack": [
-          "assets/modular/fps/characters/player/akio/frames/attack/00.png",
-          "assets/modular/fps/characters/player/akio/frames/attack/01.png",
-          "assets/modular/fps/characters/player/akio/frames/attack/02.png",
-          "assets/modular/fps/characters/player/akio/frames/attack/03.png",
-          "assets/modular/fps/characters/player/akio/frames/attack/04.png",
-          "assets/modular/fps/characters/player/akio/frames/attack/05.png"
+          "assets/modular/fps/player/akio/body/frames/attack/00.png",
+          "assets/modular/fps/player/akio/body/frames/attack/01.png",
+          "assets/modular/fps/player/akio/body/frames/attack/02.png",
+          "assets/modular/fps/player/akio/body/frames/attack/03.png",
+          "assets/modular/fps/player/akio/body/frames/attack/04.png",
+          "assets/modular/fps/player/akio/body/frames/attack/05.png"
         ],
         "hurt": [
-          "assets/modular/fps/characters/player/akio/frames/hurt/00.png",
-          "assets/modular/fps/characters/player/akio/frames/hurt/01.png",
-          "assets/modular/fps/characters/player/akio/frames/hurt/02.png",
-          "assets/modular/fps/characters/player/akio/frames/hurt/03.png",
-          "assets/modular/fps/characters/player/akio/frames/hurt/04.png",
-          "assets/modular/fps/characters/player/akio/frames/hurt/05.png"
+          "assets/modular/fps/player/akio/body/frames/hurt/00.png",
+          "assets/modular/fps/player/akio/body/frames/hurt/01.png",
+          "assets/modular/fps/player/akio/body/frames/hurt/02.png",
+          "assets/modular/fps/player/akio/body/frames/hurt/03.png",
+          "assets/modular/fps/player/akio/body/frames/hurt/04.png",
+          "assets/modular/fps/player/akio/body/frames/hurt/05.png"
         ],
         "death": [
-          "assets/modular/fps/characters/player/akio/frames/death/00.png",
-          "assets/modular/fps/characters/player/akio/frames/death/01.png",
-          "assets/modular/fps/characters/player/akio/frames/death/02.png",
-          "assets/modular/fps/characters/player/akio/frames/death/03.png",
-          "assets/modular/fps/characters/player/akio/frames/death/04.png",
-          "assets/modular/fps/characters/player/akio/frames/death/05.png"
+          "assets/modular/fps/player/akio/body/frames/death/00.png",
+          "assets/modular/fps/player/akio/body/frames/death/01.png",
+          "assets/modular/fps/player/akio/body/frames/death/02.png",
+          "assets/modular/fps/player/akio/body/frames/death/03.png",
+          "assets/modular/fps/player/akio/body/frames/death/04.png",
+          "assets/modular/fps/player/akio/body/frames/death/05.png"
         ]
       },
-      "fpsSprite": "assets/modular/fps/characters/player/akio",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused.",
-      "fpsWeaponAnimations": {
-        "01-kurokage": {
-          "idle": "assets/modular/fps/player/akio/weapons/01-kurokage/sheets/idle.png",
-          "move": "assets/modular/fps/player/akio/weapons/01-kurokage/sheets/move.png",
-          "attack": "assets/modular/fps/player/akio/weapons/01-kurokage/sheets/attack.png",
-          "hurt": "assets/modular/fps/player/akio/weapons/01-kurokage/sheets/hurt.png",
-          "death": "assets/modular/fps/player/akio/weapons/01-kurokage/sheets/death.png"
-        },
-        "02-shogun-no-in": {
-          "idle": "assets/modular/fps/player/akio/weapons/02-shogun-no-in/sheets/idle.png",
-          "move": "assets/modular/fps/player/akio/weapons/02-shogun-no-in/sheets/move.png",
-          "attack": "assets/modular/fps/player/akio/weapons/02-shogun-no-in/sheets/attack.png",
-          "hurt": "assets/modular/fps/player/akio/weapons/02-shogun-no-in/sheets/hurt.png",
-          "death": "assets/modular/fps/player/akio/weapons/02-shogun-no-in/sheets/death.png"
-        },
-        "03-hinezumi": {
-          "idle": "assets/modular/fps/player/akio/weapons/03-hinezumi/sheets/idle.png",
-          "move": "assets/modular/fps/player/akio/weapons/03-hinezumi/sheets/move.png",
-          "attack": "assets/modular/fps/player/akio/weapons/03-hinezumi/sheets/attack.png",
-          "hurt": "assets/modular/fps/player/akio/weapons/03-hinezumi/sheets/hurt.png",
-          "death": "assets/modular/fps/player/akio/weapons/03-hinezumi/sheets/death.png"
-        },
-        "04-shirogane": {
-          "idle": "assets/modular/fps/player/akio/weapons/04-shirogane/sheets/idle.png",
-          "move": "assets/modular/fps/player/akio/weapons/04-shirogane/sheets/move.png",
-          "attack": "assets/modular/fps/player/akio/weapons/04-shirogane/sheets/attack.png",
-          "hurt": "assets/modular/fps/player/akio/weapons/04-shirogane/sheets/hurt.png",
-          "death": "assets/modular/fps/player/akio/weapons/04-shirogane/sheets/death.png"
-        },
-        "05-yomibane": {
-          "idle": "assets/modular/fps/player/akio/weapons/05-yomibane/sheets/idle.png",
-          "move": "assets/modular/fps/player/akio/weapons/05-yomibane/sheets/move.png",
-          "attack": "assets/modular/fps/player/akio/weapons/05-yomibane/sheets/attack.png",
-          "hurt": "assets/modular/fps/player/akio/weapons/05-yomibane/sheets/hurt.png",
-          "death": "assets/modular/fps/player/akio/weapons/05-yomibane/sheets/death.png"
-        },
-        "06-kegare-kiri": {
-          "idle": "assets/modular/fps/player/akio/weapons/06-kegare-kiri/sheets/idle.png",
-          "move": "assets/modular/fps/player/akio/weapons/06-kegare-kiri/sheets/move.png",
-          "attack": "assets/modular/fps/player/akio/weapons/06-kegare-kiri/sheets/attack.png",
-          "hurt": "assets/modular/fps/player/akio/weapons/06-kegare-kiri/sheets/hurt.png",
-          "death": "assets/modular/fps/player/akio/weapons/06-kegare-kiri/sheets/death.png"
-        },
-        "07-takekaze": {
-          "idle": "assets/modular/fps/player/akio/weapons/07-takekaze/sheets/idle.png",
-          "move": "assets/modular/fps/player/akio/weapons/07-takekaze/sheets/move.png",
-          "attack": "assets/modular/fps/player/akio/weapons/07-takekaze/sheets/attack.png",
-          "hurt": "assets/modular/fps/player/akio/weapons/07-takekaze/sheets/hurt.png",
-          "death": "assets/modular/fps/player/akio/weapons/07-takekaze/sheets/death.png"
-        },
-        "08-raijin-no-tsume": {
-          "idle": "assets/modular/fps/player/akio/weapons/08-raijin-no-tsume/sheets/idle.png",
-          "move": "assets/modular/fps/player/akio/weapons/08-raijin-no-tsume/sheets/move.png",
-          "attack": "assets/modular/fps/player/akio/weapons/08-raijin-no-tsume/sheets/attack.png",
-          "hurt": "assets/modular/fps/player/akio/weapons/08-raijin-no-tsume/sheets/hurt.png",
-          "death": "assets/modular/fps/player/akio/weapons/08-raijin-no-tsume/sheets/death.png"
-        },
-        "09-akatsuki": {
-          "idle": "assets/modular/fps/player/akio/weapons/09-akatsuki/sheets/idle.png",
-          "move": "assets/modular/fps/player/akio/weapons/09-akatsuki/sheets/move.png",
-          "attack": "assets/modular/fps/player/akio/weapons/09-akatsuki/sheets/attack.png",
-          "hurt": "assets/modular/fps/player/akio/weapons/09-akatsuki/sheets/hurt.png",
-          "death": "assets/modular/fps/player/akio/weapons/09-akatsuki/sheets/death.png"
-        },
-        "10-mujo": {
-          "idle": "assets/modular/fps/player/akio/weapons/10-mujo/sheets/idle.png",
-          "move": "assets/modular/fps/player/akio/weapons/10-mujo/sheets/move.png",
-          "attack": "assets/modular/fps/player/akio/weapons/10-mujo/sheets/attack.png",
-          "hurt": "assets/modular/fps/player/akio/weapons/10-mujo/sheets/hurt.png",
-          "death": "assets/modular/fps/player/akio/weapons/10-mujo/sheets/death.png"
-        }
+      "fpsSprite": "assets/modular/fps/player/akio/body/sprite.json",
+      "fpsGeneration": "OpenAI ImageGen built-in: strict 6x5 first-person Akio arms atlas, rows idle/move/attack/hurt/death, no weapon, flat magenta key, black lacquered kote with red lacing, weapon-ready invisible grip.",
+      "fpsRenderOrder": [
+        "weapon",
+        "body"
+      ],
+      "fpsWeaponsBakedIntoBody": false,
+      "fpsWeaponMounts": {
+        "idle": [
+          [
+            0.52,
+            0.51,
+            -1.78,
+            0.94,
+            1.0
+          ],
+          [
+            0.51,
+            0.52,
+            -1.76,
+            0.95,
+            1.0
+          ],
+          [
+            0.51,
+            0.52,
+            -1.79,
+            0.95,
+            1.0
+          ],
+          [
+            0.5,
+            0.5,
+            -1.81,
+            0.94,
+            1.0
+          ],
+          [
+            0.5,
+            0.52,
+            -1.77,
+            0.95,
+            1.0
+          ],
+          [
+            0.51,
+            0.52,
+            -1.8,
+            0.94,
+            1.0
+          ]
+        ],
+        "move": [
+          [
+            0.44,
+            0.57,
+            -1.83,
+            0.93,
+            1.0
+          ],
+          [
+            0.37,
+            0.58,
+            -1.76,
+            0.94,
+            1.0
+          ],
+          [
+            0.35,
+            0.59,
+            -1.71,
+            0.95,
+            1.0
+          ],
+          [
+            0.35,
+            0.57,
+            -1.76,
+            0.94,
+            1.0
+          ],
+          [
+            0.38,
+            0.59,
+            -1.82,
+            0.93,
+            1.0
+          ],
+          [
+            0.37,
+            0.61,
+            -1.78,
+            0.94,
+            1.0
+          ]
+        ],
+        "attack": [
+          [
+            0.46,
+            0.64,
+            -1.96,
+            0.92,
+            1.0
+          ],
+          [
+            0.5,
+            0.61,
+            -1.7,
+            0.96,
+            1.0
+          ],
+          [
+            0.52,
+            0.64,
+            -1.38,
+            1.0,
+            1.0
+          ],
+          [
+            0.56,
+            0.39,
+            -0.95,
+            1.04,
+            1.0
+          ],
+          [
+            0.59,
+            0.65,
+            -0.43,
+            1.08,
+            1.0
+          ],
+          [
+            0.56,
+            0.75,
+            0.08,
+            1.0,
+            1.0
+          ]
+        ],
+        "hurt": [
+          [
+            0.36,
+            0.59,
+            -2.04,
+            0.94,
+            1.0
+          ],
+          [
+            0.34,
+            0.58,
+            -2.25,
+            0.92,
+            0.9
+          ],
+          [
+            0.28,
+            0.57,
+            -2.48,
+            0.88,
+            0.72
+          ],
+          [
+            0.37,
+            0.59,
+            -2.62,
+            0.84,
+            0.5
+          ],
+          [
+            0.4,
+            0.57,
+            -2.08,
+            0.9,
+            0.72
+          ],
+          [
+            0.38,
+            0.58,
+            -1.8,
+            0.94,
+            1.0
+          ]
+        ],
+        "death": [
+          [
+            0.42,
+            0.54,
+            -1.78,
+            0.92,
+            1.0
+          ],
+          [
+            0.48,
+            0.6,
+            -1.18,
+            0.9,
+            0.86
+          ],
+          [
+            0.55,
+            0.78,
+            -0.58,
+            0.86,
+            0.66
+          ],
+          [
+            0.62,
+            0.95,
+            -0.1,
+            0.82,
+            0.42
+          ],
+          [
+            0.68,
+            1.04,
+            0.28,
+            0.76,
+            0.18
+          ],
+          [
+            0.72,
+            1.18,
+            0.46,
+            0.72,
+            0.0
+          ]
+        ]
+      },
+      "fpsWeaponSprites": {
+        "01-kurokage": "assets/modular/fps/player/akio/weapons/01-kurokage/weapon.png",
+        "02-shogun-no-in": "assets/modular/fps/player/akio/weapons/02-shogun-no-in/weapon.png",
+        "03-hinezumi": "assets/modular/fps/player/akio/weapons/03-hinezumi/weapon.png",
+        "04-shirogane": "assets/modular/fps/player/akio/weapons/04-shirogane/weapon.png",
+        "05-yomibane": "assets/modular/fps/player/akio/weapons/05-yomibane/weapon.png",
+        "06-kegare-kiri": "assets/modular/fps/player/akio/weapons/06-kegare-kiri/weapon.png",
+        "07-takekaze": "assets/modular/fps/player/akio/weapons/07-takekaze/weapon.png",
+        "08-raijin-no-tsume": "assets/modular/fps/player/akio/weapons/08-raijin-no-tsume/weapon.png",
+        "09-akatsuki": "assets/modular/fps/player/akio/weapons/09-akatsuki/weapon.png",
+        "10-mujo": "assets/modular/fps/player/akio/weapons/10-mujo/weapon.png"
       }
     },
     {
@@ -11176,15 +11343,7 @@
       "defaultRotation": 0,
       "family": "Arsenal d’élite",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/bokuto/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/bokuto/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/bokuto/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/bokuto/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/bokuto/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11202,15 +11361,7 @@
       "defaultRotation": 0,
       "family": "Arsenal d’élite",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/hachiwari/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/hachiwari/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/hachiwari/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/hachiwari/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/hachiwari/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11228,15 +11379,7 @@
       "defaultRotation": 0,
       "family": "Arsenal d’élite",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/jitte/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/jitte/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/jitte/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/jitte/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/jitte/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11254,15 +11397,7 @@
       "defaultRotation": 0,
       "family": "Arsenal d’élite",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/kikuchi-yari/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/kikuchi-yari/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/kikuchi-yari/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/kikuchi-yari/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/kikuchi-yari/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11280,15 +11415,7 @@
       "defaultRotation": 0,
       "family": "Arsenal d’élite",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/naginata-lourde/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/naginata-lourde/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/naginata-lourde/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/naginata-lourde/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/naginata-lourde/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11306,15 +11433,7 @@
       "defaultRotation": 0,
       "family": "Arsenal d’élite",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/odachi/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/odachi/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/odachi/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/odachi/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/odachi/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11332,15 +11451,7 @@
       "defaultRotation": 0,
       "family": "Arsenal d’élite",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/otsuchi/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/otsuchi/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/otsuchi/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/otsuchi/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/otsuchi/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11358,15 +11469,7 @@
       "defaultRotation": 0,
       "family": "Arsenal d’élite",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/shakujo/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/shakujo/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/shakujo/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/shakujo/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/shakujo/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11384,15 +11487,7 @@
       "defaultRotation": 0,
       "family": "Arsenal d’élite",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/tachi/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/tachi/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/tachi/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/tachi/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/tachi/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11410,15 +11505,7 @@
       "defaultRotation": 0,
       "family": "Arsenal d’élite",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/tanto/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/tanto/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/tanto/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/tanto/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/tanto/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11436,15 +11523,7 @@
       "defaultRotation": 0,
       "family": "Arsenal d’élite",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/tessen-ferme/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/tessen-ferme/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/tessen-ferme/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/tessen-ferme/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/tessen-ferme/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11462,15 +11541,7 @@
       "defaultRotation": 0,
       "family": "Arsenal d’élite",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/wakizashi/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/wakizashi/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/wakizashi/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/wakizashi/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/wakizashi/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11488,15 +11559,7 @@
       "defaultRotation": 0,
       "family": "Composants détachables des géants",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/ancre-riviere-numa/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/ancre-riviere-numa/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/ancre-riviere-numa/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/ancre-riviere-numa/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/ancre-riviere-numa/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11514,15 +11577,7 @@
       "defaultRotation": 0,
       "family": "Composants détachables des géants",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/belier-bambou-take-mori/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/belier-bambou-take-mori/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/belier-bambou-take-mori/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/belier-bambou-take-mori/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/belier-bambou-take-mori/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11540,15 +11595,7 @@
       "defaultRotation": 0,
       "family": "Composants détachables des géants",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/bouclier-carapace-shiro/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/bouclier-carapace-shiro/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/bouclier-carapace-shiro/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/bouclier-carapace-shiro/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/bouclier-carapace-shiro/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11566,15 +11613,7 @@
       "defaultRotation": 0,
       "family": "Composants détachables des géants",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/chaines-menottes-nuno/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/chaines-menottes-nuno/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/chaines-menottes-nuno/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/chaines-menottes-nuno/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/chaines-menottes-nuno/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11592,15 +11631,7 @@
       "defaultRotation": 0,
       "family": "Composants détachables des géants",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/encensoir-spores-kinoko/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/encensoir-spores-kinoko/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/encensoir-spores-kinoko/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/encensoir-spores-kinoko/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/encensoir-spores-kinoko/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11618,15 +11649,7 @@
       "defaultRotation": 0,
       "family": "Composants détachables des géants",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/fleau-cloche-enjin/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/fleau-cloche-enjin/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/fleau-cloche-enjin/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/fleau-cloche-enjin/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/fleau-cloche-enjin/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11644,15 +11667,7 @@
       "defaultRotation": 0,
       "family": "Composants détachables des géants",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/joug-tranchant-aka-ushi/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/joug-tranchant-aka-ushi/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/joug-tranchant-aka-ushi/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/joug-tranchant-aka-ushi/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/joug-tranchant-aka-ushi/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11670,15 +11685,7 @@
       "defaultRotation": 0,
       "family": "Composants détachables des géants",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/maillet-tambour-geant/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/maillet-tambour-geant/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/maillet-tambour-geant/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/maillet-tambour-geant/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/maillet-tambour-geant/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11696,15 +11703,7 @@
       "defaultRotation": 0,
       "family": "Composants détachables des géants",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/marteau-carriere-ganseki/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/marteau-carriere-ganseki/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/marteau-carriere-ganseki/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/marteau-carriere-ganseki/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/marteau-carriere-ganseki/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11722,15 +11721,7 @@
       "defaultRotation": 0,
       "family": "Composants détachables des géants",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/nodachi-geant-yomi/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/nodachi-geant-yomi/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/nodachi-geant-yomi/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/nodachi-geant-yomi/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/nodachi-geant-yomi/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11748,15 +11739,7 @@
       "defaultRotation": 0,
       "family": "Composants détachables des géants",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/pavois-siege-geant/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/pavois-siege-geant/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/pavois-siege-geant/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/pavois-siege-geant/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/pavois-siege-geant/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11774,15 +11757,7 @@
       "defaultRotation": 0,
       "family": "Composants détachables des géants",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/poutre-massue-kurogane/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/poutre-massue-kurogane/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/poutre-massue-kurogane/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/poutre-massue-kurogane/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/poutre-massue-kurogane/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11800,15 +11775,7 @@
       "defaultRotation": 0,
       "family": "Armes d’hast et outils de capture",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/jumonji-yari/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/jumonji-yari/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/jumonji-yari/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/jumonji-yari/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/jumonji-yari/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11826,15 +11793,7 @@
       "defaultRotation": 0,
       "family": "Armes d’hast et outils de capture",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/kama-yari/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/kama-yari/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/kama-yari/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/kama-yari/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/kama-yari/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11852,15 +11811,7 @@
       "defaultRotation": 0,
       "family": "Armes d’hast et outils de capture",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/kanabo/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/kanabo/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/kanabo/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/kanabo/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/kanabo/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11878,15 +11829,7 @@
       "defaultRotation": 0,
       "family": "Armes d’hast et outils de capture",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/masakari/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/masakari/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/masakari/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/masakari/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/masakari/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11904,15 +11847,7 @@
       "defaultRotation": 0,
       "family": "Armes d’hast et outils de capture",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/nagamaki/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/nagamaki/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/nagamaki/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/nagamaki/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/nagamaki/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11930,15 +11865,7 @@
       "defaultRotation": 0,
       "family": "Armes d’hast et outils de capture",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/naginata/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/naginata/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/naginata/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/naginata/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/naginata/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11956,15 +11883,7 @@
       "defaultRotation": 0,
       "family": "Armes d’hast et outils de capture",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/ono/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/ono/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/ono/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/ono/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/ono/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -11982,15 +11901,7 @@
       "defaultRotation": 0,
       "family": "Armes d’hast et outils de capture",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/sasumata/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/sasumata/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/sasumata/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/sasumata/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/sasumata/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -12008,15 +11919,7 @@
       "defaultRotation": 0,
       "family": "Armes d’hast et outils de capture",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/sodegarami/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/sodegarami/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/sodegarami/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/sodegarami/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/sodegarami/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -12034,15 +11937,7 @@
       "defaultRotation": 0,
       "family": "Armes d’hast et outils de capture",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/su-yari/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/su-yari/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/su-yari/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/su-yari/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/su-yari/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -12060,15 +11955,7 @@
       "defaultRotation": 0,
       "family": "Armes d’hast et outils de capture",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/tetsubo/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/tetsubo/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/tetsubo/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/tetsubo/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/tetsubo/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -12086,15 +11973,7 @@
       "defaultRotation": 0,
       "family": "Armes d’hast et outils de capture",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/tsukubo/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/tsukubo/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/tsukubo/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/tsukubo/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/tsukubo/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -12112,15 +11991,7 @@
       "defaultRotation": 0,
       "family": "Tir, chaînes et bâtons",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/bajozutsu/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/bajozutsu/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/bajozutsu/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/bajozutsu/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/bajozutsu/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -12138,15 +12009,7 @@
       "defaultRotation": 0,
       "family": "Tir, chaînes et bâtons",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/bo/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/bo/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/bo/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/bo/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/bo/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -12164,15 +12027,7 @@
       "defaultRotation": 0,
       "family": "Tir, chaînes et bâtons",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/chigiriki/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/chigiriki/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/chigiriki/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/chigiriki/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/chigiriki/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -12190,15 +12045,7 @@
       "defaultRotation": 0,
       "family": "Tir, chaînes et bâtons",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/jo/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/jo/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/jo/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/jo/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/jo/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -12216,15 +12063,7 @@
       "defaultRotation": 0,
       "family": "Tir, chaînes et bâtons",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/kusarigama/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/kusarigama/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/kusarigama/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/kusarigama/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/kusarigama/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -12242,15 +12081,7 @@
       "defaultRotation": 0,
       "family": "Tir, chaînes et bâtons",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/manrikigusari/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/manrikigusari/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/manrikigusari/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/manrikigusari/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/manrikigusari/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -12268,15 +12099,7 @@
       "defaultRotation": 0,
       "family": "Tir, chaînes et bâtons",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/tanegashima-cavalerie/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/tanegashima-cavalerie/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/tanegashima-cavalerie/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/tanegashima-cavalerie/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/tanegashima-cavalerie/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -12294,15 +12117,7 @@
       "defaultRotation": 0,
       "family": "Tir, chaînes et bâtons",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/tanegashima-teppo/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/tanegashima-teppo/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/tanegashima-teppo/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/tanegashima-teppo/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/tanegashima-teppo/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -12320,15 +12135,7 @@
       "defaultRotation": 0,
       "family": "Tir, chaînes et bâtons",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/tessen-ouvert/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/tessen-ouvert/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/tessen-ouvert/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/tessen-ouvert/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/tessen-ouvert/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -12346,15 +12153,7 @@
       "defaultRotation": 0,
       "family": "Tir, chaînes et bâtons",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/uchine/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/uchine/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/uchine/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/uchine/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/uchine/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -12372,15 +12171,7 @@
       "defaultRotation": 0,
       "family": "Tir, chaînes et bâtons",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/yumi-daikyu/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/yumi-daikyu/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/yumi-daikyu/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/yumi-daikyu/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/yumi-daikyu/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -12398,15 +12189,7 @@
       "defaultRotation": 0,
       "family": "Tir, chaînes et bâtons",
       "generationTool": "OpenAI ImageGen built-in",
-      "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/yumi-hankyu/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/yumi-hankyu/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/yumi-hankyu/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/yumi-hankyu/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/yumi-hankyu/sheets/death.png"
-      },
-      "fpsGeneration": "First-person interchangeable weapon sheet derived from the separate modular weapon sprite."
+      "manifest": "assets/modular/manifests/weapons.json"
     },
     {
       "type": "weapon",
@@ -12425,13 +12208,12 @@
       "family": null,
       "generationTool": "OpenAI ImageGen built-in",
       "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/01-kurokage/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/01-kurokage/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/01-kurokage/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/01-kurokage/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/01-kurokage/sheets/death.png"
-      }
+      "fpsSprite": "assets/modular/fps/player/akio/weapons/01-kurokage/weapon.png",
+      "fpsSpriteMeta": "assets/modular/fps/player/akio/weapons/01-kurokage/sprite.json",
+      "fpsGripAnchor": [
+        0.26,
+        0.52
+      ]
     },
     {
       "type": "weapon",
@@ -12450,13 +12232,12 @@
       "family": null,
       "generationTool": "OpenAI ImageGen built-in",
       "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/02-shogun-no-in/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/02-shogun-no-in/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/02-shogun-no-in/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/02-shogun-no-in/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/02-shogun-no-in/sheets/death.png"
-      }
+      "fpsSprite": "assets/modular/fps/player/akio/weapons/02-shogun-no-in/weapon.png",
+      "fpsSpriteMeta": "assets/modular/fps/player/akio/weapons/02-shogun-no-in/sprite.json",
+      "fpsGripAnchor": [
+        0.26,
+        0.52
+      ]
     },
     {
       "type": "weapon",
@@ -12475,13 +12256,12 @@
       "family": null,
       "generationTool": "OpenAI ImageGen built-in",
       "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/03-hinezumi/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/03-hinezumi/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/03-hinezumi/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/03-hinezumi/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/03-hinezumi/sheets/death.png"
-      }
+      "fpsSprite": "assets/modular/fps/player/akio/weapons/03-hinezumi/weapon.png",
+      "fpsSpriteMeta": "assets/modular/fps/player/akio/weapons/03-hinezumi/sprite.json",
+      "fpsGripAnchor": [
+        0.26,
+        0.52
+      ]
     },
     {
       "type": "weapon",
@@ -12500,13 +12280,12 @@
       "family": null,
       "generationTool": "OpenAI ImageGen built-in",
       "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/04-shirogane/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/04-shirogane/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/04-shirogane/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/04-shirogane/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/04-shirogane/sheets/death.png"
-      }
+      "fpsSprite": "assets/modular/fps/player/akio/weapons/04-shirogane/weapon.png",
+      "fpsSpriteMeta": "assets/modular/fps/player/akio/weapons/04-shirogane/sprite.json",
+      "fpsGripAnchor": [
+        0.26,
+        0.52
+      ]
     },
     {
       "type": "weapon",
@@ -12525,13 +12304,12 @@
       "family": null,
       "generationTool": "OpenAI ImageGen built-in",
       "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/05-yomibane/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/05-yomibane/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/05-yomibane/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/05-yomibane/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/05-yomibane/sheets/death.png"
-      }
+      "fpsSprite": "assets/modular/fps/player/akio/weapons/05-yomibane/weapon.png",
+      "fpsSpriteMeta": "assets/modular/fps/player/akio/weapons/05-yomibane/sprite.json",
+      "fpsGripAnchor": [
+        0.26,
+        0.52
+      ]
     },
     {
       "type": "weapon",
@@ -12550,13 +12328,12 @@
       "family": null,
       "generationTool": "OpenAI ImageGen built-in",
       "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/06-kegare-kiri/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/06-kegare-kiri/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/06-kegare-kiri/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/06-kegare-kiri/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/06-kegare-kiri/sheets/death.png"
-      }
+      "fpsSprite": "assets/modular/fps/player/akio/weapons/06-kegare-kiri/weapon.png",
+      "fpsSpriteMeta": "assets/modular/fps/player/akio/weapons/06-kegare-kiri/sprite.json",
+      "fpsGripAnchor": [
+        0.26,
+        0.52
+      ]
     },
     {
       "type": "weapon",
@@ -12575,13 +12352,12 @@
       "family": null,
       "generationTool": "OpenAI ImageGen built-in",
       "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/07-takekaze/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/07-takekaze/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/07-takekaze/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/07-takekaze/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/07-takekaze/sheets/death.png"
-      }
+      "fpsSprite": "assets/modular/fps/player/akio/weapons/07-takekaze/weapon.png",
+      "fpsSpriteMeta": "assets/modular/fps/player/akio/weapons/07-takekaze/sprite.json",
+      "fpsGripAnchor": [
+        0.26,
+        0.52
+      ]
     },
     {
       "type": "weapon",
@@ -12600,13 +12376,12 @@
       "family": null,
       "generationTool": "OpenAI ImageGen built-in",
       "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/08-raijin-no-tsume/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/08-raijin-no-tsume/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/08-raijin-no-tsume/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/08-raijin-no-tsume/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/08-raijin-no-tsume/sheets/death.png"
-      }
+      "fpsSprite": "assets/modular/fps/player/akio/weapons/08-raijin-no-tsume/weapon.png",
+      "fpsSpriteMeta": "assets/modular/fps/player/akio/weapons/08-raijin-no-tsume/sprite.json",
+      "fpsGripAnchor": [
+        0.26,
+        0.52
+      ]
     },
     {
       "type": "weapon",
@@ -12625,13 +12400,12 @@
       "family": null,
       "generationTool": "OpenAI ImageGen built-in",
       "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/09-akatsuki/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/09-akatsuki/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/09-akatsuki/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/09-akatsuki/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/09-akatsuki/sheets/death.png"
-      }
+      "fpsSprite": "assets/modular/fps/player/akio/weapons/09-akatsuki/weapon.png",
+      "fpsSpriteMeta": "assets/modular/fps/player/akio/weapons/09-akatsuki/sprite.json",
+      "fpsGripAnchor": [
+        0.26,
+        0.52
+      ]
     },
     {
       "type": "weapon",
@@ -12650,13 +12424,12 @@
       "family": null,
       "generationTool": "OpenAI ImageGen built-in",
       "manifest": "assets/modular/manifests/weapons.json",
-      "fpsAnimations": {
-        "idle": "assets/modular/fps/player/akio/weapons/10-mujo/sheets/idle.png",
-        "move": "assets/modular/fps/player/akio/weapons/10-mujo/sheets/move.png",
-        "attack": "assets/modular/fps/player/akio/weapons/10-mujo/sheets/attack.png",
-        "hurt": "assets/modular/fps/player/akio/weapons/10-mujo/sheets/hurt.png",
-        "death": "assets/modular/fps/player/akio/weapons/10-mujo/sheets/death.png"
-      }
+      "fpsSprite": "assets/modular/fps/player/akio/weapons/10-mujo/weapon.png",
+      "fpsSpriteMeta": "assets/modular/fps/player/akio/weapons/10-mujo/sprite.json",
+      "fpsGripAnchor": [
+        0.26,
+        0.52
+      ]
     }
   ],
   "environments": [
@@ -13941,7 +13714,6 @@
   },
   "fps": {
     "characters": 96,
-    "playerWeaponSets": 10,
     "animations": [
       "idle",
       "move",
@@ -13950,6 +13722,13 @@
       "death"
     ],
     "framesPerAnimation": 6,
-    "source": "derived from existing OpenAI modular masters"
+    "source": "OpenAI ImageGen player arms master with independent weapon sprites",
+    "playerViewModels": 1,
+    "playerWeaponSprites": 10,
+    "playerFrameSize": [
+      240,
+      160
+    ],
+    "enemySource": "Detailed OpenAI 2D masters normalized as grounded Doom billboards"
   }
 }

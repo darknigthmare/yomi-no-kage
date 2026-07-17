@@ -5,6 +5,14 @@
     "columns": 6,
     "rows": 5
   },
+  "groundAnchor": {
+    "normalized": [
+      0.5,
+      1.0
+    ],
+    "baseline": "bottom-edge",
+    "transparentPaddingBelowFeet": 0
+  },
   "normalization": [
     {
       "row": "idle",

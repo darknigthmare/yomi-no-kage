@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "view": "first-person-weapon",
+  "weaponId": "10-mujo",
+  "file": "weapon.png",
+  "source": "assets/generated/weapons/10-mujo.png",
+  "sourceCrop": [
+    54,
+    127,
+    2062,
+    469
+  ],
+  "gripAnchor": [
+    0.26,
+    0.52
+  ],
+  "detachedAccessoriesRemoved": true,
+  "renderOrder": "behind-body",
+  "weaponsBakedIntoBody": false,
+  "alphaMode": "binary"
+}

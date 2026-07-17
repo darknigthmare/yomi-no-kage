@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "view": "first-person-weapon",
+  "weaponId": "02-shogun-no-in",
+  "file": "weapon.png",
+  "source": "assets/generated/weapons/02-shogun-no-in.png",
+  "sourceCrop": [
+    55,
+    144,
+    2061,
+    444
+  ],
+  "gripAnchor": [
+    0.26,
+    0.52
+  ],
+  "detachedAccessoriesRemoved": true,
+  "renderOrder": "behind-body",
+  "weaponsBakedIntoBody": false,
+  "alphaMode": "binary"
+}

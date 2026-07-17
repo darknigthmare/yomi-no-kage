@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "view": "first-person-weapon",
+  "weaponId": "04-shirogane",
+  "file": "weapon.png",
+  "source": "assets/generated/weapons/04-shirogane.png",
+  "sourceCrop": [
+    36,
+    171,
+    1757,
+    509
+  ],
+  "gripAnchor": [
+    0.26,
+    0.52
+  ],
+  "detachedAccessoriesRemoved": true,
+  "renderOrder": "behind-body",
+  "weaponsBakedIntoBody": false,
+  "alphaMode": "binary"
+}

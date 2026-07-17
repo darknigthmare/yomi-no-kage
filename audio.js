@@ -182,8 +182,11 @@
         shot: () => this.playShot(),
         shoot: () => this.playShot(),
         tir: () => this.playShot(),
-        impact: () => this.playImpact(),
-        hit: () => this.playImpact(),
+        impact: () => this.playImpact(options?.material || options),
+        hit: () => this.playImpact(options?.material || options),
+        playerhurt: () => this.playPlayerHurt(),
+        playerdamage: () => this.playPlayerHurt(),
+        hurtplayer: () => this.playPlayerHurt(),
         zombie: () => this.playZombie(),
         groan: () => this.playZombie(),
         transition: () => this.playTransition(options?.to || options),
@@ -275,10 +278,81 @@
       return true;
     }
 
-    /** Coup sourd utilisable sur ennemi, porte ou décor. */
-    playImpact() {
+    /** Impact distinct pour la chair, l'armure ou une entité spirituelle. */
+    playImpact(material = "flesh") {
       if (!this._canPlay()) return false;
       const now = this.context.currentTime;
+      const requestedMaterial =
+        typeof material === "object" ? material?.material : material;
+      const impactMaterial = ["armor", "spirit"].includes(
+        String(requestedMaterial || "flesh").toLowerCase()
+      )
+        ? String(requestedMaterial).toLowerCase()
+        : "flesh";
+
+      if (impactMaterial === "armor") {
+        this._tone({
+          frequency: 1820,
+          endFrequency: 930,
+          start: now,
+          duration: 0.18,
+          gain: 0.21,
+          type: "triangle",
+          destination: this.sfxGain,
+        });
+        this._tone({
+          frequency: 2740,
+          endFrequency: 1560,
+          start: now + 0.008,
+          duration: 0.12,
+          gain: 0.1,
+          type: "sine",
+          destination: this.sfxGain,
+        });
+        this._noiseBurst({
+          start: now,
+          duration: 0.075,
+          gain: 0.17,
+          type: "highpass",
+          frequency: 1320,
+          q: 1.4,
+        });
+        return true;
+      }
+
+      if (impactMaterial === "spirit") {
+        this._tone({
+          frequency: 920,
+          endFrequency: 430,
+          start: now,
+          duration: 0.28,
+          gain: 0.14,
+          type: "sine",
+          destination: this.sfxGain,
+          attack: 0.018,
+        });
+        this._tone({
+          frequency: 1380,
+          endFrequency: 690,
+          start: now + 0.025,
+          duration: 0.34,
+          gain: 0.08,
+          type: "triangle",
+          destination: this.sfxGain,
+          attack: 0.03,
+        });
+        this._noiseBurst({
+          start: now,
+          duration: 0.3,
+          gain: 0.1,
+          type: "bandpass",
+          frequency: 1180,
+          q: 3.8,
+          attack: 0.02,
+        });
+        return true;
+      }
+
       this._tone({
         frequency: 145,
         endFrequency: 58,
@@ -295,6 +369,42 @@
         type: "lowpass",
         frequency: 780,
         q: 0.8,
+      });
+      return true;
+    }
+
+    /** Réaction synthétique courte lorsque le samouraï subit des dégâts. */
+    playPlayerHurt() {
+      if (!this._canPlay()) return false;
+      const now = this.context.currentTime;
+      this._tone({
+        frequency: 132,
+        endFrequency: 76,
+        start: now,
+        duration: 0.24,
+        gain: 0.2,
+        type: "sawtooth",
+        destination: this.sfxGain,
+        attack: 0.018,
+      });
+      this._tone({
+        frequency: 82,
+        endFrequency: 48,
+        start: now + 0.025,
+        duration: 0.3,
+        gain: 0.17,
+        type: "triangle",
+        destination: this.sfxGain,
+        attack: 0.025,
+      });
+      this._noiseBurst({
+        start: now,
+        duration: 0.2,
+        gain: 0.11,
+        type: "bandpass",
+        frequency: 360,
+        q: 1.9,
+        attack: 0.018,
       });
       return true;
     }

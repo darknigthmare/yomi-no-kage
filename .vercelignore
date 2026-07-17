@@ -6,11 +6,14 @@ tools/__pycache__/
 # Runtime uses animation sheets. Individual frame exports stay in GitHub.
 assets/modular/characters/**/frames/
 assets/modular/fps/characters/**/frames/
+assets/modular/fps/player/**/frames/
 assets/modular/characters/*/*/frames/**
 assets/modular/fps/characters/*/*/frames/**
 assets/modular/characters/*/*/master.png
+assets/modular/characters/**/master-alpha.png
 assets/modular/characters/*/*/source-master.png
 assets/modular/characters/*/*/source/**
+assets/modular/fps/player/**/master-alpha.png
 
 # Keep production deployment small; source masters remain in GitHub.
 assets/generated/sources/

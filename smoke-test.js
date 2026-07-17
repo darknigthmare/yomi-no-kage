@@ -2,7 +2,8 @@
 
 /*
  * Test de progression sans navigateur. Il fournit juste assez de DOM/Canvas
- * pour charger le moteur, puis vérifie les deux purifications et la victoire.
+ * pour charger le moteur, puis vérifie les portes, le combat, les deux
+ * purifications et la victoire.
  */
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
@@ -104,7 +105,16 @@ require("./game.js");
     modularRegistry.counts.characters,
   );
 
-  global.KageGame.debug.setMode("fps");
+  // La porte bloque le passage, mais ne change jamais de vue sans une action.
+  global.KageGame.debug.warpToGate();
+  state = global.KageGame.getState();
+  assert.equal(state.nearEntrance, true);
+  global.KageGame.debug.step(0.25);
+  state = global.KageGame.getState();
+  assert.equal(state.mode, "side");
+  assert.equal(state.chapter, 0);
+
+  global.KageGame.interact();
   state = global.KageGame.getState();
   assert.equal(state.mode, "fps");
   assert.equal(state.fpsRemaining, 7);
@@ -117,9 +127,19 @@ require("./game.js");
   assert.equal(state.chapter, 1);
   assert.equal(state.seals, 1);
 
-  // La transition cinématique bloque volontairement V pendant 0,85 s.
-  // Le hook de test entre directement dans la seconde zone.
-  global.KageGame.debug.setMode("fps");
+  // La seconde porte suit le même flux manuel après la transition.
+  for (let i = 0; i < 4; i += 1) global.KageGame.debug.step(0.25);
+  global.KageGame.debug.warpToGate();
+  global.KageGame.debug.step(0.25);
+  state = global.KageGame.getState();
+  assert.equal(state.mode, "side");
+  assert.equal(state.chapter, 1);
+  assert.equal(state.nearEntrance, true);
+
+  global.KageGame.interact();
+  state = global.KageGame.getState();
+  assert.equal(state.mode, "fps");
+
   global.KageGame.debug.clearFps();
   global.KageGame.debug.warpToAltar();
   global.KageGame.interact();
@@ -127,7 +147,57 @@ require("./game.js");
   assert.equal(state.status, "ended");
   assert.equal(state.seals, 2);
 
-  console.log("Smoke test OK — 2D -> FPS -> 2D -> FPS -> victoire");
+  // Partie fraîche : le coup ne porte qu'à sa frame active, une seule fois.
+  await global.KageGame.start();
+  global.KageGame.debug.setPlayer2d({
+    x: 56,
+    y: 272,
+    vx: 0,
+    vy: 0,
+    facing: 1,
+    grounded: true,
+  });
+  global.KageGame.debug.setSideEnemy(0, {
+    x: 82,
+    y: 276,
+    hp: 5,
+    maxHp: 5,
+    dead: false,
+    dying: false,
+    attack: 0,
+    attackCooldown: 99,
+    hurtTimer: 0,
+    deathTimer: 0,
+    knockbackVx: 0,
+    impactMaterial: "armor",
+  });
+
+  const hpBeforeAttack = global.KageGame.debug.combatSnapshot().sideEnemies[0].hp;
+  global.KageGame.attack();
+  assert.equal(global.KageGame.debug.combatSnapshot().sideEnemies[0].hp, hpBeforeAttack);
+
+  global.KageGame.debug.step(0.1);
+  assert.equal(
+    global.KageGame.debug.combatSnapshot().sideEnemies[0].hp,
+    hpBeforeAttack,
+    "Le sabre ne doit pas infliger de dégâts avant sa frame active",
+  );
+
+  global.KageGame.debug.step(0.04);
+  let combat = global.KageGame.debug.combatSnapshot();
+  assert.equal(combat.sideEnemies[0].hp, hpBeforeAttack - 2);
+  assert.equal(combat.hitConfirmMaterial, "armor");
+  assert.ok(combat.particles.includes("spark"), "Un impact d'armure doit produire des étincelles");
+
+  global.KageGame.debug.step(0.2);
+  combat = global.KageGame.debug.combatSnapshot();
+  assert.equal(
+    combat.sideEnemies[0].hp,
+    hpBeforeAttack - 2,
+    "Une attaque ne doit appliquer ses dégâts qu'une seule fois",
+  );
+
+  console.log("Smoke test OK — portes manuelles, timing d'impact et progression complète");
 })().catch((error) => {
   console.error(error);
   process.exitCode = 1;

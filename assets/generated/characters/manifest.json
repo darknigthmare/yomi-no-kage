@@ -24,17 +24,16 @@
       }
     },
     {
-      "id": "akio-fps-katana",
-      "file": "akio-fps-katana.png",
-      "source": "../sources/characters/akio-fps-katana-source.png",
-      "dimensions": [1625, 968],
+      "id": "akio-fps-viewmodel-master",
+      "file": "../../modular/fps/player/akio/master-alpha.png",
+      "dimensions": [1683, 935],
       "background": "transparent",
-      "usage": ["overlay d'arme FPS", "animation d'attaque", "écran d'équipement"],
+      "usage": ["source des cinq planches FPS", "bras joueur modulaires", "ancrage des armes séparées"],
       "prompt": {
-        "asset_type": "first-person katana weapon overlay",
-        "request": "Les deux avant-bras blindés d'Akio tenant son katana, vus à la première personne, lame diagonale du bas droit vers le centre haut.",
+        "asset_type": "first-person player arms animation atlas",
+        "request": "Les deux avant-bras blindés d'Akio vus à la première personne, exactement six colonnes et cinq lignes : repos, déplacement, attaque, dégâts et mort.",
         "style": "pixel-art 16-bit original compatible raycasting rétro",
-        "constraints": "Une paire de mains cohérente et un seul katana, fond chroma #ff00ff uniforme, aucun corps, visage, décor, ennemi, texte, logo ou filigrane."
+        "constraints": "Mains cohérentes autour d'une prise invisible, aucune arme, lame, poignée, tête, décor, grille, texte, logo ou filigrane ; fond chroma magenta uniforme."
       }
     }
   ]

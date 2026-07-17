@@ -136,7 +136,14 @@ dialog[open] { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(18
   background: #090b10;
   cursor: pointer;
 }
-.dialog-frames img { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; }
+.dialog-frames .frame-slice {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: 600% 100%;
+  image-rendering: pixelated;
+}
 .dialog-frames span { position: absolute; right: 2px; bottom: 2px; padding: 1px 3px; background: #080a0edb; color: #d8c9a8; font-size: 0.5rem; }
 .dialog-frames button:hover { border-color: #d34646; }
 .dialog-copy dl div { padding: 0.8rem 0; border-top: 1px solid #34343a; }

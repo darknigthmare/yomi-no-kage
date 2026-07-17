@@ -25,6 +25,10 @@ ImageGen puis découpé en assets de production indépendants :
 - 20 ennemis ordinaires, 20 spéciaux, 20 sous-boss, 20 boss et 10 boss géants ;
 - 5 planches par personnage (`idle`, `move`, `attack`, `hurt`, `death`) ;
 - 6 frames PNG par planche, soit 485 planches et 2 910 frames individuelles ;
+- 5 planches FPS dédiées à Akio (`idle`, `move`, `attack`, `hurt`, `death`),
+  soit 30 frames subjectives complètes générées avec OpenAI ImageGen ;
+- 10 sprites FPS de sabres entièrement séparés, interchangeables sur les
+  mêmes bras grâce à 30 points de prise ajustés image par image ;
 - 48 nouvelles armes interchangeables, plus les 10 sabres de lore d'Akio ;
 - 3 zones composées chacune de 4 fonds de parallaxe, 12 accessoires et
   12 tuiles de plateforme, soit 84 sprites de décor finaux.
@@ -47,8 +51,8 @@ génération.
 - `J` ou clic gauche : katana
 - `K` ou clic droit : ofuda
 - `1` à `0` : équiper l'un des 10 sabres d'Akio
-- `E` : interagir / sceller
-- `V` : changer de perspective
+- `E` : ouvrir une entrée en 2D / sceller un autel en FPS
+- `V` : raccourci de seuil, uniquement près d'une entrée
 - `Échap` ou `P` : pause
 - `M` : couper / réactiver le son
 
@@ -60,6 +64,8 @@ Les contrôles tactiles apparaissent automatiquement sur mobile.
 node --check game.js
 node --check audio.js
 node --check assets-gallery.js
+py tools/build-fps-variants.py
+py tools/validate-fps-player.py
 node tools/build-modular-catalog.mjs
 node tools/validate-modular-pack.mjs
 node tools/verify-modular-registry.mjs
