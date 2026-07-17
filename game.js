@@ -142,10 +142,10 @@
       hurt: { x: -0.22, y: -0.43, scale: 0.54, rotation: 0.12 },
     },
     fps: {
-      idle: { x: 0.2, y: -0.42, scale: 0.52, rotation: -0.28 },
-      move: { x: 0.18, y: -0.41, scale: 0.5, rotation: -0.22 },
-      attack: { x: 0.26, y: -0.44, scale: 0.62, rotation: -0.9, arc: 1.55 },
-      hurt: { x: 0.1, y: -0.37, scale: 0.46, rotation: 0.16 },
+      idle: { x: 0.18, y: -0.4, scale: 0.34, rotation: -0.28 },
+      move: { x: 0.16, y: -0.39, scale: 0.32, rotation: -0.22 },
+      attack: { x: 0.22, y: -0.42, scale: 0.44, rotation: -0.9, arc: 1.55 },
+      hurt: { x: 0.08, y: -0.36, scale: 0.3, rotation: 0.16 },
     },
   };
   ctx.imageSmoothingEnabled = false;
@@ -543,6 +543,16 @@
       boss: [9.5, 11.5],
     },
   ];
+  const FPS_ENGAGEMENT_ANGLES = [
+    0,
+    Math.PI,
+    Math.PI / 2,
+    -Math.PI / 2,
+    Math.PI / 4,
+    -3 * Math.PI / 4,
+    3 * Math.PI / 4,
+    -Math.PI / 4,
+  ];
 
   let game = createGameState();
   let lastTime = performance.now();
@@ -624,12 +634,16 @@
 
   function makeFpsMission(index) {
     const def = FPS_DEFS[index];
+    const formationCount = def.enemies.length + (def.boss ? 1 : 0);
+    const formationPhase = index * Math.PI / 7;
     const enemies = def.enemies.map((entry, i) => ({
       x: entry[0], y: entry[1], hp: 4, maxHp: 4, dead: false, dying: false,
       attack: 0, attackDuration: 0.68, attackCooldown: i * 0.12, attackHitApplied: false,
       hurtTimer: 0, deathTimer: 0, knockbackX: 0, knockbackY: 0,
       flash: 0, boss: false, impactMaterial: "flesh",
       spriteIndex: i % 5,
+      engagementSlot: i,
+      engagementAngle: formationPhase + i * Math.PI * 2 / formationCount,
     }));
     if (def.boss) {
       enemies.push({
@@ -637,6 +651,8 @@
         attack: 0, attackDuration: 0.92, attackCooldown: 0.4, attackHitApplied: false,
         hurtTimer: 0, deathTimer: 0, knockbackX: 0, knockbackY: 0,
         flash: 0, boss: true, spriteIndex: 5, impactMaterial: "armor",
+        engagementSlot: enemies.length,
+        engagementAngle: formationPhase + enemies.length * Math.PI * 2 / formationCount,
       });
     }
     return {
@@ -999,16 +1015,112 @@
   }
 
   function fpsEnemyRadius(enemy) {
-    if (enemy?.modularEntry?.category === "giant") return 0.55;
-    return enemy?.boss ? 0.34 : 0.22;
+    if (enemy?.modularEntry?.category === "giant") return 0.56;
+    return enemy?.boss ? 0.4 : 0.28;
   }
 
   function canOccupyFps(mission, x, y, radius, movingEnemy) {
     if (!isWalkable(mission.map, x, y, radius)) return false;
+    if (
+      movingEnemy
+      && Math.hypot(x - mission.player.x, y - mission.player.y) < radius + 0.24
+    ) return false;
     return mission.enemies.every((other) => {
       if (other === movingEnemy || !isEnemyAlive(other)) return true;
       const minimum = radius + fpsEnemyRadius(other);
       return Math.hypot(x - other.x, y - other.y) >= minimum;
+    });
+  }
+
+  function fpsEngagementGoal(mission, enemy, profile) {
+    const slot = Math.abs(Math.round(enemy.engagementSlot ?? enemy.spriteIndex ?? 0));
+    const angle = Number.isFinite(enemy.engagementAngle)
+      ? enemy.engagementAngle
+      : FPS_ENGAGEMENT_ANGLES[slot % FPS_ENGAGEMENT_ANGLES.length];
+    const radius = profile.reach * 0.92;
+    const x = mission.player.x + Math.cos(angle) * radius;
+    const y = mission.player.y + Math.sin(angle) * radius;
+    const enemyRadius = fpsEnemyRadius(enemy);
+    if (!isWalkable(mission.map, x, y, enemyRadius)) return null;
+    return { x, y };
+  }
+
+  function moveFpsEnemyWithSteering(mission, enemy, goalDx, goalDy, pace) {
+    const goalLength = Math.max(0.001, Math.hypot(goalDx, goalDy));
+    const baseX = goalDx / goalLength;
+    const baseY = goalDy / goalLength;
+    const radius = fpsEnemyRadius(enemy);
+    let repelX = 0;
+    let repelY = 0;
+    for (const other of mission.enemies) {
+      if (other === enemy || !isEnemyAlive(other)) continue;
+      const awayX = enemy.x - other.x;
+      const awayY = enemy.y - other.y;
+      const separation = Math.hypot(awayX, awayY);
+      const comfort = radius + fpsEnemyRadius(other) + 0.16;
+      if (separation <= 0.001 || separation >= comfort) continue;
+      const strength = (comfort - separation) / comfort;
+      repelX += awayX / separation * strength;
+      repelY += awayY / separation * strength;
+    }
+
+    const combinedLength = Math.max(0.001, Math.hypot(baseX + repelX * 1.35, baseY + repelY * 1.35));
+    const combined = {
+      x: (baseX + repelX * 1.35) / combinedLength,
+      y: (baseY + repelY * 1.35) / combinedLength,
+    };
+    const flankSign = (Math.abs(Math.round(enemy.engagementSlot ?? 0)) % 2) * 2 - 1;
+    const flankAngle = flankSign * 0.55;
+    const alternateAngle = -flankAngle;
+    const candidates = [
+      combined,
+      {
+        x: baseX * Math.cos(flankAngle) - baseY * Math.sin(flankAngle),
+        y: baseX * Math.sin(flankAngle) + baseY * Math.cos(flankAngle),
+      },
+      {
+        x: baseX * Math.cos(alternateAngle) - baseY * Math.sin(alternateAngle),
+        y: baseX * Math.sin(alternateAngle) + baseY * Math.cos(alternateAngle),
+      },
+      { x: baseX, y: baseY },
+    ];
+
+    for (const candidate of candidates) {
+      const nx = enemy.x + candidate.x * pace;
+      const ny = enemy.y + candidate.y * pace;
+      if (canOccupyFps(mission, nx, ny, radius, enemy)) {
+        enemy.x = nx;
+        enemy.y = ny;
+        return true;
+      }
+      let slid = false;
+      if (canOccupyFps(mission, nx, enemy.y, radius, enemy)) {
+        enemy.x = nx;
+        slid = true;
+      }
+      if (canOccupyFps(mission, enemy.x, ny, radius, enemy)) {
+        enemy.y = ny;
+        slid = true;
+      }
+      if (slid) return true;
+    }
+    return false;
+  }
+
+  function fpsFrontlineBlocked(mission, enemy) {
+    const p = mission.player;
+    const enemyDx = enemy.x - p.x;
+    const enemyDy = enemy.y - p.y;
+    const enemyDistance = Math.hypot(enemyDx, enemyDy);
+    const enemyBearing = Math.atan2(enemyDy, enemyDx);
+    return mission.enemies.some((other) => {
+      if (other === enemy || !isEnemyAlive(other)) return false;
+      const otherDx = other.x - p.x;
+      const otherDy = other.y - p.y;
+      const otherDistance = Math.hypot(otherDx, otherDy);
+      if (otherDistance >= enemyDistance - 0.04) return false;
+      const bearingGap = Math.abs(normalizeAngle(Math.atan2(otherDy, otherDx) - enemyBearing));
+      return bearingGap < 0.24 && enemyDistance - otherDistance < 1.08;
     });
   }
 
@@ -1064,6 +1176,8 @@
       const dx = p.x - enemy.x;
       const dy = p.y - enemy.y;
       const dist = Math.hypot(dx, dy);
+      const frontlineBlocked = fpsFrontlineBlocked(mission, enemy);
+      enemy.frontlineBlocked = frontlineBlocked;
       if (enemy.attack > 0) {
         enemy.attack = Math.max(0, enemy.attack - dt);
         const progress = 1 - enemy.attack / enemy.attackDuration;
@@ -1082,14 +1196,27 @@
       }
 
       if (dist < (enemy.boss ? 11 : 8) && lineOfSight(mission, enemy.x, enemy.y, p.x, p.y)) {
-        if (dist > profile.reach) {
+        const engagementGoal = dist < profile.reach + 2
+          ? fpsEngagementGoal(mission, enemy, profile)
+          : null;
+        const goalDx = engagementGoal ? engagementGoal.x - enemy.x : dx;
+        const goalDy = engagementGoal ? engagementGoal.y - enemy.y : dy;
+        const goalDistance = Math.hypot(goalDx, goalDy);
+        const shouldReposition = Boolean(engagementGoal && goalDistance > 0.16);
+        let moved = false;
+        if (
+          (dist > profile.reach || shouldReposition)
+          && (!frontlineBlocked || engagementGoal)
+        ) {
           const pace = profile.speed * dt;
-          const nx = enemy.x + (dx / dist) * pace;
-          const ny = enemy.y + (dy / dist) * pace;
-          const radius = fpsEnemyRadius(enemy);
-          if (canOccupyFps(mission, nx, enemy.y, radius, enemy)) enemy.x = nx;
-          if (canOccupyFps(mission, enemy.x, ny, radius, enemy)) enemy.y = ny;
-        } else if (enemy.attackCooldown <= 0) {
+          moved = moveFpsEnemyWithSteering(mission, enemy, goalDx, goalDy, pace);
+        }
+        if (
+          dist <= profile.reach + 0.12
+          && !frontlineBlocked
+          && (!shouldReposition || !moved)
+          && enemy.attackCooldown <= 0
+        ) {
           enemy.attackDuration = profile.attackDuration;
           enemy.attack = profile.attackDuration;
           enemy.attackHitApplied = false;
@@ -2507,7 +2634,8 @@
   function drawFpsEnemy(enemy, distance, angle) {
     const giantBoss = enemy.modularEntry?.category === "giant";
     const worldHeight = giantBoss ? 1.9 : (enemy.boss ? 1.55 : 1.14);
-    const projection = projectFpsEntity(distance, angle, worldHeight, 1);
+    const aspect = giantBoss ? 0.82 : (enemy.boss ? 0.78 : 0.76);
+    const projection = projectFpsEntity(distance, angle, worldHeight, aspect);
     const left = projection.screenX - projection.width / 2;
     if (left > W || left + projection.width < 0) return;
 
@@ -2518,7 +2646,9 @@
     const frame = fpsEnemyAnimationFrame(enemy, animation, spriteIndex);
 
     ctx.save();
-    if (!clipBillboardToDepth(left, projection.width, projection.corrected)) {
+    const clipWidth = projection.height * (giantBoss ? 1.12 : 1.04);
+    const clipLeft = projection.screenX - clipWidth / 2;
+    if (!clipBillboardToDepth(clipLeft, clipWidth, projection.corrected)) {
       ctx.restore();
       return;
     }
@@ -2543,7 +2673,7 @@
         Math.round(projection.width),
         Math.round(projection.height),
       );
-      if (animation !== "death") {
+      if (animation !== "death" && !enemy.frontlineBlocked) {
         ctx.save();
         ctx.translate(projection.screenX, projection.groundY);
         drawEnemyWeapon(enemy, animation, projection.height, true);
@@ -3010,6 +3140,16 @@
         Object.assign(enemy, patch);
         return { ...enemy };
       },
+      setFpsPlayer: (patch = {}) => {
+        Object.assign(currentMission().player, patch);
+        return { ...currentMission().player };
+      },
+      setFpsEnemy: (index, patch = {}) => {
+        const enemies = currentMission().enemies;
+        const enemy = enemies[clamp(Number(index) || 0, 0, enemies.length - 1)];
+        Object.assign(enemy, patch);
+        return { ...enemy };
+      },
       warpToGate: () => {
         const entrance = currentSideEntrance();
         game.side.player.x = entrance.blockX - 4;
@@ -3040,6 +3180,14 @@
           dead: enemy.dead,
           hurtTimer: enemy.hurtTimer,
           material: enemy.impactMaterial,
+        })),
+        fpsEnemies: currentMission().enemies.map((enemy) => ({
+          x: enemy.x,
+          y: enemy.y,
+          hp: enemy.hp,
+          dead: enemy.dead,
+          radius: fpsEnemyRadius(enemy),
+          engagementSlot: enemy.engagementSlot,
         })),
         particles: game.mode === "side"
           ? game.side.particles.map((particle) => particle.kind)

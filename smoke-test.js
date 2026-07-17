@@ -197,7 +197,54 @@ require("./game.js");
     "Une attaque ne doit appliquer ses dégâts qu'une seule fois",
   );
 
-  console.log("Smoke test OK — portes manuelles, timing d'impact et progression complète");
+  // En FPS, trois poursuivants collinéaires doivent prendre des angles
+  // d'engagement distincts et conserver une collision cohérente.
+  await global.KageGame.start();
+  global.KageGame.debug.setMode("fps");
+  global.KageGame.debug.clearFps();
+  global.KageGame.debug.setFpsPlayer({ x: 12, y: 12, angle: 0 });
+  const formationSetup = [
+    { x: 12.45, y: 12.45, engagementAngle: 0 },
+    { x: 12.9, y: 12.9, engagementAngle: Math.PI / 2 },
+    { x: 13.35, y: 13.35, engagementAngle: Math.PI },
+  ];
+  formationSetup.forEach((patch, index) => {
+    global.KageGame.debug.setFpsEnemy(index, {
+      ...patch,
+      engagementSlot: index,
+      hp: 4,
+      maxHp: 4,
+      dead: false,
+      dying: false,
+      attack: 0,
+      attackCooldown: 99,
+      attackHitApplied: false,
+      hurtTimer: 0,
+      deathTimer: 0,
+      knockbackX: 0,
+      knockbackY: 0,
+    });
+  });
+  for (let i = 0; i < 50; i += 1) global.KageGame.debug.step(0.05);
+  combat = global.KageGame.debug.combatSnapshot();
+  const formationEnemies = combat.fpsEnemies.slice(0, 3);
+  const bearings = formationEnemies.map((enemy) => Math.atan2(enemy.y - 12, enemy.x - 12));
+  assert.ok(
+    Math.max(...bearings) - Math.min(...bearings) > 0.8,
+    "Les ennemis FPS doivent se répartir autour du joueur au lieu de s'empiler",
+  );
+  for (let i = 0; i < formationEnemies.length; i += 1) {
+    for (let j = i + 1; j < formationEnemies.length; j += 1) {
+      const a = formationEnemies[i];
+      const b = formationEnemies[j];
+      assert.ok(
+        Math.hypot(a.x - b.x, a.y - b.y) >= a.radius + b.radius - 0.02,
+        "Les collisions FPS doivent garder les billboards séparés",
+      );
+    }
+  }
+
+  console.log("Smoke test OK — portes manuelles, impacts, formation FPS et progression complète");
 })().catch((error) => {
   console.error(error);
   process.exitCode = 1;
