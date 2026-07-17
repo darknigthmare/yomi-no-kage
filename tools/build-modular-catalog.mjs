@@ -5,10 +5,16 @@ const root = process.cwd();
 const modularRoot = path.join(root, "assets", "modular");
 const manifestsRoot = path.join(modularRoot, "manifests");
 const characterRoot = path.join(modularRoot, "characters");
+const fpsRoot = path.join(modularRoot, "fps");
+const fpsCharacterRoot = path.join(fpsRoot, "characters");
+const fpsPlayerRoot = path.join(fpsRoot, "player", "akio");
+const fpsPlayerBodyRoot = path.join(fpsPlayerRoot, "body");
+const fpsPlayerWeaponsRoot = path.join(fpsPlayerRoot, "weapons");
 const outputCatalog = path.join(modularRoot, "catalog.json");
 const outputRegistry = path.join(modularRoot, "registry.json");
 
 const animationNames = ["idle", "move", "attack", "hurt", "death"];
+const loreKatanaIdPattern = /^(?:0[1-9]|10)-/;
 const categoryOrder = ["player", "legacy", "regular", "special", "miniboss", "boss", "giant"];
 const categoryLabels = {
   player: "Joueur",
@@ -26,6 +32,62 @@ function toWebPath(filePath) {
 
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, "utf8"));
+}
+
+function readJsonIfExists(filePath) {
+  return fs.existsSync(filePath) ? readJson(filePath) : null;
+}
+
+function fpsAnimationPaths(folder) {
+  return Object.fromEntries(
+    animationNames.map((animation) => [animation, toWebPath(path.join(folder, "sheets", `${animation}.png`))]),
+  );
+}
+
+function fpsFramePaths(folder, sprite) {
+  return Object.fromEntries(animationNames.map((animation) => {
+    const declaredFrames = sprite?.animations?.[animation];
+    if (Array.isArray(declaredFrames) && declaredFrames.length > 0) {
+      return [
+        animation,
+        declaredFrames
+          .map((frame) => (typeof frame === "string" ? frame : frame?.file))
+          .filter(Boolean)
+          .map((file) => toWebPath(path.join(folder, file))),
+      ];
+    }
+
+    const frameFolder = path.join(folder, "frames", animation);
+    const discoveredFrames = fs.existsSync(frameFolder)
+      ? fs.readdirSync(frameFolder, { withFileTypes: true })
+        .filter((entry) => entry.isFile() && entry.name.toLowerCase().endsWith(".png"))
+        .sort((a, b) => a.name.localeCompare(b.name, "fr"))
+        .map((entry) => toWebPath(path.join(frameFolder, entry.name)))
+      : [];
+    return [animation, discoveredFrames];
+  }));
+}
+
+function fpsWeaponMounts(sprite) {
+  return Object.fromEntries(animationNames.map((animation) => [
+    animation,
+    (sprite?.animations?.[animation] || []).map((frame) => frame?.weaponMount || null),
+  ]));
+}
+
+function loreKatanaFpsSprites() {
+  if (!fs.existsSync(fpsPlayerWeaponsRoot)) return {};
+  return Object.fromEntries(
+    fs.readdirSync(fpsPlayerWeaponsRoot, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory() && loreKatanaIdPattern.test(entry.name))
+      .sort((a, b) => a.name.localeCompare(b.name, "fr"))
+      .flatMap((entry) => {
+        const spriteMetaFile = path.join(fpsPlayerWeaponsRoot, entry.name, "sprite.json");
+        const spriteMeta = readJsonIfExists(spriteMetaFile);
+        const spriteFile = path.join(fpsPlayerWeaponsRoot, entry.name, spriteMeta?.file || "weapon.png");
+        return fs.existsSync(spriteFile) ? [[entry.name, toWebPath(spriteFile)]] : [];
+      }),
+  );
 }
 
 function asText(value) {
@@ -155,7 +217,7 @@ for (const category of categoryOrder) {
     const animations = Object.fromEntries(
       animationNames.map((animation) => [animation, toWebPath(path.join(folder, "sheets", `${animation}.png`))]),
     );
-    characters.push({
+    const character = {
       id: entry.name,
       category,
       name: metadata.name || titleFromId(entry.name),
@@ -175,7 +237,32 @@ for (const category of categoryOrder) {
       ),
       generationTool: metadata.generationTool || "OpenAI ImageGen built-in",
       manifest: metadata.sourceFile || null,
-    });
+    };
+
+    const fpsFolder = category === "player" && entry.name === "akio"
+      ? fpsPlayerBodyRoot
+      : path.join(fpsCharacterRoot, category, entry.name);
+    const fpsSpriteFile = path.join(fpsFolder, "sprite.json");
+    const fpsSprite = readJsonIfExists(fpsSpriteFile);
+    if (fpsSprite) {
+      Object.assign(character, {
+        fpsAnimations: fpsAnimationPaths(fpsFolder),
+        fpsFrames: fpsFramePaths(fpsFolder, fpsSprite),
+        fpsSprite: toWebPath(fpsSpriteFile),
+        fpsGeneration: metadata.fpsPrompt || fpsSprite.generationTool || fpsSprite.sourceView || "FPS billboard sprites",
+      });
+    }
+
+    if (category === "player" && entry.name === "akio" && fpsSprite) {
+      Object.assign(character, {
+        fpsWeaponMounts: fpsWeaponMounts(fpsSprite),
+        fpsRenderOrder: fpsSprite.renderOrder || ["weapon", "body"],
+        fpsWeaponsBakedIntoBody: fpsSprite.weaponsBakedIntoBody === true,
+        fpsWeaponSprites: loreKatanaFpsSprites(),
+      });
+    }
+
+    characters.push(character);
   }
 }
 
@@ -218,7 +305,26 @@ const weaponPngs = [
   .filter((file) => file.toLowerCase().endsWith(".png"))
   .filter((file) => !/(^|[\\/])(source|sources|tmp|atlases)([\\/]|$)/i.test(file))
   .filter((file) => !/(source|raw|alpha|contact|atlas|preview)/i.test(path.basename(file)));
-const weapons = weaponPngs.map((file) => assetFromPng(file, "weapon"));
+const weapons = weaponPngs.map((file) => {
+  const weapon = assetFromPng(file, "weapon");
+  const isGeneratedLoreKatana = loreKatanaIdPattern.test(weapon.id)
+    && toWebPath(file).startsWith("assets/generated/weapons/");
+  if (!isGeneratedLoreKatana) return weapon;
+
+  const fpsWeaponFolder = path.join(fpsPlayerWeaponsRoot, weapon.id);
+  const fpsSpriteMetaFile = path.join(fpsWeaponFolder, "sprite.json");
+  const fpsSpriteMeta = readJsonIfExists(fpsSpriteMetaFile);
+  if (!fpsSpriteMeta) return weapon;
+
+  const fpsSpriteFile = path.join(fpsWeaponFolder, fpsSpriteMeta.file || "weapon.png");
+  if (!fs.existsSync(fpsSpriteFile)) return weapon;
+  return {
+    ...weapon,
+    fpsSprite: toWebPath(fpsSpriteFile),
+    fpsSpriteMeta: toWebPath(fpsSpriteMetaFile),
+    fpsGripAnchor: fpsSpriteMeta.gripAnchor || null,
+  };
+});
 
 const environmentPngs = walkFiles(path.join(modularRoot, "environments"))
   .filter((file) => file.toLowerCase().endsWith(".png"))
@@ -259,6 +365,14 @@ const characterAssets = characters.map((character) => ({
   weaponId: character.weaponId,
   generationTool: character.generationTool,
   manifest: character.manifest,
+  fpsAnimations: character.fpsAnimations,
+  fpsFrames: character.fpsFrames,
+  fpsSprite: character.fpsSprite,
+  fpsGeneration: character.fpsGeneration,
+  fpsWeaponMounts: character.fpsWeaponMounts,
+  fpsRenderOrder: character.fpsRenderOrder,
+  fpsWeaponsBakedIntoBody: character.fpsWeaponsBakedIntoBody,
+  fpsWeaponSprites: character.fpsWeaponSprites,
 }));
 
 const assets = [...characterAssets, ...weapons, ...environments];
@@ -278,6 +392,39 @@ const counts = {
   catalogAssets: assets.length,
 };
 
+const fpsPlayer = characters.find((entry) => entry.category === "player" && entry.id === "akio");
+const fpsEnemies = characters.filter((entry) => entry.category !== "player" && entry.fpsSprite);
+const fpsCharacters = characters.filter((entry) => entry.fpsSprite);
+const fpsPlayerSprite = readJsonIfExists(path.join(fpsPlayerBodyRoot, "sprite.json"));
+const firstEnemyFpsSprite = fpsEnemies.length > 0
+  ? readJsonIfExists(path.join(root, fpsEnemies[0].fpsSprite))
+  : null;
+const fpsPipeline = {
+  schema: 1,
+  root: toWebPath(fpsRoot),
+  animations: animationNames,
+  characterCount: fpsCharacters.length,
+  weaponCount: weapons.length,
+  cell: [
+    firstEnemyFpsSprite?.frameWidth || 96,
+    firstEnemyFpsSprite?.frameHeight || 128,
+  ],
+  note: "FPS assets are separate files and are loaded through fpsAnimations/fpsFrames.",
+};
+const fps = {
+  characters: fpsEnemies.length,
+  animations: animationNames,
+  framesPerAnimation: 6,
+  source: "OpenAI ImageGen player arms master with independent weapon sprites",
+  playerViewModels: fpsPlayer?.fpsSprite ? 1 : 0,
+  playerWeaponSprites: Object.keys(fpsPlayer?.fpsWeaponSprites || {}).length,
+  playerFrameSize: [
+    fpsPlayerSprite?.frameWidth || 960,
+    fpsPlayerSprite?.frameHeight || 640,
+  ],
+  enemySource: "Detailed OpenAI 2D masters normalized as grounded Doom billboards",
+};
+
 fs.writeFileSync(outputRegistry, `${JSON.stringify({
   schema: 1,
   generatedAt: new Date().toISOString(),
@@ -286,6 +433,8 @@ fs.writeFileSync(outputRegistry, `${JSON.stringify({
   characters,
   weapons,
   environments,
+  fpsPipeline,
+  fps,
 }, null, 2)}\n`, "utf8");
 
 fs.writeFileSync(outputCatalog, `${JSON.stringify({

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generatedAt": "2026-07-17T12:18:45.679Z",
+  "generatedAt": "2026-07-17T23:47:51.451Z",
   "animationStandard": {
     "animations": [
       "idle",
@@ -34,7 +34,7 @@
       "name": "Akio",
       "subtitle": "Samouraï envoyé par le shogun",
       "lore": "Akio reçoit l'ordre d'endiguer la peste du Yomi avant qu'elle ne gagne Edo. Son armure noire à laçage rouge porte le croissant de son clan.",
-      "gameplay": "Héros jouable. Cinq planches modulaires de six images : repos, déplacement, attaque, dégâts et mort.",
+      "gameplay": "Héros jouable. Cinq planches 2D et cinq planches FPS de six frames, générées séparément puis normalisées à échelle constante. Les dix katanas restent des sprites indépendants.",
       "prompt": "Create a production-ready 16-bit pixel-art master animation atlas preserving Akio's exact black-and-red samurai identity. Exactly 30 isolated right-facing full-body poses in 6 columns and 5 rows: idle, run, empty-handed sword-grip attack, hurt and death. No weapon, scabbard, prop, text or grid. Flat solid #ff00ff background, crisp nearest-neighbor pixel clusters, generous gutters.",
       "weaponId": "01-kurokage",
       "file": "assets/modular/characters/player/akio/master.png",
@@ -140,234 +140,234 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/player/akio/body/sprite.json",
-      "fpsGeneration": "OpenAI ImageGen built-in: strict 6x5 first-person Akio arms atlas, rows idle/move/attack/hurt/death, no weapon, flat magenta key, black lacquered kote with red lacing, weapon-ready invisible grip.",
+      "fpsGeneration": "Create one strict 16-bit pixel-art first-person Akio arms atlas with exactly 6 columns by 5 rows: idle, move, attack, hurt and death. Preserve black lacquered kote, indigo cloth and red lacing. Hands grip an invisible interchangeable weapon. No weapon, blade, hilt, prop, text or grid. Flat chroma-key magenta background.",
+      "fpsWeaponMounts": {
+        "idle": [
+          [
+            0.4685,
+            0.4734,
+            -1.78,
+            1,
+            1
+          ],
+          [
+            0.4812,
+            0.338,
+            -1.76,
+            1,
+            1
+          ],
+          [
+            0.4804,
+            0.3352,
+            -1.79,
+            1,
+            1
+          ],
+          [
+            0.4723,
+            0.3684,
+            -1.81,
+            1,
+            1
+          ],
+          [
+            0.4763,
+            0.4049,
+            -1.77,
+            1,
+            1
+          ],
+          [
+            0.471,
+            0.3766,
+            -1.8,
+            1,
+            1
+          ]
+        ],
+        "move": [
+          [
+            0.4946,
+            0.296,
+            -1.82,
+            1,
+            1
+          ],
+          [
+            0.4819,
+            0.4846,
+            -1.76,
+            1,
+            1
+          ],
+          [
+            0.4828,
+            0.6138,
+            -1.7,
+            1,
+            1
+          ],
+          [
+            0.4851,
+            0.608,
+            -1.7,
+            1,
+            1
+          ],
+          [
+            0.5006,
+            0.3165,
+            -1.78,
+            1,
+            1
+          ],
+          [
+            0.4833,
+            0.5139,
+            -1.82,
+            1,
+            1
+          ]
+        ],
+        "attack": [
+          [
+            0.5022,
+            0.4988,
+            -1.96,
+            1,
+            1
+          ],
+          [
+            0.5395,
+            0.327,
+            -1.7,
+            1,
+            1
+          ],
+          [
+            0.6132,
+            0.3037,
+            -1.38,
+            1,
+            1
+          ],
+          [
+            0.2576,
+            0.2995,
+            -0.95,
+            1,
+            1
+          ],
+          [
+            0.2354,
+            0.5263,
+            -0.43,
+            1,
+            1
+          ],
+          [
+            0.5027,
+            0.4632,
+            0.08,
+            1,
+            1
+          ]
+        ],
+        "hurt": [
+          [
+            0.5055,
+            0.4329,
+            -2.04,
+            1,
+            1
+          ],
+          [
+            0.353,
+            0.4216,
+            -2.25,
+            1,
+            0.95
+          ],
+          [
+            0.4731,
+            0.3429,
+            -2.48,
+            1,
+            0.82
+          ],
+          [
+            0.4783,
+            0.383,
+            -2.24,
+            1,
+            0.72
+          ],
+          [
+            0.4688,
+            0.3776,
+            -2.02,
+            1,
+            0.88
+          ],
+          [
+            0.4745,
+            0.3832,
+            -1.8,
+            1,
+            1
+          ]
+        ],
+        "death": [
+          [
+            0.4995,
+            0.1871,
+            -1.78,
+            1,
+            0
+          ],
+          [
+            0.4958,
+            0.2002,
+            -1.28,
+            1,
+            0
+          ],
+          [
+            0.5257,
+            0.369,
+            -0.82,
+            1,
+            0
+          ],
+          [
+            0.5335,
+            0.4565,
+            -0.34,
+            1,
+            0
+          ],
+          [
+            0.5131,
+            0.5584,
+            0.1,
+            1,
+            0
+          ],
+          [
+            0.4813,
+            0.6291,
+            0.32,
+            1,
+            0
+          ]
+        ]
+      },
       "fpsRenderOrder": [
         "weapon",
         "body"
       ],
       "fpsWeaponsBakedIntoBody": false,
-      "fpsWeaponMounts": {
-        "idle": [
-          [
-            0.52,
-            0.51,
-            -1.78,
-            0.94,
-            1.0
-          ],
-          [
-            0.51,
-            0.52,
-            -1.76,
-            0.95,
-            1.0
-          ],
-          [
-            0.51,
-            0.52,
-            -1.79,
-            0.95,
-            1.0
-          ],
-          [
-            0.5,
-            0.5,
-            -1.81,
-            0.94,
-            1.0
-          ],
-          [
-            0.5,
-            0.52,
-            -1.77,
-            0.95,
-            1.0
-          ],
-          [
-            0.51,
-            0.52,
-            -1.8,
-            0.94,
-            1.0
-          ]
-        ],
-        "move": [
-          [
-            0.44,
-            0.57,
-            -1.83,
-            0.93,
-            1.0
-          ],
-          [
-            0.37,
-            0.58,
-            -1.76,
-            0.94,
-            1.0
-          ],
-          [
-            0.35,
-            0.59,
-            -1.71,
-            0.95,
-            1.0
-          ],
-          [
-            0.35,
-            0.57,
-            -1.76,
-            0.94,
-            1.0
-          ],
-          [
-            0.38,
-            0.59,
-            -1.82,
-            0.93,
-            1.0
-          ],
-          [
-            0.37,
-            0.61,
-            -1.78,
-            0.94,
-            1.0
-          ]
-        ],
-        "attack": [
-          [
-            0.46,
-            0.64,
-            -1.96,
-            0.92,
-            1.0
-          ],
-          [
-            0.5,
-            0.61,
-            -1.7,
-            0.96,
-            1.0
-          ],
-          [
-            0.52,
-            0.64,
-            -1.38,
-            1.0,
-            1.0
-          ],
-          [
-            0.56,
-            0.39,
-            -0.95,
-            1.04,
-            1.0
-          ],
-          [
-            0.59,
-            0.65,
-            -0.43,
-            1.08,
-            1.0
-          ],
-          [
-            0.56,
-            0.75,
-            0.08,
-            1.0,
-            1.0
-          ]
-        ],
-        "hurt": [
-          [
-            0.36,
-            0.59,
-            -2.04,
-            0.94,
-            1.0
-          ],
-          [
-            0.34,
-            0.58,
-            -2.25,
-            0.92,
-            0.9
-          ],
-          [
-            0.28,
-            0.57,
-            -2.48,
-            0.88,
-            0.72
-          ],
-          [
-            0.37,
-            0.59,
-            -2.62,
-            0.84,
-            0.5
-          ],
-          [
-            0.4,
-            0.57,
-            -2.08,
-            0.9,
-            0.72
-          ],
-          [
-            0.38,
-            0.58,
-            -1.8,
-            0.94,
-            1.0
-          ]
-        ],
-        "death": [
-          [
-            0.42,
-            0.54,
-            -1.78,
-            0.92,
-            1.0
-          ],
-          [
-            0.48,
-            0.6,
-            -1.18,
-            0.9,
-            0.86
-          ],
-          [
-            0.55,
-            0.78,
-            -0.58,
-            0.86,
-            0.66
-          ],
-          [
-            0.62,
-            0.95,
-            -0.1,
-            0.82,
-            0.42
-          ],
-          [
-            0.68,
-            1.04,
-            0.28,
-            0.76,
-            0.18
-          ],
-          [
-            0.72,
-            1.18,
-            0.46,
-            0.72,
-            0.0
-          ]
-        ]
-      },
       "fpsWeaponSprites": {
         "01-kurokage": "assets/modular/fps/player/akio/weapons/01-kurokage/weapon.png",
         "02-shogun-no-in": "assets/modular/fps/player/akio/weapons/02-shogun-no-in/weapon.png",
@@ -493,7 +493,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/legacy/01-shibito-villager/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "02-ashigaru-revenant",
@@ -607,7 +607,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/legacy/02-ashigaru-revenant/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "03-kegare-sohei",
@@ -721,7 +721,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/legacy/03-kegare-sohei/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "04-onryo-miko",
@@ -835,7 +835,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/legacy/04-onryo-miko/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "05-kabuto-brute",
@@ -949,7 +949,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/legacy/05-kabuto-brute/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "06-daimyo-corrupted",
@@ -1063,7 +1063,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/legacy/06-daimyo-corrupted/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "r01-nureta-fisher",
@@ -1177,7 +1177,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/regular/r01-nureta-fisher/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "r02-sekisho-messenger",
@@ -1291,7 +1291,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/regular/r02-sekisho-messenger/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "r03-kurokawa-miner",
@@ -1405,7 +1405,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/regular/r03-kurokawa-miner/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "r04-chaya-servant",
@@ -1519,7 +1519,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/regular/r04-chaya-servant/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "r05-kome-porter",
@@ -1633,7 +1633,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/regular/r05-kome-porter/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "r06-yama-woodcutter",
@@ -1747,7 +1747,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/regular/r06-yama-woodcutter/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "r07-shio-worker",
@@ -1861,7 +1861,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/regular/r07-shio-worker/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "r08-kawara-roofer",
@@ -1975,7 +1975,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/regular/r08-kawara-roofer/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "r09-haka-digger",
@@ -2089,7 +2089,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/regular/r09-haka-digger/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "r10-hikeshi-watchman",
@@ -2203,7 +2203,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/regular/r10-hikeshi-watchman/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "r11-nohara-ronin",
@@ -2317,7 +2317,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/regular/r11-nohara-ronin/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "r12-miya-porter",
@@ -2431,7 +2431,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/regular/r12-miya-porter/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "r13-yakushi-apprentice",
@@ -2545,7 +2545,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/regular/r13-yakushi-apprentice/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "r14-kaido-bandit",
@@ -2659,7 +2659,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/regular/r14-kaido-bandit/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "r15-oku-servant",
@@ -2773,7 +2773,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/regular/r15-oku-servant/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "r16-kusari-prisoner",
@@ -2887,7 +2887,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/regular/r16-kusari-prisoner/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "r17-umaya-groom",
@@ -3001,7 +3001,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/regular/r17-umaya-groom/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "r18-washi-maker",
@@ -3115,7 +3115,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/regular/r18-washi-maker/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "r19-kago-bearer",
@@ -3229,7 +3229,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/regular/r19-kago-bearer/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "r20-komuso-wanderer",
@@ -3343,7 +3343,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/regular/r20-komuso-wanderer/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "s01-kusa-shinobi",
@@ -3457,7 +3457,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/special/s01-kusa-shinobi/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "s02-doku-kunoichi",
@@ -3571,7 +3571,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/special/s02-doku-kunoichi/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "s03-bakusai-runner",
@@ -3685,7 +3685,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/special/s03-bakusai-runner/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "s04-onibi-adept",
@@ -3799,7 +3799,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/special/s04-onibi-adept/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "s05-raimei-yamabushi",
@@ -3913,7 +3913,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/special/s05-raimei-yamabushi/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "s06-oni-men-executioner",
@@ -4027,7 +4027,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/special/s06-oni-men-executioner/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "s07-tessen-courtier",
@@ -4141,7 +4141,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/special/s07-tessen-courtier/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "s08-gomon-jailer",
@@ -4255,7 +4255,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/special/s08-gomon-jailer/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "s09-kuro-yakushi",
@@ -4369,7 +4369,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/special/s09-kuro-yakushi/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "s10-hatamoto-fallen",
@@ -4483,7 +4483,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/special/s10-hatamoto-fallen/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "s11-biwa-revenant",
@@ -4597,7 +4597,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/special/s11-biwa-revenant/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "s12-shikigami-scribe",
@@ -4711,7 +4711,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/special/s12-shikigami-scribe/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "s13-kegare-sumotori",
@@ -4825,7 +4825,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/special/s13-kegare-sumotori/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "s14-mizuchi-diver",
@@ -4939,7 +4939,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/special/s14-mizuchi-diver/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "s15-teppo-corpsman",
@@ -5053,7 +5053,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/special/s15-teppo-corpsman/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "s16-kage-mai-dancer",
@@ -5167,7 +5167,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/special/s16-kage-mai-dancer/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "s17-kurohata-bearer",
@@ -5281,7 +5281,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/special/s17-kurohata-bearer/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "s18-yomi-herald",
@@ -5395,7 +5395,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/special/s18-yomi-herald/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "s19-wana-trapper",
@@ -5509,7 +5509,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/special/s19-wana-trapper/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "s20-mekura-oracle",
@@ -5623,7 +5623,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/special/s20-mekura-oracle/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "mb-01-gunso-croc-fer",
@@ -5737,7 +5737,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/miniboss/mb-01-gunso-croc-fer/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "mb-02-ronin-kurogane",
@@ -5851,7 +5851,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/miniboss/mb-02-ronin-kurogane/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "mb-03-sohei-cent-prieres",
@@ -5965,7 +5965,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/miniboss/mb-03-sohei-cent-prieres/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "mb-04-miko-tsukikage",
@@ -6079,7 +6079,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/miniboss/mb-04-miko-tsukikage/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "mb-05-yamabushi-akaoni",
@@ -6193,7 +6193,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/miniboss/mb-05-yamabushi-akaoni/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "mb-06-shinobi-brumes",
@@ -6307,7 +6307,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/miniboss/mb-06-shinobi-brumes/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "mb-07-arquebusier-jigoku",
@@ -6421,7 +6421,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/miniboss/mb-07-arquebusier-jigoku/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "mb-08-archer-os",
@@ -6535,7 +6535,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/miniboss/mb-08-archer-os/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "mb-09-pisteur-kegare",
@@ -6649,7 +6649,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/miniboss/mb-09-pisteur-kegare/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "mb-10-forgeron-hibana",
@@ -6763,7 +6763,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/miniboss/mb-10-forgeron-hibana/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "mb-11-hatamoto-inazuma",
@@ -6877,7 +6877,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/miniboss/mb-11-hatamoto-inazuma/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "mb-12-gardien-masque-fer",
@@ -6991,7 +6991,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/miniboss/mb-12-gardien-masque-fer/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "mb-13-komuso-grue-noire",
@@ -7105,7 +7105,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/miniboss/mb-13-komuso-grue-noire/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "mb-14-pirate-shioyake",
@@ -7219,7 +7219,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/miniboss/mb-14-pirate-shioyake/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "mb-15-kunoichi-veuve",
@@ -7333,7 +7333,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/miniboss/mb-15-kunoichi-veuve/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "mb-16-yoriki-gashadokuro",
@@ -7447,7 +7447,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/miniboss/mb-16-yoriki-gashadokuro/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "mb-17-sumotori-namazu",
@@ -7561,7 +7561,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/miniboss/mb-17-sumotori-namazu/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "mb-18-onmyoji-renard",
@@ -7675,7 +7675,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/miniboss/mb-18-onmyoji-renard/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "mb-19-faucon-orage",
@@ -7789,7 +7789,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/miniboss/mb-19-faucon-orage/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "mb-20-capitaine-byakko",
@@ -7903,7 +7903,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/miniboss/mb-20-capitaine-byakko/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "boss-01-geoliere-sekimon",
@@ -8017,7 +8017,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/boss/boss-01-geoliere-sekimon/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "boss-02-abbe-kurotaki",
@@ -8131,7 +8131,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/boss/boss-02-abbe-kurotaki/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "boss-03-chatelain-ibushi",
@@ -8245,7 +8245,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/boss/boss-03-chatelain-ibushi/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "boss-04-prince-marchand-kane",
@@ -8359,7 +8359,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/boss/boss-04-prince-marchand-kane/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "boss-05-matriarche-beni-tsuru",
@@ -8473,7 +8473,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/boss/boss-05-matriarche-beni-tsuru/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "boss-06-amiral-shiranui",
@@ -8587,7 +8587,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/boss/boss-06-amiral-shiranui/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "boss-07-bourreau-lune-rouge",
@@ -8701,7 +8701,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/boss/boss-07-bourreau-lune-rouge/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "boss-08-medecin-shirohebi",
@@ -8815,7 +8815,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/boss/boss-08-medecin-shirohebi/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "boss-09-maitre-noh-utsuro",
@@ -8929,7 +8929,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/boss/boss-09-maitre-noh-utsuro/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "boss-10-seigneur-riz-noir",
@@ -9043,7 +9043,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/boss/boss-10-seigneur-riz-noir/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "boss-11-brigadier-engeki",
@@ -9157,7 +9157,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/boss/boss-11-brigadier-engeki/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "boss-12-generale-murasaki",
@@ -9271,7 +9271,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/boss/boss-12-generale-murasaki/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "boss-13-prieur-lotus-noir",
@@ -9385,7 +9385,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/boss/boss-13-prieur-lotus-noir/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "boss-14-maitre-shinobi-kumo",
@@ -9499,7 +9499,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/boss/boss-14-maitre-shinobi-kumo/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "boss-15-cavalier-kurogoma",
@@ -9613,7 +9613,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/boss/boss-15-cavalier-kurogoma/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "boss-16-emissaire-kagemori",
@@ -9727,7 +9727,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/boss/boss-16-emissaire-kagemori/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "boss-17-yokozuna-ganryu",
@@ -9841,7 +9841,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/boss/boss-17-yokozuna-ganryu/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "boss-18-pretresse-cendres-suzaku",
@@ -9955,7 +9955,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/boss/boss-18-pretresse-cendres-suzaku/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "boss-19-apothicaire-midori",
@@ -10069,7 +10069,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/boss/boss-19-apothicaire-midori/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "boss-20-vaisseau-yomi",
@@ -10183,7 +10183,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/boss/boss-20-vaisseau-yomi/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "giant-01-kurogane-warder",
@@ -10297,7 +10297,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/giant/giant-01-kurogane-warder/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "giant-02-aka-ushi",
@@ -10411,7 +10411,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/giant/giant-02-aka-ushi/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "giant-03-take-mori",
@@ -10525,7 +10525,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/giant/giant-03-take-mori/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "giant-04-enjin-bozu",
@@ -10639,7 +10639,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/giant/giant-04-enjin-bozu/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "giant-05-numa-no-oyakata",
@@ -10753,7 +10753,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/giant/giant-05-numa-no-oyakata/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "giant-06-kinoko-haha",
@@ -10867,7 +10867,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/giant/giant-06-kinoko-haha/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "giant-07-shiro-kabuto",
@@ -10981,7 +10981,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/giant/giant-07-shiro-kabuto/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "giant-08-nuno-kyojin",
@@ -11095,7 +11095,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/giant/giant-08-nuno-kyojin/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "giant-09-ganseki-otoko",
@@ -11209,7 +11209,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/giant/giant-09-ganseki-otoko/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     },
     {
       "id": "giant-10-yomi-no-kanrei",
@@ -11323,7 +11323,7 @@
         ]
       },
       "fpsSprite": "assets/modular/fps/characters/giant/giant-10-yomi-no-kanrei/sprite.json",
-      "fpsGeneration": "Derived FPS billboard sheets from existing OpenAI ImageGen side masters; no lateral sheet path is reused."
+      "fpsGeneration": "OpenAI detailed 2D master, normalized as Doom billboard"
     }
   ],
   "weapons": [
@@ -13707,7 +13707,7 @@
     "characterCount": 97,
     "weaponCount": 58,
     "cell": [
-      128,
+      96,
       128
     ],
     "note": "FPS assets are separate files and are loaded through fpsAnimations/fpsFrames."
@@ -13726,8 +13726,8 @@
     "playerViewModels": 1,
     "playerWeaponSprites": 10,
     "playerFrameSize": [
-      240,
-      160
+      960,
+      640
     ],
     "enemySource": "Detailed OpenAI 2D masters normalized as grounded Doom billboards"
   }

@@ -42,6 +42,17 @@ Les armes ne sont jamais fusionnées avec les personnages. `sprite.json`
 déclare un point d’ancrage de main par animation afin que n’importe quelle arme
 compatible puisse être équipée sans régénérer le personnage.
 
+Akio utilise la révision HD du pipeline :
+
+- cinq sources OpenAI distinctes en grille `3x2` pour la 2D et cinq pour le FPS ;
+- planches 2D `1152x160`, soit six cellules `192x160`, palette commune de
+  96 couleurs et alpha binaire ;
+- planches FPS `5760x640`, soit six cellules `960x640`, avec alpha doux propre ;
+- une seule échelle globale par vue : une pose agenouillée ou couchée n'est
+  jamais agrandie indépendamment ;
+- Canvas logique `640x360` avec backing store `1280x720`, pour afficher les
+  cellules d'Akio à leur résolution native.
+
 Le moteur charge ces planches à la demande depuis le registre et ne garde en
 mémoire que les personnages effectivement présents dans la scène.
 
@@ -80,6 +91,7 @@ individuels. Les collisions et positions restent des données du niveau.
 ## Validation
 
 ```powershell
+py tools/build_hero_sheets_v2.py
 node tools/build-modular-catalog.mjs
 node tools/validate-modular-pack.mjs
 node tools/verify-modular-registry.mjs

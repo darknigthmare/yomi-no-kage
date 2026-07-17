@@ -1,11 +1,26 @@
 {
-  "schema": 1,
+  "schema": 2,
   "category": "player",
   "count": 1,
   "generationTool": "OpenAI ImageGen built-in",
   "animationStandard": {
-    "rows": ["idle", "move", "attack", "hurt", "death"],
+    "rows": [
+      "idle",
+      "move",
+      "attack",
+      "hurt",
+      "death"
+    ],
     "framesPerRow": 6,
+    "sideFrameSize": [
+      192,
+      160
+    ],
+    "fpsFrameSize": [
+      960,
+      640
+    ],
+    "singleGlobalScale": true,
     "weaponsBakedIntoBody": false
   },
   "entries": [
@@ -17,9 +32,30 @@
       "weaponId": "01-kurokage",
       "fpsFolder": "assets/modular/fps/player/akio/body",
       "lore": "Akio reçoit l'ordre d'endiguer la peste du Yomi avant qu'elle ne gagne Edo. Son armure noire à laçage rouge porte le croissant de son clan.",
-      "gameplay": "Héros jouable. Cinq planches modulaires de six images : repos, déplacement, attaque, dégâts et mort.",
+      "gameplay": "Héros jouable. Cinq planches 2D et cinq planches FPS de six frames, générées séparément puis normalisées à échelle constante. Les dix katanas restent des sprites indépendants.",
       "prompt": "Create a production-ready 16-bit pixel-art master animation atlas preserving Akio's exact black-and-red samurai identity. Exactly 30 isolated right-facing full-body poses in 6 columns and 5 rows: idle, run, empty-handed sword-grip attack, hurt and death. No weapon, scabbard, prop, text or grid. Flat solid #ff00ff background, crisp nearest-neighbor pixel clusters, generous gutters.",
-      "fpsPrompt": "Create one strict 16-bit pixel-art first-person Akio arms atlas with exactly 6 columns by 5 rows: idle, move, attack, hurt and death. Preserve black lacquered kote, indigo cloth and red lacing. Hands grip an invisible interchangeable weapon. No weapon, blade, hilt, prop, text or grid. Flat chroma-key magenta background."
+      "fpsPrompt": "Create one strict 16-bit pixel-art first-person Akio arms atlas with exactly 6 columns by 5 rows: idle, move, attack, hurt and death. Preserve black lacquered kote, indigo cloth and red lacing. Hands grip an invisible interchangeable weapon. No weapon, blade, hilt, prop, text or grid. Flat chroma-key magenta background.",
+      "promptPack": {
+        "revision": 2,
+        "tool": "OpenAI ImageGen built-in",
+        "layoutPerAnimation": "3x2",
+        "sourceSheets2d": "assets/modular/characters/player/akio/sources-v2",
+        "sourceSheetsFps": "assets/modular/fps/player/akio/sources-v2",
+        "sourceArchive2d": {
+          "idle": "call_bQYXZuIywnb54fmtjWDUrCql",
+          "move": "call_tPCcq2yEXDCJnl5A47dhqIof",
+          "attack": "call_RvLTwyvXClCrv40VLqg6KD10",
+          "hurt": "call_06lP8QrSEaUIzL9BPysArQVO",
+          "death": "call_h62QhHaSLuGUO237G331npbL"
+        },
+        "sourceArchiveFps": {
+          "idle": "call_ycJOzczCQWctdnNBo9mn6Aq2",
+          "move": "call_kb07JO3i8cPQXewMv2wFnbJb",
+          "attack": "call_as0T5zhq0z4LNHPygO4BW8fH",
+          "hurt": "call_RARUWVaKUmum3dl6Nx7Yf4Ou",
+          "death": "call_HZfSdkPxYBruRRXW3Iw93Fqu"
+        }
+      }
     }
   ]
 }

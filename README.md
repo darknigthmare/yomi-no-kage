@@ -27,6 +27,11 @@ ImageGen puis découpé en assets de production indépendants :
 - 6 frames PNG par planche, soit 485 planches et 2 910 frames individuelles ;
 - 5 planches FPS dédiées à Akio (`idle`, `move`, `attack`, `hurt`, `death`),
   soit 30 frames subjectives complètes générées avec OpenAI ImageGen ;
+- les cinq planches 2D d'Akio utilisent des cellules `192x160`, une palette
+  commune de 96 couleurs et une seule échelle pour les 30 poses ;
+- les cinq planches FPS d'Akio utilisent des cellules natives `960x640` :
+  elles correspondent exactement au backing store haute définition du Canvas
+  et ne subissent plus le double agrandissement de l'ancien pack `240x160` ;
 - 10 sprites FPS de sabres entièrement séparés, interchangeables sur les
   mêmes bras grâce à 30 points de prise ajustés image par image ;
 - 48 nouvelles armes interchangeables, plus les 10 sabres de lore d'Akio ;
@@ -77,7 +82,7 @@ node --check audio.js
 node --check cinematic.js
 node cinematic-smoke-test.js
 node --check assets-gallery.js
-py tools/build-fps-variants.py
+py tools/build_hero_sheets_v2.py
 py tools/validate-fps-player.py
 node tools/build-modular-catalog.mjs
 node tools/validate-modular-pack.mjs

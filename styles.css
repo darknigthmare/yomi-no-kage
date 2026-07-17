@@ -85,8 +85,7 @@ button {
   display: block;
   outline: 0;
   background: var(--ink);
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
+  image-rendering: auto;
 }
 
 .screen-overlay {
@@ -669,7 +668,7 @@ noscript { position: fixed; z-index: 100; inset: 0; display: grid; place-items: 
 }
 
 @media (max-width: 520px) and (orientation: portrait) {
-  .game-shell { width: 100vw; height: 100dvh; aspect-ratio: auto; }
+  .game-shell { width: 100vw; height: auto; aspect-ratio: 16 / 9; }
   .title-screen { background-position: 61% center; }
   .title-screen::before { background: linear-gradient(90deg, rgba(3, 5, 9, 0.93), rgba(3, 5, 9, 0.42)); }
   .title-content { width: 90%; margin: 0 auto; align-self: flex-end; padding-bottom: 14vh; }

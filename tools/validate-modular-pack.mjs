@@ -156,8 +156,8 @@ if (fs.existsSync(registryPath)) {
       report.fpsPlayerViewSheets += 1;
       const size = pngSize(sheetPath);
       assert(
-        size?.width === 1440 && size?.height === 160,
-        `player/akio: planche FPS ${animation} doit faire 1440x160`,
+        size?.width === 5760 && size?.height === 640,
+        `player/akio: planche FPS ${animation} doit faire 5760x640`,
       );
     }
     const frames = player?.fpsFrames?.[animation] || [];
@@ -169,8 +169,8 @@ if (fs.existsSync(registryPath)) {
         report.fpsPlayerViewFramePngs += 1;
         const size = pngSize(framePath);
         assert(
-          size?.width === 240 && size?.height === 160,
-          `player/akio: frame FPS ${frame} doit faire 240x160`,
+          size?.width === 960 && size?.height === 640,
+          `player/akio: frame FPS ${frame} doit faire 960x640`,
         );
       }
     }

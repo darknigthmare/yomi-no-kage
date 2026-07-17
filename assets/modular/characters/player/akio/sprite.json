@@ -1,10 +1,39 @@
 {
-  "schema": 1,
+  "schema": 2,
   "master": "master.png",
+  "generationTool": "OpenAI ImageGen built-in",
+  "sourceLayout": {
+    "columns": 3,
+    "rows": 2
+  },
+  "sourceArchive": {
+    "provider": "OpenAI ImageGen built-in",
+    "layoutPerAnimation": "3x2",
+    "generationIds": {
+      "idle": "call_bQYXZuIywnb54fmtjWDUrCql",
+      "move": "call_tPCcq2yEXDCJnl5A47dhqIof",
+      "attack": "call_RvLTwyvXClCrv40VLqg6KD10",
+      "hurt": "call_06lP8QrSEaUIzL9BPysArQVO",
+      "death": "call_h62QhHaSLuGUO237G331npbL"
+    },
+    "sourceFiles": {
+      "idle": "sources-v2/idle.png",
+      "move": "sources-v2/move.png",
+      "attack": "sources-v2/attack.png",
+      "hurt": "sources-v2/hurt.png",
+      "death": "sources-v2/death.png"
+    }
+  },
   "grid": {
     "columns": 6,
     "rows": 5
   },
+  "frameWidth": 192,
+  "frameHeight": 160,
+  "renderedLogicalSize": [
+    96,
+    80
+  ],
   "groundAnchor": {
     "normalized": [
       0.5,
@@ -13,68 +42,13 @@
     "baseline": "bottom-edge",
     "transparentPaddingBelowFeet": 0
   },
-  "normalization": [
-    {
-      "row": "idle",
-      "sourceBand": [
-        0,
-        198
-      ],
-      "detectedRows": 5,
-      "detected": 6,
-      "detectionMode": "connected-components",
-      "boundaryScore": 0.0,
-      "selected": 6
-    },
-    {
-      "row": "move",
-      "sourceBand": [
-        198,
-        377
-      ],
-      "detectedRows": 5,
-      "detected": 6,
-      "detectionMode": "connected-components",
-      "boundaryScore": 0.0,
-      "selected": 6
-    },
-    {
-      "row": "attack",
-      "sourceBand": [
-        377,
-        554
-      ],
-      "detectedRows": 5,
-      "detected": 6,
-      "detectionMode": "connected-components",
-      "boundaryScore": 0.0,
-      "selected": 6
-    },
-    {
-      "row": "hurt",
-      "sourceBand": [
-        554,
-        738
-      ],
-      "detectedRows": 5,
-      "detected": 6,
-      "detectionMode": "connected-components",
-      "boundaryScore": 0.0,
-      "selected": 6
-    },
-    {
-      "row": "death",
-      "sourceBand": [
-        738,
-        948
-      ],
-      "detectedRows": 5,
-      "detected": 6,
-      "detectionMode": "connected-components",
-      "boundaryScore": 0.0,
-      "selected": 6
-    }
-  ],
+  "normalization": {
+    "strategy": "single-global-scale",
+    "scale": 0.369668,
+    "perPoseScaling": false,
+    "sharedPaletteColors": 96,
+    "alphaMode": "binary"
+  },
   "animations": {
     "idle": [
       {
@@ -83,8 +57,8 @@
         "rect": [
           0,
           0,
-          276,
-          190
+          192,
+          160
         ],
         "nonEmpty": true
       },
@@ -92,10 +66,10 @@
         "index": 1,
         "file": "frames/idle/01.png",
         "rect": [
-          276,
+          192,
           0,
-          277,
-          190
+          192,
+          160
         ],
         "nonEmpty": true
       },
@@ -103,10 +77,10 @@
         "index": 2,
         "file": "frames/idle/02.png",
         "rect": [
-          553,
+          384,
           0,
-          277,
-          190
+          192,
+          160
         ],
         "nonEmpty": true
       },
@@ -114,10 +88,10 @@
         "index": 3,
         "file": "frames/idle/03.png",
         "rect": [
-          830,
+          576,
           0,
-          276,
-          190
+          192,
+          160
         ],
         "nonEmpty": true
       },
@@ -125,10 +99,10 @@
         "index": 4,
         "file": "frames/idle/04.png",
         "rect": [
-          1106,
+          768,
           0,
-          276,
-          190
+          192,
+          160
         ],
         "nonEmpty": true
       },
@@ -136,10 +110,10 @@
         "index": 5,
         "file": "frames/idle/05.png",
         "rect": [
-          1382,
+          960,
           0,
-          277,
-          190
+          192,
+          160
         ],
         "nonEmpty": true
       }
@@ -150,9 +124,9 @@
         "file": "frames/move/00.png",
         "rect": [
           0,
-          190,
-          276,
-          189
+          160,
+          192,
+          160
         ],
         "nonEmpty": true
       },
@@ -160,10 +134,10 @@
         "index": 1,
         "file": "frames/move/01.png",
         "rect": [
-          276,
-          190,
-          277,
-          189
+          192,
+          160,
+          192,
+          160
         ],
         "nonEmpty": true
       },
@@ -171,10 +145,10 @@
         "index": 2,
         "file": "frames/move/02.png",
         "rect": [
-          553,
-          190,
-          277,
-          189
+          384,
+          160,
+          192,
+          160
         ],
         "nonEmpty": true
       },
@@ -182,10 +156,10 @@
         "index": 3,
         "file": "frames/move/03.png",
         "rect": [
-          830,
-          190,
-          276,
-          189
+          576,
+          160,
+          192,
+          160
         ],
         "nonEmpty": true
       },
@@ -193,10 +167,10 @@
         "index": 4,
         "file": "frames/move/04.png",
         "rect": [
-          1106,
-          190,
-          276,
-          189
+          768,
+          160,
+          192,
+          160
         ],
         "nonEmpty": true
       },
@@ -204,10 +178,10 @@
         "index": 5,
         "file": "frames/move/05.png",
         "rect": [
-          1382,
-          190,
-          277,
-          189
+          960,
+          160,
+          192,
+          160
         ],
         "nonEmpty": true
       }
@@ -218,9 +192,9 @@
         "file": "frames/attack/00.png",
         "rect": [
           0,
-          379,
-          276,
-          190
+          320,
+          192,
+          160
         ],
         "nonEmpty": true
       },
@@ -228,10 +202,10 @@
         "index": 1,
         "file": "frames/attack/01.png",
         "rect": [
-          276,
-          379,
-          277,
-          190
+          192,
+          320,
+          192,
+          160
         ],
         "nonEmpty": true
       },
@@ -239,10 +213,10 @@
         "index": 2,
         "file": "frames/attack/02.png",
         "rect": [
-          553,
-          379,
-          277,
-          190
+          384,
+          320,
+          192,
+          160
         ],
         "nonEmpty": true
       },
@@ -250,10 +224,10 @@
         "index": 3,
         "file": "frames/attack/03.png",
         "rect": [
-          830,
-          379,
-          276,
-          190
+          576,
+          320,
+          192,
+          160
         ],
         "nonEmpty": true
       },
@@ -261,10 +235,10 @@
         "index": 4,
         "file": "frames/attack/04.png",
         "rect": [
-          1106,
-          379,
-          276,
-          190
+          768,
+          320,
+          192,
+          160
         ],
         "nonEmpty": true
       },
@@ -272,10 +246,10 @@
         "index": 5,
         "file": "frames/attack/05.png",
         "rect": [
-          1382,
-          379,
-          277,
-          190
+          960,
+          320,
+          192,
+          160
         ],
         "nonEmpty": true
       }
@@ -286,9 +260,9 @@
         "file": "frames/hurt/00.png",
         "rect": [
           0,
-          569,
-          276,
-          189
+          480,
+          192,
+          160
         ],
         "nonEmpty": true
       },
@@ -296,10 +270,10 @@
         "index": 1,
         "file": "frames/hurt/01.png",
         "rect": [
-          276,
-          569,
-          277,
-          189
+          192,
+          480,
+          192,
+          160
         ],
         "nonEmpty": true
       },
@@ -307,10 +281,10 @@
         "index": 2,
         "file": "frames/hurt/02.png",
         "rect": [
-          553,
-          569,
-          277,
-          189
+          384,
+          480,
+          192,
+          160
         ],
         "nonEmpty": true
       },
@@ -318,10 +292,10 @@
         "index": 3,
         "file": "frames/hurt/03.png",
         "rect": [
-          830,
-          569,
-          276,
-          189
+          576,
+          480,
+          192,
+          160
         ],
         "nonEmpty": true
       },
@@ -329,10 +303,10 @@
         "index": 4,
         "file": "frames/hurt/04.png",
         "rect": [
-          1106,
-          569,
-          276,
-          189
+          768,
+          480,
+          192,
+          160
         ],
         "nonEmpty": true
       },
@@ -340,10 +314,10 @@
         "index": 5,
         "file": "frames/hurt/05.png",
         "rect": [
-          1382,
-          569,
-          277,
-          189
+          960,
+          480,
+          192,
+          160
         ],
         "nonEmpty": true
       }
@@ -354,9 +328,9 @@
         "file": "frames/death/00.png",
         "rect": [
           0,
-          758,
-          276,
-          190
+          640,
+          192,
+          160
         ],
         "nonEmpty": true
       },
@@ -364,10 +338,10 @@
         "index": 1,
         "file": "frames/death/01.png",
         "rect": [
-          276,
-          758,
-          277,
-          190
+          192,
+          640,
+          192,
+          160
         ],
         "nonEmpty": true
       },
@@ -375,10 +349,10 @@
         "index": 2,
         "file": "frames/death/02.png",
         "rect": [
-          553,
-          758,
-          277,
-          190
+          384,
+          640,
+          192,
+          160
         ],
         "nonEmpty": true
       },
@@ -386,10 +360,10 @@
         "index": 3,
         "file": "frames/death/03.png",
         "rect": [
-          830,
-          758,
-          276,
-          190
+          576,
+          640,
+          192,
+          160
         ],
         "nonEmpty": true
       },
@@ -397,10 +371,10 @@
         "index": 4,
         "file": "frames/death/04.png",
         "rect": [
-          1106,
-          758,
-          276,
-          190
+          768,
+          640,
+          192,
+          160
         ],
         "nonEmpty": true
       },
@@ -408,36 +382,219 @@
         "index": 5,
         "file": "frames/death/05.png",
         "rect": [
-          1382,
-          758,
-          277,
-          190
+          960,
+          640,
+          192,
+          160
         ],
         "nonEmpty": true
       }
     ]
   },
+  "weaponsBakedIntoBody": false,
+  "weaponMountsPerFrame": true,
   "weaponMount": {
     "normalized": true,
-    "idle": [
-      0.62,
-      0.55
-    ],
-    "move": [
-      0.62,
-      0.55
-    ],
-    "attack": [
-      0.66,
-      0.5
-    ],
-    "hurt": [
-      0.58,
-      0.56
-    ],
-    "death": [
-      0.6,
-      0.66
-    ]
+    "perFrame": true,
+    "coordinateSpace": "renderedLogicalSize",
+    "renderOrder": "behind-body",
+    "animations": {
+      "idle": [
+        [
+          0.5,
+          0.4625,
+          -0.62,
+          1.0
+        ],
+        [
+          0.5,
+          0.45,
+          -0.62,
+          1.0
+        ],
+        [
+          0.5104,
+          0.4375,
+          -0.62,
+          1.0
+        ],
+        [
+          0.5,
+          0.45,
+          -0.62,
+          1.0
+        ],
+        [
+          0.5,
+          0.4625,
+          -0.62,
+          1.0
+        ],
+        [
+          0.5,
+          0.4625,
+          -0.62,
+          1.0
+        ]
+      ],
+      "move": [
+        [
+          0.6042,
+          0.475,
+          -0.52,
+          0.92
+        ],
+        [
+          0.5833,
+          0.4875,
+          -0.46,
+          0.92
+        ],
+        [
+          0.5625,
+          0.5,
+          -0.4,
+          0.92
+        ],
+        [
+          0.5833,
+          0.475,
+          -0.48,
+          0.92
+        ],
+        [
+          0.6146,
+          0.4625,
+          -0.56,
+          0.92
+        ],
+        [
+          0.5938,
+          0.4875,
+          -0.48,
+          0.92
+        ]
+      ],
+      "attack": [
+        [
+          0.3646,
+          0.4625,
+          -1.42,
+          1.06
+        ],
+        [
+          0.4271,
+          0.4125,
+          -1.2,
+          1.08
+        ],
+        [
+          0.5729,
+          0.4,
+          -0.82,
+          1.1
+        ],
+        [
+          0.6771,
+          0.4375,
+          -0.28,
+          1.12
+        ],
+        [
+          0.6979,
+          0.55,
+          0.18,
+          1.1
+        ],
+        [
+          0.5625,
+          0.575,
+          0.52,
+          1.04
+        ]
+      ],
+      "hurt": [
+        [
+          0.4167,
+          0.5,
+          -0.22,
+          0.92
+        ],
+        [
+          0.4479,
+          0.475,
+          -0.1,
+          0.9
+        ],
+        [
+          0.4792,
+          0.5125,
+          0.06,
+          0.88
+        ],
+        [
+          0.5104,
+          0.5375,
+          0.12,
+          0.88
+        ],
+        [
+          0.5312,
+          0.5125,
+          -0.08,
+          0.9
+        ],
+        [
+          0.5417,
+          0.4875,
+          -0.3,
+          0.94
+        ]
+      ],
+      "death": [
+        [
+          0.5,
+          0.5,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.5,
+          0.5,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.5,
+          0.5,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.5,
+          0.5,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.5,
+          0.5,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.5,
+          0.5,
+          0.0,
+          1.0,
+          0.0
+        ]
+      ]
+    }
   }
 }

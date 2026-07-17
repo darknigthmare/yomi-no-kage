@@ -9,16 +9,15 @@ from PIL import Image, ImageDraw
 ANIMATIONS = ["idle", "move", "attack", "hurt", "death"]
 FRAME_W = 96
 FRAME_H = 128
-PLAYER_FRAME_W = 240
-PLAYER_FRAME_H = 160
+PLAYER_FRAME_W = 960
+PLAYER_FRAME_H = 640
 TRANSPARENT = (0, 0, 0, 0)
-PLAYER_MASTER = Path("assets/modular/fps/player/akio/master-alpha.png")
 PLAYER_BODY_BASE = Path("assets/modular/fps/player/akio/body")
 PLAYER_WEAPON_BASE = Path("assets/modular/fps/player/akio/weapons")
 PLAYER_VIEWMODEL_PROMPT = (
-    "OpenAI ImageGen built-in: strict 6x5 first-person Akio arms atlas, "
-    "rows idle/move/attack/hurt/death, no weapon, flat magenta key, "
-    "black lacquered kote with red lacing, weapon-ready invisible grip."
+    "OpenAI ImageGen built-in revision 2: five separate 3x2 first-person "
+    "Akio source sheets, no weapon, black lacquered kote with red lacing, "
+    "weapon-ready invisible grip and one global normalization scale."
 )
 PLAYER_WEAPON_CROPS = {
     "01-kurokage": [52, 197, 1713, 450],
@@ -32,53 +31,6 @@ PLAYER_WEAPON_CROPS = {
     "09-akatsuki": [17, 295, 1502, 402],
     "10-mujo": [54, 127, 2062, 469],
 }
-
-# Normalized viewmodel cell coordinates: x, y, rotation (radians), scale, alpha.
-# The weapon is drawn first and the OpenAI arms layer is drawn above it, so the
-# grip remains visually inside Akio's hands while every katana stays swappable.
-PLAYER_WEAPON_MOUNTS = {
-    "idle": [
-        [0.52, 0.51, -1.78, 0.94, 1.00],
-        [0.51, 0.52, -1.76, 0.95, 1.00],
-        [0.51, 0.52, -1.79, 0.95, 1.00],
-        [0.50, 0.50, -1.81, 0.94, 1.00],
-        [0.50, 0.52, -1.77, 0.95, 1.00],
-        [0.51, 0.52, -1.80, 0.94, 1.00],
-    ],
-    "move": [
-        [0.44, 0.57, -1.83, 0.93, 1.00],
-        [0.37, 0.58, -1.76, 0.94, 1.00],
-        [0.35, 0.59, -1.71, 0.95, 1.00],
-        [0.35, 0.57, -1.76, 0.94, 1.00],
-        [0.38, 0.59, -1.82, 0.93, 1.00],
-        [0.37, 0.61, -1.78, 0.94, 1.00],
-    ],
-    "attack": [
-        [0.46, 0.64, -1.96, 0.92, 1.00],
-        [0.50, 0.61, -1.70, 0.96, 1.00],
-        [0.52, 0.64, -1.38, 1.00, 1.00],
-        [0.56, 0.39, -0.95, 1.04, 1.00],
-        [0.59, 0.65, -0.43, 1.08, 1.00],
-        [0.56, 0.75, 0.08, 1.00, 1.00],
-    ],
-    "hurt": [
-        [0.36, 0.59, -2.04, 0.94, 1.00],
-        [0.34, 0.58, -2.25, 0.92, 0.90],
-        [0.28, 0.57, -2.48, 0.88, 0.72],
-        [0.37, 0.59, -2.62, 0.84, 0.50],
-        [0.40, 0.57, -2.08, 0.90, 0.72],
-        [0.38, 0.58, -1.80, 0.94, 1.00],
-    ],
-    "death": [
-        [0.42, 0.54, -1.78, 0.92, 1.00],
-        [0.48, 0.60, -1.18, 0.90, 0.86],
-        [0.55, 0.78, -0.58, 0.86, 0.66],
-        [0.62, 0.95, -0.10, 0.82, 0.42],
-        [0.68, 1.04, 0.28, 0.76, 0.18],
-        [0.72, 1.18, 0.46, 0.72, 0.00],
-    ],
-}
-
 
 def read_registry():
     path = Path("assets/modular/registry.json")
@@ -363,78 +315,34 @@ def web_path(path):
 
 
 def split_player_body():
-    if not PLAYER_MASTER.exists():
-        raise FileNotFoundError(f"Missing OpenAI FPS player master: {PLAYER_MASTER}")
+    # Une seule source de vérité reconstruit désormais les cinq planches HD.
+    # Le vieux fallback qui dupliquait les derniers doigts de l'animation de
+    # mort a volontairement été supprimé.
+    source_root = Path("assets/modular/fps/player/akio/sources-v2")
+    if all((source_root / f"{animation}.png").exists() for animation in ANIMATIONS):
+        from build_hero_sheets_v2 import build_fps_sheets
 
-    master = Image.open(PLAYER_MASTER).convert("RGBA")
-    sheets_dir = PLAYER_BODY_BASE / "sheets"
-    frames_dir = PLAYER_BODY_BASE / "frames"
-    sheets_dir.mkdir(parents=True, exist_ok=True)
-    frames_dir.mkdir(parents=True, exist_ok=True)
-    fps_animations = {}
-    fps_frames = {}
+        fps_animations, fps_frames, _ = build_fps_sheets()
+        return fps_animations, fps_frames, PLAYER_BODY_BASE / "sprite.json"
 
-    for row, animation in enumerate(ANIMATIONS):
-        sheet = Image.new("RGBA", (PLAYER_FRAME_W * 6, PLAYER_FRAME_H), TRANSPARENT)
-        fps_frames[animation] = []
-        previous_cell = None
-        top = round(row * master.height / len(ANIMATIONS))
-        bottom = round((row + 1) * master.height / len(ANIMATIONS))
-        for frame in range(6):
-            left = round(frame * master.width / 6)
-            right = round((frame + 1) * master.width / 6)
-            cell = master.crop((left, top, right, bottom))
-            cell = remove_cross_row_fragments(cell)
-            cell = cell.resize((PLAYER_FRAME_W, PLAYER_FRAME_H), Image.Resampling.NEAREST)
-            cell = harden_pixel_alpha(cell)
-            # ImageGen fait naturellement sortir les mains du cadre sur les
-            # deux derniers temps de mort. On conserve une traîne progressive
-            # de la pose précédente afin que les six exports restent distincts
-            # et que la chute se lise image par image avant la disparition.
-            if (
-                animation == "death"
-                and cell.getchannel("A").getbbox() is None
-                and previous_cell is not None
-            ):
-                dropped = Image.new("RGBA", cell.size, TRANSPARENT)
-                dropped.alpha_composite(previous_cell, (0, 5))
-                cell = dropped
-            frame_dir = frames_dir / animation
-            frame_dir.mkdir(parents=True, exist_ok=True)
-            frame_path = frame_dir / f"{frame:02d}.png"
-            cell.save(frame_path, optimize=True)
-            fps_frames[animation].append(web_path(frame_path))
-            sheet.alpha_composite(cell, (frame * PLAYER_FRAME_W, 0))
-            previous_cell = cell.copy()
-        sheet_path = sheets_dir / f"{animation}.png"
-        sheet.save(sheet_path, optimize=True)
-        fps_animations[animation] = web_path(sheet_path)
-
+    # Les sources de génération ne font pas partie du paquet runtime. Une passe
+    # consacrée aux armes réutilise donc les planches HD validées au lieu de
+    # reconstruire silencieusement Akio depuis un ancien master.
     sprite_path = PLAYER_BODY_BASE / "sprite.json"
-    sprite_path.write_text(json.dumps({
-        "schema": 1,
-        "view": "first-person-player",
-        "sourceMaster": web_path(PLAYER_MASTER),
-        "generationTool": "OpenAI ImageGen built-in",
-        "prompt": PLAYER_VIEWMODEL_PROMPT,
-        "grid": {"columns": 6, "rows": 5},
-        "frameWidth": PLAYER_FRAME_W,
-        "frameHeight": PLAYER_FRAME_H,
-        "animations": {
-            animation: [
-                {
-                    "index": frame,
-                    "file": f"frames/{animation}/{frame:02d}.png",
-                    "weaponMount": PLAYER_WEAPON_MOUNTS[animation][frame],
-                }
-                for frame in range(6)
-            ]
-            for animation in ANIMATIONS
-        },
-        "renderOrder": ["weapon", "body"],
-        "weaponsBakedIntoBody": False,
-        "alphaMode": "binary",
-    }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    if not sprite_path.exists():
+        raise FileNotFoundError(f"Missing Akio FPS metadata: {sprite_path}")
+    sprite = json.loads(sprite_path.read_text(encoding="utf-8"))
+    fps_animations = {
+        animation: web_path(PLAYER_BODY_BASE / "sheets" / f"{animation}.png")
+        for animation in ANIMATIONS
+    }
+    fps_frames = {
+        animation: [
+            web_path(PLAYER_BODY_BASE / frame["file"])
+            for frame in sprite["animations"][animation]
+        ]
+        for animation in ANIMATIONS
+    }
     return fps_animations, fps_frames, sprite_path
 
 
@@ -497,13 +405,20 @@ def make_player_view_model(registry):
 
     player = next((entry for entry in registry.get("characters", []) if entry.get("category") == "player"), None)
     if player:
+        sprite_metadata = json.loads(Path(sprite_path).read_text(encoding="utf-8"))
         player["fpsAnimations"] = fps_animations
         player["fpsFrames"] = fps_frames
         player["fpsSprite"] = web_path(sprite_path)
         player["fpsGeneration"] = PLAYER_VIEWMODEL_PROMPT
         player["fpsRenderOrder"] = ["weapon", "body"]
         player["fpsWeaponsBakedIntoBody"] = False
-        player["fpsWeaponMounts"] = PLAYER_WEAPON_MOUNTS
+        player["fpsWeaponMounts"] = {
+            animation: [
+                frame["weaponMount"]
+                for frame in sprite_metadata["animations"][animation]
+            ]
+            for animation in ANIMATIONS
+        }
         player["fpsWeaponSprites"] = {
             weapon["id"]: weapon["fpsSprite"]
             for weapon in lore_weapons

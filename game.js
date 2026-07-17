@@ -8,11 +8,17 @@
 
   const canvas = document.getElementById("game-canvas");
   const ctx = canvas.getContext("2d", { alpha: false });
-  const W = canvas.width;
-  const H = canvas.height;
+  // Le gameplay reste en coordonnées logiques 640x360. Le backing store est
+  // deux fois plus grand afin que les nouvelles planches d'Akio soient
+  // affichées pixel pour pixel, sans réduction suivie d'un agrandissement CSS.
+  const W = 640;
+  const H = 360;
+  const RENDER_SCALE_X = Math.max(1, canvas.width / W);
+  const RENDER_SCALE_Y = Math.max(1, canvas.height / H);
+  ctx.setTransform(RENDER_SCALE_X, 0, 0, RENDER_SCALE_Y, 0, 0);
   const TAU = Math.PI * 2;
   const FOV = Math.PI / 3;
-  const ASSET_VERSION = "20260717-9";
+  const ASSET_VERSION = "20260718-hero-v2";
   const PLAYER_ATTACK_DURATION = 0.34;
   const PLAYER_ATTACK_ACTIVE_AT = 0.38;
   const PLAYER_HURT_DURATION = 0.72;
@@ -167,29 +173,47 @@
   const FPS_VIEWMODEL_RECT = { x: 80, y: 40, width: 480, height: 320 };
   const FPS_PLAYER_WEAPON_MOUNTS = {
     idle: [
-      [0.52, 0.51, -1.78, 0.94, 1], [0.51, 0.52, -1.76, 0.95, 1],
-      [0.51, 0.52, -1.79, 0.95, 1], [0.50, 0.50, -1.81, 0.94, 1],
-      [0.50, 0.52, -1.77, 0.95, 1], [0.51, 0.52, -1.80, 0.94, 1],
+      [0.4677, 0.4724, -1.78, 1.00, 1], [0.4818, 0.3374, -1.76, 1.00, 1],
+      [0.4787, 0.3352, -1.79, 1.00, 1], [0.4720, 0.3660, -1.81, 1.00, 1],
+      [0.4759, 0.4031, -1.77, 1.00, 1], [0.4696, 0.3764, -1.80, 1.00, 1],
     ],
     move: [
-      [0.44, 0.57, -1.83, 0.93, 1], [0.37, 0.58, -1.76, 0.94, 1],
-      [0.35, 0.59, -1.71, 0.95, 1], [0.35, 0.57, -1.76, 0.94, 1],
-      [0.38, 0.59, -1.82, 0.93, 1], [0.37, 0.61, -1.78, 0.94, 1],
+      [0.4935, 0.2981, -1.82, 1.00, 1], [0.4809, 0.4836, -1.76, 1.00, 1],
+      [0.4843, 0.6125, -1.70, 1.00, 1], [0.4848, 0.6061, -1.70, 1.00, 1],
+      [0.5002, 0.3143, -1.78, 1.00, 1], [0.4834, 0.5164, -1.82, 1.00, 1],
     ],
     attack: [
-      [0.46, 0.64, -1.96, 0.92, 1], [0.50, 0.61, -1.70, 0.96, 1],
-      [0.52, 0.64, -1.38, 1.00, 1], [0.56, 0.39, -0.95, 1.04, 1],
-      [0.59, 0.65, -0.43, 1.08, 1], [0.56, 0.75, 0.08, 1.00, 1],
+      [0.5016, 0.4992, -1.96, 1.00, 1], [0.5396, 0.3282, -1.70, 1.00, 1],
+      [0.6141, 0.3062, -1.38, 1.00, 1], [0.2584, 0.3002, -0.95, 1.00, 1],
+      [0.2358, 0.5277, -0.43, 1.00, 1], [0.5025, 0.4642, 0.08, 1.00, 1],
     ],
     hurt: [
-      [0.36, 0.59, -2.04, 0.94, 1], [0.34, 0.58, -2.25, 0.92, 0.90],
-      [0.28, 0.57, -2.48, 0.88, 0.72], [0.37, 0.59, -2.62, 0.84, 0.50],
-      [0.40, 0.57, -2.08, 0.90, 0.72], [0.38, 0.58, -1.80, 0.94, 1],
+      [0.5059, 0.4310, -2.04, 1.00, 1], [0.3541, 0.4222, -2.25, 1.00, 0.95],
+      [0.4734, 0.3448, -2.48, 1.00, 0.82], [0.4781, 0.3851, -2.24, 1.00, 0.72],
+      [0.4680, 0.3759, -2.02, 1.00, 0.88], [0.4752, 0.3825, -1.80, 1.00, 1],
     ],
     death: [
-      [0.42, 0.54, -1.78, 0.92, 1], [0.48, 0.60, -1.18, 0.90, 0.86],
-      [0.55, 0.78, -0.58, 0.86, 0.66], [0.62, 0.95, -0.10, 0.82, 0.42],
-      [0.68, 1.04, 0.28, 0.76, 0.18], [0.72, 1.18, 0.46, 0.72, 0],
+      [0.5002, 0.1861, -1.78, 1.00, 0], [0.4965, 0.2033, -1.28, 1.00, 0],
+      [0.5248, 0.3670, -0.82, 1.00, 0], [0.5322, 0.4581, -0.34, 1.00, 0],
+      [0.5120, 0.5591, 0.10, 1.00, 0], [0.4830, 0.6300, 0.32, 1.00, 0],
+    ],
+  };
+  const SIDE_PLAYER_WEAPON_MOUNTS = {
+    idle: [
+      [0, -43, -0.62, 1], [0, -44, -0.62, 1], [1, -45, -0.62, 1],
+      [0, -44, -0.62, 1], [0, -43, -0.62, 1], [0, -43, -0.62, 1],
+    ],
+    move: [
+      [10, -42, -0.52, 0.92], [8, -41, -0.46, 0.92], [6, -40, -0.40, 0.92],
+      [8, -42, -0.48, 0.92], [11, -43, -0.56, 0.92], [9, -41, -0.48, 0.92],
+    ],
+    attack: [
+      [-13, -43, -1.42, 1.06], [-7, -47, -1.20, 1.08], [7, -48, -0.82, 1.10],
+      [17, -45, -0.28, 1.12], [19, -36, 0.18, 1.10], [6, -34, 0.52, 1.04],
+    ],
+    hurt: [
+      [-8, -40, -0.22, 0.92], [-5, -42, -0.10, 0.90], [-2, -39, 0.06, 0.88],
+      [1, -37, 0.12, 0.88], [3, -39, -0.08, 0.90], [4, -41, -0.30, 0.94],
     ],
   };
   const WEAPON_MOUNTS = {
@@ -250,7 +274,6 @@
   }
 
   const bitmapAssets = {
-    akioSheet: loadBitmap("assets/generated/characters/akio-character-sheet.png"),
     akioModular: loadAnimationSet("assets/modular/characters/player/akio"),
     akioFpsBody: loadAnimationSet("assets/modular/fps/player/akio/body"),
     // Les mêmes lames détourées servent aux deux perspectives. Les anciennes
@@ -2183,17 +2206,19 @@
     ctx.restore();
   }
 
-  function drawPlayerWeapon(attacking) {
+  function drawPlayerWeapon(animation, frame) {
     const equippedWeapon = bitmapAssets.weapons[game.weaponIndex];
     if (!bitmapReady(equippedWeapon)) return;
     const meta = KATANA_WEAPON_META[game.weaponIndex] || KATANA_WEAPON_META[0];
-    const progress = attacking ? clamp(1 - game.attackTimer / PLAYER_ATTACK_DURATION, 0, 1) : 0;
+    const mount = SIDE_PLAYER_WEAPON_MOUNTS[animation]?.[frame]
+      || SIDE_PLAYER_WEAPON_MOUNTS.idle[0];
+    const [mountX, mountY, rotation, scale] = mount;
     ctx.save();
-    ctx.translate(attacking ? 6 : -5, attacking ? -33 : -25);
-    ctx.rotate(attacking ? -1.36 + progress * 1.74 : meta.sideRotation);
+    ctx.translate(mountX, mountY);
+    ctx.rotate(rotation + (animation === "idle" ? meta.sideRotation * 0.08 : 0));
     drawWeaponImage(equippedWeapon, {
       anchor: meta.anchor,
-      maxDimension: attacking ? 58 : 48,
+      maxDimension: 54 * scale,
       widthBias: 1.08,
     });
     ctx.restore();
@@ -2319,10 +2344,6 @@
     return true;
   }
 
-  function drawEquippedKatana(attacking) {
-    drawPlayerWeapon(attacking);
-  }
-
   function drawAnimationSprite(animationSet, animation, frame, x, y, width, height) {
     const image = animationSet && animationSet[animation];
     if (!bitmapReady(image)) return false;
@@ -2383,25 +2404,10 @@
       ctx.translate(x + p.w / 2, y + p.h);
       ctx.scale(flip, 1);
       if (game.invulnerable > 0 && Math.floor(game.invulnerable * 18) % 2) ctx.globalAlpha = 0.35;
-      drawAnimationSprite(bitmapAssets.akioModular, animation, frame, -35, -63, 70, 63);
-      if (animation !== "death") drawEquippedKatana(animation === "attack");
-      ctx.restore();
-      return;
-    }
-
-    if (bitmapReady(bitmapAssets.akioSheet)) {
-      const bob = moving ? Math.round(Math.sin(performance.now() / 70) * 1.5) : 0;
-      ctx.save();
-      ctx.translate(x + p.w / 2, y + p.h + bob);
-      ctx.scale(flip, 1);
-      if (game.invulnerable > 0 && Math.floor(game.invulnerable * 18) % 2) ctx.globalAlpha = 0.35;
-      if (game.attackTimer > 0) {
-        // Quatrième pose du turnaround : attaque complète au katana.
-        ctx.drawImage(bitmapAssets.akioSheet, 1135, 135, 640, 675, -31, -54, 62, 54);
-      } else {
-        // Troisième pose : profil strict, idéal pour le side-scroller.
-        ctx.drawImage(bitmapAssets.akioSheet, 820, 55, 365, 750, -14, -58, 28, 58);
-      }
+      // L'arme est rendue derrière les bras : la tsuka reste interchangeable
+      // tout en paraissant réellement tenue par les mains d'Akio.
+      if (animation !== "death") drawPlayerWeapon(animation, frame);
+      drawAnimationSprite(bitmapAssets.akioModular, animation, frame, -48, -80, 96, 80);
       ctx.restore();
       return;
     }
@@ -3629,7 +3635,7 @@
         hitConfirmMaterial: game.hitConfirmMaterial,
       }),
       assetStatus: () => ({
-        akio: bitmapReady(bitmapAssets.akioSheet),
+        akio: modularAnimationReady(bitmapAssets.akioModular, "idle"),
         akioModular: Object.fromEntries(
           MODULAR_ANIMATIONS.map((animation) => [animation, modularAnimationReady(bitmapAssets.akioModular, animation)]),
         ),

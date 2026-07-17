@@ -24,16 +24,35 @@
       }
     },
     {
-      "id": "akio-fps-viewmodel-master",
-      "file": "../../modular/fps/player/akio/master-alpha.png",
-      "dimensions": [1683, 935],
+      "id": "akio-fps-viewmodel-sheets-v2",
+      "file": "../../modular/fps/player/akio/body/sheets/idle.png",
+      "files": {
+        "idle": "../../modular/fps/player/akio/body/sheets/idle.png",
+        "move": "../../modular/fps/player/akio/body/sheets/move.png",
+        "attack": "../../modular/fps/player/akio/body/sheets/attack.png",
+        "hurt": "../../modular/fps/player/akio/body/sheets/hurt.png",
+        "death": "../../modular/fps/player/akio/body/sheets/death.png"
+      },
+      "dimensions": [5760, 640],
+      "frameDimensions": [960, 640],
       "background": "transparent",
+      "sourceArchive": {
+        "provider": "OpenAI ImageGen built-in",
+        "layoutPerAnimation": "3x2",
+        "generationIds": {
+          "idle": "call_ycJOzczCQWctdnNBo9mn6Aq2",
+          "move": "call_kb07JO3i8cPQXewMv2wFnbJb",
+          "attack": "call_as0T5zhq0z4LNHPygO4BW8fH",
+          "hurt": "call_RARUWVaKUmum3dl6Nx7Yf4Ou",
+          "death": "call_HZfSdkPxYBruRRXW3Iw93Fqu"
+        }
+      },
       "usage": ["source des cinq planches FPS", "bras joueur modulaires", "ancrage des armes séparées"],
       "prompt": {
-        "asset_type": "first-person player arms animation atlas",
-        "request": "Les deux avant-bras blindés d'Akio vus à la première personne, exactement six colonnes et cinq lignes : repos, déplacement, attaque, dégâts et mort.",
-        "style": "pixel-art 16-bit original compatible raycasting rétro",
-        "constraints": "Mains cohérentes autour d'une prise invisible, aucune arme, lame, poignée, tête, décor, grille, texte, logo ou filigrane ; fond chroma magenta uniforme."
+        "asset_type": "five first-person player arms animation sheets",
+        "request": "Five separate 3x2 source sheets for Akio's first-person idle, move, attack, hurt and death animations.",
+        "style": "high-definition late-1990s 32-bit arcade pixel art compatible with retro raycasting",
+        "constraints": "Consistent hands around an invisible grip; no weapon, blade, hilt, head, scenery, grid, text, logo or watermark; clean transparency."
       }
     }
   ]
