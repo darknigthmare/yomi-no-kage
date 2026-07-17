@@ -8,11 +8,18 @@ const refs = new Set([
   "assets.html",
   "game.js",
   "audio.js",
+  "cinematic.js",
   "styles.css",
   "assets-gallery.js",
   "assets-gallery.css",
   "assets/modular/registry.json",
   "assets/modular/catalog.json",
+  "assets/generated/cinematics/prologue-01-peste.png",
+  "assets/generated/cinematics/prologue-02-cloche.png",
+  "assets/generated/cinematics/prologue-03-foyers.png",
+  "assets/generated/cinematics/prologue-04-ordre.png",
+  "assets/generated/cinematics/prologue-05-serment.png",
+  "assets/generated/cinematics/prologue-06-kurokawa.png",
 ]);
 
 for (const asset of catalog.assets) refs.add(asset.file);

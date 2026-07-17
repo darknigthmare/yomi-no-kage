@@ -9,7 +9,7 @@
       content="Yomi no Kage, un jeu d'action pixel-art alternant plateforme 2D et FPS rétro dans un Japon féodal ravagé par une épidémie zombie."
     />
     <title>Yomi no Kage — L'Ombre du Shogun</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=20" />
   </head>
   <body>
     <main class="game-shell" aria-label="Yomi no Kage, jeu d'action pixel-art">
@@ -100,6 +100,55 @@
         <p class="title-credit">UNE CHRONIQUE INTERACTIVE ORIGINALE</p>
       </section>
 
+      <section
+        id="prologue-screen"
+        class="screen-overlay prologue-screen"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Prologue cinématique"
+        aria-hidden="true"
+        tabindex="-1"
+      >
+        <div class="prologue-stage">
+          <img id="prologue-image" class="prologue-image" src="" alt="" />
+          <div class="prologue-grain" aria-hidden="true"></div>
+          <div class="prologue-vignette" aria-hidden="true"></div>
+
+          <header class="prologue-toolbar">
+            <span id="prologue-counter" class="prologue-counter">PLAN 1 / 6</span>
+            <button id="prologue-skip" class="prologue-skip" type="button">
+              PASSER LE PROLOGUE <kbd>ÉCHAP</kbd>
+            </button>
+          </header>
+
+          <div id="prologue-copy" class="prologue-copy" aria-live="polite" aria-atomic="true">
+            <p id="prologue-kicker" class="eyebrow"></p>
+            <h2 id="prologue-location"></h2>
+            <p id="prologue-narration" class="prologue-narration"></p>
+            <blockquote id="prologue-dialogue" class="prologue-dialogue" hidden>
+              <span id="prologue-speaker"></span>
+              <p id="prologue-line"></p>
+            </blockquote>
+          </div>
+
+          <footer class="prologue-footer">
+            <div
+              id="prologue-progress"
+              class="prologue-progress"
+              role="progressbar"
+              aria-label="Progression du prologue"
+              aria-valuemin="1"
+              aria-valuemax="6"
+              aria-valuenow="1"
+            ></div>
+            <p class="prologue-help">CLIC · ESPACE · ENTRÉE POUR CONTINUER</p>
+            <button id="prologue-next" class="pixel-button primary compact" type="button">
+              PLAN SUIVANT <span aria-hidden="true">›</span>
+            </button>
+          </footer>
+        </div>
+      </section>
+
       <section id="briefing-screen" class="screen-overlay briefing-screen" aria-labelledby="briefing-title">
         <div class="parchment-panel">
           <header class="briefing-header">
@@ -188,6 +237,7 @@
 
     <noscript>Ce jeu nécessite JavaScript pour fonctionner.</noscript>
     <script src="audio.js?v=3"></script>
-    <script src="game.js?v=18"></script>
+    <script src="game.js?v=20"></script>
+    <script src="cinematic.js?v=4"></script>
   </body>
 </html>

@@ -58,11 +58,24 @@ génération.
 
 Les contrôles tactiles apparaissent automatiquement sur mobile.
 
+## Prologue cinématique
+
+La chronique s'ouvre sur six plans originaux générés avec OpenAI ImageGen :
+l'apparition de la peste, la dernière cloche de Kurokawa, les deux foyers,
+l'ordre du shogun, le serment d'Akio et son arrivée au village. Chaque plan est
+un asset 16:9 indépendant dans `assets/generated/cinematics/`.
+
+- clic, `Espace`, `Entrée` ou flèche droite : plan suivant ;
+- flèche gauche : plan précédent ;
+- `Échap` ou le bouton « Passer le prologue » : accéder directement au briefing.
+
 ## Vérification
 
 ```powershell
 node --check game.js
 node --check audio.js
+node --check cinematic.js
+node cinematic-smoke-test.js
 node --check assets-gallery.js
 py tools/build-fps-variants.py
 py tools/validate-fps-player.py
@@ -72,6 +85,7 @@ node tools/verify-modular-registry.mjs
 py tools/clean-modular-atlas-bleed.py
 py tools/sprite_pipeline.py validate --root assets/modular
 node smoke-test.js
+node tools/verify-http-assets.mjs http://127.0.0.1:8765/
 ```
 
 Le jeu ne dépend d'aucune bibliothèque externe.

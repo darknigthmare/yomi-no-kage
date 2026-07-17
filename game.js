@@ -20,6 +20,8 @@
   const ENEMY_HURT_DURATION = 0.34;
   const ENEMY_DEATH_DURATION = 0.78;
   const SIDE_ENEMY_BASELINE_OFFSET = 4;
+  const SIDE_GROUND_Y = 300;
+  const SIDE_GROUND_DEPTH = 60;
   const KATANA_IDS = [
     "01-kurokage", "02-shogun-no-in", "03-hinezumi", "04-shirogane", "05-yomibane",
     "06-kegare-kiri", "07-takekaze", "08-raijin-no-tsume", "09-akatsuki", "10-mujo",
@@ -43,16 +45,19 @@
   const SIDE_ENTRANCES = [
     {
       x: 900,
-      blockX: 862,
+      approachX: 852,
       interactionRange: 58,
+      collision: "passThrough",
       mission: 0,
       label: "SANCTUAIRE CONTAMINÉ",
       prompt: "E — FRANCHIR LE TORII",
     },
     {
       x: 2190,
+      approachX: 2138,
       blockX: 2148,
       interactionRange: 66,
+      collision: "solidDoor",
       mission: 1,
       label: "DONJON DE KUROKAWA",
       prompt: "E — OUVRIR LA PORTE",
@@ -60,17 +65,48 @@
   ];
   const SIDE_PLATFORM_LAYOUTS = [
     [
-      { x: 180, y: 245, w: 118, h: 9 }, { x: 395, y: 218, w: 105, h: 9 },
-      { x: 650, y: 246, w: 95, h: 9 }, { x: 1120, y: 235, w: 130, h: 9 },
-      { x: 1450, y: 206, w: 105, h: 9 }, { x: 1710, y: 244, w: 120, h: 9 },
-      { x: 1990, y: 225, w: 105, h: 9 },
+      { x: 80, y: 262, w: 132, h: 8, visualHeight: 27 },
+      { x: 382, y: 236, w: 118, h: 8, visualHeight: 27 },
+      { x: 628, y: 264, w: 116, h: 8, visualHeight: 27 },
+      { x: 1058, y: 260, w: 142, h: 8, visualHeight: 29 },
+      { x: 1422, y: 234, w: 122, h: 8, visualHeight: 27 },
+      { x: 1688, y: 262, w: 136, h: 8, visualHeight: 28 },
+      { x: 2105, y: 244, w: 118, h: 8, visualHeight: 27 },
+      { x: 2300, y: 264, w: 126, h: 8, visualHeight: 27 },
     ],
     [
-      { x: 1110, y: 246, w: 105, h: 9 }, { x: 1325, y: 219, w: 112, h: 9 },
-      { x: 1545, y: 245, w: 118, h: 9 }, { x: 1770, y: 210, w: 104, h: 9 },
-      { x: 1925, y: 244, w: 105, h: 9 },
+      { x: 1080, y: 264, w: 128, h: 8, visualHeight: 33 },
+      { x: 1330, y: 238, w: 126, h: 8, visualHeight: 33 },
+      { x: 1590, y: 264, w: 128, h: 8, visualHeight: 34 },
+      { x: 1872, y: 242, w: 80, h: 8, visualHeight: 32 },
+      { x: 2312, y: 264, w: 92, h: 8, visualHeight: 33 },
     ],
   ];
+  const SIDE_CHAPTER_RULES = [
+    {
+      minX: 6,
+      maxX: 2479,
+      cameraMinX: 0,
+      enemyXs: [330, 510, 990, 1030, 1210, 1400, 1640, 1880, 2240, 2440],
+      pickups: [
+        { x: 600, kind: "ammo" },
+        { x: 1280, kind: "health" },
+        { x: 1850, kind: "ammo" },
+      ],
+    },
+    {
+      minX: 960,
+      maxX: 2479,
+      cameraMinX: 900,
+      enemyXs: [1000, 1230, 1310, 1465, 1490, 1730, 2420, 2450],
+      pickups: [
+        { x: 1240, kind: "ammo" },
+        { x: 1570, kind: "health" },
+        { x: 2260, kind: "ammo" },
+      ],
+    },
+  ];
+  const SIDE_MIDGROUND_SOURCE_Y = [696, 792, 791];
   const SPIRIT_IMPACT_IDS = new Set([
     "04-onryo-miko",
     "s04-onibi-adept",
@@ -105,6 +141,28 @@
     [406, 560, 344, 344],
     [786, 560, 344, 344],
     [1166, 560, 344, 344],
+  ];
+  const FPS_MATERIAL_SCHEMES = [
+    {
+      id: "sanctuaire-pierre-et-bois",
+      floorTile: 2,
+      floorScale: 1,
+      boundaryWall: 2,
+      coreWall: 0,
+      chamberWall: 1,
+      altarWall: 7,
+      fog: [17, 13, 17],
+    },
+    {
+      id: "donjon-tatami-et-cedre",
+      floorTile: 3,
+      floorScale: 1,
+      boundaryWall: 4,
+      coreWall: 6,
+      chamberWall: 5,
+      altarWall: 7,
+      fog: [12, 10, 14],
+    },
   ];
   const FPS_VIEWMODEL_RECT = { x: 80, y: 40, width: 480, height: 320 };
   const FPS_PLAYER_WEAPON_MOUNTS = {
@@ -595,15 +653,11 @@
     };
   }
 
-  function makeSideState() {
-    const enemyXs = [285, 510, 730, 1160, 1390, 1640, 1880, 2070, 2325];
-    return {
-      width: 2500,
-      cameraX: 0,
-      player: { x: 56, y: 272, vx: 0, vy: 0, w: 15, h: 27, facing: 1, grounded: true },
-      enemies: enemyXs.map((x, i) => ({
+  function makeSideEnemies(chapter) {
+    const rules = SIDE_CHAPTER_RULES[chapter] || SIDE_CHAPTER_RULES[0];
+    return rules.enemyXs.map((x, i) => ({
         x,
-        y: 276,
+        y: SIDE_GROUND_Y - 24,
         w: 16,
         h: 24,
         hp: i > 6 ? 3 : 2,
@@ -620,16 +674,46 @@
         knockbackVx: 0,
         flash: 0,
         impactMaterial: "flesh",
-        seed: i * 13.7,
-      })),
+        seed: chapter * 101 + i * 13.7,
+      }));
+  }
+
+  function makeSidePickups(chapter) {
+    const rules = SIDE_CHAPTER_RULES[chapter] || SIDE_CHAPTER_RULES[0];
+    return rules.pickups.map((pickup) => ({
+      x: pickup.x,
+      y: SIDE_GROUND_Y - 34,
+      kind: pickup.kind,
+      taken: false,
+    }));
+  }
+
+  function makeSideState() {
+    return {
+      width: 2500,
+      cameraX: 0,
+      player: {
+        x: 56,
+        y: SIDE_GROUND_Y - 27,
+        vx: 0,
+        vy: 0,
+        w: 15,
+        h: 27,
+        facing: 1,
+        grounded: true,
+      },
+      enemies: makeSideEnemies(0),
       projectiles: [],
       particles: [],
-      pickups: [
-        { x: 620, y: 266, kind: "ammo", taken: false },
-        { x: 1320, y: 266, kind: "health", taken: false },
-        { x: 1790, y: 266, kind: "ammo", taken: false },
-      ],
+      pickups: makeSidePickups(0),
     };
+  }
+
+  function prepareSideChapter(chapter) {
+    game.side.enemies = makeSideEnemies(chapter);
+    game.side.pickups = makeSidePickups(chapter);
+    game.side.projectiles.length = 0;
+    game.side.particles.length = 0;
   }
 
   function makeFpsMission(index) {
@@ -687,8 +771,19 @@
     return game.chapter === 0 ? 0 : 2;
   }
 
+  function currentSideRules() {
+    return SIDE_CHAPTER_RULES[game.chapter] || SIDE_CHAPTER_RULES[0];
+  }
+
   function currentSidePlatforms() {
     return SIDE_PLATFORM_LAYOUTS[game.chapter] || SIDE_PLATFORM_LAYOUTS[0];
+  }
+
+  function currentSideSurfaces() {
+    return [
+      ...currentSidePlatforms(),
+      { x: 0, y: SIDE_GROUND_Y, w: game.side.width, h: SIDE_GROUND_DEPTH, ground: true },
+    ].sort((a, b) => a.y - b.y);
   }
 
   function currentSideEntrance() {
@@ -702,7 +797,7 @@
     const centerX = p.x + p.w / 2;
     const feetY = p.y + p.h;
     return Math.abs(centerX - entrance.x) <= entrance.interactionRange * rangeScale
-      && Math.abs(feetY - 300) <= 12;
+      && Math.abs(feetY - SIDE_GROUND_Y) <= 12;
   }
 
   function isEnemyAlive(enemy) {
@@ -833,9 +928,16 @@
     }
     input.jumpQueued = false;
 
-    p.x = clamp(p.x + p.vx * dt, 6, side.width - p.w - 6);
+    // Les portes restent des déclencheurs manuels, jamais des murs invisibles :
+    // Akio peut traverser leur plan 2D et continuer à explorer derrière.
+    const chapterRules = currentSideRules();
+    p.x = clamp(
+      p.x + p.vx * dt,
+      chapterRules.minX,
+      Math.min(chapterRules.maxX, side.width - p.w - 6),
+    );
     const entrance = currentSideEntrance();
-    if (p.x > entrance.blockX) {
+    if (entrance.collision === "solidDoor" && p.x > entrance.blockX) {
       p.x = entrance.blockX;
       if (p.vx > 0) p.vx = 0;
     }
@@ -844,10 +946,12 @@
     p.y += p.vy * dt;
     p.grounded = false;
 
-    const surfaces = [{ x: 0, y: 300, w: side.width, h: 60 }, ...currentSidePlatforms()];
-    for (const platform of surfaces) {
+    // Les surfaces sont triées du haut vers le bas afin qu'un grand pas de
+    // simulation ne traverse pas une plateforme pour finir sur le sol.
+    for (const platform of currentSideSurfaces()) {
       const overlapsX = p.x + p.w > platform.x && p.x < platform.x + platform.w;
-      if (p.vy >= 0 && overlapsX && previousBottom <= platform.y + 5 && p.y + p.h >= platform.y) {
+      const crossedTop = previousBottom <= platform.y + 3 && p.y + p.h >= platform.y;
+      if (p.vy >= 0 && overlapsX && crossedTop) {
         p.y = platform.y - p.h;
         p.vy = 0;
         p.grounded = true;
@@ -860,7 +964,11 @@
     updateSideProjectiles(dt);
     updateSidePickups();
     updateParticles(side.particles, dt);
-    side.cameraX = clamp(approach(side.cameraX, p.x - W * 0.32, 520 * dt), 0, side.width - W);
+    side.cameraX = clamp(
+      approach(side.cameraX, p.x - W * 0.32, 520 * dt),
+      chapterRules.cameraMinX,
+      side.width - W,
+    );
   }
 
   function sideEnemyCombatProfile(enemy) {
@@ -876,6 +984,11 @@
   }
 
   function canOccupySideEnemy(enemy, candidateX) {
+    const rules = currentSideRules();
+    if (candidateX < rules.minX || candidateX + enemy.w > rules.maxX) return false;
+    // Les plateformes sont à sens unique et les props de premier plan sont
+    // décoratifs : Akio comme ses adversaires les traversent horizontalement.
+    // Les bloquer pour les ennemis seulement créait des zones de combat mortes.
     const candidateCenter = candidateX + enemy.w / 2;
     return game.side.enemies.every((other) => {
       if (other === enemy || !isEnemyVisible(other)) return true;
@@ -894,7 +1007,12 @@
       enemy.attackCooldown = Math.max(0, enemy.attackCooldown - dt);
       enemy.knockbackVx = approach(enemy.knockbackVx, 0, 420 * dt);
       if (Math.abs(enemy.knockbackVx) > 0.1) {
-        const candidateX = clamp(enemy.x + enemy.knockbackVx * dt, 8, game.side.width - enemy.w - 8);
+        const rules = currentSideRules();
+        const candidateX = clamp(
+          enemy.x + enemy.knockbackVx * dt,
+          rules.minX,
+          Math.min(rules.maxX - enemy.w, game.side.width - enemy.w - 8),
+        );
         if (canOccupySideEnemy(enemy, candidateX)) enemy.x = candidateX;
       }
 
@@ -1010,7 +1128,7 @@
     return pts.every(([px, py]) => {
       const row = map[Math.floor(py)];
       const cell = row?.[Math.floor(px)];
-      return cell === "0" || cell === "3";
+      return isFpsWalkableCell(cell);
     });
   }
 
@@ -1462,12 +1580,13 @@
       playAudio("playPickup");
       if (game.fps.current === 0) {
         game.chapter = 1;
+        prepareSideChapter(1);
         applyRosterToGame(game);
         game.ammo = Math.min(12, game.ammo + 3);
         game.health = Math.min(100, game.health + 18);
         Object.assign(game.side.player, {
           x: 1045,
-          y: 273,
+          y: SIDE_GROUND_Y - game.side.player.h,
           vx: 0,
           vy: 0,
           facing: 1,
@@ -1613,7 +1732,7 @@
         : "rgba(222, 174, 93, .78)";
       ctx.shadowBlur = 14;
     }
-    if (!drawGroundedWorldSprite(image, entrance.x - width / 2, 300, width)) {
+    if (!drawGroundedWorldSprite(image, entrance.x - width / 2, SIDE_GROUND_Y, width)) {
       drawTorii(entrance.x, game.chapter === 0 ? 185 : 174, game.chapter !== 0);
     }
     ctx.restore();
@@ -1645,7 +1764,12 @@
     if (parallax && bitmapReady(parallax.sky)) {
       drawParallaxLayer(parallax.sky, cam, 0);
       drawParallaxLayer(parallax.far, cam, 0.035);
-      drawParallaxLayer(parallax.mid, cam, 0.09);
+      drawParallaxLayer(
+        parallax.mid,
+        cam,
+        0.09,
+        SIDE_MIDGROUND_SOURCE_Y[environmentIndex],
+      );
       drawParallaxLayer(parallax.near, cam, 0.16);
       ctx.fillStyle = "rgba(4, 6, 11, .12)";
       ctx.fillRect(0, 0, W, H);
@@ -1702,17 +1826,20 @@
     }
   }
 
-  function drawParallaxLayer(image, cam, factor) {
+  function drawParallaxLayer(image, cam, factor, sourceGroundY = null) {
     if (!bitmapReady(image)) return;
+    const scale = H / image.naturalHeight;
+    const drawY = Number.isFinite(sourceGroundY)
+      ? Math.round(SIDE_GROUND_Y - sourceGroundY * scale)
+      : 0;
     if (factor === 0) {
-      ctx.drawImage(image, 0, 0, W, H);
+      ctx.drawImage(image, 0, drawY, W, H);
       return;
     }
-    const scale = H / image.naturalHeight;
     const drawWidth = Math.max(W, image.naturalWidth * scale);
     const offset = -((cam * factor) % drawWidth);
     for (let x = offset - drawWidth; x < W + drawWidth; x += drawWidth) {
-      ctx.drawImage(image, Math.round(x), 0, Math.ceil(drawWidth), H);
+      ctx.drawImage(image, Math.round(x), drawY, Math.ceil(drawWidth), H);
     }
   }
 
@@ -1817,13 +1944,46 @@
     return true;
   }
 
+  function drawContinuousGroundSprite(image, x, y, width, height) {
+    const bounds = opaqueBoundsForImage(image);
+    if (!bounds) return false;
+    // Les exports de terrain possèdent des extrémités arrondies destinées aux
+    // bords de niveau. Répéter l'image entière créait un chapelet de blocs
+    // disjoints. Seul le cœur du matériau est répété, ancré aux coordonnées du
+    // monde pour que les raccords ne glissent pas avec la caméra.
+    const inset = Math.max(1, Math.round(bounds.w * 0.24));
+    const sourceX = bounds.x + inset;
+    const sourceWidth = Math.max(1, bounds.w - inset * 2);
+    const tileWidth = Math.max(48, Math.round(height * sourceWidth / bounds.h));
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(x, y, width, height);
+    ctx.clip();
+    const firstTile = x - ((x % tileWidth) + tileWidth) % tileWidth;
+    for (let tileX = firstTile; tileX < x + width; tileX += tileWidth) {
+      ctx.drawImage(
+        image,
+        sourceX,
+        bounds.y,
+        sourceWidth,
+        bounds.h,
+        Math.round(tileX),
+        y,
+        tileWidth + 1,
+        height,
+      );
+    }
+    ctx.restore();
+    return true;
+  }
+
   function drawModularWorldProps(layer = "back") {
     const props = bitmapAssets.worldProps[currentSideEnvironmentIndex()] || [];
     let drawn = false;
     for (const prop of props) {
       if ((prop.layer || "back") !== layer) continue;
       if (!bitmapReady(prop.image)) continue;
-      const bottomY = prop.bottomY ?? 300;
+      const bottomY = prop.bottomY ?? SIDE_GROUND_Y;
       drawGroundedWorldSprite(prop.image, prop.x, bottomY, prop.width);
       drawn = true;
     }
@@ -1842,12 +2002,20 @@
     const tiles = bitmapAssets.platformTiles[environmentIndex];
     const hasBackProps = drawModularWorldProps("back");
     ctx.fillStyle = hasGeneratedBackdrop ? "rgba(16, 14, 19, .72)" : "#161219";
-    ctx.fillRect(0, 300, side.width, 60);
-    if (!drawTiledWorldSprite(tiles?.ground, 0, 300, side.width, 60)) {
+    ctx.fillRect(0, SIDE_GROUND_Y, side.width, SIDE_GROUND_DEPTH);
+    if (!drawContinuousGroundSprite(
+      tiles?.ground,
+      0,
+      SIDE_GROUND_Y,
+      side.width,
+      SIDE_GROUND_DEPTH,
+    )) {
       ctx.fillStyle = hasGeneratedBackdrop ? "rgba(72, 49, 40, .78)" : "#2a2020";
-      ctx.fillRect(0, 300, side.width, 7);
+      ctx.fillRect(0, SIDE_GROUND_Y, side.width, 7);
       ctx.fillStyle = "#42302a";
-      for (let x = 0; x < side.width; x += 18) ctx.fillRect(x, 307 + (x % 3), 11, 3);
+      for (let x = 0; x < side.width; x += 18) {
+        ctx.fillRect(x, SIDE_GROUND_Y + 7 + (x % 3), 11, 3);
+      }
     }
 
     // Maisons et accessoires restent des sprites indépendants des quatre
@@ -1859,19 +2027,25 @@
       const x = houses[i];
       const h = 58 + (i % 3) * 12;
       ctx.fillStyle = "#171417";
-      ctx.fillRect(x, 300 - h, 105, h);
+      ctx.fillRect(x, SIDE_GROUND_Y - h, 105, h);
       ctx.fillStyle = "#30211e";
-      ctx.beginPath(); ctx.moveTo(x - 12, 300 - h); ctx.lineTo(x + 52, 300 - h - 25); ctx.lineTo(x + 117, 300 - h); ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(x - 12, SIDE_GROUND_Y - h);
+      ctx.lineTo(x + 52, SIDE_GROUND_Y - h - 25);
+      ctx.lineTo(x + 117, SIDE_GROUND_Y - h);
+      ctx.fill();
       ctx.fillStyle = i % 2 ? "#b7482c" : "#6f2d25";
-      ctx.fillRect(x + 25, 300 - h + 22, 10, 14);
-      ctx.fillRect(x + 69, 300 - h + 22, 10, 14);
+      ctx.fillRect(x + 25, SIDE_GROUND_Y - h + 22, 10, 14);
+      ctx.fillRect(x + 69, SIDE_GROUND_Y - h + 22, 10, 14);
       if (i === 1 || i === 4) {
         ctx.fillStyle = "#e47732";
-        ctx.fillRect(x + 27, 300 - h + 24, 6, 9);
-        ctx.fillRect(x + 71, 300 - h + 24, 6, 9);
+        ctx.fillRect(x + 27, SIDE_GROUND_Y - h + 24, 6, 9);
+        ctx.fillRect(x + 71, SIDE_GROUND_Y - h + 24, 6, 9);
       }
     }
-    for (let x = 330; x < side.width; x += 430) drawBamboo(x, 300, 1 + (x % 3) * 0.12);
+    for (let x = 330; x < side.width; x += 430) {
+      drawBamboo(x, SIDE_GROUND_Y, 1 + (x % 3) * 0.12);
+    }
   }
 
   function drawBamboo(x, ground, scale) {
@@ -1907,11 +2081,17 @@
 
   function drawPlatform(p) {
     const tile = bitmapAssets.platformTiles[currentSideEnvironmentIndex()]?.ledge;
-    if (drawTiledWorldSprite(tile, p.x, p.y, p.w, p.h)) return;
-    ctx.fillStyle = "#382d28"; ctx.fillRect(p.x, p.y, p.w, p.h);
+    const visualHeight = p.visualHeight || Math.max(18, p.h);
+    // Une plateforme correspond à un sprite complet, jamais à une répétition
+    // de ses cordes et de ses embouts. Son bord supérieur est exactement la
+    // ligne utilisée par la collision.
+    if (drawOpaqueBitmap(tile, p.x, p.y, p.w, visualHeight)) return;
+    ctx.fillStyle = "#382d28"; ctx.fillRect(p.x, p.y, p.w, visualHeight);
     ctx.fillStyle = "#655044"; ctx.fillRect(p.x, p.y, p.w, 3);
     ctx.fillStyle = "#171419";
-    for (let x = p.x + 8; x < p.x + p.w; x += 18) ctx.fillRect(x, p.y + 4, 3, 5);
+    for (let x = p.x + 8; x < p.x + p.w; x += 18) {
+      ctx.fillRect(x, p.y + 4, 3, Math.max(5, visualHeight - 6));
+    }
   }
 
   function modularAnimationReady(animationSet, animation) {
@@ -2442,30 +2622,134 @@
     ctx.restore();
   }
 
-  function castRay(mission, angle) {
-    const p = mission.player;
-    const step = 0.025;
-    const cos = Math.cos(angle), sin = Math.sin(angle);
-    let x = p.x, y = p.y, dist = 0;
-    while (dist < 20) {
-      x += cos * step; y += sin * step; dist += step;
-      const row = mission.map[Math.floor(y)];
-      const cell = row?.[Math.floor(x)];
-      if (!cell || (cell !== "0" && cell !== "3")) {
-        return { dist, x, y, cell: cell || "1", texture: ((x + y) * 5) % 1 };
-      }
-    }
-    return { dist: 20, x, y, cell: "1", texture: 0 };
+  function isFpsWalkableCell(cell) {
+    return cell === "0" || cell === "3";
   }
 
-  function drawFpsFloorGuides(player) {
+  // DDA exact : le point d'impact et son axe donnent une coordonnée U stable
+  // le long de chaque mur. L'ancien pas fixe mélangeait x+y et répétait cinq
+  // fois la texture, d'où l'impression de mosaïque aléatoire.
+  function castRay(mission, angle) {
+    const p = mission.player;
+    const rayDirX = Math.cos(angle);
+    const rayDirY = Math.sin(angle);
+    let mapX = Math.floor(p.x);
+    let mapY = Math.floor(p.y);
+    const deltaDistX = Math.abs(1 / (Math.abs(rayDirX) < 1e-8 ? 1e-8 : rayDirX));
+    const deltaDistY = Math.abs(1 / (Math.abs(rayDirY) < 1e-8 ? 1e-8 : rayDirY));
+    const stepX = rayDirX < 0 ? -1 : 1;
+    const stepY = rayDirY < 0 ? -1 : 1;
+    let sideDistX = rayDirX < 0
+      ? (p.x - mapX) * deltaDistX
+      : (mapX + 1 - p.x) * deltaDistX;
+    let sideDistY = rayDirY < 0
+      ? (p.y - mapY) * deltaDistY
+      : (mapY + 1 - p.y) * deltaDistY;
+    let side = 0;
+    let cell = "1";
+
+    for (let steps = 0; steps < 64; steps += 1) {
+      if (sideDistX < sideDistY) {
+        sideDistX += deltaDistX;
+        mapX += stepX;
+        side = 0;
+      } else {
+        sideDistY += deltaDistY;
+        mapY += stepY;
+        side = 1;
+      }
+      cell = mission.map[mapY]?.[mapX] || "1";
+      if (!isFpsWalkableCell(cell)) break;
+    }
+
+    const rawDistance = side === 0
+      ? (mapX - p.x + (1 - stepX) / 2) / (Math.abs(rayDirX) < 1e-8 ? 1e-8 : rayDirX)
+      : (mapY - p.y + (1 - stepY) / 2) / (Math.abs(rayDirY) < 1e-8 ? 1e-8 : rayDirY);
+    const dist = clamp(Math.abs(rawDistance), 0.001, 20);
+    const x = p.x + rayDirX * dist;
+    const y = p.y + rayDirY * dist;
+    const wallCoordinate = side === 0 ? y : x;
+    let texture = wallCoordinate - Math.floor(wallCoordinate);
+    if ((side === 0 && rayDirX > 0) || (side === 1 && rayDirY < 0)) {
+      texture = 1 - texture;
+    }
+    return { dist, x, y, mapX, mapY, side, cell, texture };
+  }
+
+  const fpsFloorSourceCache = new Map();
+  let fpsFloorRenderSurface = null;
+
+  function currentFpsMaterialScheme() {
+    return FPS_MATERIAL_SCHEMES[game.fps.current] || FPS_MATERIAL_SCHEMES[0];
+  }
+
+  function fpsFloorSource(tileIndex) {
+    const atlas = bitmapAssets.fpsWallAtlas;
+    if (!bitmapReady(atlas) || typeof document.createElement !== "function") return null;
+    if (fpsFloorSourceCache.has(tileIndex)) return fpsFloorSourceCache.get(tileIndex);
+    try {
+      const size = 64;
+      const tileCanvas = document.createElement("canvas");
+      tileCanvas.width = size;
+      tileCanvas.height = size;
+      const tileContext = tileCanvas.getContext("2d", { willReadFrequently: true });
+      tileContext.imageSmoothingEnabled = false;
+      const [tileX, tileY, tileWidth, tileHeight] = FPS_WALL_TILES[tileIndex];
+      tileContext.drawImage(
+        atlas,
+        tileX,
+        tileY,
+        tileWidth,
+        tileHeight,
+        0,
+        0,
+        size,
+        size,
+      );
+      const source = {
+        size,
+        pixels: tileContext.getImageData(0, 0, size, size).data,
+      };
+      fpsFloorSourceCache.set(tileIndex, source);
+      return source;
+    } catch (_) {
+      // Sous file://, certains navigateurs refusent getImageData sur l'atlas.
+      // Mémoriser l'échec évite de déclencher une exception à chaque frame.
+      fpsFloorSourceCache.set(tileIndex, null);
+      return null;
+    }
+  }
+
+  function ensureFpsFloorRenderSurface() {
+    if (fpsFloorRenderSurface) return fpsFloorRenderSurface;
+    if (typeof document.createElement !== "function") return null;
+    const surface = document.createElement("canvas");
+    surface.width = Math.max(1, Math.floor(W / 2));
+    surface.height = Math.max(1, Math.floor(H / 4));
+    const surfaceContext = surface.getContext("2d");
+    if (!surfaceContext?.createImageData) return null;
+    fpsFloorRenderSurface = {
+      canvas: surface,
+      context: surfaceContext,
+      image: surfaceContext.createImageData(surface.width, surface.height),
+    };
+    return fpsFloorRenderSurface;
+  }
+
+  function drawFpsFloorFallback(player) {
+    const floor = ctx.createLinearGradient(0, H / 2, 0, H);
+    floor.addColorStop(0, game.fps.current === 0 ? "#493b35" : "#4b4031");
+    floor.addColorStop(1, "#100e12");
+    ctx.fillStyle = floor;
+    ctx.fillRect(0, H / 2, W, H / 2);
+
+    // Grille de secours déterministe si l'atlas n'est pas encore chargé.
     ctx.save();
-    ctx.globalAlpha = 0.18;
-    ctx.strokeStyle = game.fps.current === 0 ? "#b87656" : "#9c7b72";
-    ctx.lineWidth = 1;
-    for (let row = 1; row <= 7; row++) {
-      const ratio = row / 7;
-      const y = H / 2 + Math.pow(ratio, 1.75) * H / 2;
+    ctx.globalAlpha = 0.2;
+    ctx.strokeStyle = game.fps.current === 0 ? "#a99a8b" : "#bda976";
+    for (let row = 1; row <= 8; row += 1) {
+      const ratio = row / 8;
+      const y = H / 2 + Math.pow(ratio, 1.72) * H / 2;
       ctx.beginPath();
       ctx.moveTo(0, Math.round(y) + 0.5);
       ctx.lineTo(W, Math.round(y) + 0.5);
@@ -2473,34 +2757,139 @@
     }
     const headingOffset = normalizeAngle(player.angle) / TAU * 96;
     for (let x = -W; x <= W * 2; x += 64) {
-      const floorX = x - headingOffset;
       ctx.beginPath();
       ctx.moveTo(W / 2, H / 2);
-      ctx.lineTo(floorX, H);
+      ctx.lineTo(x - headingOffset, H);
       ctx.stroke();
     }
     ctx.restore();
   }
 
+  function proceduralFpsFloorSample(worldX, worldY) {
+    const cellX = Math.floor(worldX);
+    const cellY = Math.floor(worldY);
+    const u = ((worldX % 1) + 1) % 1;
+    const v = ((worldY % 1) + 1) % 1;
+    const hash = Math.abs(
+      cellX * 17 + cellY * 31 + Math.floor(u * 12) * 7 + Math.floor(v * 12) * 13,
+    ) % 9;
+    let red;
+    let green;
+    let blue;
+
+    if (game.fps.current === 0) {
+      const joint = u < 0.045 || v < 0.045;
+      const moss = !joint && (u < 0.09 || v < 0.09) && hash < 3;
+      const alternate = Math.abs(cellX + cellY) % 2;
+      red = joint ? 31 : moss ? 53 : 76 + alternate * 8 + hash;
+      green = joint ? 32 : moss ? 67 : 72 + alternate * 7 + hash;
+      blue = joint ? 30 : moss ? 48 : 67 + alternate * 6 + hash;
+    } else {
+      const horizontal = Math.abs(cellX + cellY) % 2 === 0;
+      const seam = u < 0.035 || v < 0.035;
+      const weave = horizontal
+        ? Math.floor(v * 18) % 3
+        : Math.floor(u * 18) % 3;
+      red = seam ? 48 : 128 + weave * 5 + hash;
+      green = seam ? 38 : 106 + weave * 4 + hash;
+      blue = seam ? 26 : 63 + weave * 3 + Math.floor(hash / 2);
+    }
+    return red | (green << 8) | (blue << 16);
+  }
+
+  function drawFpsFloor(player) {
+    const scheme = currentFpsMaterialScheme();
+    const source = fpsFloorSource(scheme.floorTile);
+    const render = ensureFpsFloorRenderSurface();
+    if (!render) {
+      drawFpsFloorFallback(player);
+      return;
+    }
+
+    const renderWidth = render.canvas.width;
+    const renderHeight = render.canvas.height;
+    const output = render.image.data;
+    const directionX = Math.cos(player.angle);
+    const directionY = Math.sin(player.angle);
+    const planeScale = Math.tan(FOV / 2);
+    const planeX = -directionY * planeScale;
+    const planeY = directionX * planeScale;
+    const leftRayX = directionX - planeX;
+    const leftRayY = directionY - planeY;
+    const rightRayX = directionX + planeX;
+    const rightRayY = directionY + planeY;
+    const screenPixelHeight = (H / 2) / renderHeight;
+    const textureSize = source?.size || 1;
+    const floorScale = scheme.floorScale;
+
+    for (let row = 0; row < renderHeight; row += 1) {
+      const screenY = H / 2 + (row + 0.5) * screenPixelHeight;
+      const rowDistance = Math.min(30, (H * 0.5) / Math.max(0.5, screenY - H / 2));
+      const stepX = rowDistance * (rightRayX - leftRayX) / renderWidth;
+      const stepY = rowDistance * (rightRayY - leftRayY) / renderWidth;
+      let floorX = player.x + rowDistance * leftRayX;
+      let floorY = player.y + rowDistance * leftRayY;
+      const fogAmount = clamp((rowDistance - 1.2) / 20, 0, 0.8);
+      const light = 1 - fogAmount * 0.72;
+      for (let column = 0; column < renderWidth; column += 1) {
+        const wrappedX = ((floorX * floorScale) % 1 + 1) % 1;
+        const wrappedY = ((floorY * floorScale) % 1 + 1) % 1;
+        const sourceX = Math.min(textureSize - 1, Math.floor(wrappedX * textureSize));
+        const sourceY = Math.min(textureSize - 1, Math.floor(wrappedY * textureSize));
+        const sourceOffset = (sourceY * textureSize + sourceX) * 4;
+        const targetOffset = (row * renderWidth + column) * 4;
+        const procedural = source ? 0 : proceduralFpsFloorSample(floorX, floorY);
+        const sourceRed = source ? source.pixels[sourceOffset] : procedural & 255;
+        const sourceGreen = source ? source.pixels[sourceOffset + 1] : procedural >> 8 & 255;
+        const sourceBlue = source ? source.pixels[sourceOffset + 2] : procedural >> 16 & 255;
+        output[targetOffset] = Math.floor(
+          sourceRed * light + scheme.fog[0] * fogAmount,
+        );
+        output[targetOffset + 1] = Math.floor(
+          sourceGreen * light + scheme.fog[1] * fogAmount,
+        );
+        output[targetOffset + 2] = Math.floor(
+          sourceBlue * light + scheme.fog[2] * fogAmount,
+        );
+        output[targetOffset + 3] = 255;
+        floorX += stepX;
+        floorY += stepY;
+      }
+    }
+    render.context.putImageData(render.image, 0, 0);
+    ctx.drawImage(render.canvas, 0, H / 2, W, H / 2);
+  }
+
   function fpsWallTileIndex(hit) {
-    const distanceToVerticalEdge = Math.min(
-      Math.abs(hit.x - Math.floor(hit.x)),
-      Math.abs(Math.ceil(hit.x) - hit.x),
+    const scheme = currentFpsMaterialScheme();
+    const mission = currentMission();
+    const mapWidth = mission.map[0]?.length || 0;
+    const mapHeight = mission.map.length;
+    const boundary = hit.mapX <= 0
+      || hit.mapY <= 0
+      || hit.mapX >= mapWidth - 1
+      || hit.mapY >= mapHeight - 1;
+    const altarDistance = Math.hypot(
+      hit.mapX + 0.5 - mission.altar.x,
+      hit.mapY + 0.5 - mission.altar.y,
     );
-    const distanceToHorizontalEdge = Math.min(
-      Math.abs(hit.y - Math.floor(hit.y)),
-      Math.abs(Math.ceil(hit.y) - hit.y),
-    );
-    const vertical = distanceToVerticalEdge < distanceToHorizontalEdge;
-    const variation = Math.abs(Math.floor(hit.x) + Math.floor(hit.y)) % 2;
-    return (game.fps.current * 4 + (vertical ? 0 : 1) + variation * 2) % FPS_WALL_TILES.length;
+    if (altarDistance <= 2.25) return scheme.altarWall;
+    if (boundary) return scheme.boundaryWall;
+    if (
+      game.fps.current === 0
+        ? hit.mapX >= 8 && hit.mapY >= 8
+        : hit.mapX <= 6 && hit.mapY <= 6
+    ) {
+      return scheme.chamberWall;
+    }
+    return scheme.coreWall;
   }
 
   function drawFpsWallColumn(hit, columnX, top, wallHeight, corrected) {
     const atlas = bitmapAssets.fpsWallAtlas;
     if (bitmapReady(atlas)) {
       const [tileX, tileY, tileWidth, tileHeight] = FPS_WALL_TILES[fpsWallTileIndex(hit)];
-      const texture = Math.abs(hit.texture % 1);
+      const texture = ((hit.texture % 1) + 1) % 1;
       const sourceX = tileX + clamp(Math.floor(texture * tileWidth), 0, tileWidth - 1);
       ctx.drawImage(
         atlas,
@@ -2513,9 +2902,14 @@
         2,
         Math.ceil(wallHeight),
       );
+      if (hit.side === 1) {
+        ctx.fillStyle = "rgba(5, 7, 11, .12)";
+        ctx.fillRect(columnX, top, 2, Math.ceil(wallHeight));
+      }
       const fogAlpha = clamp((corrected - 2.2) / 15, 0, 0.78);
       if (fogAlpha > 0) {
-        ctx.fillStyle = `rgba(7, 7, 11, ${fogAlpha})`;
+        const fog = currentFpsMaterialScheme().fog;
+        ctx.fillStyle = `rgba(${fog[0]}, ${fog[1]}, ${fog[2]}, ${fogAlpha})`;
         ctx.fillRect(columnX, top, 2, Math.ceil(wallHeight));
       }
       return;
@@ -2596,10 +2990,7 @@
     const ceiling = ctx.createLinearGradient(0, 0, 0, H / 2);
     ceiling.addColorStop(0, "#070912"); ceiling.addColorStop(1, "#281a24");
     ctx.fillStyle = ceiling; ctx.fillRect(0, 0, W, H / 2);
-    const floor = ctx.createLinearGradient(0, H / 2, 0, H);
-    floor.addColorStop(0, "#49302b"); floor.addColorStop(1, "#100e12");
-    ctx.fillStyle = floor; ctx.fillRect(0, H / 2, W, H / 2);
-    drawFpsFloorGuides(p);
+    drawFpsFloor(p);
 
     const rays = 320;
     for (let i = 0; i < rays; i++) {
@@ -2610,10 +3001,6 @@
       const wallH = Math.min(H * 1.8, H / corrected);
       const top = Math.floor(H / 2 - wallH / 2);
       drawFpsWallColumn(hit, i * 2, top, wallH, corrected);
-      if (i % 8 === 0) {
-        ctx.fillStyle = `rgba(10,8,10,${0.22 + corrected / 35})`;
-        ctx.fillRect(i * 2, top, 1, Math.ceil(wallH));
-      }
     }
 
     drawFpsAltar(mission);
@@ -3152,8 +3539,8 @@
       },
       warpToGate: () => {
         const entrance = currentSideEntrance();
-        game.side.player.x = entrance.blockX - 4;
-        game.side.player.y = 273;
+        game.side.player.x = entrance.approachX;
+        game.side.player.y = SIDE_GROUND_Y - game.side.player.h;
         game.side.player.vx = 0;
         game.side.player.vy = 0;
         game.side.player.grounded = true;
@@ -3167,6 +3554,53 @@
         });
       },
       warpToAltar: () => { const m = currentMission(); m.player.x = m.altar.x; m.player.y = m.altar.y; },
+      worldSnapshot: () => {
+        const scheme = currentFpsMaterialScheme();
+        const mission = currentMission();
+        const sideRules = currentSideRules();
+        const chamberSample = game.fps.current === 0
+          ? { mapX: 9, mapY: 9 }
+          : { mapX: 3, mapY: 3 };
+        return {
+          groundY: SIDE_GROUND_Y,
+          groundDepth: SIDE_GROUND_DEPTH,
+          bounds: {
+            minX: sideRules.minX,
+            maxX: sideRules.maxX,
+            cameraMinX: sideRules.cameraMinX,
+          },
+          platforms: currentSidePlatforms().map((platform) => ({ ...platform })),
+          enemies: game.side.enemies.map((enemy) => ({
+            x: enemy.x,
+            w: enemy.w,
+            dead: enemy.dead,
+          })),
+          pickups: game.side.pickups.map((pickup) => ({
+            x: pickup.x,
+            w: 10,
+            taken: pickup.taken,
+          })),
+          frontPropFootprints: (bitmapAssets.worldProps[currentSideEnvironmentIndex()] || [])
+            .filter((prop) => prop.layer === "front")
+            .map((prop) => ({ x: prop.x, w: prop.width, file: prop.file })),
+          entrancePassThrough: currentSideEntrance().collision === "passThrough",
+          fps: {
+            scheme: scheme.id,
+            floorTile: scheme.floorTile,
+            floorProjection: "world-uv-floor-cast",
+            wallTiles: {
+              boundary: fpsWallTileIndex({ mapX: 0, mapY: 1 }),
+              core: fpsWallTileIndex({ mapX: 7, mapY: 7 }),
+              chamber: fpsWallTileIndex(chamberSample),
+              altar: fpsWallTileIndex({
+                mapX: Math.floor(mission.altar.x),
+                mapY: Math.floor(mission.altar.y),
+              }),
+            },
+            forwardRay: castRay(mission, mission.player.angle),
+          },
+        };
+      },
       combatSnapshot: () => ({
         player: {
           health: game.health,
@@ -3248,13 +3682,14 @@
         || preview === "gate-castle"
         || preview === "fps-castle";
       game.chapter = castlePreview ? 1 : 0;
+      prepareSideChapter(game.chapter);
       applyRosterToGame(game);
       if (preview?.startsWith("gate-")) {
         game.invulnerable = 999;
         const entrance = currentSideEntrance();
         Object.assign(game.side.player, {
-          x: entrance.blockX - 4,
-          y: 273,
+          x: entrance.approachX,
+          y: SIDE_GROUND_Y - game.side.player.h,
           vx: 0,
           vy: 0,
           grounded: true,

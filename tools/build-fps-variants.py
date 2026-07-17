@@ -462,6 +462,15 @@ def make_player_view_model(registry):
         source = isolate_held_weapon(source)
         source.thumbnail((640, 160), Image.Resampling.NEAREST)
         source = harden_pixel_alpha(source, threshold=48)
+        # Les exports restent détourés même lorsqu'une poignée touche le bord
+        # du crop source : les quatre pixels de coin sont toujours transparents.
+        for corner in (
+            (0, 0),
+            (source.width - 1, 0),
+            (0, source.height - 1),
+            (source.width - 1, source.height - 1),
+        ):
+            source.putpixel(corner, TRANSPARENT)
         base = PLAYER_WEAPON_BASE / weapon_id
         base.mkdir(parents=True, exist_ok=True)
         weapon_path = base / "weapon.png"
@@ -505,10 +514,16 @@ def make_player_view_model(registry):
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Build modular FPS sprite variants.")
-    parser.add_argument(
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument(
         "--enemies-only",
         action="store_true",
         help="Rebuild the 96 enemy billboards without touching Akio or weapon sprites.",
+    )
+    mode.add_argument(
+        "--player-only",
+        action="store_true",
+        help="Rebuild Akio and the ten independent weapons without rewriting enemies.",
     )
     return parser.parse_args()
 
@@ -516,7 +531,11 @@ def parse_args():
 def main():
     args = parse_args()
     path, registry = read_registry()
-    character_count = make_character_sheets(registry)
+    character_count = (
+        registry.get("fps", {}).get("characters", 96)
+        if args.player_only
+        else make_character_sheets(registry)
+    )
     if args.enemies_only:
         player_view_count = registry.get("fps", {}).get("playerViewModels", 1)
         player_weapon_count = registry.get("fps", {}).get("playerWeaponSprites", 10)

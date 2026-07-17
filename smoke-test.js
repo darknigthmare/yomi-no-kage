@@ -105,7 +105,8 @@ require("./game.js");
     modularRegistry.counts.characters,
   );
 
-  // La porte bloque le passage, mais ne change jamais de vue sans une action.
+  // L'arche signale l'entrée sans changer de vue et sans former un mur
+  // invisible : le joueur reste libre d'explorer derrière.
   global.KageGame.debug.warpToGate();
   state = global.KageGame.getState();
   assert.equal(state.nearEntrance, true);
@@ -114,6 +115,69 @@ require("./game.js");
   assert.equal(state.mode, "side");
   assert.equal(state.chapter, 0);
 
+  global.KageGame.debug.setPlayer2d({
+    x: state.entrance.x - 30,
+    y: 273,
+    vx: 800,
+    vy: 0,
+    grounded: true,
+  });
+  global.KageGame.debug.step(0.1);
+  state = global.KageGame.getState();
+  assert.ok(
+    state.player2d.x > state.entrance.x + 20,
+    "Akio doit franchir le plan du torii en mouvement, sans mur invisible",
+  );
+  assert.equal(state.mode, "side");
+
+  const villageWorld = global.KageGame.debug.worldSnapshot();
+  assert.equal(villageWorld.entrancePassThrough, true);
+  assert.equal(villageWorld.groundY, 300);
+  assert.equal(villageWorld.fps.floorTile, 2);
+  assert.equal(villageWorld.fps.floorProjection, "world-uv-floor-cast");
+  assert.notEqual(
+    villageWorld.fps.wallTiles.boundary,
+    villageWorld.fps.wallTiles.core,
+    "L'enceinte et les cloisons FPS doivent suivre des matériaux fixes distincts",
+  );
+  assert.ok(
+    villageWorld.platforms.every((platform) =>
+      platform.y < villageWorld.groundY
+      && platform.visualHeight >= 24
+      && platform.h <= platform.visualHeight),
+    "Le rendu et le sommet de collision des plateformes doivent rester cohérents",
+  );
+  const overlaps = (a, b) => a.x < b.x + b.w && a.x + a.w > b.x;
+  assert.ok(
+    villageWorld.platforms.every((platform) =>
+      villageWorld.frontPropFootprints.every((prop) => !overlaps(platform, prop))),
+    "Les plateformes du village ne doivent pas couper les props de premier plan",
+  );
+  assert.ok(
+    villageWorld.enemies.every((enemy) =>
+      villageWorld.platforms.every((platform) => !overlaps(enemy, platform))
+      && villageWorld.frontPropFootprints.every((prop) => !overlaps(enemy, prop))),
+    "Les ennemis du village doivent apparaître sur une zone de sol libre",
+  );
+
+  // Une chute rapide doit toucher la plateforme haute avant le sol.
+  const firstPlatform = villageWorld.platforms[0];
+  global.KageGame.debug.setPlayer2d({
+    x: firstPlatform.x + 12,
+    y: firstPlatform.y - 42,
+    vx: 0,
+    vy: 120,
+    grounded: false,
+  });
+  global.KageGame.debug.step(0.25);
+  state = global.KageGame.getState();
+  assert.equal(
+    state.player2d.y + state.player2d.h,
+    firstPlatform.y,
+    "La collision balayée doit poser Akio sur le même bord que le sprite",
+  );
+
+  global.KageGame.debug.warpToGate();
   global.KageGame.interact();
   state = global.KageGame.getState();
   assert.equal(state.mode, "fps");
@@ -126,6 +190,20 @@ require("./game.js");
   assert.equal(state.mode, "side");
   assert.equal(state.chapter, 1);
   assert.equal(state.seals, 1);
+  const castleInitialWorld = global.KageGame.debug.worldSnapshot();
+  const castleSpawnOverlaps = castleInitialWorld.enemies.flatMap((enemy, enemyIndex) => [
+    ...castleInitialWorld.platforms
+      .filter((platform) => overlaps(enemy, platform))
+      .map((platform) => ({ enemyIndex, enemy, kind: "platform", target: platform })),
+    ...castleInitialWorld.frontPropFootprints
+      .filter((prop) => overlaps(enemy, prop))
+      .map((prop) => ({ enemyIndex, enemy, kind: "prop", target: prop })),
+  ]);
+  assert.deepEqual(
+    castleSpawnOverlaps,
+    [],
+    "Les gardes du château doivent apparaître sur une zone de sol libre",
+  );
 
   // La seconde porte suit le même flux manuel après la transition.
   for (let i = 0; i < 4; i += 1) global.KageGame.debug.step(0.25);
@@ -136,10 +214,43 @@ require("./game.js");
   assert.equal(state.chapter, 1);
   assert.equal(state.nearEntrance, true);
 
+  global.KageGame.debug.setPlayer2d({
+    x: state.entrance.x + 80,
+    y: 273,
+    vx: 0,
+    vy: 0,
+    grounded: true,
+  });
+  global.KageGame.debug.step(0.05);
+  state = global.KageGame.getState();
+  assert.equal(
+    state.player2d.x,
+    state.entrance.blockX,
+    "La porte matérielle du donjon ne doit pas être traversée fermée",
+  );
+
+  global.KageGame.debug.warpToGate();
   global.KageGame.interact();
   state = global.KageGame.getState();
   assert.equal(state.mode, "fps");
-
+  const castleWorld = global.KageGame.debug.worldSnapshot();
+  assert.equal(
+    castleWorld.entrancePassThrough,
+    false,
+    "La porte fermée du donjon doit rester solide jusqu'à l'action E",
+  );
+  assert.equal(castleWorld.fps.floorTile, 3);
+  assert.notEqual(
+    castleWorld.fps.scheme,
+    villageWorld.fps.scheme,
+    "Le sanctuaire et le donjon doivent conserver leur propre palette de sol",
+  );
+  assert.equal(castleWorld.bounds.minX, 960);
+  assert.ok(
+    castleWorld.platforms.every((platform) =>
+      castleWorld.frontPropFootprints.every((prop) => !overlaps(platform, prop))),
+    "Les plateformes du château ne doivent pas couper les props de premier plan",
+  );
   global.KageGame.debug.clearFps();
   global.KageGame.debug.warpToAltar();
   global.KageGame.interact();
@@ -244,7 +355,7 @@ require("./game.js");
     }
   }
 
-  console.log("Smoke test OK — portes manuelles, impacts, formation FPS et progression complète");
+  console.log("Smoke test OK — arches traversables, sols cohérents, impacts, formation FPS et progression complète");
 })().catch((error) => {
   console.error(error);
   process.exitCode = 1;

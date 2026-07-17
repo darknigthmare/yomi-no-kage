@@ -278,6 +278,232 @@ kbd {
 .title-features i { width: 3px; height: 3px; background: var(--blood-bright); }
 .title-credit { position: absolute; right: 1.5rem; bottom: 1rem; margin: 0; color: #63656a; font-size: 0.5rem; letter-spacing: 0.18em; }
 
+/* Prologue : six plans OpenAI séparés, montés comme une cinématique pixel-art. */
+.prologue-screen {
+  z-index: 36;
+  align-items: stretch;
+  background: #030407;
+  cursor: pointer;
+}
+
+.prologue-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #030407;
+}
+
+.prologue-stage::before {
+  position: absolute;
+  inset: -7%;
+  z-index: 0;
+  content: "";
+  pointer-events: none;
+  opacity: 0;
+  background: var(--shot-image) center / cover no-repeat;
+  filter: blur(18px) brightness(0.34) saturate(0.7);
+}
+
+.prologue-image {
+  position: absolute;
+  inset: -3%;
+  width: 106%;
+  height: 106%;
+  object-fit: cover;
+  object-position: center;
+  image-rendering: pixelated;
+  opacity: 1;
+  filter: saturate(0.9) contrast(1.04) brightness(0.82);
+  transform: scale(1.02);
+  transition: opacity 260ms steps(5, end), filter 260ms steps(5, end);
+  will-change: transform, opacity;
+}
+
+.prologue-screen.is-changing .prologue-image {
+  opacity: 0.12;
+  filter: saturate(0.4) contrast(1.3) brightness(1.3);
+}
+
+.prologue-screen.is-playing-shot[data-motion="push"] .prologue-image {
+  animation: prologue-push var(--shot-duration, 8s) linear both;
+}
+
+.prologue-screen.is-playing-shot[data-motion="left"] .prologue-image {
+  animation: prologue-pan-left var(--shot-duration, 8s) linear both;
+}
+
+.prologue-screen.is-playing-shot[data-motion="right"] .prologue-image {
+  animation: prologue-pan-right var(--shot-duration, 8s) linear both;
+}
+
+@keyframes prologue-push {
+  from { transform: scale(1.02) translate3d(0, 0, 0); }
+  to { transform: scale(1.1) translate3d(0, -1.2%, 0); }
+}
+
+@keyframes prologue-pan-left {
+  from { transform: scale(1.08) translate3d(1.4%, 0, 0); }
+  to { transform: scale(1.08) translate3d(-1.8%, -0.8%, 0); }
+}
+
+@keyframes prologue-pan-right {
+  from { transform: scale(1.08) translate3d(-1.4%, -0.6%, 0); }
+  to { transform: scale(1.08) translate3d(1.8%, 0, 0); }
+}
+
+.prologue-grain,
+.prologue-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.prologue-grain {
+  opacity: 0.13;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 3px, rgba(0, 0, 0, 0.26) 4px),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 5px);
+  mix-blend-mode: overlay;
+}
+
+.prologue-vignette {
+  background:
+    linear-gradient(180deg, rgba(2, 3, 6, 0.82) 0%, transparent 24%, transparent 52%, rgba(2, 3, 6, 0.88) 88%),
+    linear-gradient(90deg, rgba(2, 3, 6, 0.66), transparent 48%, rgba(2, 3, 6, 0.28));
+  box-shadow: inset 0 0 clamp(2rem, 9vw, 9rem) #000;
+}
+
+.prologue-toolbar {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding:
+    max(clamp(0.7rem, 2.1vw, 1.4rem), env(safe-area-inset-top))
+    max(clamp(0.8rem, 2.5vw, 1.8rem), env(safe-area-inset-right))
+    clamp(0.7rem, 2.1vw, 1.4rem)
+    max(clamp(0.8rem, 2.5vw, 1.8rem), env(safe-area-inset-left));
+}
+
+.prologue-counter {
+  color: rgba(242, 230, 202, 0.7);
+  font-size: clamp(0.48rem, 0.74vw, 0.68rem);
+  font-weight: 900;
+  letter-spacing: 0.18em;
+}
+
+.prologue-skip {
+  padding: 0.35rem 0.55rem;
+  border: 0;
+  background: rgba(5, 6, 9, 0.62);
+  color: #b5ad9c;
+  cursor: pointer;
+  font-size: clamp(0.46rem, 0.72vw, 0.64rem);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.prologue-skip:hover,
+.prologue-skip:focus-visible { color: #fff0ca; outline: 1px solid #8d3a3a; }
+.prologue-skip kbd { margin-left: 0.35rem; font-size: 0.9em; }
+
+.prologue-copy {
+  position: absolute;
+  z-index: 3;
+  left: clamp(1rem, 5vw, 4.6rem);
+  bottom: clamp(3.5rem, 14vh, 8rem);
+  width: min(57%, 43rem);
+  padding-left: clamp(0.75rem, 1.6vw, 1.25rem);
+  border-left: clamp(2px, 0.25vw, 4px) solid #b93439;
+  text-shadow: 2px 2px 0 #000, 0 0 16px #000;
+  transition: opacity 220ms, translate 220ms;
+}
+
+.prologue-screen.is-changing .prologue-copy {
+  opacity: 0;
+  translate: 0 0.75rem;
+}
+
+.prologue-copy h2 {
+  margin: 0.3rem 0 0;
+  color: #f3e5c5;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.3rem, 3.4vw, 3.25rem);
+  line-height: 0.98;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+}
+
+.prologue-narration {
+  max-width: 38rem;
+  margin: clamp(0.5rem, 1.4vh, 0.9rem) 0 0;
+  color: #d4ccba;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(0.68rem, 1.22vw, 1.05rem);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.prologue-dialogue {
+  max-width: 39rem;
+  margin: clamp(0.55rem, 1.7vh, 1rem) 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.prologue-dialogue span {
+  color: #e78942;
+  font-size: clamp(0.48rem, 0.74vw, 0.66rem);
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+
+.prologue-dialogue p {
+  margin: 0.18rem 0 0;
+  color: #fff2d2;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(0.85rem, 1.7vw, 1.45rem);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.prologue-footer {
+  position: absolute;
+  z-index: 3;
+  right: max(clamp(0.8rem, 2.5vw, 1.8rem), env(safe-area-inset-right));
+  bottom: max(clamp(0.7rem, 2.1vw, 1.4rem), env(safe-area-inset-bottom));
+  left: max(clamp(0.8rem, 2.5vw, 1.8rem), env(safe-area-inset-left));
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(0.6rem, 1.6vw, 1.2rem);
+}
+
+.prologue-progress {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.28rem, 0.6vw, 0.5rem);
+}
+
+.prologue-progress span {
+  display: block;
+  width: clamp(0.8rem, 1.7vw, 1.55rem);
+  height: 3px;
+  background: rgba(242, 230, 202, 0.28);
+  box-shadow: 1px 1px 0 #000;
+}
+
+.prologue-progress span.seen { background: #6e2a2f; }
+.prologue-progress span.active { width: clamp(1.4rem, 3vw, 2.7rem); background: #e24a48; }
+.prologue-help { margin: 0; color: rgba(220, 213, 197, 0.55); font-size: clamp(0.42rem, 0.66vw, 0.58rem); letter-spacing: 0.1em; text-align: center; }
+.prologue-footer .pixel-button { min-width: clamp(9rem, 16vw, 13.5rem); }
+
 /* Briefing */
 .briefing-screen {
   padding: clamp(0.6rem, 3vw, 2rem);
@@ -435,6 +661,11 @@ noscript { position: fixed; z-index: 100; inset: 0; display: grid; place-items: 
   .hud-top { gap: 0.35rem; }
   .hud-resources { margin-left: auto; }
   .boss-bar { top: 3.2rem; width: 54%; }
+  .prologue-copy { bottom: 3.5rem; width: 70%; }
+  .prologue-narration { line-height: 1.25; }
+  .prologue-dialogue { margin-top: 0.35rem; }
+  .prologue-help { display: none; }
+  .prologue-footer { grid-template-columns: 1fr auto; }
 }
 
 @media (max-width: 520px) and (orientation: portrait) {
@@ -449,6 +680,14 @@ noscript { position: fixed; z-index: 100; inset: 0; display: grid; place-items: 
   .crest { display: none; }
   .hud-resources span:nth-child(2) { display: none; }
   .touch-controls { padding-bottom: 3.4rem; }
+  .prologue-stage::before { opacity: 0.78; }
+  .prologue-image { inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; }
+  .prologue-copy { right: 1rem; bottom: 5.2rem; left: 1rem; width: auto; }
+  .prologue-copy h2 { font-size: clamp(1.2rem, 8vw, 2rem); }
+  .prologue-footer { grid-template-columns: 1fr; }
+  .prologue-footer .pixel-button { width: 100%; }
+  .prologue-progress { justify-content: center; }
+  .prologue-skip kbd { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
