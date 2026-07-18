@@ -1,0 +1,135 @@
+{
+  "schema": 1,
+  "id": "kai-kurokawa-deployment",
+  "regionTags": [
+    "kai",
+    "tsuru",
+    "tsuru-kurokawa",
+    "kanei-1638"
+  ],
+  "selectionPolicy": {
+    "explicitAllowLists": true,
+    "inheritPoolTags": true,
+    "excludeUnlistedCharacters": true,
+    "forbiddenRoleTags": [
+      "coastal-fisher",
+      "salt-coast",
+      "pirate",
+      "naval",
+      "amphibious"
+    ]
+  },
+  "pools": {
+    "kai-kurokawa-village": {
+      "chapterTags": [
+        "village",
+        "quarantine",
+        "civilian-infected"
+      ],
+      "regular": [
+        "r02-sekisho-messenger",
+        "r03-kurokawa-miner",
+        "r04-chaya-servant",
+        "r05-kome-porter",
+        "r06-yama-woodcutter",
+        "r08-kawara-roofer",
+        "r09-haka-digger",
+        "r10-hikeshi-watchman",
+        "r12-miya-porter",
+        "r13-yakushi-apprentice",
+        "r14-kaido-bandit",
+        "r16-kusari-prisoner",
+        "r17-umaya-groom",
+        "r18-washi-maker",
+        "r19-kago-bearer",
+        "r20-komuso-wanderer"
+      ],
+      "special": [
+        "s01-kusa-shinobi",
+        "s02-doku-kunoichi",
+        "s03-bakusai-runner",
+        "s04-onibi-adept",
+        "s05-raimei-yamabushi",
+        "s06-oni-men-executioner",
+        "s09-kuro-yakushi",
+        "s11-biwa-revenant",
+        "s12-shikigami-scribe",
+        "s13-kegare-sumotori",
+        "s17-kurohata-bearer",
+        "s18-yomi-herald",
+        "s19-wana-trapper",
+        "s20-mekura-oracle"
+      ]
+    },
+    "kai-kurokawa-castle": {
+      "chapterTags": [
+        "castle",
+        "quarantine-garrison",
+        "yomi-court"
+      ],
+      "regular": [
+        "r02-sekisho-messenger",
+        "r03-kurokawa-miner",
+        "r05-kome-porter",
+        "r08-kawara-roofer",
+        "r10-hikeshi-watchman",
+        "r13-yakushi-apprentice",
+        "r15-oku-servant",
+        "r16-kusari-prisoner",
+        "r17-umaya-groom",
+        "r19-kago-bearer"
+      ],
+      "special": [
+        "s06-oni-men-executioner",
+        "s07-tessen-courtier",
+        "s08-gomon-jailer",
+        "s09-kuro-yakushi",
+        "s10-hatamoto-fallen",
+        "s12-shikigami-scribe",
+        "s13-kegare-sumotori",
+        "s15-teppo-corpsman",
+        "s16-kage-mai-dancer",
+        "s17-kurohata-bearer",
+        "s18-yomi-herald",
+        "s20-mekura-oracle"
+      ],
+      "miniboss": [
+        "mb-01-gunso-croc-fer",
+        "mb-02-ronin-kurogane",
+        "mb-03-sohei-cent-prieres",
+        "mb-07-arquebusier-jigoku",
+        "mb-08-archer-os",
+        "mb-09-pisteur-kegare",
+        "mb-10-forgeron-hibana",
+        "mb-11-hatamoto-inazuma",
+        "mb-12-gardien-masque-fer",
+        "mb-15-kunoichi-veuve",
+        "mb-16-yoriki-gashadokuro",
+        "mb-18-onmyoji-renard",
+        "mb-20-capitaine-byakko"
+      ]
+    }
+  },
+  "explicitExclusions": [
+    {
+      "id": "r01-nureta-fisher",
+      "reason": "profil côtier incompatible avec le district intérieur de Tsuru-Kurokawa"
+    },
+    {
+      "id": "r07-shio-worker",
+      "reason": "activité saline côtière incompatible avec Kai"
+    },
+    {
+      "id": "s14-mizuchi-diver",
+      "reason": "profil amphibie réservé aux niveaux fluviaux"
+    },
+    {
+      "id": "mb-14-pirate-shioyake",
+      "reason": "profil wakō réservé aux niveaux côtiers"
+    },
+    {
+      "id": "boss-06-amiral-shiranui",
+      "reason": "commandement maritime réservé à une campagne côtière"
+    }
+  ]
+}

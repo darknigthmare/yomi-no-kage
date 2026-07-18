@@ -9,7 +9,7 @@
       content="Yomi no Kage, un jeu d'action pixel-art alternant plateforme 2D et FPS rétro dans un Japon féodal ravagé par une épidémie zombie."
     />
     <title>Yomi no Kage — L'Ombre du Shogun</title>
-    <link rel="stylesheet" href="styles.css?v=23" />
+    <link rel="stylesheet" href="styles.css?v=25" />
   </head>
   <body>
     <main class="game-shell" aria-label="Yomi no Kage, jeu d'action pixel-art">
@@ -22,7 +22,7 @@
           tabindex="0"
         ></canvas>
 
-        <div id="hud" class="hud" aria-live="polite">
+        <div id="hud" class="hud">
           <div class="hud-top">
             <div class="crest" aria-hidden="true"><span>影</span></div>
             <div class="meter-stack">
@@ -85,6 +85,7 @@
         </button>
 
         <div id="announcement" class="announcement" aria-live="assertive" aria-atomic="true"></div>
+        <div id="game-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
         <div id="damage-flash" class="damage-flash" aria-hidden="true"></div>
       </section>
 
@@ -99,15 +100,87 @@
             La peste des morts a franchi les cols de Kai. Le shogun n'envoie ni armée, ni prêtre.
             <strong>Il vous envoie, vous.</strong>
           </p>
-          <button id="start-button" class="pixel-button primary large" type="button">
-            RECEVOIR L'ORDRE <span aria-hidden="true">›</span>
-          </button>
+          <nav class="title-menu" aria-label="Menu principal">
+            <button id="continue-button" class="pixel-button large" type="button" disabled aria-describedby="continue-note">
+              CONTINUER
+            </button>
+            <button id="start-button" class="pixel-button primary large" type="button">
+              NOUVELLE PARTIE <span aria-hidden="true">›</span>
+            </button>
+            <button id="settings-button" class="pixel-button ghost large" type="button" aria-controls="settings-screen">
+              PARAMÈTRES
+            </button>
+          </nav>
+          <p id="continue-note" class="title-save-note">Aucune chronique sauvegardée.</p>
           <a class="title-artbook" href="assets.html">CONSULTER L'ARTBOOK &amp; L'ARSENAL</a>
           <div class="title-features" aria-label="Caractéristiques du jeu">
             <span>PLATEFORME 2D</span><i></i><span>FPS RAYCAST</span><i></i><span>HORREUR 16-BIT</span>
           </div>
         </div>
         <p class="title-credit">UNE CHRONIQUE INTERACTIVE ORIGINALE</p>
+      </section>
+
+      <section
+        id="settings-screen"
+        class="screen-overlay settings-screen"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="settings-title"
+        aria-hidden="true"
+        tabindex="-1"
+      >
+        <div class="settings-panel">
+          <header class="settings-header">
+            <div>
+              <p class="eyebrow">CONFORT DE JEU</p>
+              <h2 id="settings-title">PARAMÈTRES</h2>
+            </div>
+            <button id="settings-close" class="settings-close" type="button" aria-label="Fermer les paramètres">×</button>
+          </header>
+
+          <div class="settings-grid">
+            <fieldset>
+              <legend>Audio</legend>
+              <label for="settings-master-volume"><span>Volume général</span><output id="settings-master-output">85 %</output></label>
+              <input id="settings-master-volume" type="range" min="0" max="100" value="85" />
+              <label for="settings-music-volume"><span>Musique</span><output id="settings-music-output">55 %</output></label>
+              <input id="settings-music-volume" type="range" min="0" max="100" value="55" />
+              <label for="settings-sfx-volume"><span>Effets sonores</span><output id="settings-sfx-output">85 %</output></label>
+              <input id="settings-sfx-volume" type="range" min="0" max="100" value="85" />
+              <label class="settings-check" for="settings-muted">
+                <input id="settings-muted" type="checkbox" />
+                <span>Couper tous les sons</span>
+              </label>
+            </fieldset>
+
+            <fieldset>
+              <legend>Accessibilité</legend>
+              <label class="settings-check" for="settings-reduced-motion">
+                <input id="settings-reduced-motion" type="checkbox" />
+                <span>Réduire les mouvements et désactiver l’auto-défilement</span>
+              </label>
+              <label class="settings-check" for="settings-screen-shake">
+                <input id="settings-screen-shake" type="checkbox" checked />
+                <span>Autoriser les secousses de caméra pendant les impacts</span>
+              </label>
+              <label class="settings-check" for="settings-high-contrast">
+                <input id="settings-high-contrast" type="checkbox" />
+                <span>Renforcer le contraste de l’interface</span>
+              </label>
+              <label for="settings-text-scale"><span>Taille des textes</span></label>
+              <select id="settings-text-scale">
+                <option value="normal">Normale</option>
+                <option value="large">Grande</option>
+              </select>
+              <p class="settings-note">Les commandes clavier et tactiles restent affichées dans les écrans de mission.</p>
+            </fieldset>
+          </div>
+
+          <footer class="settings-footer">
+            <p id="settings-status" role="status" aria-live="polite"></p>
+            <button id="settings-done" class="pixel-button primary compact" type="button">VALIDER</button>
+          </footer>
+        </div>
       </section>
 
       <section
@@ -126,9 +199,14 @@
 
           <header class="prologue-toolbar">
             <span id="prologue-counter" class="prologue-counter">PLAN 1 / 6</span>
-            <button id="prologue-skip" class="prologue-skip" type="button">
-              PASSER LE PROLOGUE <kbd>ÉCHAP</kbd>
-            </button>
+            <div class="prologue-toolbar-actions">
+              <button id="prologue-pause" class="prologue-skip" type="button" aria-pressed="false">
+                PAUSE <kbd>P</kbd>
+              </button>
+              <button id="prologue-skip" class="prologue-skip" type="button">
+                PASSER LE PROLOGUE <kbd>ÉCHAP</kbd>
+              </button>
+            </div>
           </header>
 
           <div id="prologue-copy" class="prologue-copy" aria-live="polite" aria-atomic="true">
@@ -151,10 +229,13 @@
               aria-valuemax="6"
               aria-valuenow="1"
             ></div>
-            <p class="prologue-help">CLIC · ESPACE · ENTRÉE POUR CONTINUER</p>
-            <button id="prologue-next" class="pixel-button primary compact" type="button">
-              PLAN SUIVANT <span aria-hidden="true">›</span>
-            </button>
+            <p id="prologue-help" class="prologue-help">CLIC · ESPACE · ENTRÉE POUR CONTINUER</p>
+            <div class="prologue-nav-actions">
+              <button id="prologue-prev" class="pixel-button ghost compact" type="button">PLAN PRÉCÉDENT</button>
+              <button id="prologue-next" class="pixel-button primary compact" type="button">
+                PLAN SUIVANT <span aria-hidden="true">›</span>
+              </button>
+            </div>
           </footer>
         </div>
       </section>
@@ -186,7 +267,10 @@
                 <div><dt><kbd>A</kbd><kbd>D</kbd></dt><dd>Se déplacer</dd></div>
                 <div><dt><kbd>W</kbd><kbd>S</kbd></dt><dd>Avancer / reculer en FPS</dd></div>
                 <div><dt><kbd>ESPACE</kbd></dt><dd>Sauter en 2D</dd></div>
-                <div><dt><kbd>J</kbd> / <kbd>CLIC</kbd></dt><dd>Arme active</dd></div>
+                <div><dt><kbd>J</kbd> / <kbd>CLIC</kbd></dt><dd>Combo léger</dd></div>
+                <div><dt><kbd>L</kbd></dt><dd>Attaque lourde</dd></div>
+                <div><dt><kbd>U</kbd></dt><dd>Maintenir la garde / parer</dd></div>
+                <div><dt><kbd>H</kbd></dt><dd>Esquiver</dd></div>
                 <div><dt><kbd>K</kbd> / <kbd>3</kbd></dt><dd>Projectile préparé</dd></div>
                 <div><dt><kbd>1</kbd><kbd>2</kbd><kbd>Q</kbd></dt><dd>Principale / secondaire</dd></div>
                 <div><dt><kbd>I</kbd></dt><dd>Ouvrir le dōjō</dd></div>
@@ -197,7 +281,7 @@
             </div>
           </div>
           <footer class="briefing-footer">
-            <p>« N'épargnez que les vivants. » <span>— Tokugawa Iemitsu</span></p>
+            <p><span class="fiction-label">DIALOGUE FICTIONNEL</span> « N'épargnez que les vivants. » <span>— ordre dramatique attribué au shogun</span></p>
             <button id="briefing-start-button" class="pixel-button primary" data-loadout-open="briefing" type="button">PRÉPARER L’ÉQUIPEMENT</button>
           </footer>
         </div>
@@ -278,7 +362,7 @@
         </div>
       </section>
 
-      <section id="pause-screen" class="screen-overlay pause-screen" aria-labelledby="pause-title">
+      <section id="pause-screen" class="screen-overlay pause-screen" role="dialog" aria-modal="true" aria-labelledby="pause-title" aria-hidden="true" tabindex="-1">
         <div class="modal-card">
           <p class="japanese-glyph" aria-hidden="true">間</p>
           <p class="eyebrow">LE TEMPS S'IMMOBILISE</p>
@@ -290,7 +374,7 @@
         </div>
       </section>
 
-      <section id="end-screen" class="screen-overlay end-screen" aria-labelledby="end-title">
+      <section id="end-screen" class="screen-overlay end-screen" role="dialog" aria-modal="true" aria-labelledby="end-title" aria-hidden="true" tabindex="-1">
         <div class="modal-card end-card">
           <p id="end-glyph" class="japanese-glyph" aria-hidden="true">勝</p>
           <p id="end-kicker" class="eyebrow">MISSION ACCOMPLIE</p>
@@ -311,33 +395,36 @@
         class="touch-look"
         aria-label="Zone tactile : glisser horizontalement pour tourner la caméra"
       >
-        <span>GLISSER POUR TOURNER</span>
+        <span>GLISSER ICI POUR TOURNER</span>
       </div>
 
       <div id="touch-controls" class="touch-controls" aria-label="Commandes tactiles">
         <div class="touch-cluster movement">
-          <button class="touch-button left" data-input="left" type="button" aria-label="Gauche">◀</button>
-          <button class="touch-button up" data-input="up" type="button" aria-label="Avancer ou sauter">▲</button>
-          <button class="touch-button down" data-input="down" type="button" aria-label="Reculer">▼</button>
-          <button class="touch-button right" data-input="right" type="button" aria-label="Droite">▶</button>
+          <button class="touch-button left" data-input="left" type="button" aria-label="Gauche"><span aria-hidden="true">◀</span><small>GAUCHE</small></button>
+          <button class="touch-button up" data-input="up" type="button" aria-label="Avancer ou sauter"><span aria-hidden="true">▲</span><small>AVANT</small></button>
+          <button class="touch-button down" data-input="down" type="button" aria-label="Reculer"><span aria-hidden="true">▼</span><small>ARRIÈRE</small></button>
+          <button class="touch-button right" data-input="right" type="button" aria-label="Droite"><span aria-hidden="true">▶</span><small>DROITE</small></button>
         </div>
         <div class="touch-cluster actions">
           <button class="touch-button small" data-action="switch" type="button" aria-label="Changer de vue">VUE</button>
           <button class="touch-button small" data-action="interact" type="button" aria-label="Interagir">E</button>
-          <button id="touch-weapon-swap" class="touch-button small" data-action="weapon-swap" type="button" aria-label="Changer entre arme principale et secondaire">替</button>
-          <button class="touch-button ranged" data-action="ranged" type="button" aria-label="Utiliser le projectile équipé">刃</button>
-          <button class="touch-button attack" data-action="attack" type="button" aria-label="Attaquer avec l’arme active">斬</button>
+          <button id="touch-weapon-swap" class="touch-button small" data-action="weapon-swap" type="button" aria-label="Changer entre arme principale et secondaire">ARME</button>
+          <button class="touch-button ranged" data-action="ranged" type="button" aria-label="Utiliser le projectile équipé">TIR</button>
+          <button class="touch-button attack" data-action="attack" type="button" aria-label="Attaquer avec l’arme active">COUP</button>
+          <button id="touch-heavy" class="touch-button heavy" data-action="heavy" type="button" aria-label="Déclencher une attaque lourde">LOURD</button>
+          <button id="touch-guard" class="touch-button guard" data-action="guard" type="button" aria-label="Maintenir pour garder, relâcher pour cesser">GARDE</button>
+          <button id="touch-dodge" class="touch-button dodge" data-action="dodge" type="button" aria-label="Esquiver">ESQ.</button>
         </div>
       </div>
     </main>
 
     <noscript>Ce jeu nécessite JavaScript pour fonctionner.</noscript>
-    <script src="audio.js?v=3"></script>
-    <script src="arsenal.js?v=1"></script>
-    <script src="save.js?v=1"></script>
+    <script src="audio.js?v=4"></script>
+    <script src="arsenal.js?v=2"></script>
+    <script src="save.js?v=2"></script>
     <script src="loadout.js?v=1"></script>
-    <script src="level-data.js?v=2"></script>
-    <script src="game.js?v=24"></script>
-    <script src="cinematic.js?v=4"></script>
+    <script src="level-data.js?v=3"></script>
+    <script src="game.js?v=25"></script>
+    <script src="cinematic.js?v=6"></script>
   </body>
 </html>

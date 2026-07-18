@@ -1153,11 +1153,12 @@
     ranged: "kunai",
   });
   const defaultUnlockedWeapons = Object.freeze(
-    // Le shogun ouvre son arsenal de quarantaine avant la mission : le joueur
-    // peut réellement tester les 53 armes dans le dōjō dès cette version.
-    // Les conditions `unlock` restent les provenances lore et serviront aux
-    // modes de progression plus restrictifs.
-    weapons.filter((entry) => entry.playable).map((entry) => entry.id),
+    // La chronique commence avec un équipement lisible. Les autres armes
+    // restent visibles au dōjō, puis se débloquent par boss, chapitre,
+    // contrat, secret ou artisan selon leur provenance de lore.
+    weapons
+      .filter((entry) => entry.playable && entry.unlockedByDefault)
+      .map((entry) => entry.id),
   );
 
   function weaponById(id) {

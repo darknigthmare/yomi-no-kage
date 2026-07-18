@@ -25,6 +25,14 @@
   const PLAYER_DEATH_DURATION = 0.9;
   const ENEMY_HURT_DURATION = 0.34;
   const ENEMY_DEATH_DURATION = 0.78;
+  const PLAYER_COMBO_WINDOW = 0.72;
+  const PLAYER_PARRY_WINDOW = 0.18;
+  const PLAYER_DODGE_DURATION = 0.32;
+  const PLAYER_DODGE_COOLDOWN = 0.72;
+  const PLAYER_GUARD_POSTURE_MAX = 100;
+  const SIDE_ANIMATION_CACHE_LIMIT = 24;
+  const FPS_ANIMATION_CACHE_LIMIT = 18;
+  const FPS_WEAPON_ANIMATION_CACHE_LIMIT = 10;
   const ENEMY_HURT_RENDER_SCALE = 0.92;
   const SIDE_ENEMY_BASELINE_OFFSET = 4;
   const SIDE_GROUND_Y = 300;
@@ -225,6 +233,18 @@
       // Une partie locale ou un navigateur privé restent jouables sans save.
     }
     return normalizePlayerLoadout();
+  }
+
+  function persistedGameSettings() {
+    try {
+      const settings = window.KageSave?.load?.()?.settings || {};
+      return {
+        reducedMotion: Boolean(settings.reducedMotion),
+        screenShake: settings.screenShake !== false,
+      };
+    } catch (_) {
+      return { reducedMotion: false, screenShake: true };
+    }
   }
 
   function persistedAmmoMap() {
@@ -598,24 +618,68 @@
     };
   }
 
-  function playerAttackSpec(weapon = currentPlayerWeapon()) {
+  function playerAttackSpec(weapon = currentPlayerWeapon(), options = {}) {
     const stats = normalizedWeaponStats(weapon);
     const family = weaponFamilyKey(weapon);
-    const duration = clamp(0.54 - stats.speed * 0.0032, 0.22, 0.52);
+    const attackKind = options.kind === "heavy" ? "heavy" : "light";
+    const comboStep = clamp(Math.round(options.comboStep || 1), 1, 3);
+    const passiveEffect = String(weapon?.passive?.effect || "");
+    const passiveTrigger = String(weapon?.passive?.trigger || "");
+    let duration = clamp(0.54 - stats.speed * 0.0032, 0.22, 0.52);
+    let damage = clamp(Math.round(1 + stats.power / 42), 1, 4);
+    let staminaCost = Math.max(4, stats.kiCost * 0.72);
+    let sideReach = 30 + stats.reach * 0.38;
+    let fpsReach = 1.02 + stats.reach * 0.012;
+    let postureDamage = 12 + stats.posture * 0.34;
+    let targets = ["polearm", "flexible", "staff", "capture"].includes(family)
+      ? 3
+      : (family === "shortBlade" ? 1 : 2);
+
+    if (attackKind === "heavy") {
+      duration *= 1.58;
+      damage = Math.max(2, Math.round(damage * 1.75));
+      staminaCost *= 1.55;
+      postureDamage *= 2.25;
+      sideReach *= 1.12;
+      fpsReach *= 1.1;
+      targets = Math.max(1, targets - 1);
+    } else {
+      const comboDamage = [1, 1.16, 1.42][comboStep - 1];
+      damage = Math.max(1, Math.round(damage * comboDamage));
+      postureDamage *= [1, 1.12, 1.38][comboStep - 1];
+      duration *= [1, 0.94, 1.12][comboStep - 1];
+      if (game?.loadout?.technique === "iai-kage" && comboStep === 3) {
+        damage += 1;
+        postureDamage *= 1.2;
+      }
+    }
+
+    if (passiveEffect === "attackSpeed" || passiveEffect === "indoorAttackSpeed") duration *= 0.88;
+    if (passiveEffect === "reach") {
+      sideReach *= 1.14;
+      fpsReach *= 1.14;
+    }
+    if (passiveEffect === "extraTarget") targets += 1;
+    if (passiveEffect === "lightAttackKiCost" && attackKind === "light") staminaCost *= 0.78;
+    if (passiveEffect === "postureDamage" || passiveTrigger === "onHeavyHit") postureDamage *= 1.25;
+    if (passiveEffect === "highHealthDamage" && game?.health >= 80) damage += 1;
+
     return {
       weapon,
       stats,
       family,
+      attackKind,
+      comboStep,
       duration,
       cooldown: duration + clamp(0.25 - stats.speed * 0.0014, 0.1, 0.24),
-      damage: clamp(Math.round(1 + stats.power / 42), 1, 4),
-      sideReach: 30 + stats.reach * 0.38,
-      fpsReach: 1.02 + stats.reach * 0.012,
-      targets: ["polearm", "flexible", "staff", "capture"].includes(family)
-        ? 3
-        : (family === "shortBlade" ? 1 : 2),
-      staminaCost: Math.max(4, stats.kiCost * 0.72),
+      damage,
+      sideReach,
+      fpsReach,
+      targets,
+      staminaCost: Math.max(3, staminaCost),
+      postureDamage,
       armorBonus: stats.armorPenetration >= 62 ? 1 : 0,
+      armorIgnore: passiveEffect === "armorIgnore",
     };
   }
 
@@ -648,18 +712,21 @@
 
   const bitmapAssets = {
     akioModular: loadAnimationSet("assets/modular/characters/player/akio"),
-    akioFpsBody: loadAnimationSet("assets/modular/fps/player/akio/body"),
+    // Les cinq planches FPS 5760x640 sont volontairement differees jusqu'a
+    // la premiere entree en vue subjective afin d'epargner la memoire mobile.
+    akioFpsBody: null,
     // Les mêmes lames détourées servent aux deux perspectives. Les anciennes
     // sources générées contenaient encore, pour sept sabres, un morceau de
     // fourreau dans le crop 2D.
     weapons: KATANA_IDS.map((id) =>
       loadBitmap(`assets/modular/fps/player/akio/weapons/${id}/weapon.png`)),
-    fpsPlayerWeapons: KATANA_IDS.map((id) =>
-      loadBitmap(`assets/modular/fps/player/akio/weapons/${id}/weapon.png`)),
+    fpsPlayerWeapons: [],
     sideBackgrounds: [
       loadBitmap("assets/generated/environments/01-kurokawa-burning-village.png"),
       loadBitmap("assets/generated/environments/02-bamboo-shrine.png"),
-      loadBitmap("assets/generated/environments/03-daimyo-castle-interior.png"),
+      // L'ancien panorama frontal FPS ne doit ni charger ni apparaître dans
+      // les pièces latérales du château.
+      null,
     ],
     parallaxBackgrounds: [
       loadParallaxSet("assets/modular/environments/kurokawa"),
@@ -787,6 +854,17 @@
     ],
   };
 
+  function ensureFpsPlayerAssets() {
+    if (!bitmapAssets.akioFpsBody) {
+      bitmapAssets.akioFpsBody = loadAnimationSet("assets/modular/fps/player/akio/body");
+    }
+    if (!bitmapAssets.fpsPlayerWeapons.length) {
+      bitmapAssets.fpsPlayerWeapons = KATANA_IDS.map((id) =>
+        loadBitmap(`assets/modular/fps/player/akio/weapons/${id}/weapon.png`));
+    }
+    return bitmapAssets.akioFpsBody;
+  }
+
   // Le registre complet reste charge a la demande : seuls les adversaires
   // visibles instancient leurs cinq planches, ce qui evite de charger les
   // centaines de PNG du bestiaire en une seule fois.
@@ -801,35 +879,49 @@
     fpsWeaponAnimationSets: new Map(),
   };
 
+  function cacheAnimationSet(cache, cacheId, factory, limit) {
+    if (cache.has(cacheId)) {
+      const cached = cache.get(cacheId);
+      cache.delete(cacheId);
+      cache.set(cacheId, cached);
+      return cached;
+    }
+    const created = factory();
+    cache.set(cacheId, created);
+    while (cache.size > limit) {
+      const oldestKey = cache.keys().next().value;
+      cache.delete(oldestKey);
+    }
+    return created;
+  }
+
   function getRosterCategory(category) {
     return modularRoster.characters.filter((entry) => entry.category === category);
   }
 
   function animationSetForRosterEntry(entry) {
     if (!entry) return null;
-    if (!modularRoster.animationSets.has(entry.id)) {
-      modularRoster.animationSets.set(
-        entry.id,
-        loadAnimationSet(`assets/modular/characters/${entry.category}/${entry.id}`),
-      );
-    }
-    return modularRoster.animationSets.get(entry.id);
+    return cacheAnimationSet(
+      modularRoster.animationSets,
+      entry.id,
+      () => loadAnimationSet(`assets/modular/characters/${entry.category}/${entry.id}`),
+      SIDE_ANIMATION_CACHE_LIMIT,
+    );
   }
 
-  function animationSetFromPaths(paths, cache, cacheId) {
+  function animationSetFromPaths(paths, cache, cacheId, limit = FPS_ANIMATION_CACHE_LIMIT) {
     if (!paths || !cacheId) return null;
-    if (!cache.has(cacheId)) {
-      cache.set(
-        cacheId,
-        Object.fromEntries(
+    return cacheAnimationSet(
+      cache,
+      cacheId,
+      () => Object.fromEntries(
           MODULAR_ANIMATIONS.map((animation) => [
             animation,
             paths[animation] ? loadBitmap(paths[animation]) : null,
           ]),
         ),
-      );
-    }
-    return cache.get(cacheId);
+      limit,
+    );
   }
 
   function fpsAnimationSetForRosterEntry(entry) {
@@ -839,7 +931,12 @@
 
   function fpsWeaponSetForWeapon(weapon) {
     if (!weapon) return null;
-    return animationSetFromPaths(weapon.fpsAnimations, modularRoster.fpsWeaponAnimationSets, weapon.id);
+    return animationSetFromPaths(
+      weapon.fpsAnimations,
+      modularRoster.fpsWeaponAnimationSets,
+      weapon.id,
+      FPS_WEAPON_ANIMATION_CACHE_LIMIT,
+    );
   }
 
   function weaponBitmapForEnemy(enemy) {
@@ -876,6 +973,31 @@
       || enemy?.boss
     ) return "armor";
     return "flesh";
+  }
+
+  function enemyBehaviorFamily(enemy, entry = enemy?.modularEntry) {
+    if (isMassiveEnemy(enemy)) return "charger";
+    const text = [
+      entry?.id,
+      entry?.name,
+      entry?.subtitle,
+      entry?.gameplay,
+      entry?.weaponId,
+      enemy?.weaponAsset?.id,
+    ].filter(Boolean).join(" ").toLowerCase();
+    if (/teppo|tanegashima|arqueb|archer|yumi|arc\b|tireur|projectile|shuriken|kunai/.test(text)) {
+      return "ranged";
+    }
+    if (/onibi|onryo|oracle|shikigami|miko|yomi|esprit|spirit|spectr|biwa/.test(text)) {
+      return "spirit";
+    }
+    if (/bouclier|pavois|shield|gardien|kabuto|carapace|jailer|geoli/.test(text)) {
+      return "shield";
+    }
+    if (/charge|runner|sumotori|oni|taureau|ushi|brute|cavalier/.test(text)) {
+      return "charger";
+    }
+    return "melee";
   }
 
   function massiveBossProfileFor(entry) {
@@ -943,6 +1065,7 @@
       : null;
     enemy.weaponAsset = requestedWeapon || fallbackWeapon || null;
     enemy.weaponFile = enemy.weaponAsset?.file || null;
+    enemy.behaviorFamily = enemyBehaviorFamily(enemy, entry);
   }
 
   function applyRosterToGame(state) {
@@ -952,7 +1075,19 @@
     const miniboss = getRosterCategory("miniboss");
     const bosses = getRosterCategory("boss");
     const giants = getRosterCategory("giant");
-    const sidePool = [...regular, ...special];
+    const activeArea = sideAreaById(state.side?.areaId);
+    const rosterPoolId = activeArea?.rosterPoolId || null;
+    const declaredPool = window.KageLevels?.rosterPools?.[rosterPoolId] || null;
+    const entriesForIds = (ids, fallback) => {
+      if (!Array.isArray(ids) || !ids.length) return fallback;
+      const allowList = new Set(ids);
+      const regional = modularRoster.characters.filter((entry) => allowList.has(entry.id));
+      return regional.length ? regional : fallback;
+    };
+    const regionalRegular = entriesForIds(declaredPool?.regular, regular);
+    const regionalSpecial = entriesForIds(declaredPool?.special, special);
+    const regionalMiniboss = entriesForIds(declaredPool?.miniboss, miniboss);
+    const sidePool = [...regionalRegular, ...regionalSpecial];
     state.side.enemies.forEach((enemy, index) => {
       const rosterIndex = state.chapter * state.side.enemies.length + index;
       const explicitId = enemy.rosterId || enemy.profileId;
@@ -960,13 +1095,16 @@
         ? modularRoster.characters.find((entry) => entry.id === explicitId)
         : null;
       const hintedPool = enemy.rosterHint === "miniboss"
-        ? miniboss
+        ? regionalMiniboss
         : (enemy.rosterHint === "special"
-          ? special
+          ? regionalSpecial
           : (enemy.rosterHint === "boss" ? bosses : sidePool));
       const entry = explicitEntry
         || (hintedPool.length ? hintedPool[rosterIndex % hintedPool.length] : null);
-      if (entry) equipRosterEntry(enemy, entry, rosterIndex);
+      if (entry) {
+        equipRosterEntry(enemy, entry, rosterIndex);
+        enemy.rosterPoolId = rosterPoolId;
+      }
     });
     state.fps.missions.forEach((mission, missionIndex) => {
       const combatPool = missionIndex === 0 ? special : [...special.slice(10), ...miniboss];
@@ -975,8 +1113,12 @@
         if (enemy.boss) {
           // Aka-Ushi domine une arène de route en 2D. Le donjon conserve son
           // daimyō FPS : les deux formats ont ainsi une vraie arène dédiée.
-          const bossEntry = bosses[missionIndex % bosses.length]
-            || giants[missionIndex % giants.length];
+          const bossEntry = missionIndex === 1
+            ? modularRoster.characters.find((entry) => entry.id === "06-daimyo-corrupted")
+              || bosses[missionIndex % bosses.length]
+              || giants[missionIndex % giants.length]
+            : bosses[missionIndex % bosses.length]
+              || giants[missionIndex % giants.length];
           if (bossEntry) {
             equipRosterEntry(enemy, bossEntry, 40 + missionIndex);
           }
@@ -1014,6 +1156,11 @@
     pause: document.getElementById("pause-screen"),
     end: document.getElementById("end-screen"),
     startButton: document.getElementById("start-button"),
+    continueButton: document.getElementById("continue-button")
+      || document.getElementById("continue-game"),
+    continueNote: document.getElementById("continue-note"),
+    settingsButton: document.getElementById("settings-button")
+      || document.getElementById("settings-toggle"),
     health: document.getElementById("hud-health"),
     healthText: document.getElementById("hud-health-text"),
     stamina: document.getElementById("hud-stamina"),
@@ -1181,12 +1328,26 @@
       startedAt: 0,
       elapsed: 0,
       invulnerable: 0,
+      engagementGrace: 0,
       hurtTimer: 0,
       deathTimer: 0,
       attackTimer: 0,
       attackDuration: PLAYER_ATTACK_DURATION,
       attackCooldown: 0,
       attackHitApplied: false,
+      attackKind: "light",
+      attackSpec: null,
+      comboStep: 0,
+      comboTimer: 0,
+      guardHeld: false,
+      guardTimer: 0,
+      parryTimer: 0,
+      dodgeTimer: 0,
+      dodgeCooldown: 0,
+      playerPosture: 0,
+      playerPostureDelay: 0,
+      perfectParries: 0,
+      settings: persistedGameSettings(),
       rangedViewTimer: 0,
       lastRangedWeaponId: null,
       playerStagger: 0,
@@ -1198,6 +1359,8 @@
       transition: 0,
       transitionLabel: "",
       pendingTravel: null,
+      activeCheckpointId: null,
+      restoringProgress: false,
       loadout,
       activeWeaponSlot: "primary",
       activeWeaponId: loadout.primary,
@@ -1210,6 +1373,60 @@
         zBuffer: new Array(320).fill(20),
       },
     };
+  }
+
+  function savedProgress() {
+    try {
+      return window.KageSave?.getProgress?.()
+        || window.KageSave?.load?.()?.progress
+        || null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function persistRunProgress(patch = {}) {
+    if (!window.KageSave?.setProgress || !game || game.restoringProgress) return null;
+    const previous = savedProgress();
+    const areaId = patch.areaId || game.side?.areaId || sideAreaIdForChapter(game.chapter);
+    const area = sideAreaById(areaId);
+    const chapter = area?.chapterId === "castle" ? 1 : game.chapter;
+    try {
+      return window.KageSave.setProgress({
+        chapter,
+        highestChapter: chapter,
+        areaId,
+        spawnId: patch.spawnId || previous?.spawnId || "prologue",
+        checkpoint: patch.checkpoint || previous?.checkpoint || "kurokawa-entry",
+        health: clamp(Number(patch.health ?? game.health), 1, 100),
+        seals: Math.max(0, Number(patch.seals ?? game.seals) || 0),
+        elapsed: Math.max(0, Number(patch.elapsed ?? game.elapsed) || 0),
+        started: patch.started !== false,
+        completed: Boolean(patch.completed),
+      });
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function restoreRunProgress() {
+    const progress = savedProgress();
+    if (!progress?.started || progress.completed) return false;
+    game.restoringProgress = true;
+    game.chapter = clamp(Number(progress.chapter) || 0, 0, 1);
+    game.health = clamp(Number(progress.health) || 100, 1, 100);
+    game.seals = Math.max(0, Number(progress.seals) || 0);
+    game.elapsed = Math.max(0, Number(progress.elapsed) || 0);
+    game.activeCheckpointId = progress.checkpoint || null;
+    const fallbackAreaId = sideAreaIdForChapter(game.chapter);
+    const areaId = sideAreaById(progress.areaId) ? progress.areaId : fallbackAreaId;
+    const area = sideAreaById(areaId);
+    const spawnId = area?.spawns?.[progress.spawnId]
+      ? progress.spawnId
+      : Object.keys(area?.spawns || {})[0];
+    const restored = setCurrentSideArea(areaId, spawnId, true);
+    game.restoringProgress = false;
+    return restored;
   }
 
   function sideAreaById(areaId) {
@@ -1237,6 +1454,15 @@
     if (definition.platformId) return "sentinel";
     if (definition.roster === "special") return "brute";
     return "walker";
+  }
+
+  function persistedBossDefeated(...ids) {
+    try {
+      const bosses = window.KageSave?.load?.()?.bosses || {};
+      return ids.filter(Boolean).some((id) => bosses[id] === true);
+    } catch (_) {
+      return false;
+    }
   }
 
   function createSideEnemyAi(definition, area, width, height, index, massive) {
@@ -1311,7 +1537,11 @@
       const width = definition.w || (massive ? 128 : 16);
       const height = definition.h || (massive ? 82 : 24);
       const hp = definition.hp
-        || (massive ? 42 : (definition.roster === "special" || i > 6 ? 3 : 2));
+        || (massive
+          ? 42
+          : (definition.roster === "miniboss"
+            ? 9
+            : (definition.roster === "special" || i > 6 ? 3 : 2)));
       const enemy = {
         sourceId: definition.id || `${areaId}-enemy-${i + 1}`,
         rosterHint: definition.roster || null,
@@ -1338,11 +1568,29 @@
         knockbackVx: 0,
         flash: 0,
         impactMaterial: massive ? "armor" : "flesh",
+        behaviorFamily: massive ? "charger" : (definition.roster === "miniboss" ? "shield" : "melee"),
+        posture: 0,
+        maxPosture: massive ? 120 : (definition.roster === "miniboss" ? 72 : 36),
+        postureDelay: 0,
+        postureBrokenTimer: 0,
         massivePhase: massive ? 1 : null,
         detachablePartAttached: massive ? true : null,
         seed: chapter * 101 + i * 13.7,
         platformId: definition.platformId || null,
       };
+      if (
+        enemy.boss
+        && persistedBossDefeated(
+          enemy.sourceId,
+          enemy.rosterId,
+          enemy.profileId,
+          enemy.encounterId,
+        )
+      ) {
+        enemy.hp = 0;
+        enemy.dead = true;
+        enemy.dying = false;
+      }
       enemy.ai = createSideEnemyAi(definition, area, width, height, i, massive);
       return enemy;
     });
@@ -1478,6 +1726,8 @@
       attack: 0, attackDuration: 0.68, attackCooldown: i * 0.12, attackHitApplied: false,
       hurtTimer: 0, deathTimer: 0, knockbackX: 0, knockbackY: 0,
       flash: 0, boss: false, impactMaterial: "flesh",
+      behaviorFamily: "melee", posture: 0, maxPosture: 42,
+      postureDelay: 0, postureBrokenTimer: 0,
       spriteIndex: i % 5,
       engagementSlot: i,
       engagementAngle: formationPhase + i * Math.PI * 2 / formationCount,
@@ -1489,6 +1739,8 @@
         attack: 0, attackDuration: 0.92, attackCooldown: 0.4, attackHitApplied: false,
         hurtTimer: 0, deathTimer: 0, knockbackX: 0, knockbackY: 0,
         flash: 0, boss: true, spriteIndex: 5, impactMaterial: "armor",
+        behaviorFamily: "shield", posture: 0, maxPosture: 110,
+        postureDelay: 0, postureBrokenTimer: 0,
         engagementSlot: enemies.length,
         engagementAngle: formationPhase + enemies.length * Math.PI * 2 / formationCount,
         ai: createFpsEnemyAi(def.boss[0], def.boss[1], enemies.length, true),
@@ -1622,7 +1874,12 @@
     const encounter = currentSideMassiveEncounter();
     const boss = currentSideMassiveBoss(encounter);
     if (!encounter || !boss || !isEnemyAlive(boss)) {
+      const encounterEnded = Boolean(game.side.activeEncounterId);
       game.side.activeEncounterId = null;
+      if (encounterEnded) {
+        const music = sideMusicState();
+        setMusicState(music.state, music.intensity);
+      }
       return null;
     }
     const playerCenter = game.side.player.x + game.side.player.w / 2;
@@ -1630,7 +1887,12 @@
       game.side.activeEncounterId === encounter.id
       || playerCenter >= (encounter.activationX ?? encounter.bounds?.x ?? Infinity)
     ) {
+      const encounterStarted = game.side.activeEncounterId !== encounter.id;
       game.side.activeEncounterId = encounter.id;
+      if (encounterStarted) {
+        setMusicState("boss", 0.95);
+        playAudio("playCombatCue", "boss-intro");
+      }
       const bounds = encounter.bounds;
       if (bounds) {
         game.side.player.x = clamp(
@@ -1790,7 +2052,13 @@
       side.projectiles.length = 0;
       side.particles.length = 0;
     }
+    if (targetArea.chapterId === "castle") game.chapter = Math.max(game.chapter, 1);
     applyRosterToGame(game);
+    if (game.status === "playing" && !game.restoringProgress) {
+      persistRunProgress({ areaId, spawnId: spawnId || Object.keys(targetArea.spawns || {})[0] });
+      const music = sideMusicState(targetArea);
+      setMusicState(music.state, music.intensity);
+    }
     return true;
   }
 
@@ -1809,6 +2077,26 @@
     game.transitionLabel = label;
     game.invulnerable = Math.max(game.invulnerable, 1);
     playAudio("playTransition", "2d");
+    return true;
+  }
+
+  function updateSideCheckpoint() {
+    const checkpoints = currentSideArea()?.checkpoints || [];
+    if (!checkpoints.length || game.mode !== "side" || game.status !== "playing") return false;
+    const playerCenter = game.side.player.x + game.side.player.w / 2;
+    const checkpoint = checkpoints.find((entry) => Math.abs(playerCenter - entry.x) <= 34);
+    if (!checkpoint || game.activeCheckpointId === checkpoint.id) return false;
+    game.activeCheckpointId = checkpoint.id;
+    game.health = Math.min(100, game.health + 20);
+    game.playerPosture = 0;
+    persistRunProgress({
+      checkpoint: checkpoint.id,
+      areaId: game.side.areaId,
+      spawnId: checkpoint.spawnId,
+      health: game.health,
+    });
+    announce("FOYER SECURISE - PROGRESSION SAUVEGARDEE");
+    playAudio("playPickup");
     return true;
   }
 
@@ -1839,19 +2127,57 @@
     }
   }
 
+  function setMusicState(state, intensity = 0.45) {
+    const normalizedIntensity = clamp(intensity, 0, 1);
+    const signature = `${state}:${Math.round(normalizedIntensity * 20)}`;
+    if (document.body.dataset.musicState === signature) return;
+    document.body.dataset.musicState = signature;
+    playAudio("setMusicState", state, { intensity: normalizedIntensity });
+  }
+
+  function sideMusicState(area = currentSideArea()) {
+    if (game.side?.activeEncounterId) return { state: "boss", intensity: 0.95 };
+    if (["building", "castle"].includes(area?.zoneKind)) {
+      return { state: "interior", intensity: area?.zoneKind === "castle" ? 0.7 : 0.52 };
+    }
+    return { state: "village", intensity: game.chapter > 0 ? 0.62 : 0.42 };
+  }
+
   function showOnly(screen) {
     [dom.title, dom.briefing, dom.dojo, dom.pause, dom.end]
       .filter(Boolean)
-      .forEach((el) => el.classList.toggle("active", el === screen));
+      .forEach((el) => {
+        const active = el === screen;
+        el.classList.toggle("active", active);
+        el.setAttribute?.("aria-hidden", String(!active));
+      });
+  }
+
+  function refreshContinueState() {
+    const canContinue = Boolean(window.KageSave?.hasContinue?.());
+    if (dom.continueButton) {
+      dom.continueButton.disabled = !canContinue;
+      dom.continueButton.dataset.saveAvailable = String(canContinue);
+      dom.continueButton.setAttribute?.("aria-disabled", String(!canContinue));
+    }
+    if (dom.continueNote) {
+      const progress = savedProgress();
+      dom.continueNote.textContent = canContinue
+        ? `Chronique sauvegardee — chapitre ${Math.max(1, Number(progress?.chapter || 0) + 1)}, dernier foyer disponible.`
+        : "Aucune chronique sauvegardee.";
+    }
+    return canContinue;
   }
 
   function showBriefing() {
     showOnly(dom.briefing);
     game.status = "briefing";
     document.body.dataset.state = "briefing";
+    setMusicState("prologue", 0.25);
   }
 
-  async function startGame() {
+  async function startGame(options = {}) {
+    const continueRequested = options === true || options?.continue === true;
     const selectedLoadout = normalizePlayerLoadout(
       window.KageLoadout?.getCurrentLoadout?.()
       || window.KageSave?.getLoadout?.()
@@ -1859,21 +2185,61 @@
     );
     game = createGameState(selectedLoadout);
     applyRosterToGame(game);
+    if (continueRequested) restoreRunProgress();
     game.status = "playing";
-    game.startedAt = performance.now();
+    // Laisse au joueur le temps de reprendre la main après la fermeture du
+    // briefing ou le chargement d'un foyer. La première commande écourte
+    // cette grâce sans permettre un coup instantané hors champ.
+    game.engagementGrace = continueRequested ? 1.8 : 8;
+    game.startedAt = performance.now() - game.elapsed * 1000;
     document.body.dataset.state = "playing";
     showOnly(null);
     canvas.focus();
     if (window.gameAudio?.begin) {
       try { await window.gameAudio.begin(); } catch (_) { /* Autorisation navigateur facultative. */ }
     }
-    announce("KUROKAWA — LE VILLAGE DES CENDRES");
+    const music = sideMusicState();
+    setMusicState(music.state, music.intensity);
+    if (!continueRequested) {
+      persistRunProgress({
+        checkpoint: "kurokawa-entry",
+        areaId: game.side.areaId,
+        spawnId: "prologue",
+        started: true,
+      });
+    }
+    announce(continueRequested
+      ? "CHRONIQUE REPRISE AU DERNIER FOYER"
+      : "KUROKAWA — LE VILLAGE DES CENDRES");
     updateHud();
   }
 
   function restartGame() {
     document.exitPointerLock?.();
-    startGame();
+    const canContinue = window.KageSave?.hasContinue?.() || false;
+    startGame(canContinue ? { continue: true } : {});
+  }
+
+  function continueGame() {
+    if (window.KageSave?.hasContinue?.()) return startGame({ continue: true });
+    showBriefing();
+    announce("AUCUNE CHRONIQUE EN COURS");
+    return false;
+  }
+
+  function newGame() {
+    if (typeof dom.startButton?.click === "function") dom.startButton.click();
+    else prepareNewGameBriefing();
+    return true;
+  }
+
+  function prepareNewGameBriefing() {
+    try { window.KageSave?.reset?.(); } catch (_) { /* sauvegarde facultative */ }
+    game = createGameState();
+    applyRosterToGame(game);
+    refreshContinueState();
+    showBriefing();
+    return true;
   }
 
   function returnToTitle() {
@@ -1881,6 +2247,7 @@
     game.status = "title";
     document.body.dataset.state = "title";
     showOnly(dom.title);
+    setMusicState("title", 0.22);
   }
 
   function togglePause() {
@@ -1888,11 +2255,14 @@
       game.status = "paused";
       document.body.dataset.state = "paused";
       dom.pause.classList.add("active");
+      dom.pause.setAttribute?.("aria-hidden", "false");
+      dom.pause.querySelector?.("button:not([disabled])")?.focus?.({ preventScroll: true });
       document.exitPointerLock?.();
     } else if (game.status === "paused") {
       game.status = "playing";
       document.body.dataset.state = "playing";
       dom.pause.classList.remove("active");
+      dom.pause.setAttribute?.("aria-hidden", "true");
       lastTime = performance.now();
       canvas.focus();
     }
@@ -1943,12 +2313,23 @@
   function update(dt) {
     game.elapsed = (performance.now() - game.startedAt) / 1000;
     game.invulnerable = Math.max(0, game.invulnerable - dt);
+    game.engagementGrace = Math.max(0, game.engagementGrace - dt);
     game.hurtTimer = Math.max(0, game.hurtTimer - dt);
     game.playerStagger = Math.max(0, game.playerStagger - dt);
     game.hitConfirm = Math.max(0, game.hitConfirm - dt);
     const previousAttackTimer = game.attackTimer;
     game.attackTimer = Math.max(0, game.attackTimer - dt);
     game.attackCooldown = Math.max(0, game.attackCooldown - dt);
+    game.comboTimer = Math.max(0, game.comboTimer - dt);
+    if (game.comboTimer <= 0 && game.attackTimer <= 0) game.comboStep = 0;
+    game.guardTimer = Math.max(0, game.guardTimer - dt);
+    game.parryTimer = Math.max(0, game.parryTimer - dt);
+    game.dodgeTimer = Math.max(0, game.dodgeTimer - dt);
+    game.dodgeCooldown = Math.max(0, game.dodgeCooldown - dt);
+    game.playerPostureDelay = Math.max(0, game.playerPostureDelay - dt);
+    if (game.playerPostureDelay <= 0 && !game.guardHeld && game.guardTimer <= 0) {
+      game.playerPosture = Math.max(0, game.playerPosture - 32 * dt);
+    }
     game.rangedViewTimer = Math.max(0, game.rangedViewTimer - dt);
     game.shake = Math.max(0, game.shake - dt * 22);
     const previousTransition = game.transition;
@@ -1987,19 +2368,23 @@
     const p = side.player;
     const left = key("a") || key("ArrowLeft");
     const right = key("d") || key("ArrowRight");
-    const controlsLocked = game.transition > 0.05 || game.playerStagger > 0;
-    const sprint = !controlsLocked && key("Shift") && game.stamina > 1 && (left || right);
-    const speed = sprint ? 178 : 112;
+    const guarding = game.guardHeld || game.guardTimer > 0;
+    const dodging = game.dodgeTimer > 0;
+    const controlsLocked = game.transition > 0.05 || game.playerStagger > 0 || dodging;
+    const sprint = !controlsLocked && !guarding && key("Shift") && game.stamina > 1 && (left || right);
+    const speed = guarding ? 54 : (sprint ? 178 : 112);
     const dir = controlsLocked ? 0 : (right ? 1 : 0) - (left ? 1 : 0);
 
     if (sprint) game.stamina = Math.max(0, game.stamina - 28 * dt);
-    else game.stamina = Math.min(100, game.stamina + 19 * dt);
+    else game.stamina = Math.min(100, game.stamina + (guarding ? 6 : 19) * dt);
 
-    p.vx = approach(
-      p.vx,
-      dir * speed,
-      (game.playerStagger > 0 ? 240 : (dir ? 760 : 980)) * dt,
-    );
+    if (!dodging) {
+      p.vx = approach(
+        p.vx,
+        dir * speed,
+        (game.playerStagger > 0 ? 240 : (dir ? 760 : 980)) * dt,
+      );
+    }
     if (dir) p.facing = dir;
     if (!controlsLocked && input.jumpQueued && p.grounded) {
       p.vy = -235;
@@ -2051,6 +2436,7 @@
     updateSideEnemies(dt);
     updateSideProjectiles(dt);
     updateSidePickups();
+    updateSideCheckpoint();
     updateParticles(side.particles, dt);
     const cameraMin = activeEncounter?.bounds
       ? Math.max(chapterRules.cameraMinX, activeEncounter.bounds.x)
@@ -2138,26 +2524,75 @@
     return true;
   }
 
+  function activeMassivePhase(enemy) {
+    const phases = enemy.massiveProfile?.phases || [];
+    return phases[Math.max(0, (enemy.massivePhase || 1) - 1)] || null;
+  }
+
   function sideEnemyCombatProfile(enemy) {
+    const family = enemy.behaviorFamily || enemyBehaviorFamily(enemy);
     if (isMassiveEnemy(enemy)) {
+      const phase = activeMassivePhase(enemy);
       const enraged = (enemy.massivePhase || 1) >= 2;
+      const phaseSpeed = Number(phase?.speedMultiplier) || 1;
+      const pattern = String(phase?.pattern || "");
+      const charge = /charge|rush|advance/.test(pattern);
       return {
-        speed: enraged ? 43 : 31,
-        damage: enraged ? 25 : 20,
-        attackDuration: enraged ? 0.72 : 0.98,
-        activeAt: enraged ? 0.46 : 0.61,
-        recovery: enraged ? 0.5 : 0.84,
-        reach: enraged ? 92 : 82,
+        family: "charger",
+        speed: (enraged ? 45 : 32) * phaseSpeed,
+        damage: enraged ? 25 : 21,
+        postureDamage: enraged ? 44 : 36,
+        attackDuration: enraged ? 0.72 : 1.02,
+        activeAt: enraged ? 0.48 : 0.64,
+        recovery: enraged ? 0.58 : 0.92,
+        reach: charge ? (enraged ? 118 : 104) : (enraged ? 92 : 82),
+        minRange: 0,
+        ranged: false,
+        charge,
+        attackKind: charge ? "charge" : "smash",
+        pattern,
       };
     }
     const elite = enemy.maxHp >= 3;
+    if (family === "ranged") {
+      return {
+        family, speed: 18, damage: elite ? 14 : 10, postureDamage: 18,
+        attackDuration: 0.96, activeAt: 0.64, recovery: 1.2,
+        reach: 178, minRange: 72, ranged: true, attackKind: "ranged",
+      };
+    }
+    if (family === "spirit") {
+      return {
+        family, speed: 25, damage: elite ? 16 : 12, postureDamage: 24,
+        attackDuration: 0.82, activeAt: 0.58, recovery: 0.96,
+        reach: 132, minRange: 48, ranged: true, attackKind: "spirit",
+      };
+    }
+    if (family === "shield") {
+      return {
+        family, speed: 17, damage: elite ? 19 : 15, postureDamage: 34,
+        attackDuration: 0.78, activeAt: 0.6, recovery: 0.86,
+        reach: 27, minRange: 0, ranged: false, attackKind: "shield-bash",
+      };
+    }
+    if (family === "charger") {
+      return {
+        family, speed: elite ? 38 : 35, damage: elite ? 19 : 14, postureDamage: 30,
+        attackDuration: 0.74, activeAt: 0.55, recovery: 0.92,
+        reach: elite ? 52 : 43, minRange: 0, ranged: false,
+        charge: true, attackKind: "charge",
+      };
+    }
     return {
-      speed: elite ? 22 : 29,
-      damage: elite ? 16 : 11,
+      family, speed: elite ? 22 : 29, damage: elite ? 16 : 11,
+      postureDamage: elite ? 28 : 20,
       attackDuration: elite ? 0.64 : 0.56,
       activeAt: elite ? 0.54 : 0.48,
       recovery: elite ? 0.68 : 0.82,
       reach: elite ? 22 : 18,
+      minRange: 0,
+      ranged: false,
+      attackKind: "melee",
     };
   }
 
@@ -2182,6 +2617,11 @@
       if (enemy.dead) continue;
       enemy.flash = Math.max(0, enemy.flash - dt);
       enemy.hurtTimer = Math.max(0, enemy.hurtTimer - dt);
+      enemy.postureDelay = Math.max(0, (enemy.postureDelay || 0) - dt);
+      enemy.postureBrokenTimer = Math.max(0, (enemy.postureBrokenTimer || 0) - dt);
+      if (enemy.postureDelay <= 0 && enemy.posture > 0) {
+        enemy.posture = Math.max(0, enemy.posture - (enemy.boss ? 12 : 24) * dt);
+      }
       enemy.attackCooldown = Math.max(0, enemy.attackCooldown - dt);
       updateMassiveEnemyPhase(enemy, game.side.particles, "side");
       enemy.knockbackVx = approach(enemy.knockbackVx, 0, 420 * dt);
@@ -2215,6 +2655,8 @@
           const feetGap = Math.abs((p.y + p.h) - (enemy.y + enemy.h));
           if (Math.abs(dx) <= profile.reach + 6 && feetGap < 55) {
             const damaged = damagePlayer(profile.damage, {
+              attacker: enemy,
+              material: profile.family === "spirit" ? "spirit" : enemy.impactMaterial,
               mode: "side",
               direction: Math.sign(dx) || enemy.facing,
             });
@@ -2396,6 +2838,11 @@
       ai.moveVelocity = 0;
       enemy.flash = Math.max(0, enemy.flash - dt);
       enemy.hurtTimer = Math.max(0, enemy.hurtTimer - dt);
+      enemy.postureDelay = Math.max(0, (enemy.postureDelay || 0) - dt);
+      enemy.postureBrokenTimer = Math.max(0, (enemy.postureBrokenTimer || 0) - dt);
+      if (enemy.postureDelay <= 0 && enemy.posture > 0) {
+        enemy.posture = Math.max(0, enemy.posture - (enemy.boss ? 12 : 24) * dt);
+      }
       enemy.attackCooldown = Math.max(0, enemy.attackCooldown - dt);
       updateMassiveEnemyPhase(enemy, game.side.particles, "side");
       enemy.knockbackVx = approach(enemy.knockbackVx, 0, 420 * dt);
@@ -2420,7 +2867,7 @@
       }
       if (enemy.hurtTimer > 0) {
         transitionEnemyAi(enemy, "hurt", "impact");
-        enemy.attack = 0;
+        if (!enemy.boss || enemy.postureBrokenTimer > 0) enemy.attack = 0;
         continue;
       }
       if (ai.state === "hurt") {
@@ -2436,8 +2883,9 @@
       const enemyCenter = enemy.x + enemy.w / 2;
       const dx = playerCenter - enemyCenter;
       const feetGap = Math.abs((player.y + player.h) - (enemy.y + enemy.h));
-      ai.targetVisible = sideEnemyCanSeePlayer(enemy, player, ai);
-      ai.targetAudible = sideEnemyCanHearPlayer(enemy, player, ai);
+      const playerCanBeEngaged = game.engagementGrace <= 0;
+      ai.targetVisible = playerCanBeEngaged && sideEnemyCanSeePlayer(enemy, player, ai);
+      ai.targetAudible = playerCanBeEngaged && sideEnemyCanHearPlayer(enemy, player, ai);
       if (ai.targetVisible || ai.targetAudible) {
         recordEnemyStimulus(
           enemy,
@@ -2452,6 +2900,9 @@
         transitionEnemyAi(enemy, "attack", "attack-active");
         enemy.attack = Math.max(0, enemy.attack - dt);
         const progress = 1 - enemy.attack / enemy.attackDuration;
+        if (profile.charge && progress < profile.activeAt) {
+          moveSideEnemyToward(enemy, playerCenter, profile.speed * 2.25, dt);
+        }
         if (!enemy.attackHitApplied && progress >= profile.activeAt) {
           enemy.attackHitApplied = true;
           const targetStillInFront = Math.sign(dx) === enemy.facing
@@ -2462,8 +2913,12 @@
             && feetGap < 55
           ) {
             const damaged = damagePlayer(profile.damage, {
+              attacker: enemy,
+              material: profile.family === "spirit" ? "spirit" : enemy.impactMaterial,
               mode: "side",
               direction: Math.sign(dx) || enemy.facing,
+              postureDamage: profile.postureDamage,
+              attackKind: profile.attackKind,
             });
             if (damaged) playAudio("playZombie");
           }
@@ -2495,10 +2950,19 @@
           transitionEnemyAi(enemy, "returnHome", "leash");
         } else {
           enemy.facing = Math.sign(targetX - enemyCenter) || enemy.facing;
-          if (Math.abs(dx) <= profile.reach && feetGap < 55 && ai.targetVisible) {
+          const distance = Math.abs(dx);
+          if (
+            profile.ranged
+            && distance < profile.minRange
+            && feetGap < 55
+          ) {
+            const retreatTarget = enemyCenter - Math.sign(dx || enemy.facing) * 84;
+            moveSideEnemyToward(enemy, retreatTarget, profile.speed * 1.18, dt);
+          } else if (distance <= profile.reach && feetGap < 55 && ai.targetVisible) {
             if (enemy.attackCooldown <= 0 && game.transition <= 0.05) {
               enemy.attackDuration = profile.attackDuration;
               enemy.attack = profile.attackDuration;
+              enemy.attackKind = profile.attackKind;
               enemy.attackHitApplied = false;
               enemy.attackCooldown = profile.attackDuration + profile.recovery;
               transitionEnemyAi(enemy, "attack", "in-range");
@@ -2541,6 +3005,20 @@
       }
       ai.lastX = enemy.x;
     }
+    if (game.status === "playing" && game.mode === "side") {
+      const activeBoss = game.side.enemies.some((enemy) =>
+        isEnemyAlive(enemy) && (enemy.boss || isMassiveEnemy(enemy))
+        && ["pursue", "attack", "hurt"].includes(enemy.ai?.state));
+      const alerted = game.side.enemies.some((enemy) =>
+        isEnemyAlive(enemy)
+        && ["pursue", "attack", "hurt"].includes(enemy.ai?.state));
+      if (activeBoss) setMusicState("boss", 0.94);
+      else if (alerted) setMusicState("combat", 0.7);
+      else {
+        const music = sideMusicState();
+        setMusicState(music.state, music.intensity);
+      }
+    }
   }
 
   function updateSideProjectiles(dt) {
@@ -2556,7 +3034,11 @@
           && projectile.y <= enemy.y + enemy.h + 10;
         if (horizontalHit && verticalHit) {
           projectile.dead = true;
-          hitEnemy(enemy, projectile.damage || 3, "side");
+          hitEnemy(enemy, projectile.damage || 3, {
+            mode: "side",
+            ranged: true,
+            postureDamage: 10,
+          });
         }
       }
     }
@@ -2612,12 +3094,13 @@
     const turning = controlsLocked
       ? 0
       : (key("ArrowRight") ? 1 : 0) - (key("ArrowLeft") ? 1 : 0);
-    const sprint = key("Shift") && game.stamina > 1 && (forward || strafe);
+    const guarding = game.guardHeld || game.guardTimer > 0;
+    const sprint = !guarding && key("Shift") && game.stamina > 1 && (forward || strafe);
     const speed = (sprint ? 3.55 : 2.25) * dt;
 
     p.angle = normalizeAngle(p.angle + turning * 1.9 * dt);
     if (sprint) game.stamina = Math.max(0, game.stamina - 30 * dt);
-    else game.stamina = Math.min(100, game.stamina + 17 * dt);
+    else game.stamina = Math.min(100, game.stamina + (guarding ? 5 : 17) * dt);
 
     const mx = Math.cos(p.angle) * forward * speed + Math.cos(p.angle + Math.PI / 2) * strafe * speed;
     const my = Math.sin(p.angle) * forward * speed + Math.sin(p.angle + Math.PI / 2) * strafe * speed;
@@ -2681,12 +3164,21 @@
     const angle = Number.isFinite(enemy.engagementAngle)
       ? enemy.engagementAngle
       : FPS_ENGAGEMENT_ANGLES[slot % FPS_ENGAGEMENT_ANGLES.length];
-    const radius = profile.reach * 0.92;
-    const x = mission.player.x + Math.cos(angle) * radius;
-    const y = mission.player.y + Math.sin(angle) * radius;
+    const radius = profile.ranged
+      ? clamp(profile.minRange * 0.82, 1.3, 2.2)
+      : profile.reach * 0.92;
     const enemyRadius = fpsEnemyRadius(enemy);
-    if (!isWalkable(mission.map, x, y, enemyRadius)) return null;
-    return { x, y };
+    const angleOffsets = [0, 0.42, -0.42, 0.82, -0.82, 1.24, -1.24];
+    const radiusScales = [1, 0.78, 1.18];
+    for (const radiusScale of radiusScales) {
+      for (const angleOffset of angleOffsets) {
+        const candidateAngle = angle + angleOffset;
+        const x = mission.player.x + Math.cos(candidateAngle) * radius * radiusScale;
+        const y = mission.player.y + Math.sin(candidateAngle) * radius * radiusScale;
+        if (isWalkable(mission.map, x, y, enemyRadius)) return { x, y };
+      }
+    }
+    return null;
   }
 
   function moveFpsEnemyWithSteering(mission, enemy, goalDx, goalDy, pace) {
@@ -2769,34 +3261,84 @@
   }
 
   function fpsEnemyCombatProfile(enemy) {
+    const family = enemy.behaviorFamily || enemyBehaviorFamily(enemy);
     if (isMassiveEnemy(enemy)) {
+      const phase = activeMassivePhase(enemy);
       const enraged = (enemy.massivePhase || 1) >= 2;
+      const phaseSpeed = Number(phase?.speedMultiplier) || 1;
+      const pattern = String(phase?.pattern || "");
+      const charge = /charge|rush|advance/.test(pattern);
       return {
-        speed: enraged ? 0.84 : 0.58,
+        family: "charger",
+        speed: (enraged ? 0.84 : 0.58) * phaseSpeed,
         damage: enraged ? 25 : 21,
+        postureDamage: enraged ? 46 : 38,
         attackDuration: enraged ? 0.76 : 1.04,
         activeAt: enraged ? 0.5 : 0.62,
         recovery: enraged ? 0.54 : 0.9,
-        reach: enraged ? 1.14 : 1.06,
+        reach: charge ? (enraged ? 1.46 : 1.32) : (enraged ? 1.14 : 1.06),
+        minRange: 0,
+        ranged: false,
+        charge,
+        attackKind: charge ? "charge" : "smash",
+        pattern,
       };
     }
     if (enemy.boss) {
       return {
+        family,
         speed: 0.7,
         damage: 19,
+        postureDamage: 38,
         attackDuration: 0.92,
         activeAt: 0.58,
         recovery: 0.72,
         reach: 0.96,
+        minRange: 0,
+        ranged: false,
+        attackKind: family === "shield" ? "shield-bash" : "boss-strike",
+      };
+    }
+    if (family === "ranged") {
+      return {
+        family, speed: 0.56, damage: 11, postureDamage: 18,
+        attackDuration: 1.02, activeAt: 0.66, recovery: 1.25,
+        reach: 5.8, minRange: 2.45, ranged: true, attackKind: "ranged",
+      };
+    }
+    if (family === "spirit") {
+      return {
+        family, speed: 0.7, damage: 13, postureDamage: 24,
+        attackDuration: 0.86, activeAt: 0.58, recovery: 1.02,
+        reach: 4.25, minRange: 1.65, ranged: true, attackKind: "spirit",
+      };
+    }
+    if (family === "shield") {
+      return {
+        family, speed: 0.58, damage: 16, postureDamage: 34,
+        attackDuration: 0.82, activeAt: 0.61, recovery: 0.88,
+        reach: 0.82, minRange: 0, ranged: false, attackKind: "shield-bash",
+      };
+    }
+    if (family === "charger") {
+      return {
+        family, speed: 1.12, damage: 15, postureDamage: 31,
+        attackDuration: 0.76, activeAt: 0.56, recovery: 0.94,
+        reach: 1.08, minRange: 0, ranged: false, charge: true, attackKind: "charge",
       };
     }
     return {
+      family,
       speed: 0.92,
       damage: 10,
+      postureDamage: 20,
       attackDuration: 0.68,
       activeAt: 0.5,
       recovery: 0.86,
       reach: 0.72,
+      minRange: 0,
+      ranged: false,
+      attackKind: "melee",
     };
   }
 
@@ -2806,6 +3348,11 @@
       if (enemy.dead) continue;
       enemy.flash = Math.max(0, enemy.flash - dt);
       enemy.hurtTimer = Math.max(0, enemy.hurtTimer - dt);
+      enemy.postureDelay = Math.max(0, (enemy.postureDelay || 0) - dt);
+      enemy.postureBrokenTimer = Math.max(0, (enemy.postureBrokenTimer || 0) - dt);
+      if (enemy.postureDelay <= 0 && enemy.posture > 0) {
+        enemy.posture = Math.max(0, enemy.posture - (enemy.boss ? 12 : 24) * dt);
+      }
       enemy.attackCooldown = Math.max(0, enemy.attackCooldown - dt);
       enemy.knockbackX = approach(enemy.knockbackX, 0, 2.8 * dt);
       enemy.knockbackY = approach(enemy.knockbackY, 0, 2.8 * dt);
@@ -2841,6 +3388,8 @@
           enemy.attackHitApplied = true;
           if (dist <= profile.reach + 0.12 && lineOfSight(mission, enemy.x, enemy.y, p.x, p.y)) {
             const damaged = damagePlayer(profile.damage, {
+              attacker: enemy,
+              material: profile.family === "spirit" ? "spirit" : enemy.impactMaterial,
               mode: "fps",
               sourceX: enemy.x,
               sourceY: enemy.y,
@@ -3000,6 +3549,11 @@
       ai.moveVelocity = 0;
       enemy.flash = Math.max(0, enemy.flash - dt);
       enemy.hurtTimer = Math.max(0, enemy.hurtTimer - dt);
+      enemy.postureDelay = Math.max(0, (enemy.postureDelay || 0) - dt);
+      enemy.postureBrokenTimer = Math.max(0, (enemy.postureBrokenTimer || 0) - dt);
+      if (enemy.postureDelay <= 0 && enemy.posture > 0) {
+        enemy.posture = Math.max(0, enemy.posture - (enemy.boss ? 12 : 24) * dt);
+      }
       enemy.attackCooldown = Math.max(0, enemy.attackCooldown - dt);
       enemy.knockbackX = approach(enemy.knockbackX, 0, 2.8 * dt);
       enemy.knockbackY = approach(enemy.knockbackY, 0, 2.8 * dt);
@@ -3023,7 +3577,7 @@
       }
       if (enemy.hurtTimer > 0) {
         transitionFpsEnemyAi(enemy, "hurt", "impact");
-        enemy.attack = 0;
+        if (!enemy.boss || enemy.postureBrokenTimer > 0) enemy.attack = 0;
         continue;
       }
       if (ai.state === "hurt") {
@@ -3053,11 +3607,22 @@
       }
 
       const frontlineBlocked = fpsFrontlineBlocked(mission, enemy);
-      enemy.frontlineBlocked = frontlineBlocked;
+      const attackLaneBlocked = frontlineBlocked && !profile.ranged;
+      enemy.frontlineBlocked = attackLaneBlocked;
       if (enemy.attack > 0) {
         transitionFpsEnemyAi(enemy, "attack", "attack-active");
         enemy.attack = Math.max(0, enemy.attack - dt);
         const progress = 1 - enemy.attack / enemy.attackDuration;
+        if (profile.charge && progress < profile.activeAt) {
+          moveFpsEnemyToward(
+            mission,
+            enemy,
+            player.x,
+            player.y,
+            profile.speed * 2.15 * dt,
+            dt,
+          );
+        }
         if (!enemy.attackHitApplied && progress >= profile.activeAt) {
           enemy.attackHitApplied = true;
           const targetInFront = Math.abs(
@@ -3069,9 +3634,13 @@
             && lineOfSight(mission, enemy.x, enemy.y, player.x, player.y)
           ) {
             const damaged = damagePlayer(profile.damage, {
+              attacker: enemy,
+              material: profile.family === "spirit" ? "spirit" : enemy.impactMaterial,
               mode: "fps",
               sourceX: enemy.x,
               sourceY: enemy.y,
+              postureDamage: profile.postureDamage,
+              attackKind: profile.attackKind,
             });
             if (damaged) playAudio("playZombie");
           }
@@ -3105,14 +3674,20 @@
           const engagementGoal = ai.targetVisible && distance < profile.reach + 2
             ? fpsEngagementGoal(mission, enemy, profile)
             : null;
-          const goalX = engagementGoal?.x ?? targetX;
-          const goalY = engagementGoal?.y ?? targetY;
+          const retreating = profile.ranged && distance < profile.minRange;
+          const retreatScale = Math.max(0.85, profile.minRange - distance + 0.85);
+          const goalX = retreating
+            ? (engagementGoal?.x ?? enemy.x - Math.cos(targetHeading) * retreatScale)
+            : (engagementGoal?.x ?? targetX);
+          const goalY = retreating
+            ? (engagementGoal?.y ?? enemy.y - Math.sin(targetHeading) * retreatScale)
+            : (engagementGoal?.y ?? targetY);
           const goalDistance = Math.hypot(goalX - enemy.x, goalY - enemy.y);
           const shouldReposition = Boolean(engagementGoal && goalDistance > 0.16);
           let moved = false;
           if (
-            (distance > profile.reach || shouldReposition)
-            && (!frontlineBlocked || engagementGoal)
+            (distance > profile.reach || shouldReposition || retreating)
+            && (!attackLaneBlocked || engagementGoal || retreating)
           ) {
             moved = moveFpsEnemyToward(
               mission,
@@ -3128,13 +3703,15 @@
           if (
             ai.targetVisible
             && distance <= profile.reach + 0.12
-            && !frontlineBlocked
+            && !attackLaneBlocked
+            && (!profile.ranged || distance >= profile.minRange * 0.72)
             && (!shouldReposition || !moved)
             && enemy.attackCooldown <= 0
           ) {
             ai.heading = targetHeading;
             enemy.attackDuration = profile.attackDuration;
             enemy.attack = profile.attackDuration;
+            enemy.attackKind = profile.attackKind;
             enemy.attackHitApplied = false;
             enemy.attackCooldown = profile.attackDuration + profile.recovery;
             transitionFpsEnemyAi(enemy, "attack", "in-range");
@@ -3188,6 +3765,17 @@
         updateFpsEnemyPatrol(mission, enemy, profile, dt);
       }
     }
+    if (game.status === "playing" && game.mode === "fps") {
+      const activeBoss = mission.enemies.some((enemy) =>
+        isEnemyAlive(enemy) && (enemy.boss || isMassiveEnemy(enemy)));
+      const alerted = mission.enemies.some((enemy) =>
+        isEnemyAlive(enemy)
+        && ["pursue", "attack", "hurt"].includes(enemy.ai?.state));
+      if (mission.purified) setMusicState("purified", 0.5);
+      else if (activeBoss) setMusicState("boss", 0.94);
+      else if (alerted) setMusicState("combat", 0.76);
+      else setMusicState("yomi", 0.54);
+    }
   }
 
   function lineOfSight(mission, x1, y1, x2, y2) {
@@ -3200,24 +3788,106 @@
     return true;
   }
 
-  function performAttack() {
+  function isPlayerGuarding() {
+    return Boolean(game.guardHeld || game.guardTimer > 0);
+  }
+
+  function performGuard(active = true) {
+    if (game.status !== "playing" || game.playerStagger > 0 || game.dodgeTimer > 0) return false;
+    game.guardHeld = Boolean(active);
+    if (active) {
+      game.guardTimer = Math.max(game.guardTimer, 0.48);
+      game.parryTimer = PLAYER_PARRY_WINDOW;
+      game.attackTimer = 0;
+      game.attackCooldown = Math.max(game.attackCooldown, 0.08);
+    }
+    return true;
+  }
+
+  function releaseGuard() {
+    game.guardHeld = false;
+    return true;
+  }
+
+  function performDodge() {
+    if (
+      game.status !== "playing"
+      || game.dodgeCooldown > 0
+      || game.transition > 0.05
+      || game.playerStagger > 0
+      || game.stamina < 18
+    ) return false;
+    const omamori = game.loadout?.omamori || [];
+    const shadowCharm = omamori.includes("ombre") || game.loadout?.charm === "omamori-ombre";
+    game.stamina -= 18;
+    game.dodgeTimer = PLAYER_DODGE_DURATION;
+    game.dodgeCooldown = shadowCharm ? PLAYER_DODGE_COOLDOWN * 0.82 : PLAYER_DODGE_COOLDOWN;
+    game.invulnerable = Math.max(game.invulnerable, PLAYER_DODGE_DURATION + (shadowCharm ? 0.08 : 0));
+    game.guardHeld = false;
+    game.guardTimer = 0;
+    game.parryTimer = 0;
+    if (game.mode === "side") {
+      const p = game.side.player;
+      const inputDirection = (key("d") || key("ArrowRight") ? 1 : 0)
+        - (key("a") || key("ArrowLeft") ? 1 : 0);
+      p.vx = (inputDirection || p.facing || 1) * 285;
+    } else {
+      const mission = currentMission();
+      const p = mission.player;
+      const strafe = (key("d") ? 1 : 0) - (key("a") ? 1 : 0);
+      const forward = (key("w") ? 1 : 0) - (key("s") ? 1 : 0);
+      const localForward = forward || (strafe ? 0 : -1);
+      const dx = Math.cos(p.angle) * localForward * 0.76
+        + Math.cos(p.angle + Math.PI / 2) * strafe * 0.76;
+      const dy = Math.sin(p.angle) * localForward * 0.76
+        + Math.sin(p.angle + Math.PI / 2) * strafe * 0.76;
+      moveFpsPlayer(mission, dx, dy);
+    }
+    playAudio("playCombatCue", "dodge");
+    return true;
+  }
+
+  function beginPlayerAttack(kind = "light") {
     if (
       game.status !== "playing"
       || game.attackCooldown > 0
       || game.transition > 0.05
       || game.playerStagger > 0
+      || game.dodgeTimer > 0
+      || isPlayerGuarding()
     ) return;
-    const spec = playerAttackSpec();
+    const attackKind = kind === "heavy" ? "heavy" : "light";
+    const comboStep = attackKind === "light"
+      ? (game.comboTimer > 0 ? game.comboStep % 3 + 1 : 1)
+      : 1;
+    const spec = playerAttackSpec(currentPlayerWeapon(), { kind: attackKind, comboStep });
     if (game.stamina < spec.staminaCost) {
       announce("KI INSUFFISANT");
-      return;
+      return false;
     }
     game.stamina = Math.max(0, game.stamina - spec.staminaCost);
+    game.attackKind = attackKind;
+    game.attackSpec = spec;
+    game.comboStep = comboStep;
+    game.comboTimer = attackKind === "light" ? PLAYER_COMBO_WINDOW : 0;
     game.attackDuration = spec.duration;
     game.attackCooldown = spec.cooldown;
     game.attackTimer = spec.duration;
     game.attackHitApplied = false;
-    playAudio("playKatana");
+    playAudio("playWeapon", spec.family, attackKind, {
+      comboStep,
+      heavy: attackKind === "heavy",
+    });
+    if (!window.gameAudio?.playWeapon) playAudio("playKatana");
+    return true;
+  }
+
+  function performAttack() {
+    return beginPlayerAttack("light");
+  }
+
+  function performHeavyAttack() {
+    return beginPlayerAttack("heavy");
   }
 
   function weaponDamageAgainst(enemy, spec) {
@@ -3229,6 +3899,9 @@
     damage *= materialMultiplier;
     if (enemy.boss || isMassiveEnemy(enemy)) damage *= spec.stats.boss;
     if (material === "armor") damage += spec.armorBonus;
+    if (enemy.behaviorFamily === "shield" && !spec.armorIgnore && spec.attackKind !== "heavy") {
+      damage *= 0.48;
+    }
     const passiveText = `${spec.weapon?.passive?.id || ""} ${spec.weapon?.passive?.effect || ""}`.toLowerCase();
     if (material === "spirit" && /spirit|yomi|purif/.test(passiveText)) damage += 1;
     return Math.max(1, Math.round(damage));
@@ -3256,7 +3929,10 @@
   function resolvePlayerAttack() {
     if (game.attackHitApplied || game.status !== "playing") return;
     game.attackHitApplied = true;
-    const spec = playerAttackSpec();
+    const spec = game.attackSpec || playerAttackSpec(currentPlayerWeapon(), {
+      kind: game.attackKind,
+      comboStep: game.comboStep || 1,
+    });
     if (game.mode === "side") {
       const p = game.side.player;
       const targets = game.side.enemies
@@ -3270,6 +3946,8 @@
         hitEnemy(enemy, weaponDamageAgainst(enemy, spec), {
           mode: "side",
           direction: p.facing,
+          postureDamage: spec.postureDamage,
+          heavy: spec.attackKind === "heavy",
         });
         applyPlayerWeaponPassive(enemy, spec);
       });
@@ -3277,7 +3955,11 @@
       const mission = currentMission();
       const target = nearestFpsTarget(mission, spec.fpsReach, 0.5);
       if (target) {
-        hitEnemy(target, weaponDamageAgainst(target, spec), { mode: "fps" });
+        hitEnemy(target, weaponDamageAgainst(target, spec), {
+          mode: "fps",
+          postureDamage: spec.postureDamage,
+          heavy: spec.attackKind === "heavy",
+        });
         applyPlayerWeaponPassive(target, spec);
       }
     }
@@ -3289,6 +3971,8 @@
       || game.attackCooldown > 0
       || game.transition > 0.05
       || game.playerStagger > 0
+      || game.dodgeTimer > 0
+      || isPlayerGuarding()
       || game.ammo <= 0
     ) {
       if (game.ammo <= 0) announce("PLUS DE PROJECTILES");
@@ -3305,7 +3989,10 @@
     game.attackCooldown = clamp(0.72 - rangedStats.speed * 0.0045, 0.28, 0.68);
     game.rangedViewTimer = 0.2;
     game.lastRangedWeaponId = rangedWeapon?.id || "ofuda-purification";
-    playAudio("playShot");
+    playAudio("playWeapon", weaponFamilyKey(rangedWeapon || {}), "ranged", {
+      weaponId: rangedWeapon?.id || "ofuda-purification",
+    });
+    if (!window.gameAudio?.playWeapon) playAudio("playShot");
     if (game.mode === "side") {
       const p = game.side.player;
       game.side.projectiles.push({
@@ -3322,7 +4009,11 @@
       const maxDistance = 6 + rangedStats.reach * 0.1;
       const maxAngle = 0.09 + rangedStats.control * 0.0011;
       const target = nearestFpsTarget(mission, maxDistance, maxAngle);
-      if (target) hitEnemy(target, rangedDamage, { mode: "fps", ranged: true });
+      if (target) hitEnemy(target, rangedDamage, {
+        mode: "fps",
+        ranged: true,
+        postureDamage: 9 + rangedStats.posture * 0.18,
+      });
       mission.particles.push({
         x: W / 2,
         y: H / 2,
@@ -3402,10 +4093,25 @@
     const mode = normalized.mode || game.mode;
     const material = enemy.impactMaterial || impactMaterialForEntry(enemy.modularEntry, enemy);
     enemy.hp = Math.max(0, enemy.hp - damage);
+    const postureDamage = Math.max(0, Number(normalized.postureDamage) || 8);
+    enemy.maxPosture = Math.max(20, Number(enemy.maxPosture) || (enemy.boss ? 96 : 36));
+    enemy.posture = Math.min(enemy.maxPosture, (Number(enemy.posture) || 0) + postureDamage);
+    enemy.postureDelay = 1.15;
+    const postureBroken = enemy.posture >= enemy.maxPosture;
+    if (postureBroken) {
+      enemy.posture = 0;
+      enemy.postureBrokenTimer = enemy.boss || isMassiveEnemy(enemy) ? 0.72 : 0.5;
+    }
     enemy.flash = material === "armor" ? 0.2 : 0.15;
-    enemy.hurtTimer = ENEMY_HURT_DURATION;
-    enemy.attack = 0;
-    enemy.attackHitApplied = false;
+    const hasBossPoise = enemy.boss || isMassiveEnemy(enemy);
+    const shouldInterrupt = postureBroken || !hasBossPoise || normalized.heavy;
+    enemy.hurtTimer = shouldInterrupt
+      ? Math.max(enemy.hurtTimer || 0, postureBroken ? enemy.postureBrokenTimer : ENEMY_HURT_DURATION)
+      : Math.max(enemy.hurtTimer || 0, 0.07);
+    if (shouldInterrupt) {
+      enemy.attack = 0;
+      enemy.attackHitApplied = false;
+    }
     game.shake = Math.max(game.shake, material === "armor" ? 4.8 : 3.8);
     game.hitStop = material === "armor" ? 0.055 : 0.042;
     game.score += 25;
@@ -3452,18 +4158,127 @@
       game.kills += 1;
       game.score += enemy.boss ? 1500 : 180;
       if (enemy.boss) {
+        const defeatedIds = [
+          enemy.sourceId,
+          enemy.rosterId,
+          enemy.profileId,
+          enemy.encounterId,
+          enemy.modularEntry?.id,
+        ].filter(Boolean);
+        defeatedIds.forEach((id) => window.KageSave?.markBossDefeated?.(id, true));
+        const rewardWeaponId = defeatedIds.includes("giant-02-aka-ushi")
+          ? "naginata-lourde"
+          : (defeatedIds.includes("06-daimyo-corrupted") ? "06-kegare-kiri" : null);
+        const newlyUnlocked = rewardWeaponId
+          && !window.KageSave?.isWeaponUnlocked?.(rewardWeaponId);
+        if (newlyUnlocked) window.KageSave?.unlockWeapon?.(rewardWeaponId);
+        persistRunProgress({ health: game.health });
         const bossName = String(enemy.modularEntry?.name || "LE DAIMYŌ").toUpperCase();
-        announce(mode === "side"
+        const rewardName = newlyUnlocked
+          ? String(arsenalWeaponById(rewardWeaponId)?.name || rewardWeaponId).toUpperCase()
+          : "";
+        const victoryMessage = mode === "side"
           ? `${bossName} TOMBE — LA ROUTE DU CHÂTEAU EST OUVERTE`
-          : `${bossName} TOMBE — PURIFIEZ L'AUTEL`);
+          : `${bossName} TOMBE — PURIFIEZ L'AUTEL`;
+        announce(rewardName ? `${victoryMessage} · ${rewardName} DÉBLOQUÉE` : victoryMessage);
       }
     }
     return true;
   }
 
+  function attackInsideGuardArc(source = {}) {
+    const attacker = source.attacker;
+    if (!attacker) return true;
+    if (source.mode === "side") {
+      const player = game.side.player;
+      const attackerCenter = attacker.x + (attacker.w || 0) / 2;
+      const playerCenter = player.x + player.w / 2;
+      return Math.sign(attackerCenter - playerCenter) === player.facing
+        || Math.abs(attackerCenter - playerCenter) < 18;
+    }
+    const player = currentMission().player;
+    const heading = Math.atan2(attacker.y - player.y, attacker.x - player.x);
+    return Math.abs(normalizeAngle(heading - player.angle)) <= Math.PI * 0.58;
+  }
+
   function damagePlayer(amount, source = {}) {
-    if (game.invulnerable > 0 || game.status !== "playing") return false;
-    game.health = Math.max(0, game.health - amount);
+    if (game.invulnerable > 0 || game.engagementGrace > 0 || game.status !== "playing") return false;
+    const material = source.material || "flesh";
+    const omamori = game.loadout?.omamori || [];
+    const cinderCharm = omamori.includes("cendre") || game.loadout?.charm === "omamori-cendre";
+    const armorReduction = game.loadout?.armor === "do-maru-voyage" ? 0.88 : 1;
+    let incomingDamage = Math.max(0, Number(amount) || 0) * armorReduction;
+    if (material === "spirit" && cinderCharm) incomingDamage *= 0.72;
+
+    const guarding = isPlayerGuarding() && attackInsideGuardArc(source);
+    if (guarding && game.parryTimer > 0) {
+      const attacker = source.attacker;
+      game.perfectParries += 1;
+      game.parryTimer = 0;
+      game.guardTimer = Math.max(game.guardTimer, 0.22);
+      game.stamina = Math.min(100, game.stamina + 12);
+      game.invulnerable = 0.16;
+      game.shake = Math.max(game.shake, 3.5);
+      if (attacker) {
+        attacker.attack = 0;
+        attacker.attackHitApplied = false;
+        attacker.attackCooldown = Math.max(attacker.attackCooldown || 0, 0.9);
+        attacker.maxPosture = Math.max(20, Number(attacker.maxPosture) || (attacker.boss ? 96 : 36));
+        attacker.posture = Math.min(
+          attacker.maxPosture,
+          (Number(attacker.posture) || 0) + (attacker.boss ? 42 : 58),
+        );
+        attacker.postureDelay = 1.3;
+        if (attacker.posture >= attacker.maxPosture) {
+          attacker.posture = 0;
+          attacker.postureBrokenTimer = attacker.boss ? 0.82 : 0.62;
+          attacker.hurtTimer = Math.max(attacker.hurtTimer || 0, attacker.postureBrokenTimer);
+        } else if (!attacker.boss) {
+          attacker.hurtTimer = Math.max(attacker.hurtTimer || 0, 0.24);
+        }
+        const passiveEffect = String(currentPlayerWeapon()?.passive?.effect || "");
+        if (passiveEffect === "disarm" && !attacker.boss) {
+          attacker.attackCooldown = Math.max(attacker.attackCooldown, 2.2);
+        }
+        if (passiveEffect === "lowHealthRestoreKi" && game.health < 30) {
+          game.stamina = Math.min(100, game.stamina + 10);
+        }
+      }
+      playAudio("playCombatCue", "perfect-parry");
+      announce("PARADE PARFAITE — GARDE ENNEMIE FISSUREE");
+      return false;
+    }
+
+    if (guarding) {
+      const chargeMultiplier = source.attackKind === "charge" ? 1.35 : 1;
+      const guardCost = Math.max(6, incomingDamage * 1.25 * chargeMultiplier);
+      game.stamina = Math.max(0, game.stamina - guardCost);
+      game.playerPosture = Math.min(
+        PLAYER_GUARD_POSTURE_MAX,
+        game.playerPosture + Math.max(8, Number(source.postureDamage) || incomingDamage * 1.8),
+      );
+      game.playerPostureDelay = 1.1;
+      const guardBroken = game.stamina <= 0 || game.playerPosture >= PLAYER_GUARD_POSTURE_MAX;
+      if (!guardBroken) {
+        const chipDamage = material === "spirit" ? incomingDamage * 0.18 : incomingDamage * 0.06;
+        game.health = Math.max(1, game.health - chipDamage);
+        game.invulnerable = 0.14;
+        game.hurtTimer = Math.max(game.hurtTimer, 0.1);
+        game.shake = Math.max(game.shake, 2.4);
+        playAudio("playCombatCue", "block");
+        return false;
+      }
+      game.guardHeld = false;
+      game.guardTimer = 0;
+      game.parryTimer = 0;
+      game.playerPosture = 0;
+      game.playerStagger = 0.62;
+      incomingDamage *= 0.62;
+      playAudio("playCombatCue", "guard-break");
+      announce("GARDE BRISEE");
+    }
+
+    game.health = Math.max(0, game.health - incomingDamage);
     game.invulnerable = PLAYER_HURT_DURATION;
     game.hurtTimer = PLAYER_HURT_DURATION;
     game.playerStagger = 0.24;
@@ -3534,6 +4349,7 @@
       game.seals += 1;
       game.score += 1000;
       playAudio("playPickup");
+      setMusicState("purified", 0.38);
       if (game.fps.current === 0) {
         game.chapter = 1;
         if (!setCurrentSideArea("kurokawa-main-street", "fpsReturn", true)) {
@@ -3546,6 +4362,13 @@
         game.ammoByType[ammoType] = game.ammo;
         persistAmmoMap();
         game.health = Math.min(100, game.health + 18);
+        persistRunProgress({
+          chapter: 1,
+          areaId: game.side.areaId,
+          spawnId: "fpsReturn",
+          health: game.health,
+          seals: game.seals,
+        });
         returnToSide(true);
         announce("PREMIER SCEAU POSÉ — PASSEZ PAR LES RUELLES ET LE MARCHÉ");
       } else {
@@ -3570,6 +4393,7 @@
 
   function enterFps(index, automatic) {
     if (game.status !== "playing") return;
+    ensureFpsPlayerAssets();
     input.keys.clear();
     input.lookPointerId = null;
     game.side.player.vx = 0;
@@ -3581,6 +4405,7 @@
     game.transitionLabel = automatic ? "LE VOILE DE YOMI SE DÉCHIRE" : "REGARD DE L'OMBRE";
     document.body.classList.add("fps-mode");
     playAudio("playTransition", "fps");
+    setMusicState(game.fps.current === 1 ? "boss" : "yomi", game.fps.current === 1 ? 0.92 : 0.54);
     announce(game.fps.current === 0 ? "SANCTUAIRE CONTAMINÉ — PURIFIEZ LE FOYER" : "DONJON DE KUROKAWA — TUEZ LE DAIMYŌ");
     if (canvas.requestPointerLock && matchMedia("(pointer: fine)").matches) {
       canvas.requestPointerLock()?.catch?.(() => {});
@@ -3599,6 +4424,8 @@
     document.body.classList.remove("fps-mode");
     document.exitPointerLock?.();
     playAudio("playTransition", "2d");
+    const music = sideMusicState();
+    setMusicState(music.state, music.intensity);
   }
 
   function finishGame(victory) {
@@ -3606,6 +4433,7 @@
     document.body.dataset.state = "ended";
     document.exitPointerLock?.();
     dom.end.classList.add("active");
+    dom.end.setAttribute?.("aria-hidden", "false");
     const minutes = Math.floor(game.elapsed / 60);
     const seconds = Math.floor(game.elapsed % 60).toString().padStart(2, "0");
     const rank = victory ? (game.health >= 75 && game.elapsed < 360 ? "S" : game.health >= 40 ? "A" : "B") : "—";
@@ -3616,6 +4444,19 @@
     dom.endKills.textContent = game.kills;
     dom.endTime.textContent = `${minutes.toString().padStart(2, "0")}:${seconds}`;
     dom.endRank.textContent = rank;
+    if (victory) {
+      persistRunProgress({
+        completed: true,
+        started: true,
+        health: game.health,
+        seals: game.seals,
+      });
+      window.KageSave?.markBossDefeated?.("06-daimyo-corrupted", true);
+      setMusicState("purified", 1);
+    } else {
+      setMusicState("title", 0.16);
+    }
+    refreshContinueState();
     playAudio(victory ? "playVictory" : "playDefeat");
   }
 
@@ -3637,8 +4478,11 @@
 
   function draw() {
     ctx.save();
-    const shakeX = game.shake ? Math.round((Math.random() - 0.5) * game.shake) : 0;
-    const shakeY = game.shake ? Math.round((Math.random() - 0.5) * game.shake) : 0;
+    const effectiveShake = game.settings?.screenShake !== false && !game.settings?.reducedMotion
+      ? game.shake
+      : 0;
+    const shakeX = effectiveShake ? Math.round((Math.random() - 0.5) * effectiveShake) : 0;
+    const shakeY = effectiveShake ? Math.round((Math.random() - 0.5) * effectiveShake) : 0;
     ctx.translate(shakeX, shakeY);
     if (game.mode === "side") drawSide();
     else drawFps();
@@ -3839,26 +4683,7 @@
   function drawSideBackdrop(cam) {
     const environmentIndex = currentSideEnvironmentIndex();
     const backdropProfile = currentSideArea()?.backdropProfile || "";
-    const interiorBackdrop = bitmapAssets.sideBackgrounds[2];
-    if (
-      ["castle-residence", "castle-donjon"].includes(backdropProfile)
-      && bitmapReady(interiorBackdrop)
-    ) {
-      ctx.drawImage(interiorBackdrop, 0, 0, W, H);
-      ctx.fillStyle = backdropProfile === "castle-donjon"
-        ? "rgba(35, 6, 13, .34)"
-        : "rgba(10, 8, 12, .16)";
-      ctx.fillRect(0, 0, W, H);
-      const beamOffset = -((cam * 0.035) % 160);
-      ctx.fillStyle = backdropProfile === "castle-donjon"
-        ? "rgba(32, 14, 18, .72)"
-        : "rgba(43, 26, 24, .58)";
-      for (let x = beamOffset - 20; x < W + 20; x += 160) {
-        ctx.fillRect(Math.round(x), 0, 7, H);
-        ctx.fillRect(Math.round(x - 12), 57, 31, 6);
-      }
-      return;
-    }
+    const modularCastleInterior = ["castle-residence", "castle-donjon"].includes(backdropProfile);
     const parallax = bitmapAssets.parallaxBackgrounds[environmentIndex];
     if (parallax && bitmapReady(parallax.sky)) {
       drawParallaxLayer(parallax.sky, cam, 0, null, false);
@@ -3866,7 +4691,7 @@
       // Les villages et le château ont désormais leurs bâtiments et murs
       // modulaires. Répéter les couches "mid/near" y créait des maisons
       // jumelles et des coutures visuelles à chaque largeur d'écran.
-      if (environmentIndex === 1) {
+      if (environmentIndex === 1 || modularCastleInterior) {
         drawParallaxLayer(
           parallax.mid,
           cam,
@@ -3881,6 +4706,21 @@
           ? "rgba(13, 8, 13, .43)"
           : "rgba(4, 6, 11, .12)");
       ctx.fillRect(0, 0, W, H);
+      return;
+    }
+
+    if (modularCastleInterior) {
+      // Les salles latérales restent composées de couches et de props 2D.
+      // Le concept art frontal FPS du donjon n'est jamais projeté derrière
+      // le joueur, ce qui évite deux perspectives contradictoires.
+      ctx.fillStyle = backdropProfile === "castle-donjon" ? "#100b10" : "#171116";
+      ctx.fillRect(0, 0, W, H);
+      const beamOffset = -((cam * 0.035) % 160);
+      ctx.fillStyle = backdropProfile === "castle-donjon" ? "#29161d" : "#38231f";
+      for (let x = beamOffset - 20; x < W + 20; x += 160) {
+        ctx.fillRect(Math.round(x), 0, 7, H);
+        ctx.fillRect(Math.round(x - 12), 57, 31, 6);
+      }
       return;
     }
 
@@ -4793,6 +5633,7 @@
   }
 
   function drawFpsPlayerBody(pose = fpsPlayerPose()) {
+    ensureFpsPlayerAssets();
     if (!modularAnimationReady(bitmapAssets.akioFpsBody, pose.animation)) {
       return false;
     }
@@ -4850,6 +5691,7 @@
   }
 
   function drawFpsSelectedWeapon() {
+    ensureFpsPlayerAssets();
     const pose = fpsPlayerPose();
     const weapon = currentPlayerWeapon();
     const fpsCandidate = playerWeaponBitmap(weapon, "fps");
@@ -5402,7 +6244,27 @@
   let fpsFloorRenderSurface = null;
 
   function currentFpsMaterialScheme() {
-    return FPS_MATERIAL_SCHEMES[game.fps.current] || FPS_MATERIAL_SCHEMES[0];
+    const fallback = FPS_MATERIAL_SCHEMES[game.fps.current] || FPS_MATERIAL_SCHEMES[0];
+    const materialLibrary = window.KageLevels?.visualStandards?.fpsMaterials;
+    const profileId = game.fps.current === 0
+      ? "contaminated-sanctuary"
+      : "kurokawa-donjon";
+    const profile = materialLibrary?.profiles?.[profileId];
+    if (!profile || !Array.isArray(materialLibrary.tiles)) return fallback;
+    const tileIndex = (materialId, fallbackIndex) => {
+      const tile = materialLibrary.tiles.find((entry) => entry.id === materialId);
+      return Number.isFinite(Number(tile?.index)) ? Number(tile.index) : fallbackIndex;
+    };
+    return {
+      ...fallback,
+      id: profileId,
+      floorTile: tileIndex(profile.floor, fallback.floorTile),
+      boundaryWall: tileIndex(profile.boundary, fallback.boundaryWall),
+      coreWall: tileIndex(profile.circulation, fallback.coreWall),
+      chamberWall: tileIndex(profile.chamber, fallback.chamberWall),
+      altarWall: tileIndex(profile.altar, fallback.altarWall),
+      semanticProfile: profile,
+    };
   }
 
   function fpsFloorSource(tileIndex) {
@@ -6403,6 +7265,11 @@
     return equipWeapon(game.activeWeaponSlot === "primary" ? "secondary" : "primary");
   }
 
+  function signalPlayerIntent() {
+    if (game.status !== "playing" || game.engagementGrace <= 0) return;
+    game.engagementGrace = Math.min(game.engagementGrace, 0.65);
+  }
+
   function onKeyDown(event) {
     const k = event.key;
     if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", " "].includes(k) && ["playing", "paused"].includes(game.status)) event.preventDefault();
@@ -6411,8 +7278,14 @@
     if (event.repeat) return;
     if (k === "Escape" || k.toLowerCase() === "p") togglePause();
     if (game.status !== "playing") return;
+    if (["a", "d", "w", "s", "arrowleft", "arrowright", "arrowup", "arrowdown", " ", "j", "l", "u", "h", "k", "e"].includes(k.toLowerCase())) {
+      signalPlayerIntent();
+    }
     if (k === " " && game.mode === "side") input.jumpQueued = true;
     if (k.toLowerCase() === "j") performAttack();
+    if (k.toLowerCase() === "l") performHeavyAttack();
+    if (k.toLowerCase() === "u") performGuard(true);
+    if (k.toLowerCase() === "h") performDodge();
     if (k.toLowerCase() === "k") performRanged();
     if (k.toLowerCase() === "e") interact();
     if (k.toLowerCase() === "v") switchMode();
@@ -6427,19 +7300,33 @@
   function onKeyUp(event) {
     input.keys.delete(event.key);
     input.keys.delete(event.key.toLowerCase());
+    if (event.key.toLowerCase() === "u") releaseGuard();
   }
 
   function handleAction(action) {
+    if (["attack", "heavy", "guard", "dodge", "ranged", "interact"].includes(action)) {
+      signalPlayerIntent();
+    }
     if (action === "start") startGame();
     else if (action === "pause") togglePause();
     else if (action === "restart") restartGame();
     else if (action === "switch") switchMode();
     else if (action === "attack") performAttack();
+    else if (action === "heavy") performHeavyAttack();
+    else if (action === "guard") {
+      performGuard(true);
+      window.setTimeout?.(releaseGuard, 420);
+    }
+    else if (action === "guard-release") releaseGuard();
+    else if (action === "dodge") performDodge();
     else if (action === "ranged") performRanged();
     else if (action === "interact") interact();
     else if (action === "weapon-next" || action === "weapon-swap") swapActiveWeapon();
     else if (action === "loadout") openLoadout();
     else if (action === "loadout-close") closeLoadout();
+    else if (action === "continue") continueGame();
+    else if (action === "new-game") newGame();
+    else if (action === "settings") window.KageCinematic?.openSettings?.();
     else if (action === "title") returnToTitle();
   }
 
@@ -6454,6 +7341,7 @@
   window.addEventListener("blur", () => {
     input.keys.clear();
     input.lookPointerId = null;
+    releaseGuard();
     if (game.status === "playing") togglePause();
   });
   window.addEventListener("yomi:loadout-opened", (event) => {
@@ -6497,6 +7385,7 @@
     // un coup. Les attaques tactiles ont leurs boutons dédiés.
     if (event.pointerType === "touch") return;
     if (game.status !== "playing") return;
+    signalPlayerIntent();
     if (game.mode === "fps" && canvas.requestPointerLock && matchMedia("(pointer: fine)").matches) canvas.requestPointerLock()?.catch?.(() => {});
     if (event.button === 0) performAttack();
     if (event.button === 2) performRanged();
@@ -6517,6 +7406,7 @@
   touchLookZone?.addEventListener("pointerdown", (event) => {
     if (game.status !== "playing" || game.mode !== "fps") return;
     event.preventDefault();
+    signalPlayerIntent();
     input.lookPointerId = event.pointerId;
     input.lookLastX = event.clientX;
     touchLookZone.setPointerCapture?.(event.pointerId);
@@ -6538,11 +7428,49 @@
   touchLookZone?.addEventListener("pointercancel", resetTouchLook);
   touchLookZone?.addEventListener("lostpointercapture", resetTouchLook);
 
-  dom.startButton.addEventListener("click", showBriefing);
-  dom.audioButton.addEventListener("click", toggleAudio);
+  dom.startButton?.addEventListener("click", prepareNewGameBriefing);
+  dom.continueButton?.addEventListener("click", (event) => {
+    event.preventDefault?.();
+    if (!dom.continueButton.disabled) continueGame();
+  });
+  dom.audioButton?.addEventListener("click", toggleAudio);
+
+  const reducedMotionSetting = document.getElementById("settings-reduced-motion");
+  reducedMotionSetting?.addEventListener("change", () => {
+    game.settings.reducedMotion = Boolean(reducedMotionSetting.checked);
+    window.KageSave?.setSetting?.("reducedMotion", game.settings.reducedMotion);
+  });
+  window.addEventListener("yomi:settings-updated", (event) => {
+    game.settings.reducedMotion = Boolean(event.detail?.reducedMotion);
+    game.settings.screenShake = event.detail?.screenShake !== false;
+    if (game.settings.reducedMotion) game.shake = 0;
+  });
+  window.addEventListener("yomi:save-updated", () => {
+    window.setTimeout?.(refreshContinueState, 0);
+  });
+  window.setTimeout?.(refreshContinueState, 0);
 
   document.querySelectorAll("[data-action]").forEach((button) => {
-    button.addEventListener("click", () => handleAction(button.dataset.action));
+    if (button.dataset.action === "guard") {
+      const guardDown = (event) => {
+        event.preventDefault();
+        signalPlayerIntent();
+        button.setPointerCapture?.(event.pointerId);
+        button.classList.add("pressed");
+        performGuard(true);
+      };
+      const guardUp = (event) => {
+        event.preventDefault();
+        button.classList.remove("pressed");
+        releaseGuard();
+      };
+      button.addEventListener("pointerdown", guardDown);
+      button.addEventListener("pointerup", guardUp);
+      button.addEventListener("pointercancel", guardUp);
+      button.addEventListener("lostpointercapture", guardUp);
+    } else {
+      button.addEventListener("click", () => handleAction(button.dataset.action));
+    }
   });
 
   document.querySelectorAll("[data-input]").forEach((button) => {
@@ -6550,6 +7478,7 @@
     const mapping = { left: "a", right: "d", up: "w", down: "s" };
     const press = (event) => {
       event.preventDefault();
+      signalPlayerIntent();
       button.setPointerCapture?.(event.pointerId);
       button.classList.add("pressed");
       input.keys.add(mapping[value]);
@@ -6568,10 +7497,16 @@
 
   window.KageGame = {
     start: startGame,
+    continue: continueGame,
+    newGame,
     pause: togglePause,
     restart: restartGame,
     switchMode,
     attack: performAttack,
+    heavy: performHeavyAttack,
+    guard: performGuard,
+    releaseGuard,
+    dodge: performDodge,
     ranged: performRanged,
     equipWeapon,
     swapWeapon: swapActiveWeapon,
@@ -6598,11 +7533,37 @@
       nearEntrance: isNearSideEntrance(),
       entrance: { ...currentSideEntrance() },
       attackTimer: game.attackTimer,
+      attackKind: game.attackKind,
+      comboStep: game.comboStep,
+      comboTimer: game.comboTimer,
+      guarding: isPlayerGuarding(),
+      parryTimer: game.parryTimer,
+      dodgeTimer: game.dodgeTimer,
+      dodgeCooldown: game.dodgeCooldown,
+      playerPosture: game.playerPosture,
+      perfectParries: game.perfectParries,
+      engagementGrace: game.engagementGrace,
+      checkpoint: game.activeCheckpointId,
       hitConfirm: game.hitConfirm,
     }),
     debug: {
       setMode: (mode) => mode === "fps" ? enterFps(game.chapter, false) : returnToSide(false),
       setHealth: (health) => { game.health = clamp(Number(health), 0, 100); },
+      setPlayerCombat: (patch = {}) => {
+        const allowed = [
+          "stamina", "attackTimer", "attackCooldown", "guardTimer", "parryTimer",
+          "dodgeTimer", "dodgeCooldown", "playerPosture", "playerStagger", "invulnerable",
+        ];
+        allowed.forEach((key) => {
+          if (Number.isFinite(Number(patch[key]))) game[key] = Number(patch[key]);
+        });
+        if (typeof patch.guardHeld === "boolean") game.guardHeld = patch.guardHeld;
+        return window.KageGame.getState();
+      },
+      damagePlayer: (amount, source = {}) => {
+        game.engagementGrace = 0;
+        return damagePlayer(Number(amount), source);
+      },
       step: (dt = 1 / 60) => {
         if (game.status === "playing") update(clamp(Number(dt) || 0, 0, 0.25));
         return window.KageGame.getState();
@@ -6655,6 +7616,7 @@
         areaId: game.side.areaId,
         label: currentSideArea()?.label || "",
         zoneKind: currentSideArea()?.zoneKind || "legacy",
+        rosterPoolId: currentSideArea()?.rosterPoolId || null,
         width: game.side.width,
         visitedAreas: [...(game.side.visitedAreas || [])],
         portals: currentSidePortals().map((portal) => ({
@@ -6676,6 +7638,8 @@
         enemies: game.side.enemies.map((enemy) => ({
           sourceId: enemy.sourceId,
           rosterId: enemy.modularEntry?.id || enemy.rosterId || null,
+          rosterPoolId: enemy.rosterPoolId || null,
+          behaviorFamily: enemy.behaviorFamily || "melee",
           profileId: enemy.profileId || enemy.massiveProfile?.id || null,
           encounterId: enemy.encounterId || null,
           platformId: enemy.platformId || enemy.ai?.platformId || null,
@@ -6815,8 +7779,12 @@
       combatSnapshot: () => ({
         player: {
           health: game.health,
+          stamina: game.stamina,
           hurtTimer: game.hurtTimer,
           stagger: game.playerStagger,
+          guarding: isPlayerGuarding(),
+          posture: game.playerPosture,
+          perfectParries: game.perfectParries,
         },
         sideEnemies: game.side.enemies.map((enemy) => ({
           sourceId: enemy.sourceId,
@@ -6827,6 +7795,9 @@
           dead: enemy.dead,
           hurtTimer: enemy.hurtTimer,
           material: enemy.impactMaterial,
+          behaviorFamily: enemy.behaviorFamily || "melee",
+          posture: enemy.posture || 0,
+          maxPosture: enemy.maxPosture || 0,
           ai: enemy.ai ? {
             state: enemy.ai.state,
             homeX: enemy.ai.homeX,
@@ -6838,6 +7809,7 @@
           } : null,
         })),
         fpsEnemies: currentMission().enemies.map((enemy) => ({
+          rosterId: enemy.modularEntry?.id || enemy.rosterId || null,
           x: enemy.x,
           y: enemy.y,
           hp: enemy.hp,
@@ -6845,6 +7817,9 @@
           radius: fpsEnemyRadius(enemy),
           engagementSlot: enemy.engagementSlot,
           viewDirection: enemy.viewDirection || null,
+          behaviorFamily: enemy.behaviorFamily || "melee",
+          posture: enemy.posture || 0,
+          maxPosture: enemy.maxPosture || 0,
           ai: enemy.ai ? {
             state: enemy.ai.state,
             heading: enemy.ai.heading,
@@ -6862,6 +7837,7 @@
       }),
       assetStatus: () => ({
         akio: modularAnimationReady(bitmapAssets.akioModular, "idle"),
+        fpsPlayerDeferred: !bitmapAssets.akioFpsBody,
         akioModular: Object.fromEntries(
           MODULAR_ANIMATIONS.map((animation) => [animation, modularAnimationReady(bitmapAssets.akioModular, animation)]),
         ),

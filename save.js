@@ -58,6 +58,13 @@
         chapter: 0,
         checkpoint: "kurokawa-entry",
         highestChapter: 0,
+        areaId: "kurokawa-main-street",
+        spawnId: "prologue",
+        health: 100,
+        seals: 0,
+        elapsed: 0,
+        started: false,
+        completed: false,
       },
       unlocks: {
         weapons: [...unlockedWeapons],
@@ -192,6 +199,13 @@
           0,
           99,
         ),
+        areaId: string(source.progress?.areaId, defaults.progress.areaId),
+        spawnId: string(source.progress?.spawnId, defaults.progress.spawnId),
+        health: number(source.progress?.health, defaults.progress.health, 1, 100),
+        seals: number(source.progress?.seals, defaults.progress.seals, 0, 99),
+        elapsed: number(source.progress?.elapsed, defaults.progress.elapsed, 0, 99999999),
+        started: Boolean(source.progress?.started),
+        completed: Boolean(source.progress?.completed),
       },
       unlocks: {
         weapons: unlockedWeapons,
@@ -307,6 +321,59 @@
     return clone(save(profile).loadout);
   }
 
+  function getProgress() {
+    return clone(load().progress);
+  }
+
+  function setProgress(patch = {}) {
+    const profile = load();
+    const candidate = patch && typeof patch === "object" && !Array.isArray(patch)
+      ? patch
+      : {};
+    profile.progress = {
+      ...profile.progress,
+      ...candidate,
+      highestChapter: Math.max(
+        number(profile.progress?.highestChapter, 0, 0, 99),
+        number(candidate.highestChapter ?? candidate.chapter, 0, 0, 99),
+      ),
+    };
+    return clone(save(profile).progress);
+  }
+
+  function setCheckpoint(checkpointId, patch = {}) {
+    const checkpoint = string(checkpointId);
+    if (!checkpoint) return getProgress();
+    return setProgress({
+      ...patch,
+      checkpoint,
+      started: true,
+      completed: false,
+    });
+  }
+
+  function hasContinue() {
+    const progress = load().progress;
+    return Boolean(progress.started && !progress.completed);
+  }
+
+  function markBossDefeated(bossId, defeated = true) {
+    const id = string(bossId);
+    if (!id) return false;
+    const profile = load();
+    profile.bosses[id] = Boolean(defeated);
+    save(profile);
+    return true;
+  }
+
+  function setSetting(settingId, value) {
+    const id = string(settingId);
+    if (!id) return clone(load().settings);
+    const profile = load();
+    profile.settings[id] = Boolean(value);
+    return clone(save(profile).settings);
+  }
+
   function unlockWeapon(weaponId) {
     const id = string(weaponId);
     const catalog = arsenal();
@@ -359,10 +426,16 @@
     normalize: normalizeProfile,
     load,
     save,
+    getProgress,
+    setProgress,
+    setCheckpoint,
+    hasContinue,
     getLoadout,
     setLoadout,
     unlockWeapon,
     isWeaponUnlocked,
+    markBossDefeated,
+    setSetting,
     reset,
     clear,
     storageStatus,

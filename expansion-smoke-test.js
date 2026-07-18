@@ -248,8 +248,55 @@ async function measureSideAttack(weaponId, targetDistance) {
   assert.ok(global.KageArsenal, "arsenal.js doit publier KageArsenal");
   assert.ok(global.KageSave, "save.js doit publier KageSave");
 
+  global.KageSave.reset();
+  assert.equal(global.KageSave.hasContinue(), false);
+  const savedCheckpoint = global.KageSave.setCheckpoint("test-foyer", {
+    chapter: 1,
+    areaId: "castle-donjon",
+    spawnId: "finalCheckpoint",
+    health: 67,
+    seals: 1,
+  });
+  assert.equal(global.KageSave.hasContinue(), true);
+  assert.deepEqual(
+    {
+      checkpoint: savedCheckpoint.checkpoint,
+      areaId: savedCheckpoint.areaId,
+      spawnId: savedCheckpoint.spawnId,
+      health: savedCheckpoint.health,
+      seals: savedCheckpoint.seals,
+    },
+    {
+      checkpoint: "test-foyer",
+      areaId: "castle-donjon",
+      spawnId: "finalCheckpoint",
+      health: 67,
+      seals: 1,
+    },
+    "La sauvegarde doit conserver foyer, zone, spawn, vie et sceaux",
+  );
+  await global.KageGame.continue();
+  const resumedState = global.KageGame.getState();
+  assert.equal(resumedState.sideAreaId, "castle-donjon");
+  assert.equal(resumedState.health, 67);
+  assert.equal(resumedState.seals, 1);
+  assert.equal(resumedState.checkpoint, "test-foyer");
+  global.KageSave.reset();
+
   const playableWeapons = global.KageArsenal.weapons.filter((weapon) => weapon.playable);
   assert.equal(playableWeapons.length, 53, "L'arsenal joueur doit contenir 53 armes");
+  assert.deepEqual(
+    [...global.KageArsenal.defaultUnlockedWeapons].sort(),
+    ["01-kurokage", "kunai", "wakizashi"].sort(),
+    "Une nouvelle chronique doit commencer avec trois armes lisibles, pas 53",
+  );
+  const indexSource = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
+  for (const action of ["attack", "heavy", "guard", "dodge", "ranged"]) {
+    assert.ok(
+      indexSource.includes(`data-action="${action}"`),
+      `La commande tactile ${action} doit être présente`,
+    );
+  }
   assert.deepEqual(
     global.KageArsenal.slots.map((slot) => slot.id),
     ["primary", "secondary", "ranged"],
@@ -310,6 +357,85 @@ async function measureSideAttack(weaponId, targetDistance) {
   await global.KageGame.start();
   await settleRoster();
   assert.equal(global.KageGame.debug.assetStatus().roster.ready, true);
+
+  const villageRoster = global.KageLevels.rosterPools["kai-kurokawa-village"];
+  const villageAllowList = new Set([
+    ...villageRoster.regular,
+    ...villageRoster.special,
+    ...(villageRoster.miniboss || []),
+  ]);
+  const villageSnapshot = global.KageGame.debug.areaSnapshot();
+  assert.equal(villageSnapshot.rosterPoolId, "kai-kurokawa-village");
+  villageSnapshot.enemies
+    .filter((enemy) => !enemy.boss && enemy.rosterId)
+    .forEach((enemy) => {
+      assert.equal(enemy.rosterPoolId, "kai-kurokawa-village");
+      assert.ok(
+        villageAllowList.has(enemy.rosterId),
+        `${enemy.rosterId} doit appartenir au pool régional de Kai/Kurokawa`,
+      );
+    });
+
+  assert.equal(typeof global.KageGame.heavy, "function");
+  assert.equal(typeof global.KageGame.guard, "function");
+  assert.equal(typeof global.KageGame.dodge, "function");
+  global.KageGame.debug.setPlayerCombat({
+    attackTimer: 0,
+    attackCooldown: 0,
+    stamina: 100,
+    playerStagger: 0,
+    invulnerable: 0,
+  });
+  assert.equal(global.KageGame.attack(), true);
+  assert.equal(global.KageGame.getState().comboStep, 1);
+  global.KageGame.debug.setPlayerCombat({ attackTimer: 0, attackCooldown: 0 });
+  assert.equal(global.KageGame.attack(), true);
+  assert.equal(global.KageGame.getState().comboStep, 2);
+  global.KageGame.debug.setPlayerCombat({ attackTimer: 0, attackCooldown: 0 });
+  assert.equal(global.KageGame.heavy(), true);
+  assert.equal(global.KageGame.getState().attackKind, "heavy");
+
+  global.KageGame.debug.setPlayerCombat({
+    attackTimer: 0,
+    attackCooldown: 0,
+    stamina: 80,
+    playerStagger: 0,
+    invulnerable: 0,
+  });
+  assert.equal(global.KageGame.guard(true), true);
+  const playerBeforeParry = global.KageGame.getState();
+  const parriedAttacker = {
+    x: playerBeforeParry.player2d.x + 30,
+    w: 16,
+    boss: false,
+    attack: 0.4,
+    attackCooldown: 0,
+    attackHitApplied: false,
+    posture: 0,
+    maxPosture: 36,
+    hurtTimer: 0,
+  };
+  assert.equal(global.KageGame.debug.damagePlayer(18, {
+    attacker: parriedAttacker,
+    mode: "side",
+    material: "armor",
+    postureDamage: 28,
+  }), false);
+  const afterParry = global.KageGame.getState();
+  assert.equal(afterParry.health, playerBeforeParry.health);
+  assert.equal(afterParry.perfectParries, playerBeforeParry.perfectParries + 1);
+  assert.equal(parriedAttacker.attack, 0);
+  global.KageGame.releaseGuard();
+  global.KageGame.debug.setPlayerCombat({
+    attackTimer: 0,
+    attackCooldown: 0,
+    dodgeCooldown: 0,
+    stamina: 100,
+    playerStagger: 0,
+    invulnerable: 0,
+  });
+  assert.equal(global.KageGame.dodge(), true);
+  assert.ok(global.KageGame.getState().dodgeTimer > 0);
 
   const swappedLoadout = global.KageGame.applyLoadout({
     ...global.KageArsenal.defaultLoadout,
@@ -548,6 +674,40 @@ async function measureSideAttack(weaponId, targetDistance) {
     global.KageLevels.areas["castle-donjon"].portals
       .some((portal) => portal.type === "fps" && Number(portal.mission) === 1),
   );
+
+  const castleRoster = global.KageLevels.rosterPools["kai-kurokawa-castle"];
+  const castleAllowList = new Set([
+    ...castleRoster.regular,
+    ...castleRoster.special,
+    ...castleRoster.miniboss,
+  ]);
+  castleArea.enemies
+    .filter((enemy) => !enemy.boss && enemy.rosterId)
+    .forEach((enemy) => {
+      assert.equal(enemy.rosterPoolId, "kai-kurokawa-castle");
+      assert.ok(castleAllowList.has(enemy.rosterId));
+    });
+
+  const finalCheckpoint = global.KageLevels.areas["castle-donjon"].checkpoints[0];
+  global.KageGame.debug.setPlayer2d({
+    x: finalCheckpoint.x - 10,
+    y: 273,
+    vx: 0,
+    vy: 0,
+    grounded: true,
+  });
+  global.KageGame.debug.step(0.05);
+  assert.equal(global.KageGame.getState().checkpoint, "donjon-final-checkpoint");
+  assert.equal(global.KageSave.getProgress().checkpoint, "donjon-final-checkpoint");
+
+  global.KageGame.debug.setMode("fps");
+  const finalCombat = global.KageGame.debug.combatSnapshot();
+  const finalBoss = finalCombat.fpsEnemies.find((enemy) => enemy.rosterId === "06-daimyo-corrupted");
+  assert.ok(finalBoss, "Le boss FPS final doit être explicitement 06-daimyo-corrupted");
+  assert.equal(global.KageGame.debug.assetStatus().fpsPlayerDeferred, false);
+  assert.equal(global.KageGame.debug.worldSnapshot().fps.scheme, "kurokawa-donjon");
+  global.KageGame.debug.setMode("side");
+  finishTransition();
 
   warpAndTravel("return-to-residence", "castle-residence");
   warpAndTravel("return-to-lower-court", "castle-lower-court");

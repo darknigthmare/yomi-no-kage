@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "id": "yomi-no-kage-canon",
+  "period": "Kan'ei 15 (1638)",
+  "geography": {
+    "country": "Japon",
+    "province": "Kai",
+    "settlement": "Tsuru",
+    "district": "Kurokawa",
+    "canonicalStatement": "Kurokawa est le district fortifié de Tsuru, dans la province de Kai.",
+    "fictionPolicy": "La géographie locale est fictionnelle mais reste compatible avec le cadre historique de Kai en 1638."
+  },
+  "contamination": {
+    "phase1": {
+      "id": "biological-outbreak",
+      "nature": "biological",
+      "transmission": [
+        "fluides contaminés",
+        "morsures",
+        "eau et réserves souillées"
+      ],
+      "effects": [
+        "fièvre",
+        "nécrose",
+        "agressivité",
+        "mort clinique"
+      ]
+    },
+    "phase2": {
+      "id": "yomi-resonance",
+      "nature": "spiritual-amplification",
+      "rule": "La résonance du Yomi réanime et transforme les corps déjà contaminés; elle amplifie le foyer biologique sans le remplacer.",
+      "vectors": [
+        "sanctuaires profanés",
+        "racines contaminées",
+        "rites de domination du daimyō"
+      ]
+    }
+  },
+  "finalBoss": {
+    "id": "giant-10-yomi-no-kanrei",
+    "name": "Yomi-no-Kanrei",
+    "hostRole": "daimyo-of-kurokawa",
+    "phase": 2,
+    "identityRule": "Yomi-no-Kanrei est la seconde phase du daimyō corrompu et conserve sa volonté de régner."
+  }
+}

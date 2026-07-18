@@ -13,11 +13,301 @@
   const HORIZONTAL_GROUND_Y = 300;
   const PLAYER_GROUND_Y = 273;
 
+  const DEPTH_BANDS = {
+    "back-architecture": {
+      layer: "back",
+      baselineY: 294,
+      perspectiveScale: 0.95,
+      collision: "none",
+    },
+    "gameplay-architecture": {
+      layer: "back",
+      baselineY: HORIZONTAL_GROUND_Y,
+      perspectiveScale: 1,
+      collision: "platformOwned",
+    },
+    "gameplay-prop": {
+      layer: "world",
+      baselineY: HORIZONTAL_GROUND_Y,
+      perspectiveScale: 1,
+      collision: "platformOwned",
+    },
+    "world-mid": {
+      layer: "world",
+      baselineY: HORIZONTAL_GROUND_Y,
+      perspectiveScale: 1,
+      collision: "none",
+    },
+    "world-near": {
+      layer: "world",
+      baselineY: 302,
+      perspectiveScale: 1.02,
+      collision: "none",
+    },
+    foreground: {
+      layer: "front",
+      baselineY: 304,
+      perspectiveScale: 1.05,
+      collision: "none",
+    },
+  };
+
+  const SURFACE_PROFILES = {
+    earthRoad: {
+      material: "packedEarth",
+      tileFamily: "kurokawa-ground",
+      friction: 1,
+      footstep: "earth",
+    },
+    castleStone: {
+      material: "castleStone",
+      tileFamily: "daimyo-castle-stone",
+      friction: 0.94,
+      footstep: "stone",
+    },
+    thatchRoof: {
+      material: "thatch",
+      tileFamily: "kurokawa-thatch",
+      friction: 0.86,
+      footstep: "thatch",
+    },
+    ceramicRoof: {
+      material: "ceramicRoofTile",
+      tileFamily: "roof-tile",
+      friction: 0.82,
+      footstep: "roofTile",
+    },
+    villageWood: {
+      material: "weatheredCedar",
+      tileFamily: "kurokawa-wood",
+      friction: 0.9,
+      footstep: "wood",
+    },
+    castleCedar: {
+      material: "blackCedar",
+      tileFamily: "daimyo-castle-cedar",
+      friction: 0.92,
+      footstep: "wood",
+    },
+    tatami: {
+      material: "tatami",
+      tileFamily: "daimyo-castle-tatami",
+      friction: 0.96,
+      footstep: "tatami",
+    },
+    infectedRoots: {
+      material: "infectedRoots",
+      tileFamily: "yomi-roots",
+      friction: 0.76,
+      footstep: "organic",
+    },
+  };
+
+  const FPS_MATERIAL_LIBRARY = {
+    atlas: "assets/generated/props/fps-wall-texture-atlas.png",
+    grid: { columns: 4, rows: 2 },
+    tiles: [
+      { id: "charred-cedar", index: 0, use: ["wall", "partition"] },
+      { id: "torn-shoji", index: 1, use: ["wall", "partition"] },
+      { id: "damp-stone", index: 2, use: ["wall", "foundation", "floor"] },
+      { id: "soiled-tatami", index: 3, use: ["floor"] },
+      { id: "cracked-plaster", index: 4, use: ["wall", "partition"] },
+      { id: "quarantine-palisade", index: 5, use: ["exteriorWall"] },
+      { id: "castle-wall", index: 6, use: ["wall", "loadBearingWall"] },
+      { id: "contaminated-shrine", index: 7, use: ["altar", "sealedDoor"] },
+    ],
+    profiles: {
+      "contaminated-sanctuary": {
+        floor: "damp-stone",
+        boundary: "damp-stone",
+        circulation: "charred-cedar",
+        chamber: "torn-shoji",
+        altar: "contaminated-shrine",
+        forbiddenInteriorMaterials: ["quarantine-palisade"],
+        semanticRegions: [
+          { id: "outer-foundation", bounds: [0, 0, 15, 15], material: "damp-stone" },
+          { id: "ritual-chamber", bounds: [8, 8, 15, 15], material: "torn-shoji" },
+          { id: "altar-seal", radiusFromObjective: 2.25, material: "contaminated-shrine" },
+        ],
+      },
+      "kurokawa-sick-house": {
+        floor: "soiled-tatami",
+        boundary: "cracked-plaster",
+        circulation: "charred-cedar",
+        chamber: "torn-shoji",
+        altar: "contaminated-shrine",
+        forbiddenInteriorMaterials: ["quarantine-palisade"],
+      },
+      "market-road-shrine": {
+        floor: "damp-stone",
+        boundary: "charred-cedar",
+        circulation: "cracked-plaster",
+        chamber: "torn-shoji",
+        altar: "contaminated-shrine",
+        forbiddenInteriorMaterials: ["castle-wall"],
+      },
+      "daimyo-archive": {
+        floor: "soiled-tatami",
+        boundary: "cracked-plaster",
+        circulation: "castle-wall",
+        chamber: "torn-shoji",
+        altar: "contaminated-shrine",
+        forbiddenInteriorMaterials: ["quarantine-palisade"],
+      },
+      "kurokawa-donjon": {
+        floor: "soiled-tatami",
+        boundary: "cracked-plaster",
+        circulation: "castle-wall",
+        chamber: "torn-shoji",
+        altar: "contaminated-shrine",
+        forbiddenInteriorMaterials: ["quarantine-palisade"],
+        semanticRegions: [
+          { id: "guard-corridor", material: "castle-wall" },
+          { id: "residence-chambers", material: "torn-shoji" },
+          { id: "damaged-plaster", material: "cracked-plaster" },
+          { id: "yomi-throne-seal", radiusFromObjective: 2.25, material: "contaminated-shrine" },
+        ],
+      },
+    },
+  };
+
   const KageLevels = {
-    schema: 1,
+    schema: 2,
     campaignId: "yomi-no-kage",
     startAreaId: "kurokawa-main-street",
     startSpawnId: "prologue",
+    canonManifest: "assets/modular/manifests/yomi-no-kage-canon.json",
+    rosterManifest: "assets/modular/manifests/kai-kurokawa-deployment.json",
+    canon: {
+      period: "Kan'ei 15 (1638)",
+      geography: {
+        country: "Japon",
+        province: "Kai",
+        settlement: "Tsuru",
+        district: "Kurokawa",
+        statement: "Kurokawa est le district fortifié de Tsuru, dans la province de Kai.",
+      },
+      contamination: {
+        phase1: {
+          id: "biological-outbreak",
+          nature: "biological",
+          summary: "Une infection transmissible provoque fièvre, nécrose et violence avant la mort clinique.",
+        },
+        phase2: {
+          id: "yomi-resonance",
+          nature: "spiritual-amplification",
+          summary: "La résonance du Yomi réanime et transforme les corps déjà contaminés; elle amplifie le foyer biologique sans le remplacer.",
+        },
+      },
+      finalBoss: {
+        id: "giant-10-yomi-no-kanrei",
+        hostRole: "daimyo-of-kurokawa",
+        identityRule: "Yomi-no-Kanrei est la phase 2 du daimyō corrompu, pas une entité finale sans lien avec le seigneur.",
+      },
+    },
+    worldTags: {
+      regionId: "kai",
+      settlementId: "tsuru",
+      districtId: "tsuru-kurokawa",
+      periodId: "kanei-1638",
+      factionIds: ["shogunate-expedition", "kurokawa-quarantine", "yomi-infected"],
+    },
+    rosterPools: {
+      "kai-kurokawa-village": {
+        chapterTags: ["village", "quarantine", "civilian-infected"],
+        factions: ["kurokawa-quarantine", "yomi-infected"],
+        regular: [
+          "r02-sekisho-messenger",
+          "r03-kurokawa-miner",
+          "r04-chaya-servant",
+          "r05-kome-porter",
+          "r06-yama-woodcutter",
+          "r08-kawara-roofer",
+          "r09-haka-digger",
+          "r10-hikeshi-watchman",
+          "r12-miya-porter",
+          "r13-yakushi-apprentice",
+          "r14-kaido-bandit",
+          "r16-kusari-prisoner",
+          "r17-umaya-groom",
+          "r18-washi-maker",
+          "r19-kago-bearer",
+          "r20-komuso-wanderer",
+        ],
+        special: [
+          "s01-kusa-shinobi",
+          "s02-doku-kunoichi",
+          "s03-bakusai-runner",
+          "s04-onibi-adept",
+          "s05-raimei-yamabushi",
+          "s06-oni-men-executioner",
+          "s09-kuro-yakushi",
+          "s11-biwa-revenant",
+          "s12-shikigami-scribe",
+          "s13-kegare-sumotori",
+          "s17-kurohata-bearer",
+          "s18-yomi-herald",
+          "s19-wana-trapper",
+          "s20-mekura-oracle",
+        ],
+        excludedRoleTags: ["coastal-fisher", "salt-coast", "pirate", "naval", "amphibious"],
+      },
+      "kai-kurokawa-castle": {
+        chapterTags: ["castle", "quarantine-garrison", "yomi-court"],
+        factions: ["kurokawa-garrison", "yomi-infected"],
+        regular: [
+          "r02-sekisho-messenger",
+          "r03-kurokawa-miner",
+          "r05-kome-porter",
+          "r08-kawara-roofer",
+          "r10-hikeshi-watchman",
+          "r13-yakushi-apprentice",
+          "r15-oku-servant",
+          "r16-kusari-prisoner",
+          "r17-umaya-groom",
+          "r19-kago-bearer",
+        ],
+        special: [
+          "s06-oni-men-executioner",
+          "s07-tessen-courtier",
+          "s08-gomon-jailer",
+          "s09-kuro-yakushi",
+          "s10-hatamoto-fallen",
+          "s12-shikigami-scribe",
+          "s13-kegare-sumotori",
+          "s15-teppo-corpsman",
+          "s16-kage-mai-dancer",
+          "s17-kurohata-bearer",
+          "s18-yomi-herald",
+          "s20-mekura-oracle",
+        ],
+        miniboss: [
+          "mb-01-gunso-croc-fer",
+          "mb-02-ronin-kurogane",
+          "mb-03-sohei-cent-prieres",
+          "mb-07-arquebusier-jigoku",
+          "mb-08-archer-os",
+          "mb-09-pisteur-kegare",
+          "mb-10-forgeron-hibana",
+          "mb-11-hatamoto-inazuma",
+          "mb-12-gardien-masque-fer",
+          "mb-15-kunoichi-veuve",
+          "mb-16-yoriki-gashadokuro",
+          "mb-18-onmyoji-renard",
+          "mb-20-capitaine-byakko",
+        ],
+        excludedRoleTags: ["coastal-fisher", "salt-coast", "pirate", "naval", "amphibious"],
+      },
+    },
+    visualStandards: {
+      coordinateSpace: "side-view-orthographic",
+      groundBaselineY: HORIZONTAL_GROUND_Y,
+      depthBands: DEPTH_BANDS,
+      surfaceProfiles: SURFACE_PROFILES,
+      requireOwnedColliderForHiddenPlatforms: true,
+      minimumGuardSpacing: 72,
+      fpsMaterials: FPS_MATERIAL_LIBRARY,
+    },
     designRules: {
       outdoorRequiredRoute: "horizontal",
       outdoorPlatformRole: "optionalUpper",
@@ -120,6 +410,11 @@
       "kurokawa-main-street": {
         id: "kurokawa-main-street",
         chapterId: "village",
+        chapterTags: ["village", "main-road", "quarantine"],
+        regionId: "kai",
+        settlementId: "tsuru",
+        districtId: "tsuru-kurokawa",
+        rosterPoolId: "kai-kurokawa-village",
         label: "Grande rue de Kurokawa",
         zoneKind: "outdoor",
         environmentIndex: 0,
@@ -166,6 +461,19 @@
             routeRole: "optionalUpper",
           },
           {
+            id: "village-barrier-west-top",
+            x: 226,
+            y: 272,
+            w: 58,
+            h: 8,
+            visualHeight: 24,
+            visual: false,
+            owner: "village-barrier-west",
+            surface: "wood",
+            collision: "oneWay",
+            routeRole: "optionalUpper",
+          },
+          {
             id: "west-watch-balcony",
             x: 318,
             y: 238,
@@ -179,6 +487,19 @@
             routeRole: "optionalUpper",
           },
           {
+            id: "barrel-access-top",
+            x: 506,
+            y: 258,
+            w: 24,
+            h: 8,
+            visualHeight: 24,
+            visual: false,
+            owner: "barrel-access",
+            surface: "wood",
+            collision: "oneWay",
+            routeRole: "optionalUpper",
+          },
+          {
             id: "intact-house-awning",
             x: 541,
             y: 239,
@@ -187,6 +508,19 @@
             visualHeight: 24,
             visual: false,
             owner: "minka-tuiles-intacte",
+            surface: "roofTile",
+            collision: "oneWay",
+            routeRole: "optionalUpper",
+          },
+          {
+            id: "intact-house-roof",
+            x: 552,
+            y: 210,
+            w: 142,
+            h: 8,
+            visualHeight: 24,
+            visual: false,
+            owner: "intact-minka",
             surface: "roofTile",
             collision: "oneWay",
             routeRole: "optionalUpper",
@@ -218,6 +552,19 @@
             routeRole: "optionalUpper",
           },
           {
+            id: "rice-storehouse-awning",
+            x: 1068,
+            y: 231,
+            w: 62,
+            h: 8,
+            visualHeight: 24,
+            visual: false,
+            owner: "rice-storehouse",
+            surface: "roofTile",
+            collision: "oneWay",
+            routeRole: "optionalUpper",
+          },
+          {
             id: "haystack-shortcut",
             x: 1385,
             y: 258,
@@ -227,6 +574,70 @@
             visual: false,
             owner: "tas-paille",
             surface: "thatch",
+            collision: "oneWay",
+            routeRole: "optionalUpper",
+          },
+          {
+            id: "haystack-high-step",
+            x: 1395,
+            y: 225,
+            w: 28,
+            h: 8,
+            visualHeight: 24,
+            visual: false,
+            owner: "hay-access",
+            surface: "thatch",
+            collision: "oneWay",
+            routeRole: "optionalUpper",
+          },
+          {
+            id: "burned-quarter-barrel-top",
+            x: 1775,
+            y: 258,
+            w: 28,
+            h: 8,
+            visualHeight: 24,
+            visual: false,
+            owner: "burned-quarter-barrel",
+            surface: "wood",
+            collision: "oneWay",
+            routeRole: "optionalUpper",
+          },
+          {
+            id: "burned-house-east-roof",
+            x: 1817,
+            y: 254,
+            w: 158,
+            h: 8,
+            visualHeight: 24,
+            visual: false,
+            owner: "burned-minka-east",
+            surface: "thatch",
+            collision: "oneWay",
+            routeRole: "optionalUpper",
+          },
+          {
+            id: "east-watch-step",
+            x: 2178,
+            y: 264,
+            w: 82,
+            h: 8,
+            visualHeight: 32,
+            tile: "step",
+            surface: "wood",
+            collision: "oneWay",
+            routeRole: "optionalUpper",
+          },
+          {
+            id: "east-watch-balcony",
+            x: 2263,
+            y: 238,
+            w: 64,
+            h: 8,
+            visualHeight: 24,
+            visual: false,
+            owner: "watchtower-east",
+            surface: "wood",
             collision: "oneWay",
             routeRole: "optionalUpper",
           },
@@ -326,6 +737,11 @@
       "kurokawa-back-street": {
         id: "kurokawa-back-street",
         chapterId: "village",
+        chapterTags: ["village", "back-street", "quarantine"],
+        regionId: "kai",
+        settlementId: "tsuru",
+        districtId: "tsuru-kurokawa",
+        rosterPoolId: "kai-kurokawa-village",
         label: "Ruelle des puits",
         zoneKind: "outdoor",
         environmentIndex: 0,
@@ -357,6 +773,19 @@
           },
         ],
         platforms: [
+          {
+            id: "back-minka-west-roof",
+            x: 270,
+            y: 230,
+            w: 150,
+            h: 8,
+            visualHeight: 24,
+            visual: false,
+            owner: "back-minka-01",
+            surface: "thatch",
+            collision: "oneWay",
+            routeRole: "optionalUpper",
+          },
           {
             id: "back-cart",
             x: 460,
@@ -393,6 +822,32 @@
             visual: false,
             owner: "kura-entrepot-riz",
             surface: "roofTile",
+            collision: "oneWay",
+            routeRole: "optionalUpper",
+          },
+          {
+            id: "back-hay-top",
+            x: 1250,
+            y: 258,
+            w: 54,
+            h: 8,
+            visualHeight: 24,
+            visual: false,
+            owner: "back-hay",
+            surface: "thatch",
+            collision: "oneWay",
+            routeRole: "optionalUpper",
+          },
+          {
+            id: "back-barrier-top",
+            x: 2188,
+            y: 272,
+            w: 58,
+            h: 8,
+            visualHeight: 24,
+            visual: false,
+            owner: "back-barrier",
+            surface: "wood",
             collision: "oneWay",
             routeRole: "optionalUpper",
           },
@@ -489,6 +944,11 @@
       "kurokawa-market-east": {
         id: "kurokawa-market-east",
         chapterId: "village",
+        chapterTags: ["village", "market", "quarantine", "massive-boss-arena"],
+        regionId: "kai",
+        settlementId: "tsuru",
+        districtId: "tsuru-kurokawa",
+        rosterPoolId: "kai-kurokawa-village",
         label: "Marché oriental",
         zoneKind: "outdoor",
         environmentIndex: 0,
@@ -688,10 +1148,22 @@
       "castle-lower-court": {
         id: "castle-lower-court",
         chapterId: "castle",
+        chapterTags: ["castle", "exterior-courtyard", "quarantine-garrison"],
+        regionId: "kai",
+        settlementId: "tsuru",
+        districtId: "tsuru-kurokawa",
+        rosterPoolId: "kai-kurokawa-castle",
         label: "Cour basse du château",
         zoneKind: "castle",
         environmentIndex: 2,
         backdropProfile: "castle-courtyard",
+        sideBackdrop: {
+          mode: "orthographic-modular-exterior",
+          environmentId: "daimyo-castle",
+          projection: "lateral",
+          layerOrder: ["sky", "far", "mid", "near"],
+          forbiddenAssets: ["assets/generated/environments/03-daimyo-castle-interior.png"],
+        },
         groundVisual: "castle-stone",
         width: 2500,
         minX: 960,
@@ -736,15 +1208,40 @@
             routeRole: "structuralFloor",
           },
           {
+            id: "castle-tower-middle",
+            x: 1015,
+            y: 178,
+            w: 145,
+            h: 8,
+            visualHeight: 24,
+            visual: false,
+            owner: "lower-court-tower",
+            surface: "roofTile",
+            collision: "oneWay",
+            routeRole: "optionalUpper",
+          },
+          {
+            id: "castle-tower-upper",
+            x: 1030,
+            y: 135,
+            w: 115,
+            h: 8,
+            visualHeight: 24,
+            visual: false,
+            owner: "lower-court-tower",
+            surface: "roofTile",
+            collision: "oneWay",
+            routeRole: "optionalUpper",
+          },
+          {
             id: "castle-stair-1",
             x: 1140,
             y: 286,
             w: 78,
             h: 8,
             visualHeight: 24,
-            visual: false,
-            owner: "escalier-bois",
-            surface: "wood",
+            tile: "step",
+            surface: "castleStone",
             collision: "oneWay",
             routeRole: "structuralFloor",
           },
@@ -755,9 +1252,8 @@
             w: 66,
             h: 8,
             visualHeight: 24,
-            visual: false,
-            owner: "escalier-bois",
-            surface: "wood",
+            tile: "step",
+            surface: "castleStone",
             collision: "oneWay",
             routeRole: "structuralFloor",
           },
@@ -768,36 +1264,97 @@
             w: 54,
             h: 8,
             visualHeight: 24,
-            visual: false,
-            owner: "escalier-bois",
-            surface: "wood",
+            tile: "step",
+            surface: "castleStone",
             collision: "oneWay",
             routeRole: "structuralFloor",
           },
           {
-            id: "shoji-gallery",
+            id: "court-stone-gallery",
             x: 1225,
             y: 264,
             w: 170,
             h: 8,
             visualHeight: 24,
-            visual: false,
-            owner: "mur-shoji",
-            surface: "wood",
+            tile: "ledge",
+            surface: "castleStone",
             collision: "oneWay",
             routeRole: "structuralFloor",
+          },
+          {
+            id: "court-gate-roof",
+            x: 1695,
+            y: 242,
+            w: 170,
+            h: 8,
+            visualHeight: 30,
+            tile: "roof",
+            owner: "lower-court-gate",
+            surface: "roofTile",
+            collision: "oneWay",
+            routeRole: "optionalUpper",
+          },
+          {
+            id: "court-east-beam",
+            x: 1914,
+            y: 234,
+            w: 46,
+            h: 8,
+            visualHeight: 28,
+            tile: "beam",
+            owner: "lower-court-pillar",
+            surface: "cedar",
+            collision: "oneWay",
+            routeRole: "optionalUpper",
+          },
+          {
+            id: "court-root-step",
+            x: 2048,
+            y: 264,
+            w: 78,
+            h: 8,
+            visualHeight: 24,
+            visual: false,
+            owner: "lower-court-roots",
+            surface: "infectedRoots",
+            collision: "oneWay",
+            routeRole: "optionalUpper",
+          },
+          {
+            id: "court-door-step",
+            x: 2130,
+            y: 274,
+            w: 72,
+            h: 8,
+            visualHeight: 30,
+            tile: "short",
+            surface: "castleStone",
+            collision: "oneWay",
+            routeRole: "structuralFloor",
+          },
+          {
+            id: "court-final-gallery",
+            x: 2320,
+            y: 264,
+            w: 90,
+            h: 8,
+            visualHeight: 30,
+            tile: "ledge",
+            surface: "castleStone",
+            collision: "oneWay",
+            routeRole: "optionalUpper",
           },
         ],
         props: [
           { id: "lower-court-tower", file: "tour-chateau", x: 990, width: 180, layer: "back" },
-          { id: "lower-court-stairs", file: "escalier-bois", x: 1140, width: 80, layer: "world" },
-          { id: "lower-court-shoji", file: "mur-shoji", x: 1215, width: 190, layer: "back" },
-          { id: "lower-court-brazier", file: "brasero-fer", x: 1270, width: 32, layer: "world", bottomY: 300 },
-          { id: "lower-court-alcove", file: "alcove-tatami", x: 1450, width: 175, layer: "back" },
-          { id: "lower-court-armor", file: "armure-vide", x: 1515, width: 38, layer: "world" },
+          { id: "lower-court-west-rampart", file: "mur-pierre-jokamachi", x: 1215, width: 190, layer: "back" },
+          { id: "lower-court-brazier", file: "brasero-fer", x: 1320, width: 32, layer: "world", bottomY: 300 },
+          { id: "lower-court-central-rampart", file: "mur-pierre-jokamachi", x: 1450, width: 220, layer: "back" },
+          { id: "lower-court-gate", file: "porte-chateau", x: 1680, width: 190, layer: "back" },
           { id: "lower-court-pillar", file: "pilier-cedre", x: 1910, width: 48, layer: "back" },
-          { id: "lower-court-rack", file: "ratelier-vide", x: 1960, width: 78, layer: "world" },
+          { id: "lower-court-brazier-east", file: "brasero-fer", x: 1968, width: 32, layer: "world", bottomY: 300 },
           { id: "lower-court-roots", file: "racines-donjon", x: 2045, width: 80, layer: "world" },
+          { id: "lower-court-east-rampart", file: "mur-pierre-jokamachi", x: 2210, width: 190, layer: "back" },
         ],
         portals: [
           {
@@ -836,8 +1393,8 @@
           },
         ],
         enemies: [
-          { id: "court-guard-01", roster: "special", x: 1398, y: 276, facing: -1 },
-          { id: "court-guard-02", roster: "miniboss", x: 1430, y: 276, facing: -1 },
+          { id: "court-guard-01", roster: "special", x: 1350, y: 276, facing: -1 },
+          { id: "court-guard-02", roster: "miniboss", x: 1490, y: 276, facing: -1 },
           { id: "court-guard-03", roster: "special", x: 1650, y: 276, facing: -1 },
           { id: "court-guard-04", roster: "special", x: 1870, y: 276, facing: -1 },
           { id: "court-guard-05", roster: "miniboss", x: 2400, y: 276, facing: -1 },
@@ -853,10 +1410,29 @@
       "castle-residence": {
         id: "castle-residence",
         chapterId: "castle",
+        chapterTags: ["castle", "interior", "residence", "yomi-court"],
+        regionId: "kai",
+        settlementId: "tsuru",
+        districtId: "tsuru-kurokawa",
+        rosterPoolId: "kai-kurokawa-castle",
         label: "Résidence du daimyō",
         zoneKind: "building",
         environmentIndex: 2,
-        backdropProfile: "castle-residence",
+        backdropProfile: "castle-side-residence",
+        sideBackdrop: {
+          mode: "orthographic-modular-interior",
+          environmentId: "daimyo-castle",
+          projection: "lateral",
+          layerOrder: ["sky", "far", "mid", "near"],
+          lateralLayers: {
+            ambient: "assets/modular/environments/daimyo-castle/layers/sky.png",
+            distantDepth: "assets/modular/environments/daimyo-castle/layers/far.png",
+            architecture: "assets/modular/environments/daimyo-castle/layers/mid.png",
+            foregroundFrame: "assets/modular/environments/daimyo-castle/layers/near.png",
+          },
+          interiorOcclusion: "architecture-and-props",
+          forbiddenAssets: ["assets/generated/environments/03-daimyo-castle-interior.png"],
+        },
         groundVisual: "tatami-clean",
         width: 2400,
         minX: 6,
@@ -1053,10 +1629,29 @@
       "castle-donjon": {
         id: "castle-donjon",
         chapterId: "castle",
+        chapterTags: ["castle", "interior", "donjon", "yomi-heart"],
+        regionId: "kai",
+        settlementId: "tsuru",
+        districtId: "tsuru-kurokawa",
+        rosterPoolId: "kai-kurokawa-castle",
         label: "Donjon supérieur",
         zoneKind: "castle",
         environmentIndex: 2,
-        backdropProfile: "castle-donjon",
+        backdropProfile: "castle-side-donjon",
+        sideBackdrop: {
+          mode: "orthographic-modular-interior",
+          environmentId: "daimyo-castle",
+          projection: "lateral",
+          layerOrder: ["sky", "far", "mid", "near"],
+          lateralLayers: {
+            ambient: "assets/modular/environments/daimyo-castle/layers/sky.png",
+            distantDepth: "assets/modular/environments/daimyo-castle/layers/far.png",
+            architecture: "assets/modular/environments/daimyo-castle/layers/mid.png",
+            foregroundFrame: "assets/modular/environments/daimyo-castle/layers/near.png",
+          },
+          interiorOcclusion: "architecture-roots-and-props",
+          forbiddenAssets: ["assets/generated/environments/03-daimyo-castle-interior.png"],
+        },
         groundVisual: "tatami-tainted",
         width: 2500,
         minX: 6,
@@ -1255,6 +1850,161 @@
       },
     },
   };
+
+  const PLATFORM_OWNER_OVERRIDES = {
+    "burned-house-roof": "burned-minka-west",
+    "west-watch-balcony": "watchtower-west",
+    "intact-house-awning": "intact-minka",
+    "rice-storehouse-roof": "rice-storehouse",
+    "broken-cart-shortcut": "broken-cart",
+    "haystack-shortcut": "hay-access",
+    "back-cart": "back-cart-01",
+    "back-minka-roof": "back-minka-02",
+    "back-kura-awning": "back-kura",
+    "market-cart-shortcut": "market-cart",
+    "market-house-secret": "market-house",
+    "castle-tower-lower": "lower-court-tower",
+    "residence-stair-lower": "residence-stairs",
+    "residence-stair-upper": "residence-stairs",
+    "residence-east-stairs": "residence-stairs",
+    "donjon-stair-1": "donjon-stairs",
+    "donjon-stair-2": "donjon-stairs",
+    "donjon-upper-stair": "donjon-stairs",
+  };
+
+  function surfaceProfileId(surface, area) {
+    const value = String(surface || "").toLowerCase();
+    if (value.includes("tatami")) return "tatami";
+    if (value.includes("root")) return "infectedRoots";
+    if (value.includes("stone") || value.includes("pierre")) return "castleStone";
+    if (value.includes("thatch") || value.includes("chaume")) return "thatchRoof";
+    if (value.includes("roof") || value.includes("tuile")) return "ceramicRoof";
+    if (area.environmentIndex === 2) return "castleCedar";
+    return "villageWood";
+  }
+
+  function propSurfaceProfileId(prop, area) {
+    const file = String(prop.file || "").toLowerCase();
+    if (/mur-pierre|puits-pierre/.test(file)) return "castleStone";
+    if (/racines|yomi/.test(file)) return "infectedRoots";
+    if (/minka|kura|tour-guet/.test(file)) return "ceramicRoof";
+    if (/tas-paille/.test(file)) return "thatchRoof";
+    if (area.environmentIndex === 2) return "castleCedar";
+    return "villageWood";
+  }
+
+  function resolvePlatformOwner(area, platform) {
+    const override = PLATFORM_OWNER_OVERRIDES[platform.id];
+    if (override) return override;
+    if (!platform.owner) return null;
+    const byId = area.props.find((prop) => prop.id === platform.owner);
+    if (byId) return byId.id;
+    const byFile = area.props.filter((prop) => prop.file === platform.owner);
+    if (byFile.length === 1) return byFile[0].id;
+    if (byFile.length > 1) {
+      const center = platform.x + platform.w / 2;
+      return byFile
+        .slice()
+        .sort((left, right) =>
+          Math.abs(left.x + left.width / 2 - center) - Math.abs(right.x + right.width / 2 - center))[0].id;
+    }
+    return null;
+  }
+
+  function normalizeAreaVisualData(area) {
+    area.visualDataVersion = 2;
+    area.factionIds = area.factionIds || KageLevels.rosterPools[area.rosterPoolId]?.factions || [];
+    area.fpsMaterialProfileIds = (area.portals || [])
+      .map((portal) => portal.destination?.missionId)
+      .filter((missionId) => FPS_MATERIAL_LIBRARY.profiles[missionId]);
+
+    for (const ground of area.groundSegments || []) {
+      ground.depthBand = ground.depthBand || "gameplay-ground";
+      ground.baseline = ground.baseline || `ground-${ground.y}`;
+      ground.baselineY = ground.baselineY ?? ground.y;
+      ground.surfaceProfile = ground.surfaceProfile || (
+        String(ground.surface || "").toLowerCase().includes("tatami")
+          ? "tatami"
+          : (area.environmentIndex === 2 ? "castleStone" : "earthRoad")
+      );
+      ground.colliderProfile = ground.colliderProfile || {
+        type: "solidGround",
+        x: ground.x,
+        y: ground.y,
+        width: ground.w,
+        height: ground.h,
+      };
+    }
+
+    for (const platform of area.platforms || []) {
+      const ownerPropId = platform.ownerPropId || resolvePlatformOwner(area, platform);
+      if (ownerPropId) platform.ownerPropId = ownerPropId;
+      platform.depthBand = platform.depthBand || "gameplay-surface";
+      platform.baseline = platform.baseline || `surface-${platform.y}`;
+      platform.baselineY = platform.baselineY ?? platform.y;
+      platform.surfaceProfile = platform.surfaceProfile || surfaceProfileId(platform.surface, area);
+      platform.colliderProfile = platform.colliderProfile || {
+        type: platform.collision || "oneWay",
+        x: platform.x,
+        y: platform.y,
+        width: platform.w,
+        height: platform.h,
+        topSurfaceOnly: platform.collision === "oneWay",
+      };
+      platform.visualSource = platform.visualSource || (
+        platform.visual === false
+          ? { mode: "ownerProp", propId: ownerPropId }
+          : { mode: "platformTile", tile: platform.tile || "ledge" }
+      );
+    }
+
+    for (const prop of area.props || []) {
+      const ownedPlatforms = (area.platforms || []).filter((platform) => platform.ownerPropId === prop.id);
+      const gameplayOwned = ownedPlatforms.length > 0;
+      const depthBand = prop.depthBand || (
+        prop.layer === "front"
+          ? "foreground"
+          : (gameplayOwned
+            ? (prop.layer === "world" ? "gameplay-prop" : "gameplay-architecture")
+            : (prop.layer === "back"
+              ? "back-architecture"
+              : (/puits|brasero|foyer|autel|racines/.test(String(prop.file || ""))
+                ? "world-near"
+                : "world-mid")))
+      );
+      const band = DEPTH_BANDS[depthBand] || DEPTH_BANDS["world-mid"];
+      prop.depthBand = depthBand;
+      prop.bottomY = prop.bottomY ?? band.baselineY;
+      prop.baselineY = prop.baselineY ?? prop.bottomY;
+      prop.baseline = prop.baseline || `ground-${prop.bottomY}`;
+      prop.perspectiveScale = prop.perspectiveScale ?? band.perspectiveScale;
+      prop.surfaceProfile = prop.surfaceProfile || propSurfaceProfileId(prop, area);
+      prop.colliderProfile = prop.colliderProfile || (
+        gameplayOwned
+          ? {
+            type: "platformOwned",
+            platformIds: ownedPlatforms.map((platform) => platform.id),
+            blocksMovement: false,
+          }
+          : {
+            type: prop.destructible ? "destructibleVisual" : "visualOnly",
+            blocksMovement: false,
+          }
+      );
+    }
+
+    for (const enemy of area.enemies || []) {
+      enemy.regionId = enemy.regionId || area.regionId;
+      enemy.settlementId = enemy.settlementId || area.settlementId;
+      enemy.districtId = enemy.districtId || area.districtId;
+      enemy.chapterId = enemy.chapterId || area.chapterId;
+      enemy.rosterPoolId = enemy.rosterPoolId || area.rosterPoolId;
+      enemy.factionIds = enemy.factionIds || area.factionIds;
+      enemy.baseline = enemy.baseline || (enemy.platformId ? `platform-${enemy.platformId}` : "ground-300");
+    }
+  }
+
+  Object.values(KageLevels.areas).forEach(normalizeAreaVisualData);
 
   const MASSIVE_RENDER_DEFAULTS = {
     maxWidthRatio: 0.55,

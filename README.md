@@ -1,7 +1,13 @@
 # Yomi no Kage — L'Ombre du Shogun
 
-Prototype jouable en pixel-art qui alterne combat latéral 2D et FPS rétro
+Chapitre jouable en pixel-art qui alterne combat latéral 2D et FPS rétro
 raycast dans un Japon féodal frappé par une épidémie de morts-vivants.
+
+La version actuelle comprend une chronique sauvegardable, six zones 2D
+reliées, deux intérieurs FPS, des checkpoints, un boss massif et un boss final.
+La cible de campagne 8–10 heures reste décrite dans
+[`GAME_DESIGN_ROADMAP.md`](GAME_DESIGN_ROADMAP.md) ; les règles historiques et
+surnaturelles sont fixées dans [`LORE_BIBLE.md`](LORE_BIBLE.md).
 
 ## Lancer le jeu
 
@@ -53,15 +59,25 @@ génération.
 - `A` / `D` : déplacement
 - `W` / `S` : avancer / reculer en FPS
 - `Espace` : saut en 2D
-- `J` ou clic gauche : katana
-- `K` ou clic droit : ofuda
-- `1` à `0` : équiper l'un des 10 sabres d'Akio
-- `E` : ouvrir une entrée en 2D / sceller un autel en FPS
-- `V` : raccourci de seuil, uniquement près d'une entrée
-- `Échap` ou `P` : pause
-- `M` : couper / réactiver le son
+- `J` ou clic gauche : combo léger avec l'arme active
+- `L` : attaque lourde
+- `U` (maintenir) : garde et fenêtre de parade parfaite
+- `H` : esquive
+- `K`, `3` ou clic droit : projectile préparé
+- `1` / `2` / `Q` : arme principale, secondaire ou permutation
+- `I` : ouvrir le dōjō
+- `E` : ouvrir une entrée en 2D / sceller un autel en FPS
+- `V` : raccourci de seuil, uniquement près d'une entrée
+- `Échap` ou `P` : pause
+- `M` : couper / réactiver le son
 
-Les contrôles tactiles apparaissent automatiquement sur mobile.
+Les contrôles tactiles apparaissent automatiquement sur mobile et proposent
+le combo, le lourd, la garde maintenue, l'esquive, le tir et une zone de glisse
+pour tourner en FPS.
+
+Une nouvelle chronique commence avec Kurokage, le wakizashi et les kunai. Les
+53 armes restent visibles au dōjō ; les autres se débloquent selon leur
+provenance (boss, chapitre, contrat, secret ou artisan).
 
 ## Prologue cinématique
 
@@ -72,7 +88,10 @@ un asset 16:9 indépendant dans `assets/generated/cinematics/`.
 
 - clic, `Espace`, `Entrée` ou flèche droite : plan suivant ;
 - flèche gauche : plan précédent ;
+- `P` ou le bouton Pause : suspendre/reprendre la lecture automatique ;
 - `Échap` ou le bouton « Passer le prologue » : accéder directement au briefing.
+
+L'auto-défilement est désactivé lorsque la réduction des mouvements est active.
 
 ## Vérification
 
@@ -80,7 +99,9 @@ un asset 16:9 indépendant dans `assets/generated/cinematics/`.
 node --check game.js
 node --check audio.js
 node --check cinematic.js
+node audio-smoke-test.js
 node cinematic-smoke-test.js
+node visual-data-smoke-test.js
 node --check assets-gallery.js
 py tools/build_hero_sheets_v2.py
 py tools/validate-fps-player.py
@@ -90,6 +111,8 @@ node tools/verify-modular-registry.mjs
 py tools/clean-modular-atlas-bleed.py
 py tools/sprite_pipeline.py validate --root assets/modular
 node smoke-test.js
+node expansion-smoke-test.js
+node coherence-smoke-test.js
 node tools/verify-http-assets.mjs http://127.0.0.1:8765/
 ```
 
