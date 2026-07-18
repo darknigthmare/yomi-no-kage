@@ -69,6 +69,31 @@
     "mur-pierre-jokamachi",
     "mur-echoppe-brulee",
   ]);
+  // Recadrages de secours calculés sur la composante opaque principale des
+  // vingt modules. Ils rendent l'ancrage identique sous file://, où Chrome
+  // peut interdire getImageData() sur un bitmap local.
+  const ALLEY_WALL_GROUND_BOUNDS = Object.freeze({
+    "angle-ruelle-rentrant": [3, 3, 221, 188],
+    "angle-ruelle-sortant": [5, 4, 222, 188],
+    "mur-alcove-vide": [0, 3, 244, 183],
+    "mur-auvent-brise": [3, 3, 256, 189],
+    "mur-breche-effondree": [3, 0, 244, 176],
+    "mur-cedre-brule": [3, 3, 246, 179],
+    "mur-echoppe-brulee": [0, 0, 246, 176],
+    "mur-fenetre-barreaux": [3, 3, 247, 179],
+    "mur-gouttiere-chaine": [5, 3, 241, 189],
+    "mur-kura-bas": [3, 3, 237, 150],
+    "mur-kura-haut": [3, 3, 253, 201],
+    "mur-pierre-jokamachi": [3, 0, 256, 175],
+    "mur-planches-pluie": [0, 3, 244, 179],
+    "mur-platre-fume": [3, 3, 250, 179],
+    "mur-platre-intact": [3, 3, 226, 180],
+    "mur-platre-lattis": [3, 3, 236, 179],
+    "mur-porte-service": [3, 3, 238, 180],
+    "mur-quarantaine": [3, 0, 226, 176],
+    "mur-racines-yomi": [3, 0, 242, 178],
+    "mur-volets-pluie": [0, 3, 244, 179],
+  });
   const KATANA_NAMES = [
     "KUROKAGE", "SHOGUN NO IN", "HINEZUMI", "SHIROGANE", "YOMIBANE",
     "KEGARE-KIRI", "TAKEKAZE", "RAIJIN NO TSUME", "AKATSUKI", "MUJO",
@@ -4502,13 +4527,10 @@
     drawActiveSideEncounterBarriers();
     // Les supports jouables (charrette, tonneaux, paille, escalier) vivent
     // dans le même plan que les acteurs, mais passent derrière leurs pieds.
-    drawModularWorldProps("world");
     for (const platform of currentSidePlatforms()) drawPlatform(platform);
     for (const item of side.pickups) if (!item.taken) drawPickup(item);
     for (const projectile of side.projectiles) drawPlayerProjectile(projectile);
-    for (const enemy of side.enemies) if (isEnemyVisible(enemy)) drawZombie2d(enemy);
-    drawSamurai2d(side.player);
-    drawModularWorldProps("front");
+    drawSideDepthScene(side);
     drawWorldParticles(side.particles);
     ctx.restore();
 
@@ -4683,7 +4705,15 @@
   function drawSideBackdrop(cam) {
     const environmentIndex = currentSideEnvironmentIndex();
     const backdropProfile = currentSideArea()?.backdropProfile || "";
-    const modularCastleInterior = ["castle-residence", "castle-donjon"].includes(backdropProfile);
+    const castleResidenceBackdrop = [
+      "castle-residence",
+      "castle-side-residence",
+    ].includes(backdropProfile);
+    const castleDonjonBackdrop = [
+      "castle-donjon",
+      "castle-side-donjon",
+    ].includes(backdropProfile);
+    const modularCastleInterior = castleResidenceBackdrop || castleDonjonBackdrop;
     const parallax = bitmapAssets.parallaxBackgrounds[environmentIndex];
     if (parallax && bitmapReady(parallax.sky)) {
       drawParallaxLayer(parallax.sky, cam, 0, null, false);
@@ -4700,9 +4730,9 @@
         );
         drawParallaxLayer(parallax.near, cam, 0.16);
       }
-      ctx.fillStyle = backdropProfile === "castle-residence"
+      ctx.fillStyle = castleResidenceBackdrop
         ? "rgba(18, 11, 14, .34)"
-        : (backdropProfile === "castle-donjon"
+        : (castleDonjonBackdrop
           ? "rgba(13, 8, 13, .43)"
           : "rgba(4, 6, 11, .12)");
       ctx.fillRect(0, 0, W, H);
@@ -4713,10 +4743,10 @@
       // Les salles latérales restent composées de couches et de props 2D.
       // Le concept art frontal FPS du donjon n'est jamais projeté derrière
       // le joueur, ce qui évite deux perspectives contradictoires.
-      ctx.fillStyle = backdropProfile === "castle-donjon" ? "#100b10" : "#171116";
+      ctx.fillStyle = castleDonjonBackdrop ? "#100b10" : "#171116";
       ctx.fillRect(0, 0, W, H);
       const beamOffset = -((cam * 0.035) % 160);
-      ctx.fillStyle = backdropProfile === "castle-donjon" ? "#29161d" : "#38231f";
+      ctx.fillStyle = castleDonjonBackdrop ? "#29161d" : "#38231f";
       for (let x = beamOffset - 20; x < W + 20; x += 160) {
         ctx.fillRect(Math.round(x), 0, 7, H);
         ctx.fillRect(Math.round(x - 12), 57, 31, 6);
@@ -4809,8 +4839,32 @@
   }
 
   const opaqueBoundsCache = new WeakMap();
+  const opaqueGroundBoundsCache = new WeakMap();
+  const continuousSurfaceBoundsCache = new WeakMap();
   const opaqueAnimationFrameBoundsCache = new WeakMap();
   const weaponVisualMetricsCache = new WeakMap();
+
+  function opaqueGroundFallbackForImage(image) {
+    const source = String(image?.currentSrc || image?.src || "");
+    const match = source.match(/([^/?#]+)\.png(?:[?#].*)?$/i);
+    const authored = match
+      ? ALLEY_WALL_GROUND_BOUNDS[decodeURIComponent(match[1])]
+      : null;
+    if (authored) {
+      return {
+        x: authored[0],
+        y: authored[1],
+        w: authored[2],
+        h: authored[3],
+      };
+    }
+    return {
+      x: 4,
+      y: 4,
+      w: Math.max(1, image.naturalWidth - 8),
+      h: Math.max(1, image.naturalHeight - 8),
+    };
+  }
 
   function opaqueBoundsForImage(image) {
     if (!bitmapReady(image)) return null;
@@ -4858,6 +4912,181 @@
       // petit crop de secours retire quand même la bordure des exports.
     }
     opaqueBoundsCache.set(image, bounds);
+    return bounds;
+  }
+
+  function opaqueGroundBoundsForImage(image) {
+    if (!bitmapReady(image)) return null;
+    if (opaqueGroundBoundsCache.has(image)) {
+      return opaqueGroundBoundsCache.get(image);
+    }
+
+    const fallback = opaqueGroundFallbackForImage(image);
+    let bounds = fallback;
+    try {
+      const sampleWidth = Math.max(1, image.naturalWidth);
+      const sampleHeight = Math.max(1, image.naturalHeight);
+      const sampler = document.createElement("canvas");
+      sampler.width = sampleWidth;
+      sampler.height = sampleHeight;
+      const samplerCtx = sampler.getContext("2d", { willReadFrequently: true });
+      samplerCtx.imageSmoothingEnabled = false;
+      samplerCtx.drawImage(image, 0, 0);
+      const pixels = samplerCtx.getImageData(0, 0, sampleWidth, sampleHeight).data;
+      const rowOpaque = new Uint32Array(sampleHeight);
+      for (let y = 0; y < sampleHeight; y++) {
+        for (let x = 0; x < sampleWidth; x++) {
+          if (pixels[(y * sampleWidth + x) * 4 + 3] >= 18) {
+            rowOpaque[y] += 1;
+          }
+        }
+      }
+      const verticalBands = [];
+      let bandStart = -1;
+      let bandLastOpaque = -1;
+      let bandScore = 0;
+      for (let y = 0; y <= sampleHeight; y++) {
+        const opaqueCount = y < sampleHeight ? rowOpaque[y] : 0;
+        if (opaqueCount > 0) {
+          if (bandStart < 0) bandStart = y;
+          bandLastOpaque = y;
+          bandScore += opaqueCount;
+        } else if (
+          bandStart >= 0
+          && (y === sampleHeight || y - bandLastOpaque > 2)
+        ) {
+          verticalBands.push({
+            start: bandStart,
+            end: bandLastOpaque + 1,
+            score: bandScore,
+          });
+          bandStart = -1;
+          bandLastOpaque = -1;
+          bandScore = 0;
+        }
+      }
+      const primaryBand = verticalBands
+        .sort((a, b) => b.score - a.score || (b.end - b.start) - (a.end - a.start))[0];
+      const columnOpaque = new Uint32Array(sampleWidth);
+      if (primaryBand) {
+        for (let y = primaryBand.start; y < primaryBand.end; y++) {
+          for (let x = 0; x < sampleWidth; x++) {
+            if (pixels[(y * sampleWidth + x) * 4 + 3] >= 18) {
+              columnOpaque[x] += 1;
+            }
+          }
+        }
+      }
+      const horizontalBands = [];
+      let columnStart = -1;
+      let columnLastOpaque = -1;
+      let columnScore = 0;
+      for (let x = 0; x <= sampleWidth; x++) {
+        const opaqueCount = x < sampleWidth ? columnOpaque[x] : 0;
+        if (opaqueCount > 0) {
+          if (columnStart < 0) columnStart = x;
+          columnLastOpaque = x;
+          columnScore += opaqueCount;
+        } else if (
+          columnStart >= 0
+          && (x === sampleWidth || x - columnLastOpaque > 2)
+        ) {
+          horizontalBands.push({
+            start: columnStart,
+            end: columnLastOpaque + 1,
+            score: columnScore,
+          });
+          columnStart = -1;
+          columnLastOpaque = -1;
+          columnScore = 0;
+        }
+      }
+      const primaryColumns = horizontalBands
+        .sort((a, b) => b.score - a.score || (b.end - b.start) - (a.end - a.start))[0];
+      let minX = sampleWidth, minY = sampleHeight, maxX = -1, maxY = -1;
+      if (primaryBand && primaryColumns) {
+        for (let y = primaryBand.start; y < primaryBand.end; y++) {
+          for (let x = primaryColumns.start; x < primaryColumns.end; x++) {
+            if (pixels[(y * sampleWidth + x) * 4 + 3] < 18) continue;
+            minX = Math.min(minX, x);
+            minY = Math.min(minY, y);
+            maxX = Math.max(maxX, x);
+            maxY = Math.max(maxY, y);
+          }
+        }
+      }
+      if (maxX >= minX && maxY >= minY) {
+        const pad = 1;
+        const x = Math.max(0, minX - pad);
+        const y = Math.max(0, minY - pad);
+        const right = Math.min(image.naturalWidth, maxX + 1 + pad);
+        // Aucun padding sous le dernier pixel opaque : ce bord touche groundY.
+        const bottom = Math.min(image.naturalHeight, maxY + 1);
+        bounds = {
+          x,
+          y,
+          w: Math.max(1, right - x),
+          h: Math.max(1, bottom - y),
+        };
+      }
+    } catch (_) {
+      // Le crop de secours correspond à la bordure transparente des exports
+      // lorsque file:// interdit exceptionnellement la lecture alpha.
+    }
+    opaqueGroundBoundsCache.set(image, bounds);
+    return bounds;
+  }
+
+  function continuousSurfaceBoundsForImage(image) {
+    if (!bitmapReady(image)) return null;
+    if (continuousSurfaceBoundsCache.has(image)) {
+      return continuousSurfaceBoundsCache.get(image);
+    }
+    const groundedBounds = opaqueGroundBoundsForImage(image);
+    if (!groundedBounds) return null;
+    let bounds = groundedBounds;
+    try {
+      const sampler = document.createElement("canvas");
+      sampler.width = image.naturalWidth;
+      sampler.height = image.naturalHeight;
+      const samplerCtx = sampler.getContext("2d", { willReadFrequently: true });
+      samplerCtx.imageSmoothingEnabled = false;
+      samplerCtx.drawImage(image, 0, 0);
+      const pixels = samplerCtx.getImageData(
+        0,
+        0,
+        sampler.width,
+        sampler.height,
+      ).data;
+      const inset = Math.max(1, Math.round(groundedBounds.w * 0.24));
+      const coreX = groundedBounds.x + inset;
+      const coreWidth = Math.max(1, groundedBounds.w - inset * 2);
+      const minimumSolidPixels = Math.ceil(coreWidth * 0.72);
+      const bottom = groundedBounds.y + groundedBounds.h;
+      let surfaceY = groundedBounds.y;
+      for (let y = groundedBounds.y; y < bottom; y++) {
+        let solidPixels = 0;
+        for (let x = coreX; x < coreX + coreWidth; x++) {
+          if (pixels[(y * sampler.width + x) * 4 + 3] >= 18) {
+            solidPixels += 1;
+          }
+        }
+        if (solidPixels >= minimumSolidPixels) {
+          surfaceY = y;
+          break;
+        }
+      }
+      bounds = {
+        x: groundedBounds.x,
+        y: surfaceY,
+        w: groundedBounds.w,
+        h: Math.max(1, bottom - surfaceY),
+      };
+    } catch (_) {
+      // Le serveur HTTP normal utilise l'analyse alpha. Le fallback conserve
+      // les bounds déjà dépourvus de padding sous le contact.
+    }
+    continuousSurfaceBoundsCache.set(image, bounds);
     return bounds;
   }
 
@@ -5000,8 +5229,8 @@
     return bounds;
   }
 
-  function drawOpaqueBitmap(image, x, y, width, height) {
-    const bounds = opaqueBoundsForImage(image);
+  function drawOpaqueBitmap(image, x, y, width, height, sourceBounds = null) {
+    const bounds = sourceBounds || opaqueBoundsForImage(image);
     if (!bounds) return false;
     ctx.drawImage(
       image,
@@ -5018,10 +5247,17 @@
   }
 
   function drawGroundedWorldSprite(image, x, groundY, visibleWidth) {
-    const bounds = opaqueBoundsForImage(image);
+    const bounds = opaqueGroundBoundsForImage(image);
     if (!bounds) return false;
     const visibleHeight = Math.max(1, visibleWidth * bounds.h / bounds.w);
-    drawOpaqueBitmap(image, x, groundY - visibleHeight, visibleWidth, visibleHeight);
+    drawOpaqueBitmap(
+      image,
+      x,
+      groundY - visibleHeight,
+      visibleWidth,
+      visibleHeight,
+      bounds,
+    );
     return { width: visibleWidth, height: visibleHeight };
   }
 
@@ -5051,7 +5287,7 @@
   }
 
   function drawContinuousGroundSprite(image, x, y, width, height) {
-    const bounds = opaqueBoundsForImage(image);
+    const bounds = continuousSurfaceBoundsForImage(image);
     if (!bounds) return false;
     // Les exports de terrain possèdent des extrémités arrondies destinées aux
     // bords de niveau. Répéter l'image entière créait un chapelet de blocs
@@ -5085,6 +5321,7 @@
 
   function worldPropImageByFile(file) {
     if (bitmapAssets.alleyWalls[file]) return bitmapAssets.alleyWalls[file];
+    if (bitmapAssets.depthPortals[file]) return bitmapAssets.depthPortals[file];
     for (const propSet of bitmapAssets.worldProps) {
       const match = propSet.find((prop) => prop.file === file);
       if (match?.image) return match.image;
@@ -5112,24 +5349,76 @@
     return bitmapAssets.worldProps[currentSideEnvironmentIndex()] || [];
   }
 
+  function drawModularWorldProp(prop) {
+    if (!bitmapReady(prop?.image)) return false;
+    const bottomY = prop.bottomY ?? SIDE_GROUND_Y;
+    const perspectiveScale = Number(prop.perspectiveScale)
+      || clamp(1 + (bottomY - SIDE_GROUND_Y) * 0.012, 0.86, 1.12);
+    const width = prop.width * perspectiveScale;
+    const centeredX = prop.x - (width - prop.width) / 2;
+    drawGroundedWorldSprite(prop.image, centeredX, bottomY, width);
+    return true;
+  }
+
   function drawModularWorldProps(layer = "back") {
     const props = currentWorldProps()
       .filter((prop) => (prop.layer || "back") === layer)
       .sort((a, b) =>
-        (a.bottomY ?? SIDE_GROUND_Y) - (b.bottomY ?? SIDE_GROUND_Y)
+        (a.baselineY ?? a.bottomY ?? SIDE_GROUND_Y)
+          - (b.baselineY ?? b.bottomY ?? SIDE_GROUND_Y)
+        || (Number(a.depthBias) || 0) - (Number(b.depthBias) || 0)
         || a.x - b.x);
     let drawn = false;
     for (const prop of props) {
-      if (!bitmapReady(prop.image)) continue;
-      const bottomY = prop.bottomY ?? SIDE_GROUND_Y;
-      const perspectiveScale = Number(prop.perspectiveScale)
-        || clamp(1 + (bottomY - SIDE_GROUND_Y) * 0.012, 0.86, 1.12);
-      const width = prop.width * perspectiveScale;
-      const centeredX = prop.x - (width - prop.width) / 2;
-      drawGroundedWorldSprite(prop.image, centeredX, bottomY, width);
-      drawn = true;
+      drawn = drawModularWorldProp(prop) || drawn;
     }
     return drawn;
+  }
+
+  function drawSideDepthScene(side) {
+    const sceneEntries = [];
+    for (const prop of currentWorldProps()) {
+      const layer = prop.layer || "back";
+      if (!["world", "front"].includes(layer) || !bitmapReady(prop.image)) continue;
+      sceneEntries.push({
+        kind: "prop",
+        payload: prop,
+        baseline: prop.baselineY ?? prop.bottomY ?? SIDE_GROUND_Y,
+        depthBias: Number(prop.depthBias) || 0,
+        tieOrder: 0,
+        x: prop.x,
+      });
+    }
+    for (const enemy of side.enemies) {
+      if (!isEnemyVisible(enemy)) continue;
+      sceneEntries.push({
+        kind: "enemy",
+        payload: enemy,
+        baseline: enemy.y + enemy.h,
+        depthBias: 0,
+        tieOrder: 1,
+        x: enemy.x,
+      });
+    }
+    sceneEntries.push({
+      kind: "player",
+      payload: side.player,
+      baseline: side.player.y + side.player.h,
+      depthBias: 0,
+      tieOrder: 2,
+      x: side.player.x,
+    });
+
+    sceneEntries.sort((a, b) =>
+      a.baseline - b.baseline
+      || a.depthBias - b.depthBias
+      || a.tieOrder - b.tieOrder
+      || a.x - b.x);
+    for (const entry of sceneEntries) {
+      if (entry.kind === "prop") drawModularWorldProp(entry.payload);
+      else if (entry.kind === "enemy") drawZombie2d(entry.payload);
+      else drawSamurai2d(entry.payload);
+    }
   }
 
   function hasModularChapterProps() {

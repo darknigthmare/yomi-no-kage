@@ -482,24 +482,79 @@ function findAreaProp(propId) {
       assert.ok(fs.existsSync(file), `Fichier de mur absent : ${wall.file}`);
       assert.ok(fs.statSync(file).size > 0, `Fichier de mur vide : ${wall.file}`);
     }
+    const fallbackStart = gameSource.indexOf("const ALLEY_WALL_GROUND_BOUNDS");
+    const fallbackEnd = gameSource.indexOf("const KATANA_NAMES", fallbackStart);
+    assert.ok(fallbackStart >= 0 && fallbackEnd > fallbackStart);
+    const fallbackSource = gameSource.slice(fallbackStart, fallbackEnd);
+    for (const wall of manifest.sprites) {
+      assert.ok(
+        fallbackSource.includes(`"${wall.id}": [`),
+        `Recadrage file:// absent pour ${wall.id}`,
+      );
+    }
+    assert.match(functionSource("opaqueGroundFallbackForImage"), /ALLEY_WALL_GROUND_BOUNDS/);
+  });
+
+  await check("murs continus derrière les bâtiments et portes chargées", () => {
+    const marketProps = KageLevels.areas["kurokawa-market-east"].props;
+    const watchtower = marketProps.find((prop) => prop.id === "castle-road-watch");
+    const wallRun = marketProps.filter((prop) =>
+      prop.id.startsWith("market-castle-road-line-"));
+    assert.ok(watchtower, "Tour de la route du château absente");
+    assert.ok(wallRun.length > 0, "Bande murale de la route du château absente");
+    for (const wall of wallRun) {
+      assert.ok(
+        wall.depthBias < watchtower.depthBias,
+        `${wall.id} peut repeindre la tour au lieu de rester derrière`,
+      );
+    }
+    assert.match(
+      functionSource("worldPropImageByFile"),
+      /bitmapAssets\.depthPortals\[file\]/,
+      "Les portes spatiales utilisées comme décor doivent être résolues",
+    );
   });
 
   await check("layers et bottomY des props de profondeur cohérents", () => {
     const expected = {
-      "main-well": { layer: "world", bottomY: 300 },
-      "back-well": { layer: "world", bottomY: 300 },
-      "market-well": { layer: "world", bottomY: 300 },
-      "lower-court-brazier": { layer: "world", bottomY: 300 },
-      "residence-brazier": { layer: "world", bottomY: 300 },
-      "donjon-brazier": { layer: "world", bottomY: 300 },
-      "residence-screen": { layer: "front", bottomY: 304 },
-      "donjon-screen": { layer: "back", bottomY: 300 },
+      "main-well": {
+        layer: "world", bottomY: 302, depthBand: "world-near", depthBias: 10,
+      },
+      "back-well": {
+        layer: "world", bottomY: 302, depthBand: "world-near", depthBias: 10,
+      },
+      "market-well": {
+        layer: "world", bottomY: 302, depthBand: "world-near", depthBias: 10,
+      },
+      "road-altar": {
+        layer: "world", bottomY: 302, depthBand: "world-near", depthBias: 10,
+      },
+      "lower-court-brazier": {
+        layer: "front", bottomY: 304, depthBand: "foreground", depthBias: 20,
+      },
+      "residence-brazier": {
+        layer: "front", bottomY: 304, depthBand: "foreground", depthBias: 20,
+      },
+      "donjon-brazier": {
+        layer: "front", bottomY: 304, depthBand: "foreground", depthBias: 20,
+      },
+      "residence-screen": {
+        layer: "front", bottomY: 304, depthBand: "foreground", depthBias: 20,
+      },
+      "donjon-screen": {
+        layer: "front", bottomY: 304, depthBand: "foreground", depthBias: 20,
+      },
     };
     for (const [id, contract] of Object.entries(expected)) {
       const found = findAreaProp(id);
       assert.ok(found, `Prop attendu absent : ${id}`);
       assert.deepEqual(
-        { layer: found.prop.layer, bottomY: found.prop.bottomY },
+        {
+          layer: found.prop.layer,
+          bottomY: found.prop.bottomY,
+          depthBand: found.prop.depthBand,
+          depthBias: found.prop.depthBias,
+        },
         contract,
         `Perspective incorrecte pour ${found.area.id}/${id}`,
       );
@@ -510,15 +565,45 @@ function findAreaProp(propId) {
           ["back", "world", "front"].includes(prop.layer),
           `${area.id}/${prop.id} possède un layer invalide`,
         );
+        assert.ok(
+          Number.isFinite(prop.depthBias),
+          `${area.id}/${prop.id} n'a pas de depthBias numérique`,
+        );
+        assert.deepEqual(
+          Array.from(prop.groundAnchor || []),
+          [0.5, 1],
+          `${area.id}/${prop.id} n'a pas d'ancre de contact au sol`,
+        );
+        assert.equal(
+          prop.contactMode,
+          "opaque-bottom",
+          `${area.id}/${prop.id} n'utilise pas le contact opaque`,
+        );
         if (prop.bottomY !== undefined) {
           assert.ok(Number.isFinite(prop.bottomY), `${area.id}/${prop.id} a un bottomY invalide`);
           assert.ok(
-            prop.bottomY >= 260 && prop.bottomY <= 306,
+            prop.bottomY >= 300 && prop.bottomY <= 304,
             `${area.id}/${prop.id} est hors de la profondeur de sol`,
           );
         }
       }
     }
+  });
+
+  await check("scène 2D triée par baseline et profondeur réelle", () => {
+    const renderer = functionSource("drawSide");
+    const depthScene = functionSource("drawSideDepthScene");
+    assert.match(
+      renderer,
+      /drawSideDepthScene/,
+      "drawSide() doit déléguer les acteurs et props au tri de profondeur",
+    );
+    assert.match(depthScene, /baseline/);
+    assert.match(depthScene, /depthBias/);
+    assert.match(depthScene, /sceneEntries\.sort/);
+    assert.match(depthScene, /drawModularWorldProp/);
+    assert.match(depthScene, /drawZombie2d/);
+    assert.match(depthScene, /drawSamurai2d/);
   });
 
   await check("barrières d'arène Aka-Ushi retirées après sa mort", async () => {

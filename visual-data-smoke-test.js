@@ -53,9 +53,40 @@ for (const area of areas) {
     assert(Number.isFinite(prop.bottomY), `${area.id}/${prop.id}: bottomY absent`);
     assert(Number.isFinite(prop.baselineY), `${area.id}/${prop.id}: baselineY absent`);
     assert(Number.isFinite(prop.perspectiveScale), `${area.id}/${prop.id}: perspectiveScale absent`);
+    assert(Number.isFinite(prop.depthBias), `${area.id}/${prop.id}: depthBias absent`);
+    assert(
+      Array.isArray(prop.groundAnchor)
+        && prop.groundAnchor.length === 2
+        && prop.groundAnchor[0] === 0.5
+        && prop.groundAnchor[1] === 1,
+      `${area.id}/${prop.id}: groundAnchor invalide`,
+    );
+    assert(prop.contactMode === "opaque-bottom", `${area.id}/${prop.id}: contactMode invalide`);
     assert(prop.surfaceProfile, `${area.id}/${prop.id}: surfaceProfile absent`);
     assert(prop.colliderProfile?.type, `${area.id}/${prop.id}: colliderProfile absent`);
   }
+
+  const wallIntervals = (area.props || [])
+    .filter((prop) => /^(mur-|angle-ruelle-)/.test(String(prop.file || "")))
+    .map((prop) => [prop.x, prop.x + prop.width * prop.perspectiveScale])
+    .sort((left, right) => left[0] - right[0]);
+  assert(wallIntervals.length > 0, `${area.id}: aucun mur de fond`);
+  let coveredUntil = area.minX;
+  let coveredLength = 0;
+  let widestGap = 0;
+  for (const [rawStart, rawEnd] of wallIntervals) {
+    const start = Math.max(area.minX, rawStart);
+    const end = Math.min(area.maxX, rawEnd);
+    if (end <= start) continue;
+    if (start > coveredUntil) widestGap = Math.max(widestGap, start - coveredUntil);
+    const visibleStart = Math.max(start, coveredUntil);
+    if (end > visibleStart) coveredLength += end - visibleStart;
+    coveredUntil = Math.max(coveredUntil, end);
+  }
+  widestGap = Math.max(widestGap, area.maxX - coveredUntil);
+  const coverage = coveredLength / Math.max(1, area.maxX - area.minX);
+  assert(coverage >= 0.95, `${area.id}: murs couvrent seulement ${(coverage * 100).toFixed(1)}%`);
+  assert(widestGap <= 12, `${area.id}: trou de mur de ${widestGap.toFixed(1)}px`);
 
   for (const platform of area.platforms || []) {
     assert(platform.surfaceProfile, `${area.id}/${platform.id}: surfaceProfile absent`);

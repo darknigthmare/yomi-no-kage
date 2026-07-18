@@ -14,43 +14,101 @@
   const PLAYER_GROUND_Y = 273;
 
   const DEPTH_BANDS = {
+    "gameplay-ground": {
+      layer: "ground",
+      baselineY: HORIZONTAL_GROUND_Y,
+      perspectiveScale: 1,
+      depthBias: -50,
+      collision: "solidGround",
+    },
+    "gameplay-surface": {
+      layer: "world",
+      baselineStrategy: "authoredY",
+      perspectiveScale: 1,
+      depthBias: -5,
+      collision: "authoredPlatform",
+    },
     "back-architecture": {
       layer: "back",
-      baselineY: 294,
-      perspectiveScale: 0.95,
+      baselineY: HORIZONTAL_GROUND_Y,
+      perspectiveScale: 1,
+      depthBias: -30,
       collision: "none",
     },
     "gameplay-architecture": {
       layer: "back",
       baselineY: HORIZONTAL_GROUND_Y,
       perspectiveScale: 1,
+      depthBias: -20,
       collision: "platformOwned",
     },
     "gameplay-prop": {
       layer: "world",
       baselineY: HORIZONTAL_GROUND_Y,
       perspectiveScale: 1,
+      depthBias: -4,
       collision: "platformOwned",
     },
     "world-mid": {
       layer: "world",
       baselineY: HORIZONTAL_GROUND_Y,
       perspectiveScale: 1,
+      depthBias: 0,
       collision: "none",
     },
     "world-near": {
       layer: "world",
       baselineY: 302,
       perspectiveScale: 1.02,
+      depthBias: 10,
       collision: "none",
     },
     foreground: {
       layer: "front",
       baselineY: 304,
       perspectiveScale: 1.05,
+      depthBias: 20,
       collision: "none",
     },
   };
+
+  /*
+   * Les murs sont composés en séquences de quartier déterministes. Chaque
+   * module reste un sprite indépendant, mais les bandes se chevauchent de
+   * quelques pixels afin qu'aucun trait de ciel ne coupe une façade.
+   */
+  function architectureRun(
+    idPrefix,
+    startX,
+    endX,
+    files,
+    moduleWidth = 128,
+    options = {},
+  ) {
+    const overlap = Math.max(2, Math.min(12, options.overlap ?? 6));
+    const step = Math.max(32, moduleWidth - overlap);
+    const props = [];
+    let index = 0;
+    for (let x = startX; x < endX; x += step) {
+      const remaining = endX - x;
+      props.push({
+        id: `${idPrefix}-${String(index + 1).padStart(2, "0")}`,
+        file: files[index % files.length],
+        x,
+        width: Math.max(48, Math.min(moduleWidth, remaining + overlap)),
+        layer: "back",
+        bottomY: options.bottomY ?? HORIZONTAL_GROUND_Y,
+        depthBand: options.depthBand || "back-architecture",
+        // Les bandes de murs restent toujours derrière les bâtiments
+        // ponctuels (tours, maisons, portes), même quand leurs x se croisent.
+        depthBias: options.depthBias ?? -40,
+        perspectiveScale: options.perspectiveScale ?? 1,
+        groundAnchor: [0.5, 1],
+      });
+      index += 1;
+    }
+    return props;
+  }
 
   const SURFACE_PROFILES = {
     earthRoad: {
@@ -643,26 +701,55 @@
           },
         ],
         props: [
-          { id: "main-wall-plaster-intact", file: "mur-platre-intact", x: 215, width: 120, layer: "back" },
-          { id: "main-wall-smoked-plaster", file: "mur-platre-fume", x: 690, width: 115, layer: "back" },
-          { id: "main-wall-exposed-lath", file: "mur-platre-lattis", x: 1215, width: 120, layer: "back" },
-          { id: "main-wall-charred-cedar", file: "mur-cedre-brule", x: 1510, width: 130, layer: "back" },
-          { id: "main-wall-rain-planks", file: "mur-planches-pluie", x: 1650, width: 120, layer: "back" },
-          { id: "main-alley-inner-corner", file: "angle-ruelle-rentrant", x: 1985, width: 90, layer: "back" },
-          { id: "main-alley-outer-corner", file: "angle-ruelle-sortant", x: 2180, width: 90, layer: "back" },
+          ...architectureRun(
+            "main-west-plaster",
+            0,
+            780,
+            ["mur-platre-intact", "mur-platre-fume", "mur-platre-lattis"],
+            126,
+          ),
+          ...architectureRun(
+            "main-service-quarter",
+            774,
+            1710,
+            [
+              "mur-cedre-brule",
+              "mur-planches-pluie",
+              "mur-kura-bas",
+              "mur-porte-service",
+              "mur-fenetre-barreaux",
+              "mur-volets-pluie",
+            ],
+            132,
+          ),
+          ...architectureRun(
+            "main-quarantine-quarter",
+            1704,
+            2500,
+            [
+              "angle-ruelle-rentrant",
+              "mur-quarantaine",
+              "mur-racines-yomi",
+              "mur-breche-effondree",
+              "mur-pierre-jokamachi",
+              "mur-echoppe-brulee",
+              "angle-ruelle-sortant",
+            ],
+            132,
+          ),
           { id: "burned-minka-west", file: "minka-chaume-brulee", x: 42, width: 175, layer: "back" },
           { id: "village-barrier-west", file: "barriere-village", x: 220, width: 68, layer: "world" },
           { id: "watchtower-west", file: "tour-guet-kurokawa", x: 305, width: 82, layer: "back" },
           { id: "barrel-access", file: "tonneau-provisions", x: 500, width: 36, layer: "world" },
           { id: "intact-minka", file: "minka-tuiles-intacte", x: 535, width: 175, layer: "back" },
-          { id: "street-fire", file: "foyer-incendie", x: 760, width: 54, layer: "world", bottomY: 300 },
+          { id: "street-fire", file: "foyer-incendie", x: 760, width: 54, layer: "world" },
           { id: "broken-cart", file: "charrette-cassee", x: 990, width: 78, layer: "world" },
           { id: "rice-storehouse", file: "kura-entrepot-riz", x: 1060, width: 150, layer: "back" },
           { id: "hay-access", file: "tas-paille", x: 1374, width: 70, layer: "world" },
-          { id: "main-well", file: "puits-pierre", x: 1570, width: 48, layer: "world", bottomY: 300 },
+          { id: "main-well", file: "puits-pierre", x: 1570, width: 48, layer: "world" },
           { id: "burned-quarter-barrel", file: "tonneau-provisions", x: 1770, width: 36, layer: "world" },
           { id: "burned-minka-east", file: "minka-chaume-brulee", x: 1810, width: 175, layer: "back" },
-          { id: "road-altar", file: "autel-route", x: 2040, width: 48, layer: "back", bottomY: 300 },
+          { id: "road-altar", file: "autel-route", x: 2040, width: 48, layer: "world" },
           { id: "watchtower-east", file: "tour-guet-kurokawa", x: 2250, width: 82, layer: "back" },
         ],
         portals: [
@@ -853,20 +940,44 @@
           },
         ],
         props: [
-          { id: "back-wall-kura-lower", file: "mur-kura-bas", x: 180, width: 135, layer: "back" },
-          { id: "back-wall-kura-upper", file: "mur-kura-haut", x: 540, width: 120, layer: "back" },
-          { id: "back-wall-service-door", file: "mur-porte-service", x: 990, width: 110, layer: "back" },
-          { id: "back-wall-barred-window", file: "mur-fenetre-barreaux", x: 1215, width: 125, layer: "back" },
-          { id: "back-wall-rain-shutters", file: "mur-volets-pluie", x: 1390, width: 120, layer: "back" },
-          { id: "back-wall-rain-chain", file: "mur-gouttiere-chaine", x: 1850, width: 100, layer: "back" },
-          { id: "back-wall-broken-awning", file: "mur-auvent-brise", x: 2180, width: 125, layer: "back" },
+          ...architectureRun(
+            "back-kura-quarter",
+            0,
+            850,
+            ["mur-kura-bas", "mur-kura-haut", "mur-porte-service"],
+            130,
+          ),
+          ...architectureRun(
+            "back-guard-quarter",
+            844,
+            1710,
+            [
+              "mur-fenetre-barreaux",
+              "mur-volets-pluie",
+              "mur-gouttiere-chaine",
+              "mur-planches-pluie",
+            ],
+            130,
+          ),
+          ...architectureRun(
+            "back-burned-quarter",
+            1704,
+            2500,
+            [
+              "mur-auvent-brise",
+              "mur-cedre-brule",
+              "mur-breche-effondree",
+              "mur-echoppe-brulee",
+            ],
+            132,
+          ),
           { id: "back-minka-01", file: "minka-chaume-brulee", x: 260, width: 175, layer: "back" },
           { id: "back-cart-01", file: "charrette-cassee", x: 450, width: 82, layer: "world" },
-          { id: "back-well", file: "puits-pierre", x: 630, width: 48, layer: "world", bottomY: 300 },
+          { id: "back-well", file: "puits-pierre", x: 630, width: 48, layer: "world" },
           { id: "back-minka-02", file: "minka-chaume-brulee", x: 810, width: 175, layer: "back" },
           { id: "back-hay", file: "tas-paille", x: 1240, width: 74, layer: "world" },
           { id: "back-kura", file: "kura-entrepot-riz", x: 1660, width: 165, layer: "back" },
-          { id: "back-fire", file: "foyer-incendie", x: 2010, width: 50, layer: "world", bottomY: 300 },
+          { id: "back-fire", file: "foyer-incendie", x: 2010, width: 50, layer: "world" },
           { id: "back-barrier", file: "barriere-village", x: 2180, width: 74, layer: "world" },
         ],
         portals: [
@@ -1010,15 +1121,33 @@
           },
         ],
         props: [
-          { id: "market-wall-empty-alcove", file: "mur-alcove-vide", x: 180, width: 120, layer: "back" },
-          { id: "market-wall-quarantine", file: "mur-quarantaine", x: 470, width: 120, layer: "back" },
-          { id: "market-wall-yomi-roots", file: "mur-racines-yomi", x: 890, width: 135, layer: "back" },
-          { id: "market-wall-collapsed-breach", file: "mur-breche-effondree", x: 1250, width: 145, layer: "back" },
-          { id: "market-wall-jokamachi-stone", file: "mur-pierre-jokamachi", x: 1580, width: 150, layer: "back" },
-          { id: "market-wall-burned-shop", file: "mur-echoppe-brulee", x: 2140, width: 145, layer: "back" },
+          ...architectureRun(
+            "market-quarantine-line",
+            0,
+            1200,
+            [
+              "mur-alcove-vide",
+              "mur-quarantaine",
+              "mur-racines-yomi",
+              "mur-breche-effondree",
+            ],
+            136,
+          ),
+          ...architectureRun(
+            "market-castle-road-line",
+            1194,
+            2500,
+            [
+              "mur-pierre-jokamachi",
+              "mur-echoppe-brulee",
+              "mur-kura-bas",
+              "mur-porte-service",
+            ],
+            142,
+          ),
           { id: "market-cart", file: "charrette-cassee", x: 380, width: 84, layer: "world" },
           { id: "market-house", file: "minka-tuiles-intacte", x: 600, width: 175, layer: "back" },
-          { id: "market-well", file: "puits-pierre", x: 970, width: 48, layer: "world", bottomY: 300 },
+          { id: "market-well", file: "puits-pierre", x: 970, width: 48, layer: "world" },
           { id: "arena-barrier-west", file: "barriere-village", x: 1160, width: 76, layer: "world", destructible: true },
           { id: "arena-hay", file: "tas-paille", x: 1480, width: 76, layer: "world", destructible: true },
           { id: "arena-cart", file: "charrette-cassee", x: 1850, width: 88, layer: "world", destructible: true },
@@ -1173,7 +1302,7 @@
           mainRoute: "horizontal",
           mainRouteLength: 1420,
           requiredClimb: 0,
-          structuralFloors: 5,
+          structuralFloors: 6,
         },
         spawns: {
           villageReturn: { x: 970, y: PLAYER_GROUND_Y, facing: 1 },
@@ -1346,15 +1475,20 @@
           },
         ],
         props: [
+          ...architectureRun(
+            "lower-court-rampart",
+            0,
+            2500,
+            ["mur-pierre-jokamachi"],
+            184,
+            { overlap: 10, depthBias: -35 },
+          ),
           { id: "lower-court-tower", file: "tour-chateau", x: 990, width: 180, layer: "back" },
-          { id: "lower-court-west-rampart", file: "mur-pierre-jokamachi", x: 1215, width: 190, layer: "back" },
-          { id: "lower-court-brazier", file: "brasero-fer", x: 1320, width: 32, layer: "world", bottomY: 300 },
-          { id: "lower-court-central-rampart", file: "mur-pierre-jokamachi", x: 1450, width: 220, layer: "back" },
+          { id: "lower-court-brazier", file: "brasero-fer", x: 1320, width: 32, layer: "front", bottomY: 304 },
           { id: "lower-court-gate", file: "porte-chateau", x: 1680, width: 190, layer: "back" },
           { id: "lower-court-pillar", file: "pilier-cedre", x: 1910, width: 48, layer: "back" },
-          { id: "lower-court-brazier-east", file: "brasero-fer", x: 1968, width: 32, layer: "world", bottomY: 300 },
+          { id: "lower-court-brazier-east", file: "brasero-fer", x: 1968, width: 32, layer: "front", bottomY: 304 },
           { id: "lower-court-roots", file: "racines-donjon", x: 2045, width: 80, layer: "world" },
-          { id: "lower-court-east-rampart", file: "mur-pierre-jokamachi", x: 2210, width: 190, layer: "back" },
         ],
         portals: [
           {
@@ -1497,7 +1631,6 @@
             h: 8,
             visualHeight: 28,
             tile: "ledge",
-            owner: "residence-upper-storey",
             surface: "cedar",
             collision: "oneWay",
             routeRole: "structuralFloor",
@@ -1510,7 +1643,6 @@
             h: 8,
             visualHeight: 24,
             tile: "beam",
-            owner: "residence-upper-storey",
             surface: "cedar",
             collision: "oneWay",
             routeRole: "structuralFloor",
@@ -1523,7 +1655,6 @@
             h: 8,
             visualHeight: 28,
             tile: "ledge",
-            owner: "residence-upper-storey",
             surface: "cedar",
             collision: "oneWay",
             routeRole: "structuralFloor",
@@ -1536,19 +1667,25 @@
             h: 8,
             visualHeight: 24,
             tile: "step",
-            owner: "escalier-bois",
             surface: "wood",
             collision: "oneWay",
             routeRole: "structuralFloor",
           },
         ],
         props: [
-          { id: "residence-shoji-west", file: "mur-shoji", x: 200, width: 240, layer: "back" },
-          { id: "residence-alcove", file: "alcove-tatami", x: 470, width: 190, layer: "back" },
+          ...architectureRun(
+            "residence-shoji-wall",
+            0,
+            2400,
+            ["mur-shoji"],
+            176,
+            { overlap: 10, depthBias: -35 },
+          ),
+          { id: "residence-alcove", file: "alcove-tatami", x: 470, width: 190, layer: "back", bottomY: 300, depthBias: -15 },
           { id: "residence-stairs", file: "escalier-bois", x: 620, width: 140, layer: "world" },
           { id: "residence-armor", file: "armure-vide", x: 920, width: 42, layer: "world" },
           { id: "residence-screen", file: "paravent-dechire", x: 1180, width: 96, layer: "front", bottomY: 304 },
-          { id: "residence-brazier", file: "brasero-fer", x: 1810, width: 34, layer: "world", bottomY: 300 },
+          { id: "residence-brazier", file: "brasero-fer", x: 1810, width: 34, layer: "front", bottomY: 304 },
           { id: "residence-rack", file: "ratelier-vide", x: 2000, width: 88, layer: "world" },
         ],
         portals: [
@@ -1717,7 +1854,6 @@
             h: 8,
             visualHeight: 28,
             tile: "ledge",
-            owner: "donjon-second-storey",
             surface: "cedar",
             collision: "oneWay",
             routeRole: "structuralFloor",
@@ -1730,7 +1866,6 @@
             h: 8,
             visualHeight: 24,
             tile: "beam",
-            owner: "donjon-second-storey",
             surface: "cedar",
             collision: "oneWay",
             routeRole: "structuralFloor",
@@ -1743,7 +1878,6 @@
             h: 8,
             visualHeight: 28,
             tile: "ledge",
-            owner: "donjon-second-storey",
             surface: "cedar",
             collision: "oneWay",
             routeRole: "structuralFloor",
@@ -1756,7 +1890,6 @@
             h: 8,
             visualHeight: 24,
             tile: "step",
-            owner: "escalier-bois",
             surface: "wood",
             collision: "oneWay",
             routeRole: "structuralFloor",
@@ -1769,20 +1902,26 @@
             h: 8,
             visualHeight: 28,
             tile: "ledge",
-            owner: "donjon-third-storey",
             surface: "cedar",
             collision: "oneWay",
             routeRole: "structuralFloor",
           },
         ],
         props: [
+          ...architectureRun(
+            "donjon-shoji-wall",
+            0,
+            2500,
+            ["mur-shoji"],
+            176,
+            { overlap: 10, depthBias: -35 },
+          ),
           { id: "donjon-tower", file: "tour-chateau", x: 260, width: 220, layer: "back" },
           { id: "donjon-stairs", file: "escalier-bois", x: 420, width: 150, layer: "world" },
-          { id: "donjon-shoji", file: "mur-shoji", x: 720, width: 220, layer: "back" },
           { id: "donjon-armor", file: "armure-vide", x: 1040, width: 42, layer: "world" },
-          { id: "donjon-screen", file: "paravent-dechire", x: 1250, width: 98, layer: "back", bottomY: 300 },
+          { id: "donjon-screen", file: "paravent-dechire", x: 1250, width: 98, layer: "front", bottomY: 304 },
           { id: "donjon-roots-west", file: "racines-donjon", x: 1520, width: 96, layer: "world" },
-          { id: "donjon-brazier", file: "brasero-fer", x: 1780, width: 36, layer: "world", bottomY: 300 },
+          { id: "donjon-brazier", file: "brasero-fer", x: 1780, width: 36, layer: "front", bottomY: 304 },
         ],
         portals: [
           {
@@ -1866,10 +2005,8 @@
     "castle-tower-lower": "lower-court-tower",
     "residence-stair-lower": "residence-stairs",
     "residence-stair-upper": "residence-stairs",
-    "residence-east-stairs": "residence-stairs",
     "donjon-stair-1": "donjon-stairs",
     "donjon-stair-2": "donjon-stairs",
-    "donjon-upper-stair": "donjon-stairs",
   };
 
   function surfaceProfileId(surface, area) {
@@ -1978,6 +2115,13 @@
       prop.baselineY = prop.baselineY ?? prop.bottomY;
       prop.baseline = prop.baseline || `ground-${prop.bottomY}`;
       prop.perspectiveScale = prop.perspectiveScale ?? band.perspectiveScale;
+      prop.depthBias = Number.isFinite(prop.depthBias)
+        ? prop.depthBias
+        : (band.depthBias || 0);
+      prop.groundAnchor = Array.isArray(prop.groundAnchor)
+        ? prop.groundAnchor
+        : [0.5, 1];
+      prop.contactMode = prop.contactMode || "opaque-bottom";
       prop.surfaceProfile = prop.surfaceProfile || propSurfaceProfileId(prop, area);
       prop.colliderProfile = prop.colliderProfile || (
         gameplayOwned
