@@ -23,7 +23,7 @@ const categoryLabels = {
   special: "Ennemi spécial",
   miniboss: "Sous-boss",
   boss: "Boss",
-  giant: "Boss géant",
+  giant: "Boss massif",
 };
 
 function toWebPath(filePath) {
@@ -303,7 +303,7 @@ const weaponPngs = [
   ...walkFiles(path.join(root, "assets", "generated", "weapons")),
 ]
   .filter((file) => file.toLowerCase().endsWith(".png"))
-  .filter((file) => !/(^|[\\/])(source|sources|tmp|atlases)([\\/]|$)/i.test(file))
+  .filter((file) => !/(^|[\\/])(source|sources|tmp|atlases|components)([\\/]|$)/i.test(file))
   .filter((file) => !/(source|raw|alpha|contact|atlas|preview)/i.test(path.basename(file)));
 const weapons = weaponPngs.map((file) => {
   const weapon = assetFromPng(file, "weapon");
@@ -328,7 +328,7 @@ const weapons = weaponPngs.map((file) => {
 
 const environmentPngs = walkFiles(path.join(modularRoot, "environments"))
   .filter((file) => file.toLowerCase().endsWith(".png"))
-  .filter((file) => !/(^|[\\/])(source|sources|tmp)([\\/]|$)/i.test(file))
+  .filter((file) => !/(^|[\\/])(source|sources|tmp|depth-portals)([\\/]|$)/i.test(file))
   .filter((file) => !/(source|raw|alpha|contact|atlas|preview)/i.test(path.basename(file)));
 const environments = environmentPngs.map((file) => {
   const normalized = toWebPath(file).toLowerCase();

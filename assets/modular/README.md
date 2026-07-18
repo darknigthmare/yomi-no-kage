@@ -76,7 +76,7 @@ individuels. Les collisions et positions restent des données du niveau.
 - `special` : 20 infectés à mécanique spéciale ;
 - `miniboss` : 20 sous-boss ;
 - `boss` : 20 boss ;
-- `giant` : 10 boss géants inspirés par la lisibilité et les phases des grands
+- `giant` : 10 boss massifs inspirés par la lisibilité et les phases des grands
   combats d’arcade, avec designs originaux adaptés au Japon de 1638.
 
 ## Contraintes visuelles

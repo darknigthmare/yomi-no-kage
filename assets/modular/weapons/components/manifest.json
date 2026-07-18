@@ -1,0 +1,768 @@
+{
+  "schema": 1,
+  "category": "modular-weapon-components",
+  "runtimePolicy": {
+    "weaponsBakedIntoBodies": false,
+    "wholeChainTexturesAllowed": false,
+    "chainRendering": "repeat and rotate one declared link component"
+  },
+  "provenance": {
+    "provider": "OpenAI",
+    "tool": "OpenAI ImageGen built-in",
+    "sourceAsset": "assets/modular/weapons/components/sources/shinobi-components-imagegen-raw.png",
+    "processedAtlas": "assets/modular/weapons/components/shinobi-components-atlas.png",
+    "sourceLayout": {
+      "columns": 4,
+      "rows": 3
+    },
+    "generationDate": "2026-07-18",
+    "promptRecord": "reconstructed-from-generation-brief",
+    "prompt": "Create one original transparent 16-bit pixel-art atlas of modular shinobi weapon parts for a plague-horror action game set in fictional Kan'ei-era Japan, 1638. Strict 4 columns by 3 rows, one isolated component per cell, consistent steel, iron, dark wood and wrapped-grip palette, orthographic side view, crisp square pixels, no character, hand, scenery, shadow, text, logo or watermark. Reading order: ringed kunai, square hira-shuriken, bo-shuriken, cross hira-shuriken; nunchaku handle A, nunchaku handle B, small chain link, heavy chain link; kyoketsu-shoge hooked blade, terminal ring, kusarigama sickle, fundo weight. Every chain is represented by one single isolated link intended to be repeated, never by a complete chain."
+  },
+  "componentCount": 12,
+  "components": [
+    {
+      "id": "kunai-ring",
+      "name": "Kunai à anneau",
+      "role": "held-projectile",
+      "file": "assets/modular/weapons/components/shinobi/kunai-ring.png",
+      "sourceCell": [
+        0,
+        0
+      ],
+      "sourceRect": [
+        0,
+        0,
+        384,
+        341
+      ],
+      "sourceAlphaBounds": [
+        96,
+        47,
+        343,
+        314
+      ],
+      "size": [
+        263,
+        283
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        255,
+        275
+      ],
+      "anchor": [
+        0.78,
+        0.18
+      ],
+      "description": "Outil court utilisable en estoc ou comme projectile récupérable.",
+      "tags": [
+        "kunai",
+        "throwing",
+        "chain-end"
+      ],
+      "alphaMode": "straight-transparent",
+      "transparentPadding": 8
+    },
+    {
+      "id": "hira-shuriken-square",
+      "name": "Hira-shuriken carré",
+      "role": "projectile",
+      "file": "assets/modular/weapons/components/shinobi/hira-shuriken-square.png",
+      "sourceCell": [
+        1,
+        0
+      ],
+      "sourceRect": [
+        384,
+        0,
+        768,
+        341
+      ],
+      "sourceAlphaBounds": [
+        93,
+        75,
+        291,
+        286
+      ],
+      "size": [
+        214,
+        227
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        206,
+        219
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "description": "Étoile plate à quatre pointes, centrée pour une rotation stable.",
+      "tags": [
+        "shuriken",
+        "throwing"
+      ],
+      "alphaMode": "straight-transparent",
+      "transparentPadding": 8
+    },
+    {
+      "id": "bo-shuriken",
+      "name": "Bō-shuriken",
+      "role": "projectile",
+      "file": "assets/modular/weapons/components/shinobi/bo-shuriken.png",
+      "sourceCell": [
+        2,
+        0
+      ],
+      "sourceRect": [
+        768,
+        0,
+        1152,
+        341
+      ],
+      "sourceAlphaBounds": [
+        72,
+        59,
+        304,
+        298
+      ],
+      "size": [
+        248,
+        255
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        240,
+        247
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "description": "Pointe droite de jet, indépendante de la main et de son effet d'impact.",
+      "tags": [
+        "shuriken",
+        "throwing"
+      ],
+      "alphaMode": "straight-transparent",
+      "transparentPadding": 8
+    },
+    {
+      "id": "hira-shuriken-cross",
+      "name": "Hira-shuriken cruciforme",
+      "role": "projectile",
+      "file": "assets/modular/weapons/components/shinobi/hira-shuriken-cross.png",
+      "sourceCell": [
+        3,
+        0
+      ],
+      "sourceRect": [
+        1152,
+        0,
+        1536,
+        341
+      ],
+      "sourceAlphaBounds": [
+        61,
+        73,
+        266,
+        285
+      ],
+      "size": [
+        221,
+        228
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        213,
+        220
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "description": "Variante cruciforme à quatre pointes, sprite de projectile autonome.",
+      "tags": [
+        "shuriken",
+        "throwing"
+      ],
+      "alphaMode": "straight-transparent",
+      "transparentPadding": 8
+    },
+    {
+      "id": "nunchaku-handle-a",
+      "name": "Poignée de nunchaku A",
+      "role": "flexible-end",
+      "file": "assets/modular/weapons/components/shinobi/nunchaku-handle-a.png",
+      "sourceCell": [
+        0,
+        1
+      ],
+      "sourceRect": [
+        0,
+        341,
+        384,
+        683
+      ],
+      "sourceAlphaBounds": [
+        112,
+        45,
+        284,
+        289
+      ],
+      "size": [
+        188,
+        260
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        180,
+        252
+      ],
+      "anchor": [
+        0.5,
+        0.08
+      ],
+      "description": "Première poignée d'un nunchaku rare de provenance ryūkyūane.",
+      "tags": [
+        "nunchaku",
+        "ryukyu",
+        "flexible"
+      ],
+      "alphaMode": "straight-transparent",
+      "transparentPadding": 8
+    },
+    {
+      "id": "nunchaku-handle-b",
+      "name": "Poignée de nunchaku B",
+      "role": "flexible-end",
+      "file": "assets/modular/weapons/components/shinobi/nunchaku-handle-b.png",
+      "sourceCell": [
+        1,
+        1
+      ],
+      "sourceRect": [
+        384,
+        341,
+        768,
+        683
+      ],
+      "sourceAlphaBounds": [
+        80,
+        45,
+        252,
+        289
+      ],
+      "size": [
+        188,
+        260
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        180,
+        252
+      ],
+      "anchor": [
+        0.5,
+        0.08
+      ],
+      "description": "Seconde poignée, distincte pour conserver une rotation indépendante.",
+      "tags": [
+        "nunchaku",
+        "ryukyu",
+        "flexible"
+      ],
+      "alphaMode": "straight-transparent",
+      "transparentPadding": 8
+    },
+    {
+      "id": "chain-link-small",
+      "name": "Maillon léger",
+      "role": "repeat-link",
+      "file": "assets/modular/weapons/components/shinobi/chain-link-small.png",
+      "sourceCell": [
+        2,
+        1
+      ],
+      "sourceRect": [
+        768,
+        341,
+        1152,
+        683
+      ],
+      "sourceAlphaBounds": [
+        128,
+        91,
+        211,
+        244
+      ],
+      "size": [
+        99,
+        169
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        91,
+        161
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "description": "Unique maillon léger répété le long d'une courbe dynamique.",
+      "tags": [
+        "chain",
+        "repeatable",
+        "flexible"
+      ],
+      "alphaMode": "straight-transparent",
+      "transparentPadding": 8
+    },
+    {
+      "id": "chain-link-heavy",
+      "name": "Maillon lourd",
+      "role": "repeat-link",
+      "file": "assets/modular/weapons/components/shinobi/chain-link-heavy.png",
+      "sourceCell": [
+        3,
+        1
+      ],
+      "sourceRect": [
+        1152,
+        341,
+        1536,
+        683
+      ],
+      "sourceAlphaBounds": [
+        102,
+        58,
+        230,
+        283
+      ],
+      "size": [
+        144,
+        241
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        136,
+        233
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "description": "Unique maillon massif répété pour les armes lourdes et les boss.",
+      "tags": [
+        "chain",
+        "repeatable",
+        "boss"
+      ],
+      "alphaMode": "straight-transparent",
+      "transparentPadding": 8
+    },
+    {
+      "id": "kyoketsu-shoge-blade",
+      "name": "Lame de kyoketsu-shoge",
+      "role": "flexible-end",
+      "file": "assets/modular/weapons/components/shinobi/kyoketsu-shoge-blade.png",
+      "sourceCell": [
+        0,
+        2
+      ],
+      "sourceRect": [
+        0,
+        683,
+        384,
+        1024
+      ],
+      "sourceAlphaBounds": [
+        77,
+        23,
+        326,
+        273
+      ],
+      "size": [
+        265,
+        266
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        257,
+        258
+      ],
+      "anchor": [
+        0.78,
+        0.2
+      ],
+      "description": "Lame crochue détachée de son lien et de son anneau terminal.",
+      "tags": [
+        "kyoketsu-shoge",
+        "hook",
+        "flexible"
+      ],
+      "alphaMode": "straight-transparent",
+      "transparentPadding": 8
+    },
+    {
+      "id": "kyoketsu-terminal-ring",
+      "name": "Anneau terminal",
+      "role": "flexible-end",
+      "file": "assets/modular/weapons/components/shinobi/kyoketsu-terminal-ring.png",
+      "sourceCell": [
+        1,
+        2
+      ],
+      "sourceRect": [
+        384,
+        683,
+        768,
+        1024
+      ],
+      "sourceAlphaBounds": [
+        91,
+        46,
+        276,
+        244
+      ],
+      "size": [
+        201,
+        214
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        193,
+        206
+      ],
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "description": "Anneau terminal indépendant pour le kyoketsu-shoge.",
+      "tags": [
+        "kyoketsu-shoge",
+        "ring",
+        "flexible"
+      ],
+      "alphaMode": "straight-transparent",
+      "transparentPadding": 8
+    },
+    {
+      "id": "kusarigama-kama",
+      "name": "Kama de kusarigama",
+      "role": "held",
+      "file": "assets/modular/weapons/components/shinobi/kusarigama-kama.png",
+      "sourceCell": [
+        2,
+        2
+      ],
+      "sourceRect": [
+        768,
+        683,
+        1152,
+        1024
+      ],
+      "sourceAlphaBounds": [
+        60,
+        15,
+        287,
+        270
+      ],
+      "size": [
+        243,
+        271
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        235,
+        263
+      ],
+      "anchor": [
+        0.24,
+        0.84
+      ],
+      "description": "Faucille complète, séparée du maillon répétable et du poids.",
+      "tags": [
+        "kusarigama",
+        "sickle",
+        "flexible"
+      ],
+      "alphaMode": "straight-transparent",
+      "transparentPadding": 8
+    },
+    {
+      "id": "fundo-weight",
+      "name": "Poids fundo",
+      "role": "flexible-end",
+      "file": "assets/modular/weapons/components/shinobi/fundo-weight.png",
+      "sourceCell": [
+        3,
+        2
+      ],
+      "sourceRect": [
+        1152,
+        683,
+        1536,
+        1024
+      ],
+      "sourceAlphaBounds": [
+        80,
+        41,
+        245,
+        268
+      ],
+      "size": [
+        181,
+        243
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        173,
+        235
+      ],
+      "anchor": [
+        0.5,
+        0.12
+      ],
+      "description": "Poids terminal réutilisable pour kusarigama et chaînes lestées.",
+      "tags": [
+        "fundo",
+        "weight",
+        "flexible"
+      ],
+      "alphaMode": "straight-transparent",
+      "transparentPadding": 8
+    }
+  ],
+  "recipeCount": 9,
+  "weaponRecipes": [
+    {
+      "id": "kunai",
+      "name": "Kunai",
+      "family": "throwing",
+      "historicity": "period-tool-adapted-for-combat",
+      "components": [
+        {
+          "componentId": "kunai-ring",
+          "socket": "rightHand"
+        }
+      ],
+      "projectileComponentId": "kunai-ring"
+    },
+    {
+      "id": "bo-shuriken",
+      "name": "Bō-shuriken",
+      "family": "throwing",
+      "historicity": "period-plausible",
+      "components": [
+        {
+          "componentId": "bo-shuriken",
+          "socket": "projectileSpawn"
+        }
+      ],
+      "projectileComponentId": "bo-shuriken"
+    },
+    {
+      "id": "hira-shuriken-square",
+      "name": "Hira-shuriken carré",
+      "family": "throwing",
+      "historicity": "specialist-weapon",
+      "components": [
+        {
+          "componentId": "hira-shuriken-square",
+          "socket": "projectileSpawn"
+        }
+      ],
+      "projectileComponentId": "hira-shuriken-square"
+    },
+    {
+      "id": "hira-shuriken-cross",
+      "name": "Hira-shuriken cruciforme",
+      "family": "throwing",
+      "historicity": "specialist-weapon",
+      "components": [
+        {
+          "componentId": "hira-shuriken-cross",
+          "socket": "projectileSpawn"
+        }
+      ],
+      "projectileComponentId": "hira-shuriken-cross"
+    },
+    {
+      "id": "kusarigama-modular",
+      "name": "Kusarigama modulaire",
+      "family": "flexible",
+      "historicity": "period-plausible",
+      "components": [
+        {
+          "componentId": "kusarigama-kama",
+          "socket": "rightHand"
+        },
+        {
+          "componentId": "fundo-weight",
+          "socket": "chainTarget"
+        }
+      ],
+      "connector": {
+        "renderMode": "repeat-single-link",
+        "linkComponentId": "chain-link-small",
+        "wholeChainTexture": false,
+        "originSocket": "kamaChainEye",
+        "targetSocket": "weightEye",
+        "minLinks": 8,
+        "maxLinks": 28,
+        "segmentLengthPx": 12,
+        "rotateEachLink": true
+      }
+    },
+    {
+      "id": "kusari-kunai",
+      "name": "Kusari-kunai de quarantaine",
+      "family": "flexible",
+      "historicity": "fictional-period-field-modification",
+      "components": [
+        {
+          "componentId": "kunai-ring",
+          "socket": "rightHand"
+        },
+        {
+          "componentId": "fundo-weight",
+          "socket": "chainTarget"
+        }
+      ],
+      "connector": {
+        "renderMode": "repeat-single-link",
+        "linkComponentId": "chain-link-small",
+        "wholeChainTexture": false,
+        "originSocket": "kunaiRing",
+        "targetSocket": "weightEye",
+        "minLinks": 7,
+        "maxLinks": 24,
+        "segmentLengthPx": 12,
+        "rotateEachLink": true
+      }
+    },
+    {
+      "id": "kyoketsu-shoge-modular",
+      "name": "Kyoketsu-shoge modulaire",
+      "family": "flexible",
+      "historicity": "specialist-weapon-chain-variant",
+      "historicalNote": "La version historique est souvent décrite avec une corde ; cette variante de quarantaine utilise le maillon léger.",
+      "components": [
+        {
+          "componentId": "kyoketsu-shoge-blade",
+          "socket": "rightHand"
+        },
+        {
+          "componentId": "kyoketsu-terminal-ring",
+          "socket": "chainTarget"
+        }
+      ],
+      "connector": {
+        "renderMode": "repeat-single-link",
+        "linkComponentId": "chain-link-small",
+        "wholeChainTexture": false,
+        "originSocket": "bladeRing",
+        "targetSocket": "terminalRing",
+        "minLinks": 10,
+        "maxLinks": 32,
+        "segmentLengthPx": 12,
+        "rotateEachLink": true
+      }
+    },
+    {
+      "id": "nunchaku-ryukyu",
+      "name": "Nunchaku de Ryūkyū",
+      "family": "flexible-dual",
+      "origin": "Ryukyu",
+      "historicity": "rare-origin-disputed",
+      "components": [
+        {
+          "componentId": "nunchaku-handle-a",
+          "socket": "rightHand"
+        },
+        {
+          "componentId": "nunchaku-handle-b",
+          "socket": "chainTarget"
+        }
+      ],
+      "connector": {
+        "renderMode": "repeat-single-link",
+        "linkComponentId": "chain-link-small",
+        "wholeChainTexture": false,
+        "originSocket": "handleARing",
+        "targetSocket": "handleBRing",
+        "minLinks": 3,
+        "maxLinks": 7,
+        "segmentLengthPx": 11,
+        "rotateEachLink": true
+      }
+    },
+    {
+      "id": "manrikigusari-modular",
+      "name": "Manrikigusari modulaire",
+      "family": "flexible-dual",
+      "historicity": "early-edo-specialist",
+      "components": [
+        {
+          "componentId": "fundo-weight",
+          "socket": "rightHand",
+          "instanceId": "fundo-left"
+        },
+        {
+          "componentId": "fundo-weight",
+          "socket": "chainTarget",
+          "instanceId": "fundo-right"
+        }
+      ],
+      "connector": {
+        "renderMode": "repeat-single-link",
+        "linkComponentId": "chain-link-small",
+        "wholeChainTexture": false,
+        "originSocket": "leftWeightEye",
+        "targetSocket": "rightWeightEye",
+        "minLinks": 10,
+        "maxLinks": 30,
+        "segmentLengthPx": 12,
+        "rotateEachLink": true
+      }
+    }
+  ],
+  "sharedFlexibleProfiles": [
+    {
+      "id": "light-chain",
+      "linkComponentId": "chain-link-small",
+      "wholeChainTexture": false,
+      "uses": [
+        "kusarigama",
+        "kusari-kunai",
+        "kyoketsu-shoge",
+        "nunchaku",
+        "manrikigusari"
+      ]
+    },
+    {
+      "id": "heavy-chain",
+      "linkComponentId": "chain-link-heavy",
+      "wholeChainTexture": false,
+      "uses": [
+        "fleau-cloche-enjin",
+        "chaines-menottes-nuno",
+        "encensoir-spores-kinoko"
+      ]
+    }
+  ]
+}

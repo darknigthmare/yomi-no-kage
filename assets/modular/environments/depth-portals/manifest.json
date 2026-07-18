@@ -1,0 +1,514 @@
+{
+  "schema": 1,
+  "category": "depth-portals",
+  "designPolicy": {
+    "purpose": "Simuler la profondeur d'une ville 2D par des rues, pièces, cours, étages et caves réellement reliés.",
+    "mostlyHorizontalProgression": true,
+    "verticalTransitionsOnlyWhenArchitecturallyCoherent": true,
+    "requiresExplicitInteraction": true
+  },
+  "provenance": {
+    "provider": "OpenAI",
+    "tool": "OpenAI ImageGen built-in",
+    "sourceAsset": "assets/modular/environments/depth-portals/sources/depth-portals-imagegen-raw.png",
+    "processedAtlas": "assets/modular/environments/depth-portals/depth-portals-atlas.png",
+    "sourceLayout": {
+      "columns": 4,
+      "rows": 2
+    },
+    "generationDate": "2026-07-18",
+    "promptRecord": "reconstructed-from-generation-brief",
+    "prompt": "Create one original transparent 16-bit pixel-art atlas of depth-transition portals for a side-view plague-horror game set in fictional Kan'ei-era Japan, 1638. Strict 4 columns by 2 rows, one complete frontal or slight three-quarter architectural entrance per cell, grounded on a shared baseline, crisp square pixels, coherent timber, tile, plaster and iron perspective, no people, enemies, labels, UI, text, logo or watermark. Reading order: narrow side alley, minka sliding entrance, machiya shop entrance with noren, kura storehouse gate; palisade breach, raised stair entrance, cellar trapdoor, inner-courtyard double gate. Openings must read as traversable paths into another street, room, floor, cellar or courtyard."
+  },
+  "count": 8,
+  "entries": [
+    {
+      "id": "ruelle-laterale",
+      "name": "Ruelle latérale",
+      "role": "depth-portal",
+      "file": "assets/modular/environments/depth-portals/sprites/ruelle-laterale.png",
+      "sourceCell": [
+        0,
+        0
+      ],
+      "sourceRect": [
+        0,
+        0,
+        384,
+        512
+      ],
+      "sourceAlphaBounds": [
+        27,
+        128,
+        328,
+        480
+      ],
+      "size": [
+        317,
+        368
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        309,
+        360
+      ],
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "description": "Passage étroit vers une rue parallèle du même quartier.",
+      "tags": [
+        "street",
+        "lateral-route",
+        "outdoor"
+      ],
+      "alphaMode": "straight-transparent",
+      "transparentPadding": 8,
+      "collision": "portal",
+      "renderLayer": "world",
+      "interaction": {
+        "requiresExplicitAction": true,
+        "action": "interact",
+        "automaticEntry": false
+      },
+      "transition": {
+        "kind": "street-depth",
+        "destinationArchetype": "adjacent-street",
+        "supportsReturnPortal": true
+      },
+      "perspective": "front-facing-depth-cue",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ]
+    },
+    {
+      "id": "porte-minka",
+      "name": "Entrée de minka",
+      "role": "depth-portal",
+      "file": "assets/modular/environments/depth-portals/sprites/porte-minka.png",
+      "sourceCell": [
+        1,
+        0
+      ],
+      "sourceRect": [
+        384,
+        0,
+        768,
+        512
+      ],
+      "sourceAlphaBounds": [
+        0,
+        94,
+        360,
+        480
+      ],
+      "size": [
+        376,
+        402
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        368,
+        394
+      ],
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "description": "Porte coulissante menant à une habitation et ses pièces intérieures.",
+      "tags": [
+        "house",
+        "interior",
+        "room"
+      ],
+      "alphaMode": "straight-transparent",
+      "transparentPadding": 8,
+      "collision": "portal",
+      "renderLayer": "world",
+      "interaction": {
+        "requiresExplicitAction": true,
+        "action": "interact",
+        "automaticEntry": false
+      },
+      "transition": {
+        "kind": "interior",
+        "destinationArchetype": "minka-room",
+        "supportsReturnPortal": true
+      },
+      "perspective": "front-facing-depth-cue",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ]
+    },
+    {
+      "id": "entree-machiya-noren",
+      "name": "Entrée de machiya",
+      "role": "depth-portal",
+      "file": "assets/modular/environments/depth-portals/sprites/entree-machiya-noren.png",
+      "sourceCell": [
+        2,
+        0
+      ],
+      "sourceRect": [
+        768,
+        0,
+        1152,
+        512
+      ],
+      "sourceAlphaBounds": [
+        11,
+        116,
+        318,
+        480
+      ],
+      "size": [
+        323,
+        380
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        315,
+        372
+      ],
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "description": "Échoppe urbaine reliant la rue à un commerce ou un atelier.",
+      "tags": [
+        "shop",
+        "interior",
+        "noren"
+      ],
+      "alphaMode": "straight-transparent",
+      "transparentPadding": 8,
+      "collision": "portal",
+      "renderLayer": "world",
+      "interaction": {
+        "requiresExplicitAction": true,
+        "action": "interact",
+        "automaticEntry": false
+      },
+      "transition": {
+        "kind": "interior",
+        "destinationArchetype": "shop-workshop",
+        "supportsReturnPortal": true
+      },
+      "perspective": "front-facing-depth-cue",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ]
+    },
+    {
+      "id": "porte-kura",
+      "name": "Porte de kura",
+      "role": "depth-portal",
+      "file": "assets/modular/environments/depth-portals/sprites/porte-kura.png",
+      "sourceCell": [
+        3,
+        0
+      ],
+      "sourceRect": [
+        1152,
+        0,
+        1536,
+        512
+      ],
+      "sourceAlphaBounds": [
+        0,
+        57,
+        351,
+        484
+      ],
+      "size": [
+        367,
+        443
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        359,
+        435
+      ],
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "description": "Double porte de magasin à riz menant à un entrepôt profond.",
+      "tags": [
+        "storehouse",
+        "interior",
+        "heavy-door"
+      ],
+      "alphaMode": "straight-transparent",
+      "transparentPadding": 8,
+      "collision": "portal",
+      "renderLayer": "world",
+      "interaction": {
+        "requiresExplicitAction": true,
+        "action": "interact",
+        "automaticEntry": false
+      },
+      "transition": {
+        "kind": "interior",
+        "destinationArchetype": "storehouse",
+        "supportsReturnPortal": true
+      },
+      "perspective": "front-facing-depth-cue",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ]
+    },
+    {
+      "id": "breche-palissade",
+      "name": "Brèche de palissade",
+      "role": "depth-portal",
+      "file": "assets/modular/environments/depth-portals/sprites/breche-palissade.png",
+      "sourceCell": [
+        0,
+        1
+      ],
+      "sourceRect": [
+        0,
+        512,
+        384,
+        1024
+      ],
+      "sourceAlphaBounds": [
+        23,
+        81,
+        333,
+        420
+      ],
+      "size": [
+        326,
+        355
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        318,
+        347
+      ],
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "description": "Ouverture vers une cour arrière, une venelle ou la périphérie.",
+      "tags": [
+        "breach",
+        "outdoor",
+        "alternate-route"
+      ],
+      "alphaMode": "straight-transparent",
+      "transparentPadding": 8,
+      "collision": "portal",
+      "renderLayer": "world",
+      "interaction": {
+        "requiresExplicitAction": true,
+        "action": "interact",
+        "automaticEntry": false
+      },
+      "transition": {
+        "kind": "street-depth",
+        "destinationArchetype": "rear-lane",
+        "supportsReturnPortal": true
+      },
+      "perspective": "front-facing-depth-cue",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ]
+    },
+    {
+      "id": "escalier-etage",
+      "name": "Entrée surélevée",
+      "role": "depth-portal",
+      "file": "assets/modular/environments/depth-portals/sprites/escalier-etage.png",
+      "sourceCell": [
+        1,
+        1
+      ],
+      "sourceRect": [
+        384,
+        512,
+        768,
+        1024
+      ],
+      "sourceAlphaBounds": [
+        0,
+        20,
+        355,
+        432
+      ],
+      "size": [
+        371,
+        428
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        363,
+        420
+      ],
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "description": "Escalier architectural vers un étage cohérent ou une tour.",
+      "tags": [
+        "stairs",
+        "upper-floor",
+        "interior"
+      ],
+      "alphaMode": "straight-transparent",
+      "transparentPadding": 8,
+      "collision": "portal",
+      "renderLayer": "world",
+      "interaction": {
+        "requiresExplicitAction": true,
+        "action": "interact",
+        "automaticEntry": false
+      },
+      "transition": {
+        "kind": "vertical-coherent",
+        "destinationArchetype": "upper-floor",
+        "supportsReturnPortal": true
+      },
+      "perspective": "front-facing-depth-cue",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ]
+    },
+    {
+      "id": "trappe-cave",
+      "name": "Trappe de cave",
+      "role": "depth-portal",
+      "file": "assets/modular/environments/depth-portals/sprites/trappe-cave.png",
+      "sourceCell": [
+        2,
+        1
+      ],
+      "sourceRect": [
+        768,
+        512,
+        1152,
+        1024
+      ],
+      "sourceAlphaBounds": [
+        0,
+        158,
+        335,
+        426
+      ],
+      "size": [
+        351,
+        284
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        343,
+        276
+      ],
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "description": "Accès descendant vers une cave, un tunnel ou un égout.",
+      "tags": [
+        "trapdoor",
+        "basement",
+        "underground"
+      ],
+      "alphaMode": "straight-transparent",
+      "transparentPadding": 8,
+      "collision": "portal",
+      "renderLayer": "world",
+      "interaction": {
+        "requiresExplicitAction": true,
+        "action": "interact",
+        "automaticEntry": false
+      },
+      "transition": {
+        "kind": "vertical-coherent",
+        "destinationArchetype": "basement",
+        "supportsReturnPortal": true
+      },
+      "perspective": "front-facing-depth-cue",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ]
+    },
+    {
+      "id": "porte-cour-interieure",
+      "name": "Porte de cour intérieure",
+      "role": "depth-portal",
+      "file": "assets/modular/environments/depth-portals/sprites/porte-cour-interieure.png",
+      "sourceCell": [
+        3,
+        1
+      ],
+      "sourceRect": [
+        1152,
+        512,
+        1536,
+        1024
+      ],
+      "sourceAlphaBounds": [
+        0,
+        69,
+        359,
+        425
+      ],
+      "size": [
+        375,
+        372
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        367,
+        364
+      ],
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "description": "Passage traversant vers une cour ou une autre rue du quartier.",
+      "tags": [
+        "courtyard",
+        "street",
+        "through-route"
+      ],
+      "alphaMode": "straight-transparent",
+      "transparentPadding": 8,
+      "collision": "portal",
+      "renderLayer": "world",
+      "interaction": {
+        "requiresExplicitAction": true,
+        "action": "interact",
+        "automaticEntry": false
+      },
+      "transition": {
+        "kind": "street-depth",
+        "destinationArchetype": "inner-courtyard",
+        "supportsReturnPortal": true
+      },
+      "perspective": "front-facing-depth-cue",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ]
+    }
+  ]
+}

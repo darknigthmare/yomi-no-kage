@@ -9,7 +9,7 @@
       content="Yomi no Kage, un jeu d'action pixel-art alternant plateforme 2D et FPS rétro dans un Japon féodal ravagé par une épidémie zombie."
     />
     <title>Yomi no Kage — L'Ombre du Shogun</title>
-    <link rel="stylesheet" href="styles.css?v=22" />
+    <link rel="stylesheet" href="styles.css?v=23" />
   </head>
   <body>
     <main class="game-shell" aria-label="Yomi no Kage, jeu d'action pixel-art">
@@ -43,8 +43,18 @@
               <strong id="hud-objective">Rejoindre le torii contaminé</strong>
             </div>
 
+            <div id="hud-weapon" class="hud-weapon" data-weapon="01-kurokage">
+              <span class="hud-weapon-visual" aria-hidden="true">
+                <img id="hud-weapon-icon" src="assets/modular/fps/player/akio/weapons/01-kurokage/weapon.png" alt="" />
+              </span>
+              <span>
+                <small id="hud-weapon-slot">PRINCIPALE</small>
+                <b id="hud-weapon-name">KUROKAGE</b>
+              </span>
+            </div>
+
             <div class="hud-resources">
-              <span><i class="resource-icon">札</i> OFUDA <b id="hud-ammo">6</b></span>
+              <span><i class="resource-icon">刃</i> PROJECTILES <b id="hud-ammo">6</b></span>
               <span><i class="resource-icon">印</i> SCEAUX <b id="hud-seals">0/2</b></span>
               <span><i class="resource-icon">骸</i> <b id="hud-score">0</b></span>
             </div>
@@ -60,7 +70,7 @@
               <span class="mode-dot" aria-hidden="true"></span>
               <span id="view-mode-label">VUE LATÉRALE</span>
             </div>
-            <p id="context-hint">A/D avancer · ESPACE sauter · J katana · K ofuda · 1–0 changer d'arme</p>
+            <p id="context-hint">A/D avancer · ESPACE sauter · J attaquer · K projectile · 1/2 ou Q changer d'arme</p>
             <button id="mode-toggle" class="pixel-button compact" data-action="interact" type="button">
               INTERAGIR <kbd>E</kbd>
             </button>
@@ -176,9 +186,10 @@
                 <div><dt><kbd>A</kbd><kbd>D</kbd></dt><dd>Se déplacer</dd></div>
                 <div><dt><kbd>W</kbd><kbd>S</kbd></dt><dd>Avancer / reculer en FPS</dd></div>
                 <div><dt><kbd>ESPACE</kbd></dt><dd>Sauter en 2D</dd></div>
-                <div><dt><kbd>J</kbd> / <kbd>CLIC</kbd></dt><dd>Katana</dd></div>
-                <div><dt><kbd>K</kbd> / <kbd>⇧</kbd></dt><dd>Lancer un ofuda</dd></div>
-                <div><dt><kbd>1</kbd>–<kbd>0</kbd></dt><dd>Équiper l'un des dix sabres</dd></div>
+                <div><dt><kbd>J</kbd> / <kbd>CLIC</kbd></dt><dd>Arme active</dd></div>
+                <div><dt><kbd>K</kbd> / <kbd>3</kbd></dt><dd>Projectile préparé</dd></div>
+                <div><dt><kbd>1</kbd><kbd>2</kbd><kbd>Q</kbd></dt><dd>Principale / secondaire</dd></div>
+                <div><dt><kbd>I</kbd></dt><dd>Ouvrir le dōjō</dd></div>
                 <div><dt><kbd>E</kbd></dt><dd>Ouvrir une entrée / sceller</dd></div>
                 <div><dt><kbd>V</kbd></dt><dd>Raccourci de seuil, près d'une entrée</dd></div>
                 <div><dt><kbd>ÉCHAP</kbd></dt><dd>Pause</dd></div>
@@ -187,7 +198,82 @@
           </div>
           <footer class="briefing-footer">
             <p>« N'épargnez que les vivants. » <span>— Tokugawa Iemitsu</span></p>
-            <button id="briefing-start-button" class="pixel-button primary" data-action="start" type="button">DÉGAINER LE KATANA</button>
+            <button id="briefing-start-button" class="pixel-button primary" data-loadout-open="briefing" type="button">PRÉPARER L’ÉQUIPEMENT</button>
+          </footer>
+        </div>
+      </section>
+
+      <section
+        id="dojo-screen"
+        class="screen-overlay dojo-screen"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="dojo-title"
+        aria-hidden="true"
+      >
+        <div class="dojo-panel">
+          <header class="dojo-header">
+            <div>
+              <p class="eyebrow">DŌJŌ DE L’OMBRE · PRÉPARATION DE MISSION</p>
+              <h2 id="dojo-title">Choisir l’arsenal d’Akio</h2>
+            </div>
+            <div class="dojo-collection-count" aria-label="Armes débloquées">
+              <b id="dojo-unlocked-count">53</b><span>/</span><b id="dojo-total-count">53</b>
+              <small>ARMES</small>
+            </div>
+            <button id="dojo-close" class="dojo-close" type="button" aria-label="Fermer le dōjō">×</button>
+          </header>
+
+          <div class="dojo-layout">
+            <aside class="dojo-loadout" aria-label="Configuration de mission">
+              <p class="dojo-section-label">CONFIGURATION</p>
+              <div id="dojo-slots" class="loadout-slots" role="tablist" aria-label="Emplacements d’arme"></div>
+              <div class="dojo-rules">
+                <p><b>PRINCIPALE</b><span>Style de combat dominant</span></p>
+                <p><b>SECONDAIRE</b><span>Riposte et espace réduit</span></p>
+                <p><b>DISTANCE</b><span>Projectile ou arme de tir</span></p>
+              </div>
+              <div class="dojo-note">
+                <span aria-hidden="true">鎖</span>
+                <p>Les chaînes sont composées de poignées, poids et maillons indépendants.</p>
+              </div>
+            </aside>
+
+            <section class="dojo-browser" aria-label="Arsenal disponible">
+              <div class="dojo-browser-toolbar">
+                <div id="dojo-categories" class="dojo-categories" aria-label="Catégories d’arme"></div>
+                <p id="dojo-result-count">0 ARME COMPATIBLE</p>
+              </div>
+              <div id="dojo-weapons" class="dojo-weapons" aria-live="polite"></div>
+            </section>
+
+            <aside class="dojo-detail" aria-label="Détails de l’arme">
+              <div class="dojo-preview">
+                <img id="dojo-preview" src="" alt="" />
+                <span id="dojo-preview-fallback" hidden aria-hidden="true">武</span>
+              </div>
+              <div class="dojo-detail-heading">
+                <p id="dojo-weapon-family" class="eyebrow"></p>
+                <h3 id="dojo-weapon-name">Kurokage</h3>
+                <p id="dojo-weapon-subtitle" class="dojo-subtitle"></p>
+                <span id="dojo-rarity" class="dojo-rarity"></span>
+              </div>
+              <p id="dojo-gameplay" class="dojo-gameplay"></p>
+              <div id="dojo-stats" class="dojo-stats" aria-label="Statistiques comparées"></div>
+              <section class="dojo-passive">
+                <small>PASSIF UNIQUE</small>
+                <b id="dojo-passive-name"></b>
+                <p id="dojo-passive-description"></p>
+              </section>
+              <p id="dojo-lore" class="dojo-lore"></p>
+              <p id="dojo-unlock" class="dojo-unlock" data-unlocked="true"></p>
+            </aside>
+          </div>
+
+          <footer class="dojo-actions">
+            <p id="dojo-status" aria-live="polite"></p>
+            <button id="dojo-cancel" class="pixel-button ghost compact" type="button">ANNULER</button>
+            <button id="dojo-confirm" class="pixel-button primary compact" type="button">VALIDER LA CONFIGURATION</button>
           </footer>
         </div>
       </section>
@@ -198,6 +284,7 @@
           <p class="eyebrow">LE TEMPS S'IMMOBILISE</p>
           <h2 id="pause-title">PAUSE</h2>
           <button id="resume-button" class="pixel-button primary" data-action="pause" type="button">REPRENDRE</button>
+          <button class="pixel-button" data-loadout-open="pause" type="button">CONSULTER L’ÉQUIPEMENT</button>
           <button class="pixel-button" data-action="restart" type="button">RECOMMENCER LA MISSION</button>
           <button class="pixel-button ghost" data-action="title" type="button">QUITTER VERS LE TITRE</button>
         </div>
@@ -237,16 +324,20 @@
         <div class="touch-cluster actions">
           <button class="touch-button small" data-action="switch" type="button" aria-label="Changer de vue">VUE</button>
           <button class="touch-button small" data-action="interact" type="button" aria-label="Interagir">E</button>
-          <button class="touch-button small" data-action="weapon-next" type="button" aria-label="Katana suivant">刀</button>
-          <button class="touch-button ranged" data-action="ranged" type="button" aria-label="Lancer un ofuda">札</button>
-          <button class="touch-button attack" data-action="attack" type="button" aria-label="Attaquer au katana">斬</button>
+          <button id="touch-weapon-swap" class="touch-button small" data-action="weapon-swap" type="button" aria-label="Changer entre arme principale et secondaire">替</button>
+          <button class="touch-button ranged" data-action="ranged" type="button" aria-label="Utiliser le projectile équipé">刃</button>
+          <button class="touch-button attack" data-action="attack" type="button" aria-label="Attaquer avec l’arme active">斬</button>
         </div>
       </div>
     </main>
 
     <noscript>Ce jeu nécessite JavaScript pour fonctionner.</noscript>
     <script src="audio.js?v=3"></script>
-    <script src="game.js?v=22"></script>
+    <script src="arsenal.js?v=1"></script>
+    <script src="save.js?v=1"></script>
+    <script src="loadout.js?v=1"></script>
+    <script src="level-data.js?v=1"></script>
+    <script src="game.js?v=23"></script>
     <script src="cinematic.js?v=4"></script>
   </body>
 </html>

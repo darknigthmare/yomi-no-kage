@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "id": "makibishi",
+  "name": "Makibishi",
+  "category": "modular-weapon-component",
+  "role": "projectile-trap",
+  "file": "assets/modular/weapons/components/shinobi/makibishi.png",
+  "source": "assets/modular/weapons/components/sources/makibishi-imagegen-raw.png",
+  "processedSource": "assets/modular/weapons/components/sources/makibishi-alpha.png",
+  "anchor": [0.5, 0.72],
+  "wholeChainTexture": false,
+  "provenance": {
+    "provider": "OpenAI",
+    "tool": "OpenAI ImageGen built-in",
+    "generationDate": "2026-07-18",
+    "prompt": "Create one original isolated modular game sprite: a single historically plausible Japanese makibishi caltrop for the existing Yomi no Kage weapon set. Crisp high-detail 16-bit / 32-bit hybrid pixel art, forged dark iron, four asymmetric spikes arranged so one spike always points upward, clear readable side-game three-quarter silhouette, subtle upper-left steel highlight, no magic. Center the complete object with very generous empty margin on a perfectly flat uniform exact chroma-key magenta #ff00ff background. No ground, cast shadow, hand, character, blood, other objects, labels, text, logo, watermark, blur or antialias fringe. Intended to be cut out into one independent transparent projectile/trap PNG."
+  }
+}

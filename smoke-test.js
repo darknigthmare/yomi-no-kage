@@ -253,6 +253,13 @@ require("./game.js");
     "Les gardes du château doivent apparaître sur une zone de sol libre",
   );
 
+  // Avec le graphe complet, la campagne traverse désormais ruelles, marché,
+  // cour et résidence. Ce test unitaire se place au dernier checkpoint pour
+  // vérifier isolément que la porte FPS finale reste une action manuelle.
+  if (global.KageLevels) {
+    global.KageGame.debug.setSideArea("castle-donjon", "finalCheckpoint");
+  }
+
   // La seconde porte suit le même flux manuel après la transition.
   for (let i = 0; i < 4; i += 1) global.KageGame.debug.step(0.25);
   global.KageGame.debug.warpToGate();
@@ -293,7 +300,7 @@ require("./game.js");
     villageWorld.fps.scheme,
     "Le sanctuaire et le donjon doivent conserver leur propre palette de sol",
   );
-  assert.equal(castleWorld.bounds.minX, 960);
+  assert.equal(castleWorld.bounds.minX, global.KageLevels ? 6 : 960);
   assert.ok(
     castleWorld.platforms.every((platform) =>
       castleWorld.frontPropFootprints.every((prop) => !overlaps(platform, prop))),

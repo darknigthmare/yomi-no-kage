@@ -55,6 +55,142 @@
     { anchor: [0.26, 0.52], sideRotation: -0.62, fpsRotation: -0.9 },
     { anchor: [0.26, 0.52], sideRotation: -0.55, fpsRotation: -0.83 },
   ];
+  const FALLBACK_LOADOUT = Object.freeze({
+    primary: KATANA_IDS[0],
+    secondary: KATANA_IDS[1],
+    ranged: "ofuda-purification",
+    armor: "do-maru-voyage",
+    charm: "omamori-ombre",
+    technique: "iai-kage",
+  });
+  const PLAYER_WEAPON_RENDER_PROFILES = {
+    katana: { sideScale: 1, sideRotation: 0, fpsScale: 1, fpsRotation: 0 },
+    blade: { sideScale: 0.96, sideRotation: 0.03, fpsScale: 0.96, fpsRotation: 0.02 },
+    shortBlade: { sideScale: 0.76, sideRotation: 0.08, fpsScale: 0.78, fpsRotation: 0.08 },
+    polearm: { sideScale: 1.34, sideRotation: -0.14, fpsScale: 1.2, fpsRotation: -0.18 },
+    heavy: { sideScale: 1.12, sideRotation: 0.08, fpsScale: 1.08, fpsRotation: 0.1 },
+    staff: { sideScale: 1.24, sideRotation: -0.12, fpsScale: 1.12, fpsRotation: -0.12 },
+    flexible: { sideScale: 0.94, sideRotation: 0.04, fpsScale: 0.92, fpsRotation: 0.06 },
+    bow: { sideScale: 1.18, sideRotation: -0.38, fpsScale: 1.08, fpsRotation: -0.34 },
+    firearm: { sideScale: 1.16, sideRotation: -0.26, fpsScale: 1.12, fpsRotation: -0.22 },
+    throwing: { sideScale: 0.7, sideRotation: 0.12, fpsScale: 0.74, fpsRotation: 0.12 },
+    fan: { sideScale: 0.74, sideRotation: 0.04, fpsScale: 0.78, fpsRotation: 0.05 },
+    capture: { sideScale: 1.26, sideRotation: -0.12, fpsScale: 1.12, fpsRotation: -0.12 },
+  };
+
+  function fallbackWeaponEntry(id) {
+    const katanaIndex = KATANA_IDS.indexOf(String(id));
+    if (katanaIndex >= 0) {
+      return {
+        id: KATANA_IDS[katanaIndex],
+        name: KATANA_NAMES[katanaIndex],
+        family: "katana",
+        animationProfile: "katana",
+        sprite: `assets/modular/fps/player/akio/weapons/${KATANA_IDS[katanaIndex]}/weapon.png`,
+        stats: {
+          power: 58,
+          speed: 62,
+          reach: 58,
+          kiCost: 12,
+          posture: 52,
+          armorPenetration: 18,
+        },
+      };
+    }
+    return null;
+  }
+
+  function arsenalWeapons() {
+    return Array.isArray(window.KageArsenal?.weapons)
+      ? window.KageArsenal.weapons
+      : KATANA_IDS.map(fallbackWeaponEntry);
+  }
+
+  function arsenalWeaponById(id) {
+    if (typeof window.KageArsenal?.weaponById === "function") {
+      const result = window.KageArsenal.weaponById(id);
+      if (result) return result;
+    }
+    return arsenalWeapons().find((weapon) => weapon.id === id)
+      || fallbackWeaponEntry(id)
+      || null;
+  }
+
+  function normalizePlayerLoadout(candidate = {}) {
+    const defaults = window.KageArsenal?.defaultLoadout
+      || window.KageArsenal?.defaults?.loadout
+      || FALLBACK_LOADOUT;
+    const requested = { ...FALLBACK_LOADOUT, ...defaults, ...(candidate || {}) };
+    const meleeFallback = arsenalWeaponById(FALLBACK_LOADOUT.primary)?.id || KATANA_IDS[0];
+    const normalizeWeaponSlot = (id, fallback) =>
+      arsenalWeaponById(id)?.id || arsenalWeaponById(fallback)?.id || meleeFallback;
+    return {
+      primary: normalizeWeaponSlot(requested.primary, meleeFallback),
+      secondary: normalizeWeaponSlot(requested.secondary, requested.primary),
+      ranged: arsenalWeaponById(requested.ranged)?.id || requested.ranged || "ofuda-purification",
+      armor: requested.armor || FALLBACK_LOADOUT.armor,
+      charm: requested.charm || requested.omamori?.[0] || FALLBACK_LOADOUT.charm,
+      omamori: Array.isArray(requested.omamori)
+        ? requested.omamori.slice(0, 2)
+        : [requested.charm || FALLBACK_LOADOUT.charm],
+      technique: requested.technique || FALLBACK_LOADOUT.technique,
+      quickItems: Array.isArray(requested.quickItems)
+        ? requested.quickItems.slice(0, 2)
+        : ["ofuda-purification", "yomogi"],
+    };
+  }
+
+  function persistedPlayerLoadout() {
+    try {
+      if (typeof window.KageSave?.getLoadout === "function") {
+        return normalizePlayerLoadout(window.KageSave.getLoadout());
+      }
+      if (typeof window.KageSave?.load === "function") {
+        return normalizePlayerLoadout(window.KageSave.load()?.loadout);
+      }
+    } catch (_) {
+      // Une partie locale ou un navigateur privé restent jouables sans save.
+    }
+    return normalizePlayerLoadout();
+  }
+
+  function persistedAmmoMap() {
+    try {
+      const ammo = window.KageSave?.load?.()?.ammo;
+      if (ammo && typeof ammo === "object") return { ...ammo };
+    } catch (_) {
+      // La réserve locale reste facultative.
+    }
+    return {
+      ofuda: 8,
+      kunai: 8,
+      shuriken: 16,
+      boShuriken: 12,
+      makibishi: 5,
+      uchine: 5,
+      ya: 28,
+      tamade: 10,
+    };
+  }
+
+  function rangedAmmoType(weapon) {
+    return String(weapon?.ammoType || "ofuda");
+  }
+
+  function rangedAmmoCapacity(weapon) {
+    return Math.max(1, Number(weapon?.maxAmmo || 12));
+  }
+
+  function persistAmmoMap() {
+    try {
+      const profile = window.KageSave?.load?.();
+      if (!profile || !game?.ammoByType) return;
+      profile.ammo = { ...profile.ammo, ...game.ammoByType };
+      window.KageSave.save(profile);
+    } catch (_) {
+      // Une session privée conserve la réserve uniquement en mémoire de jeu.
+    }
+  }
   const SIDE_ENTRANCES = [
     {
       x: 900,
@@ -270,6 +406,146 @@
     return Boolean(image && image.complete && image.naturalWidth > 0);
   }
 
+  const playerWeaponBitmapCache = new Map();
+  const playerComponentBitmapCache = new Map();
+
+  function weaponFamilyKey(weapon = {}) {
+    // La catégorie et la famille sont plus précises que le profil générique
+    // d'animation (`blade`, par exemple). Ce dernier reste un repli legacy.
+    const raw = [
+      weapon.category,
+      weapon.family,
+      weapon.moveset,
+      weapon.animationProfile,
+      "blade",
+    ].filter(Boolean).join(" ").toLowerCase();
+    if (/katana|sword-two|sword-one/.test(raw)) return "katana";
+    if (/short|tanto|wakizashi|jitte|hachiwari/.test(raw)) return "shortBlade";
+    if (/pole|yari|naginata|nagamaki/.test(raw)) return "polearm";
+    if (/heavy|kanabo|tetsubo|hammer|axe|otsuchi|masakari|ono/.test(raw)) return "heavy";
+    if (/staff|bo\b|jo\b|shakujo/.test(raw)) return "staff";
+    if (/flex|chain|kusari|nunchaku|kyoketsu|chigiriki|manriki/.test(raw)) return "flexible";
+    if (/bow|yumi/.test(raw)) return "bow";
+    if (/firearm|tanegashima|teppo|bajo|ozutsu/.test(raw)) return "firearm";
+    if (/throw|shuriken|kunai|makibishi|uchine/.test(raw)) return "throwing";
+    if (/fan|tessen/.test(raw)) return "fan";
+    if (/capture|sasumata|sodegarami|tsukubo/.test(raw)) return "capture";
+    return "blade";
+  }
+
+  function weaponRenderProfile(weapon) {
+    return PLAYER_WEAPON_RENDER_PROFILES[weaponFamilyKey(weapon)]
+      || PLAYER_WEAPON_RENDER_PROFILES.blade;
+  }
+
+  function weaponSpritePath(weapon, view = "side") {
+    if (!weapon) return null;
+    const declared = weapon.sprites?.[view]
+      || weapon.views?.[view]?.sprite
+      || weapon.views?.[view]?.file;
+    if (declared) return declared;
+    if (view === "fps" && weapon.fpsSprite) return weapon.fpsSprite;
+    return weapon.sprite || weapon.file || null;
+  }
+
+  function playerWeaponBitmap(weapon, view = "side") {
+    const path = weaponSpritePath(weapon, view) || weaponSpritePath(weapon, "side");
+    if (!path) return null;
+    const key = `${view}:${path}`;
+    if (!playerWeaponBitmapCache.has(key)) {
+      playerWeaponBitmapCache.set(key, loadBitmap(path));
+    }
+    return playerWeaponBitmapCache.get(key);
+  }
+
+  function componentEntriesForWeapon(weapon, view = "side") {
+    const declared = weapon?.views?.[view]?.components
+      || weapon?.components?.[view]
+      || weapon?.components
+      || [];
+    if (Array.isArray(declared)) {
+      return declared.map((component, index) =>
+        typeof component === "string"
+          ? { role: `component-${index}`, file: component }
+          : { role: component.role || component.id || `component-${index}`, ...component });
+    }
+    if (declared && typeof declared === "object") {
+      return Object.entries(declared)
+        .filter(([role]) => role !== "root")
+        .map(([role, component]) =>
+          typeof component === "string"
+            ? { role, file: component }
+            : { role, ...component });
+    }
+    return [];
+  }
+
+  function playerComponentBitmap(component) {
+    const path = component?.file || component?.sprite;
+    if (!path) return null;
+    if (!playerComponentBitmapCache.has(path)) {
+      playerComponentBitmapCache.set(path, loadBitmap(path));
+    }
+    return playerComponentBitmapCache.get(path);
+  }
+
+  function currentPlayerWeapon() {
+    const id = game?.activeWeaponId
+      || game?.loadout?.[game?.activeWeaponSlot || "primary"]
+      || KATANA_IDS[0];
+    return arsenalWeaponById(id) || fallbackWeaponEntry(KATANA_IDS[0]);
+  }
+
+  function currentRangedWeapon() {
+    return arsenalWeaponById(game?.loadout?.ranged) || null;
+  }
+
+  function normalizedWeaponStats(weapon) {
+    const stats = weapon?.stats || {};
+    const number = (key, fallback) => {
+      const value = Number(stats[key]);
+      return Number.isFinite(value) ? value : fallback;
+    };
+    return {
+      power: clamp(number("power", number("damage", 58)), 0, 100),
+      speed: clamp(number("speed", 62), 0, 100),
+      reach: clamp(number("reach", 58), 0, 100),
+      kiCost: clamp(number("kiCost", number("stamina", 12)), 0, 100),
+      posture: clamp(number("posture", 52), 0, 100),
+      armorPenetration: clamp(
+        number("armorPenetration", number("armor", 18)),
+        0,
+        100,
+      ),
+      control: clamp(number("control", 50), 0, 100),
+      flesh: clamp(number("flesh", 1), 0.25, 2.5),
+      armor: clamp(number("armor", 1), 0.25, 2.5),
+      spirit: clamp(number("spirit", 1), 0.25, 2.5),
+      boss: clamp(number("boss", 1), 0.25, 2.5),
+    };
+  }
+
+  function playerAttackSpec(weapon = currentPlayerWeapon()) {
+    const stats = normalizedWeaponStats(weapon);
+    const family = weaponFamilyKey(weapon);
+    const duration = clamp(0.54 - stats.speed * 0.0032, 0.22, 0.52);
+    return {
+      weapon,
+      stats,
+      family,
+      duration,
+      cooldown: duration + clamp(0.25 - stats.speed * 0.0014, 0.1, 0.24),
+      damage: clamp(Math.round(1 + stats.power / 42), 1, 4),
+      sideReach: 30 + stats.reach * 0.38,
+      fpsReach: 1.02 + stats.reach * 0.012,
+      targets: ["polearm", "flexible", "staff", "capture"].includes(family)
+        ? 3
+        : (family === "shortBlade" ? 1 : 2),
+      staminaCost: Math.max(4, stats.kiCost * 0.72),
+      armorBonus: stats.armorPenetration >= 62 ? 1 : 0,
+    };
+  }
+
   const MODULAR_ANIMATIONS = ["idle", "move", "attack", "hurt", "death"];
 
   function loadAnimationSet(basePath) {
@@ -343,6 +619,18 @@
       loadBitmap("assets/modular/environments/bamboo-shrine/props/grand-torii.png"),
       loadBitmap("assets/modular/environments/daimyo-castle/props/porte-chateau.png"),
     ],
+    depthPortals: {
+      "passage-ruelle": loadBitmap("assets/modular/environments/depth-portals/sprites/ruelle-laterale.png"),
+      "porte-minka": loadBitmap("assets/modular/environments/depth-portals/sprites/porte-minka.png"),
+      "entree-machiya-noren": loadBitmap("assets/modular/environments/depth-portals/sprites/entree-machiya-noren.png"),
+      "porte-kura": loadBitmap("assets/modular/environments/depth-portals/sprites/porte-kura.png"),
+      "porte-palissade": loadBitmap("assets/modular/environments/depth-portals/sprites/breche-palissade.png"),
+      "escalier-etage": loadBitmap("assets/modular/environments/depth-portals/sprites/escalier-etage.png"),
+      "trappe-cave": loadBitmap("assets/modular/environments/depth-portals/sprites/trappe-cave.png"),
+      "porte-laquee": loadBitmap("assets/modular/environments/depth-portals/sprites/porte-cour-interieure.png"),
+      "porte-chateau": loadBitmap("assets/modular/environments/depth-portals/sprites/porte-kura.png"),
+      "porte-sanctuaire": loadBitmap("assets/modular/environments/depth-portals/sprites/entree-machiya-noren.png"),
+    },
     fpsWallAtlas: loadBitmap("assets/generated/props/fps-wall-texture-atlas.png"),
     fpsAltars: [
       loadBitmap("assets/modular/environments/bamboo-shrine/props/autel-purification.png"),
@@ -473,7 +761,7 @@
   }
 
   function weaponEntryForCurrentKatana() {
-    const selectedId = KATANA_IDS[game.weaponIndex];
+    const selectedId = game.activeWeaponId || KATANA_IDS[game.weaponIndex];
     return modularRoster.weapons.find((weapon) => weapon.id === selectedId) || null;
   }
 
@@ -500,15 +788,64 @@
     return "flesh";
   }
 
+  function massiveBossProfileFor(entry) {
+    const profiles = window.KageMassiveBossProfiles || {};
+    const declared = profiles[entry?.id];
+    if (declared) {
+      return {
+        ...declared,
+        renderProfile: declared.renderProfile || declared.render,
+      };
+    }
+    return entry?.category === "giant"
+        ? {
+            presentationClass: "massive",
+            displayLabel: "Boss massif",
+            renderProfile: {
+              targetWidthRatio: 0.48,
+              targetHeightRatio: 0.52,
+              maxHeightRatio: 0.62,
+              maxWidthRatio: 0.56,
+            },
+            phases: [
+              { id: "assaut", threshold: 1 },
+              { id: "furie", threshold: 0.5 },
+            ],
+          }
+        : null;
+  }
+
+  function isMassiveEnemy(enemy) {
+    return Boolean(
+      enemy?.presentationClass === "massive"
+      || enemy?.massiveProfile?.presentationClass === "massive"
+      || enemy?.modularEntry?.presentationClass === "massive"
+      || enemy?.modularEntry?.category === "giant",
+    );
+  }
+
   function equipRosterEntry(enemy, entry, weaponIndex) {
     if (!entry) return;
     enemy.modularEntry = entry;
     enemy.impactMaterial = impactMaterialForEntry(entry, enemy);
+    const massiveProfile = massiveBossProfileFor(entry);
+    if (massiveProfile) {
+      enemy.presentationClass = "massive";
+      enemy.massiveProfile = massiveProfile;
+      if (!Number.isFinite(enemy.massivePhase)) enemy.massivePhase = 1;
+      if (typeof enemy.detachablePartAttached !== "boolean") {
+        enemy.detachablePartAttached = true;
+      }
+    }
     const modularWeapons = modularRoster.weapons.filter((weapon) =>
       String(weapon.file || "").startsWith("assets/modular/weapons/"),
     );
+    const detachableWeaponId = massiveProfile?.detachableParts
+      ?.find((part) => part.separateSprite)?.weaponId;
     const requestedWeapon = modularWeapons.find((weapon) =>
-      weapon.id === entry.weaponId || weapon.id === entry.weapon,
+      weapon.id === entry.weaponId
+      || weapon.id === entry.weapon
+      || weapon.id === detachableWeaponId,
     );
     const fallbackWeapon = modularWeapons.length
       ? modularWeapons[Math.abs(weaponIndex) % modularWeapons.length]
@@ -525,23 +862,32 @@
     const bosses = getRosterCategory("boss");
     const giants = getRosterCategory("giant");
     const sidePool = [...regular, ...special];
-    if (sidePool.length) {
-      state.side.enemies.forEach((enemy, index) => {
-        const rosterIndex = state.chapter * state.side.enemies.length + index;
-        equipRosterEntry(enemy, sidePool[rosterIndex % sidePool.length], rosterIndex);
-      });
-    }
+    state.side.enemies.forEach((enemy, index) => {
+      const rosterIndex = state.chapter * state.side.enemies.length + index;
+      const explicitId = enemy.rosterId || enemy.profileId;
+      const explicitEntry = explicitId
+        ? modularRoster.characters.find((entry) => entry.id === explicitId)
+        : null;
+      const hintedPool = enemy.rosterHint === "miniboss"
+        ? miniboss
+        : (enemy.rosterHint === "special"
+          ? special
+          : (enemy.rosterHint === "boss" ? bosses : sidePool));
+      const entry = explicitEntry
+        || (hintedPool.length ? hintedPool[rosterIndex % hintedPool.length] : null);
+      if (entry) equipRosterEntry(enemy, entry, rosterIndex);
+    });
     state.fps.missions.forEach((mission, missionIndex) => {
       const combatPool = missionIndex === 0 ? special : [...special.slice(10), ...miniboss];
       let combatIndex = 0;
       mission.enemies.forEach((enemy) => {
         if (enemy.boss) {
-          // Les géants restent réservés aux futures arènes extérieures : dans
-          // ce donjon étroit leur hauteur dépassait trois murs et leur
-          // collision restait celle d'un zombie ordinaire.
-          const bossPool = bosses.length ? bosses : giants;
-          if (bossPool.length) {
-            equipRosterEntry(enemy, bossPool[missionIndex % bossPool.length], 40 + missionIndex);
+          // Aka-Ushi domine une arène de route en 2D. Le donjon conserve son
+          // daimyō FPS : les deux formats ont ainsi une vraie arène dédiée.
+          const bossEntry = bosses[missionIndex % bosses.length]
+            || giants[missionIndex % giants.length];
+          if (bossEntry) {
+            equipRosterEntry(enemy, bossEntry, 40 + missionIndex);
           }
         } else if (combatPool.length) {
           equipRosterEntry(enemy, combatPool[combatIndex % combatPool.length], 20 + combatIndex);
@@ -573,6 +919,7 @@
   const dom = {
     title: document.getElementById("title-screen"),
     briefing: document.getElementById("briefing-screen"),
+    dojo: document.getElementById("dojo-screen"),
     pause: document.getElementById("pause-screen"),
     end: document.getElementById("end-screen"),
     startButton: document.getElementById("start-button"),
@@ -584,6 +931,10 @@
     seals: document.getElementById("hud-seals"),
     score: document.getElementById("hud-score"),
     objective: document.getElementById("hud-objective"),
+    hudWeapon: document.getElementById("hud-weapon"),
+    hudWeaponIcon: document.getElementById("hud-weapon-icon"),
+    activeWeaponName: document.getElementById("hud-weapon-name"),
+    activeWeaponFamily: document.getElementById("hud-weapon-slot"),
     mode: document.getElementById("view-mode-label"),
     hint: document.getElementById("context-hint"),
     bossBar: document.getElementById("boss-bar"),
@@ -677,14 +1028,20 @@
   let lastTime = performance.now();
   let rafId = 0;
 
-  function createGameState() {
+  function createGameState(loadoutOverride = persistedPlayerLoadout()) {
+    const loadout = normalizePlayerLoadout(loadoutOverride);
+    const ammoByType = persistedAmmoMap();
+    const rangedWeapon = arsenalWeaponById(loadout.ranged);
+    const ammoType = rangedAmmoType(rangedWeapon);
+    const ammoCapacity = rangedAmmoCapacity(rangedWeapon);
     return {
       status: "title",
       mode: "side",
       chapter: 0,
       health: 100,
       stamina: 100,
-      ammo: 8,
+      ammo: clamp(Number(ammoByType[ammoType] ?? ammoCapacity), 0, ammoCapacity),
+      ammoByType,
       seals: 0,
       kills: 0,
       score: 0,
@@ -694,8 +1051,11 @@
       hurtTimer: 0,
       deathTimer: 0,
       attackTimer: 0,
+      attackDuration: PLAYER_ATTACK_DURATION,
       attackCooldown: 0,
       attackHitApplied: false,
+      rangedViewTimer: 0,
+      lastRangedWeaponId: null,
       playerStagger: 0,
       shake: 0,
       hitStop: 0,
@@ -704,7 +1064,12 @@
       hitConfirmPoint: { x: W / 2, y: H / 2 },
       transition: 0,
       transitionLabel: "",
-      weaponIndex: 0,
+      pendingTravel: null,
+      loadout,
+      activeWeaponSlot: "primary",
+      activeWeaponId: loadout.primary,
+      weaponIndex: Math.max(0, KATANA_IDS.indexOf(loadout.primary)),
+      loadoutReturnStatus: "briefing",
       side: makeSideState(),
       fps: {
         current: 0,
@@ -714,7 +1079,89 @@
     };
   }
 
+  function sideAreaById(areaId) {
+    return window.KageLevels?.areas?.[areaId] || null;
+  }
+
+  function sideAreaIdForChapter(chapter) {
+    if (chapter === 0) {
+      return window.KageLevels?.chapters?.village?.entryAreaId
+        || window.KageLevels?.startAreaId
+        || "legacy-village";
+    }
+    return window.KageLevels?.chapters?.castle?.entryAreaId
+      || "legacy-castle";
+  }
+
+  function makeSideEnemiesForArea(areaId, chapter = 0) {
+    const area = sideAreaById(areaId);
+    const definitions = area?.enemies;
+    const rules = SIDE_CHAPTER_RULES[chapter] || SIDE_CHAPTER_RULES[0];
+    const entries = Array.isArray(definitions) && definitions.length
+      ? definitions
+      : rules.enemyXs.map((x) => ({ x }));
+    return entries.map((definition, i) => {
+      const massive = definition.presentationClass === "massive"
+        || Boolean(definition.profileId);
+      const width = definition.w || (massive ? 128 : 16);
+      const height = definition.h || (massive ? 82 : 24);
+      const hp = definition.hp
+        || (massive ? 42 : (definition.roster === "special" || i > 6 ? 3 : 2));
+      return {
+        sourceId: definition.id || `${areaId}-enemy-${i + 1}`,
+        rosterHint: definition.roster || null,
+        rosterId: definition.rosterId || null,
+        profileId: definition.profileId || null,
+        encounterId: definition.encounterId || null,
+        presentationClass: massive ? "massive" : null,
+        boss: Boolean(definition.boss || massive),
+        x: definition.x,
+        y: Number.isFinite(definition.y) ? definition.y : SIDE_GROUND_Y - height,
+        w: width,
+        h: height,
+        hp,
+        maxHp: hp,
+        dead: false,
+        dying: false,
+        facing: definition.facing || -1,
+        attack: 0,
+        attackDuration: 0.56,
+        attackCooldown: i * 0.1,
+        attackHitApplied: false,
+        hurtTimer: 0,
+        deathTimer: 0,
+        knockbackVx: 0,
+        flash: 0,
+        impactMaterial: massive ? "armor" : "flesh",
+        massivePhase: massive ? 1 : null,
+        detachablePartAttached: massive ? true : null,
+        seed: chapter * 101 + i * 13.7,
+      };
+    });
+  }
+
   function makeSideEnemies(chapter) {
+    return makeSideEnemiesForArea(sideAreaIdForChapter(chapter), chapter);
+  }
+
+  function makeSidePickupsForArea(areaId, chapter = 0) {
+    const area = sideAreaById(areaId);
+    const definitions = area?.pickups;
+    const rules = SIDE_CHAPTER_RULES[chapter] || SIDE_CHAPTER_RULES[0];
+    const entries = Array.isArray(definitions) && definitions.length
+      ? definitions
+      : rules.pickups;
+    return entries.map((pickup, index) => ({
+      sourceId: pickup.id || `${areaId}-pickup-${index + 1}`,
+      x: pickup.x,
+      y: Number.isFinite(pickup.y) ? pickup.y : SIDE_GROUND_Y - 34,
+      kind: pickup.kind,
+      amount: pickup.amount,
+      taken: false,
+    }));
+  }
+
+  function legacyMakeSideEnemies(chapter) {
     const rules = SIDE_CHAPTER_RULES[chapter] || SIDE_CHAPTER_RULES[0];
     return rules.enemyXs.map((x, i) => ({
         x,
@@ -740,18 +1187,17 @@
   }
 
   function makeSidePickups(chapter) {
-    const rules = SIDE_CHAPTER_RULES[chapter] || SIDE_CHAPTER_RULES[0];
-    return rules.pickups.map((pickup) => ({
-      x: pickup.x,
-      y: SIDE_GROUND_Y - 34,
-      kind: pickup.kind,
-      taken: false,
-    }));
+    return makeSidePickupsForArea(sideAreaIdForChapter(chapter), chapter);
   }
 
   function makeSideState() {
+    const areaId = sideAreaIdForChapter(0);
+    const area = sideAreaById(areaId);
+    const enemies = makeSideEnemiesForArea(areaId, 0);
+    const pickups = makeSidePickupsForArea(areaId, 0);
     return {
-      width: 2500,
+      areaId,
+      width: area?.width || 2500,
       cameraX: 0,
       player: {
         x: 56,
@@ -764,18 +1210,27 @@
         grounded: true,
         walkDistance: 0,
       },
-      enemies: makeSideEnemies(0),
+      enemies,
       projectiles: [],
       particles: [],
-      pickups: makeSidePickups(0),
+      pickups,
+      areaStates: {
+        [areaId]: { enemies, pickups },
+      },
+      visitedAreas: [areaId],
+      activeEncounterId: null,
     };
   }
 
   function prepareSideChapter(chapter) {
-    game.side.enemies = makeSideEnemies(chapter);
-    game.side.pickups = makeSidePickups(chapter);
-    game.side.projectiles.length = 0;
-    game.side.particles.length = 0;
+    const areaId = sideAreaIdForChapter(chapter);
+    if (!setCurrentSideArea(areaId, chapter === 0 ? "prologue" : "legacyFpsReturn", true)) {
+      game.side.enemies = makeSideEnemiesForArea(areaId, chapter);
+      game.side.pickups = makeSidePickupsForArea(areaId, chapter);
+      game.side.projectiles.length = 0;
+      game.side.particles.length = 0;
+      game.side.width = 2500;
+    }
   }
 
   function makeFpsMission(index) {
@@ -793,7 +1248,7 @@
     }));
     if (def.boss) {
       enemies.push({
-        x: def.boss[0], y: def.boss[1], hp: 18, maxHp: 18, dead: false, dying: false,
+        x: def.boss[0], y: def.boss[1], hp: 26, maxHp: 26, dead: false, dying: false,
         attack: 0, attackDuration: 0.92, attackCooldown: 0.4, attackHitApplied: false,
         hurtTimer: 0, deathTimer: 0, knockbackX: 0, knockbackY: 0,
         flash: 0, boss: true, spriteIndex: 5, impactMaterial: "armor",
@@ -830,26 +1285,142 @@
   }
 
   function currentSideEnvironmentIndex() {
-    return game.chapter === 0 ? 0 : 2;
+    return currentSideArea()?.environmentIndex ?? (game.chapter === 0 ? 0 : 2);
+  }
+
+  function currentSideArea() {
+    return sideAreaById(game.side.areaId);
   }
 
   function currentSideRules() {
+    const area = currentSideArea();
+    if (area) {
+      return {
+        minX: area.minX ?? 6,
+        maxX: area.maxX ?? area.width - 21,
+        cameraMinX: area.cameraMinX ?? 0,
+        enemyXs: (area.enemies || []).map((enemy) => enemy.x),
+        pickups: area.pickups || [],
+      };
+    }
     return SIDE_CHAPTER_RULES[game.chapter] || SIDE_CHAPTER_RULES[0];
   }
 
   function currentSidePlatforms() {
+    const area = currentSideArea();
+    if (area) return area.platforms || [];
     return SIDE_PLATFORM_LAYOUTS[game.chapter] || SIDE_PLATFORM_LAYOUTS[0];
   }
 
   function currentSideSurfaces() {
+    const area = currentSideArea();
+    const groundSegments = area?.groundSegments?.length
+      ? area.groundSegments
+      : [{ x: 0, y: SIDE_GROUND_Y, w: game.side.width, h: SIDE_GROUND_DEPTH, ground: true }];
     return [
       ...currentSidePlatforms(),
-      { x: 0, y: SIDE_GROUND_Y, w: game.side.width, h: SIDE_GROUND_DEPTH, ground: true },
+      ...groundSegments.map((ground) => ({ ...ground, ground: true })),
     ].sort((a, b) => a.y - b.y);
   }
 
   function currentSideEntrance() {
+    const area = currentSideArea();
+    if (area?.portals?.length) {
+      return area.portals.find((portal) =>
+        portal.type === "fps"
+        && Number(portal.mission) === game.chapter)
+        || area.portals.find((portal) => portal.type === "side")
+        || area.portals.find((portal) => portal.type === "fps" && Number.isFinite(Number(portal.mission)))
+        || area.portals[0];
+    }
     return SIDE_ENTRANCES[game.chapter] || SIDE_ENTRANCES[0];
+  }
+
+  function currentSidePortals() {
+    return (currentSideArea()?.portals || [currentSideEntrance()])
+      .filter((portal) => !["disabled", "legacyOnly"].includes(portal.state));
+  }
+
+  function sideEncounterComplete(encounterId) {
+    if (!encounterId) return true;
+    for (const [areaId, area] of Object.entries(window.KageLevels?.areas || {})) {
+      const definesEncounter = area.encounters?.some((entry) => entry.id === encounterId)
+        || area.enemies?.some((enemy) => enemy.encounterId === encounterId);
+      if (!definesEncounter) continue;
+      const runtime = game.side.areaStates?.[areaId];
+      const enemy = runtime?.enemies?.find((entry) =>
+        entry.encounterId === encounterId || entry.sourceId === encounterId);
+      return Boolean(enemy && (enemy.dead || enemy.dying || enemy.hp <= 0));
+    }
+    return false;
+  }
+
+  function sidePortalLockMessage(portal) {
+    if (
+      portal.destination?.areaId === "castle-lower-court"
+      && game.seals < 1
+    ) {
+      return "LA ROUTE DU CHÂTEAU EST SCELLÉE PAR LE PREMIER FOYER";
+    }
+    if (portal.unlockEncounterId && !sideEncounterComplete(portal.unlockEncounterId)) {
+      return "AKA-USHI GARDE LA ROUTE — ABATTEZ LE BOSS MASSIF";
+    }
+    return "";
+  }
+
+  function currentSideMassiveEncounter() {
+    return currentSideArea()?.encounters?.find((entry) => entry.kind === "massiveBoss")
+      || null;
+  }
+
+  function currentSideMassiveBoss(encounter = currentSideMassiveEncounter()) {
+    if (!encounter) return null;
+    return game.side.enemies.find((enemy) =>
+      enemy.encounterId === encounter.id || enemy.profileId === encounter.profileId)
+      || null;
+  }
+
+  function updateSideEncounterLock() {
+    const encounter = currentSideMassiveEncounter();
+    const boss = currentSideMassiveBoss(encounter);
+    if (!encounter || !boss || !isEnemyAlive(boss)) {
+      game.side.activeEncounterId = null;
+      return null;
+    }
+    const playerCenter = game.side.player.x + game.side.player.w / 2;
+    if (
+      game.side.activeEncounterId === encounter.id
+      || playerCenter >= (encounter.activationX ?? encounter.bounds?.x ?? Infinity)
+    ) {
+      game.side.activeEncounterId = encounter.id;
+      const bounds = encounter.bounds;
+      if (bounds) {
+        game.side.player.x = clamp(
+          game.side.player.x,
+          bounds.x + 14,
+          bounds.x + bounds.w - game.side.player.w - 14,
+        );
+      }
+      return encounter;
+    }
+    return null;
+  }
+
+  function sidePortalDistance(portal) {
+    const p = game.side.player;
+    return Math.abs(p.x + p.w / 2 - portal.x);
+  }
+
+  function nearestSidePortal(rangeScale = 1) {
+    if (game.mode !== "side") return null;
+    const p = game.side.player;
+    const feetY = p.y + p.h;
+    if (Math.abs(feetY - SIDE_GROUND_Y) > 12) return null;
+    return currentSidePortals()
+      .filter((portal) =>
+        sidePortalDistance(portal) <= (portal.interactionRange || 52) * rangeScale)
+      .sort((a, b) => sidePortalDistance(a) - sidePortalDistance(b))[0]
+      || null;
   }
 
   function isNearSideEntrance(rangeScale = 1) {
@@ -860,6 +1431,84 @@
     const feetY = p.y + p.h;
     return Math.abs(centerX - entrance.x) <= entrance.interactionRange * rangeScale
       && Math.abs(feetY - SIDE_GROUND_Y) <= 12;
+  }
+
+  function setCurrentSideArea(areaId, spawnId, resetProjectiles = false) {
+    const targetArea = sideAreaById(areaId);
+    if (!targetArea) return false;
+    const side = game.side;
+    if (side.areaId && side.enemies && side.pickups) {
+      side.areaStates[side.areaId] = {
+        enemies: side.enemies,
+        pickups: side.pickups,
+      };
+    }
+    if (!side.areaStates[areaId]) {
+      side.areaStates[areaId] = {
+        enemies: makeSideEnemiesForArea(areaId, targetArea.chapterId === "castle" ? 1 : 0),
+        pickups: makeSidePickupsForArea(areaId, targetArea.chapterId === "castle" ? 1 : 0),
+      };
+    }
+    const runtime = side.areaStates[areaId];
+    side.areaId = areaId;
+    side.width = targetArea.width || 2500;
+    side.enemies = runtime.enemies;
+    side.pickups = runtime.pickups;
+    side.activeEncounterId = null;
+    if (!side.visitedAreas.includes(areaId)) side.visitedAreas.push(areaId);
+    const spawn = targetArea.spawns?.[spawnId]
+      || Object.values(targetArea.spawns || {})[0]
+      || { x: 56, y: SIDE_GROUND_Y - side.player.h, facing: 1 };
+    Object.assign(side.player, {
+      x: spawn.x,
+      y: Number.isFinite(spawn.y) ? spawn.y : SIDE_GROUND_Y - side.player.h,
+      vx: 0,
+      vy: 0,
+      facing: spawn.facing || 1,
+      grounded: true,
+      walkDistance: 0,
+    });
+    side.cameraX = clamp(
+      side.player.x - W * 0.32,
+      targetArea.cameraMinX || 0,
+      Math.max(targetArea.cameraMinX || 0, side.width - W),
+    );
+    if (resetProjectiles) {
+      side.projectiles.length = 0;
+      side.particles.length = 0;
+    }
+    applyRosterToGame(game);
+    return true;
+  }
+
+  function queueSideTravel(destination, label = "PASSAGE VERS UN AUTRE PLAN") {
+    if (!destination?.areaId || !sideAreaById(destination.areaId)) return false;
+    input.keys.clear();
+    game.side.player.vx = 0;
+    game.side.player.vy = 0;
+    game.pendingTravel = {
+      type: "side",
+      areaId: destination.areaId,
+      spawnId: destination.spawnId,
+      swapped: false,
+    };
+    game.transition = 0.85;
+    game.transitionLabel = label;
+    game.invulnerable = Math.max(game.invulnerable, 1);
+    playAudio("playTransition", "2d");
+    return true;
+  }
+
+  function applyPendingTravel() {
+    if (!game.pendingTravel || game.pendingTravel.swapped) return false;
+    const travel = game.pendingTravel;
+    travel.swapped = true;
+    if (travel.type === "side") {
+      setCurrentSideArea(travel.areaId, travel.spawnId, true);
+      const area = currentSideArea();
+      announce(`${String(area?.label || "NOUVELLE ZONE").toUpperCase()} — PLAN PROFOND`);
+    }
+    return true;
   }
 
   function isEnemyAlive(enemy) {
@@ -878,7 +1527,9 @@
   }
 
   function showOnly(screen) {
-    [dom.title, dom.briefing, dom.pause, dom.end].forEach((el) => el.classList.toggle("active", el === screen));
+    [dom.title, dom.briefing, dom.dojo, dom.pause, dom.end]
+      .filter(Boolean)
+      .forEach((el) => el.classList.toggle("active", el === screen));
   }
 
   function showBriefing() {
@@ -888,7 +1539,12 @@
   }
 
   async function startGame() {
-    game = createGameState();
+    const selectedLoadout = normalizePlayerLoadout(
+      window.KageLoadout?.getCurrentLoadout?.()
+      || window.KageSave?.getLoadout?.()
+      || game?.loadout,
+    );
+    game = createGameState(selectedLoadout);
     applyRosterToGame(game);
     game.status = "playing";
     game.startedAt = performance.now();
@@ -929,6 +1585,41 @@
     }
   }
 
+  function openLoadout() {
+    if (!dom.dojo || game.status === "dying" || game.status === "ended") return false;
+    if (game.status === "loadout") return true;
+    game.loadoutReturnStatus = game.status === "playing"
+      ? "playing"
+      : (game.status === "paused" ? "paused" : "briefing");
+    game.status = "loadout";
+    document.body.dataset.state = "loadout";
+    showOnly(dom.dojo);
+    document.exitPointerLock?.();
+    try { window.KageLoadout?.open?.(game.loadout); } catch (_) { /* UI facultative */ }
+    return true;
+  }
+
+  function closeLoadout() {
+    if (game.status !== "loadout") return false;
+    const returnStatus = game.loadoutReturnStatus || "briefing";
+    if (returnStatus === "playing") {
+      game.status = "playing";
+      document.body.dataset.state = "playing";
+      showOnly(null);
+      lastTime = performance.now();
+      canvas.focus();
+    } else if (returnStatus === "paused") {
+      game.status = "paused";
+      document.body.dataset.state = "paused";
+      showOnly(dom.pause);
+    } else {
+      game.status = "briefing";
+      document.body.dataset.state = "briefing";
+      showOnly(dom.briefing);
+    }
+    return true;
+  }
+
   function announce(text) {
     dom.announce.textContent = text;
     dom.announce.classList.remove("show");
@@ -945,8 +1636,21 @@
     const previousAttackTimer = game.attackTimer;
     game.attackTimer = Math.max(0, game.attackTimer - dt);
     game.attackCooldown = Math.max(0, game.attackCooldown - dt);
+    game.rangedViewTimer = Math.max(0, game.rangedViewTimer - dt);
     game.shake = Math.max(0, game.shake - dt * 22);
+    const previousTransition = game.transition;
     game.transition = Math.max(0, game.transition - dt);
+    if (
+      game.pendingTravel
+      && !game.pendingTravel.swapped
+      && previousTransition > 0.425
+      && game.transition <= 0.425
+    ) {
+      applyPendingTravel();
+    }
+    if (game.pendingTravel?.swapped && game.transition <= 0) {
+      game.pendingTravel = null;
+    }
     if (game.hitStop > 0) {
       game.hitStop -= dt;
       return;
@@ -955,7 +1659,7 @@
     if (
       previousAttackTimer > 0
       && !game.attackHitApplied
-      && 1 - game.attackTimer / PLAYER_ATTACK_DURATION >= PLAYER_ATTACK_ACTIVE_AT
+      && 1 - game.attackTimer / Math.max(0.01, game.attackDuration) >= PLAYER_ATTACK_ACTIVE_AT
     ) {
       resolvePlayerAttack();
     }
@@ -1000,10 +1704,15 @@
       Math.min(chapterRules.maxX, side.width - p.w - 6),
     );
     const entrance = currentSideEntrance();
-    if (entrance.collision === "solidDoor" && p.x > entrance.blockX) {
+    if (
+      entrance.collision === "solidDoor"
+      && Number.isFinite(entrance.blockX)
+      && p.x > entrance.blockX
+    ) {
       p.x = entrance.blockX;
       if (p.vx > 0) p.vx = 0;
     }
+    const activeEncounter = updateSideEncounterLock();
     const previousBottom = p.y + p.h;
     p.vy += 590 * dt;
     p.y += p.vy * dt;
@@ -1034,14 +1743,65 @@
     updateSideProjectiles(dt);
     updateSidePickups();
     updateParticles(side.particles, dt);
+    const cameraMin = activeEncounter?.bounds
+      ? Math.max(chapterRules.cameraMinX, activeEncounter.bounds.x)
+      : chapterRules.cameraMinX;
+    const cameraMax = activeEncounter?.bounds
+      ? Math.min(side.width - W, activeEncounter.bounds.x + activeEncounter.bounds.w - W)
+      : side.width - W;
     side.cameraX = clamp(
       approach(side.cameraX, p.x - W * 0.32, 520 * dt),
-      chapterRules.cameraMinX,
-      side.width - W,
+      cameraMin,
+      Math.max(cameraMin, cameraMax),
     );
   }
 
+  function updateMassiveEnemyPhase(enemy, particles, mode) {
+    if (
+      !isMassiveEnemy(enemy)
+      || enemy.maxHp <= 0
+      || enemy.hp / enemy.maxHp > 0.5
+      || (enemy.massivePhase || 1) !== 1
+    ) return false;
+    enemy.massivePhase = 2;
+    enemy.detachablePartAttached = false;
+    enemy.attack = 0;
+    enemy.attackCooldown = 0.45;
+    game.shake = Math.max(game.shake, 12);
+    announce("AKA-USHI BRISE SON JOUG — PHASE DE FURIE");
+    const screen = mode === "fps";
+    const originX = screen ? W / 2 : enemy.x + enemy.w / 2;
+    const originY = screen ? H * 0.46 : enemy.y + enemy.h * 0.42;
+    for (let index = 0; index < 18; index += 1) {
+      particles.push({
+        x: originX + (index % 6 - 2.5) * (screen ? 12 : 5),
+        y: originY + Math.floor(index / 6) * (screen ? 8 : 4),
+        vx: (index % 6 - 2.5) * (screen ? 18 : 12),
+        vy: -35 - Math.floor(index / 6) * 12,
+        gravity: 120,
+        drag: 0.96,
+        life: 0.45 + index % 3 * 0.08,
+        max: 0.62,
+        color: index % 2 ? "#d6b66b" : "#817268",
+        screen,
+        kind: "spark",
+      });
+    }
+    return true;
+  }
+
   function sideEnemyCombatProfile(enemy) {
+    if (isMassiveEnemy(enemy)) {
+      const enraged = (enemy.massivePhase || 1) >= 2;
+      return {
+        speed: enraged ? 43 : 31,
+        damage: enraged ? 25 : 20,
+        attackDuration: enraged ? 0.72 : 0.98,
+        activeAt: enraged ? 0.46 : 0.61,
+        recovery: enraged ? 0.5 : 0.84,
+        reach: enraged ? 92 : 82,
+      };
+    }
     const elite = enemy.maxHp >= 3;
     return {
       speed: elite ? 22 : 29,
@@ -1075,6 +1835,7 @@
       enemy.flash = Math.max(0, enemy.flash - dt);
       enemy.hurtTimer = Math.max(0, enemy.hurtTimer - dt);
       enemy.attackCooldown = Math.max(0, enemy.attackCooldown - dt);
+      updateMassiveEnemyPhase(enemy, game.side.particles, "side");
       enemy.knockbackVx = approach(enemy.knockbackVx, 0, 420 * dt);
       if (Math.abs(enemy.knockbackVx) > 0.1) {
         const rules = currentSideRules();
@@ -1103,7 +1864,8 @@
         if (!enemy.attackHitApplied && progress >= profile.activeAt) {
           enemy.attackHitApplied = true;
           const dx = p.x + p.w / 2 - (enemy.x + enemy.w / 2);
-          if (Math.abs(dx) <= profile.reach + 6 && Math.abs(p.y - enemy.y) < 55) {
+          const feetGap = Math.abs((p.y + p.h) - (enemy.y + enemy.h));
+          if (Math.abs(dx) <= profile.reach + 6 && feetGap < 55) {
             const damaged = damagePlayer(profile.damage, {
               mode: "side",
               direction: Math.sign(dx) || enemy.facing,
@@ -1114,8 +1876,9 @@
         continue;
       }
 
-      const dx = p.x - enemy.x;
-      if (Math.abs(dx) < 190 && Math.abs(p.y - enemy.y) < 55) {
+      const dx = p.x + p.w / 2 - (enemy.x + enemy.w / 2);
+      const feetGap = Math.abs((p.y + p.h) - (enemy.y + enemy.h));
+      if (Math.abs(dx) < (isMassiveEnemy(enemy) ? 260 : 190) && feetGap < 55) {
         enemy.facing = Math.sign(dx) || enemy.facing;
         if (Math.abs(dx) > profile.reach) {
           const candidateX = enemy.x + enemy.facing * profile.speed * dt;
@@ -1137,9 +1900,13 @@
       projectile.life -= dt;
       for (const enemy of side.enemies) {
         if (!isEnemyAlive(enemy) || projectile.dead) continue;
-        if (Math.abs(projectile.x - (enemy.x + enemy.w / 2)) < 13 && Math.abs(projectile.y - (enemy.y + 10)) < 19) {
+        const horizontalHit = Math.abs(projectile.x - (enemy.x + enemy.w / 2))
+          < enemy.w / 2 + 13;
+        const verticalHit = projectile.y >= enemy.y - 10
+          && projectile.y <= enemy.y + enemy.h + 10;
+        if (horizontalHit && verticalHit) {
           projectile.dead = true;
-          hitEnemy(enemy, 3, "side");
+          hitEnemy(enemy, projectile.damage || 3, "side");
         }
       }
     }
@@ -1151,11 +1918,35 @@
     for (const item of game.side.pickups) {
       if (!item.taken && Math.abs(item.x - (p.x + p.w / 2)) < 20 && Math.abs(item.y - p.y) < 36) {
         item.taken = true;
-        if (item.kind === "ammo") game.ammo = Math.min(12, game.ammo + 4);
-        else game.health = Math.min(100, game.health + 28);
+        let pickupMessage = "DÉCOCTION DE YOMOGI +28";
+        if (item.kind === "ammo") {
+          const rangedWeapon = currentRangedWeapon();
+          const ammoType = rangedAmmoType(rangedWeapon);
+          game.ammo = Math.min(
+            rangedAmmoCapacity(rangedWeapon),
+            game.ammo + (item.amount || 4),
+          );
+          game.ammoByType[ammoType] = game.ammo;
+          persistAmmoMap();
+          pickupMessage = `PROJECTILES +${item.amount || 4}`;
+        } else if (["tamahagane", "yomiAsh"].includes(item.kind)) {
+          const profile = window.KageSave?.load?.();
+          if (profile?.currencies) {
+            profile.currencies[item.kind] = Math.max(
+              0,
+              Number(profile.currencies[item.kind] || 0) + (item.amount || 1),
+            );
+            window.KageSave.save(profile);
+          }
+          pickupMessage = item.kind === "tamahagane"
+            ? "TAMAHAGANE RÉCUPÉRÉ"
+            : "CENDRE DE YOMI RÉCUPÉRÉE";
+        } else {
+          game.health = Math.min(100, game.health + (item.amount || 28));
+        }
         game.score += 100;
         playAudio("playPickup");
-        announce(item.kind === "ammo" ? "OFUDA CONSACRÉS +4" : "DÉCOCTION DE YOMOGI +28");
+        announce(pickupMessage);
       }
     }
   }
@@ -1218,7 +2009,7 @@
   }
 
   function fpsEnemyRadius(enemy) {
-    if (enemy?.modularEntry?.category === "giant") return 0.56;
+    if (isMassiveEnemy(enemy)) return 0.62;
     return enemy?.boss ? 0.4 : 0.28;
   }
 
@@ -1328,6 +2119,17 @@
   }
 
   function fpsEnemyCombatProfile(enemy) {
+    if (isMassiveEnemy(enemy)) {
+      const enraged = (enemy.massivePhase || 1) >= 2;
+      return {
+        speed: enraged ? 0.84 : 0.58,
+        damage: enraged ? 25 : 21,
+        attackDuration: enraged ? 0.76 : 1.04,
+        activeAt: enraged ? 0.5 : 0.62,
+        recovery: enraged ? 0.54 : 0.9,
+        reach: enraged ? 1.14 : 1.06,
+      };
+    }
     if (enemy.boss) {
       return {
         speed: 0.7,
@@ -1357,6 +2159,7 @@
       enemy.attackCooldown = Math.max(0, enemy.attackCooldown - dt);
       enemy.knockbackX = approach(enemy.knockbackX, 0, 2.8 * dt);
       enemy.knockbackY = approach(enemy.knockbackY, 0, 2.8 * dt);
+      updateMassiveEnemyPhase(enemy, mission.particles, "fps");
       if (Math.hypot(enemy.knockbackX, enemy.knockbackY) > 0.01) {
         const nx = enemy.x + enemy.knockbackX * dt;
         const ny = enemy.y + enemy.knockbackY * dt;
@@ -1446,29 +2249,79 @@
       || game.transition > 0.05
       || game.playerStagger > 0
     ) return;
-    game.attackCooldown = 0.4;
-    game.attackTimer = PLAYER_ATTACK_DURATION;
+    const spec = playerAttackSpec();
+    if (game.stamina < spec.staminaCost) {
+      announce("KI INSUFFISANT");
+      return;
+    }
+    game.stamina = Math.max(0, game.stamina - spec.staminaCost);
+    game.attackDuration = spec.duration;
+    game.attackCooldown = spec.cooldown;
+    game.attackTimer = spec.duration;
     game.attackHitApplied = false;
     playAudio("playKatana");
+  }
+
+  function weaponDamageAgainst(enemy, spec) {
+    let damage = spec.damage;
+    const material = enemy.impactMaterial || impactMaterialForEntry(enemy.modularEntry, enemy);
+    const materialMultiplier = material === "armor"
+      ? spec.stats.armor
+      : (material === "spirit" ? spec.stats.spirit : spec.stats.flesh);
+    damage *= materialMultiplier;
+    if (enemy.boss || isMassiveEnemy(enemy)) damage *= spec.stats.boss;
+    if (material === "armor") damage += spec.armorBonus;
+    const passiveText = `${spec.weapon?.passive?.id || ""} ${spec.weapon?.passive?.effect || ""}`.toLowerCase();
+    if (material === "spirit" && /spirit|yomi|purif/.test(passiveText)) damage += 1;
+    return Math.max(1, Math.round(damage));
+  }
+
+  function applyPlayerWeaponPassive(enemy, spec) {
+    const passiveText = `${spec.weapon?.passive?.id || ""} ${spec.weapon?.passive?.effect || ""}`.toLowerCase();
+    if (/stun|étour|posture/.test(passiveText) && enemy.hp > 0) {
+      enemy.hurtTimer = Math.max(enemy.hurtTimer, 0.48);
+    }
+    if (/pull|entrave|capture/.test(passiveText) && enemy.hp > 0 && !isMassiveEnemy(enemy)) {
+      if (game.mode === "side") {
+        enemy.knockbackVx = -Math.sign(enemy.x - game.side.player.x || 1) * 72;
+      } else {
+        const player = currentMission().player;
+        const dx = player.x - enemy.x;
+        const dy = player.y - enemy.y;
+        const length = Math.max(0.01, Math.hypot(dx, dy));
+        enemy.knockbackX = dx / length * 0.72;
+        enemy.knockbackY = dy / length * 0.72;
+      }
+    }
   }
 
   function resolvePlayerAttack() {
     if (game.attackHitApplied || game.status !== "playing") return;
     game.attackHitApplied = true;
+    const spec = playerAttackSpec();
     if (game.mode === "side") {
       const p = game.side.player;
       const targets = game.side.enemies
-        .filter((e) => isEnemyAlive(e) && Math.abs((e.x + e.w / 2) - (p.x + p.w / 2)) < 47 && Math.abs(e.y - p.y) < 42)
+        .filter((e) =>
+          isEnemyAlive(e)
+          && Math.abs((e.x + e.w / 2) - (p.x + p.w / 2)) < spec.sideReach
+          && Math.abs((e.y + e.h) - (p.y + p.h)) < 46)
         .filter((e) => Math.sign(e.x - p.x) === p.facing || Math.abs(e.x - p.x) < 16)
         .sort((a, b) => Math.abs(a.x - p.x) - Math.abs(b.x - p.x));
-      targets.slice(0, 2).forEach((enemy) => hitEnemy(enemy, 2, {
-        mode: "side",
-        direction: p.facing,
-      }));
+      targets.slice(0, spec.targets).forEach((enemy) => {
+        hitEnemy(enemy, weaponDamageAgainst(enemy, spec), {
+          mode: "side",
+          direction: p.facing,
+        });
+        applyPlayerWeaponPassive(enemy, spec);
+      });
     } else {
       const mission = currentMission();
-      const target = nearestFpsTarget(mission, 1.65, 0.48);
-      if (target) hitEnemy(target, target.boss ? 2 : 3, { mode: "fps" });
+      const target = nearestFpsTarget(mission, spec.fpsReach, 0.5);
+      if (target) {
+        hitEnemy(target, weaponDamageAgainst(target, spec), { mode: "fps" });
+        applyPlayerWeaponPassive(target, spec);
+      }
     }
   }
 
@@ -1480,19 +2333,38 @@
       || game.playerStagger > 0
       || game.ammo <= 0
     ) {
-      if (game.ammo <= 0) announce("PLUS D'OFUDA");
+      if (game.ammo <= 0) announce("PLUS DE PROJECTILES");
       return;
     }
+    const rangedWeapon = currentRangedWeapon();
+    const rangedStats = normalizedWeaponStats(rangedWeapon || {
+      stats: { power: 72, speed: 55, reach: 80, control: 72 },
+    });
+    const rangedDamage = clamp(Math.round(1 + rangedStats.power / 32), 2, 5);
     game.ammo -= 1;
-    game.attackCooldown = 0.5;
+    game.ammoByType[rangedAmmoType(rangedWeapon)] = game.ammo;
+    persistAmmoMap();
+    game.attackCooldown = clamp(0.72 - rangedStats.speed * 0.0045, 0.28, 0.68);
+    game.rangedViewTimer = 0.2;
+    game.lastRangedWeaponId = rangedWeapon?.id || "ofuda-purification";
     playAudio("playShot");
     if (game.mode === "side") {
       const p = game.side.player;
-      game.side.projectiles.push({ x: p.x + p.w / 2 + p.facing * 10, y: p.y + 9, vx: p.facing * 330, life: 1.8, dead: false });
+      game.side.projectiles.push({
+        x: p.x + p.w / 2 + p.facing * 10,
+        y: p.y + 9,
+        vx: p.facing * (300 + rangedStats.speed * 0.8),
+        life: 1.8,
+        dead: false,
+        damage: rangedDamage,
+        weaponId: rangedWeapon?.id || "ofuda-purification",
+      });
     } else {
       const mission = currentMission();
-      const target = nearestFpsTarget(mission, 12, 0.15);
-      if (target) hitEnemy(target, target.boss ? 3 : 4, { mode: "fps", ranged: true });
+      const maxDistance = 6 + rangedStats.reach * 0.1;
+      const maxAngle = 0.09 + rangedStats.control * 0.0011;
+      const target = nearestFpsTarget(mission, maxDistance, maxAngle);
+      if (target) hitEnemy(target, rangedDamage, { mode: "fps", ranged: true });
       mission.particles.push({
         x: W / 2,
         y: H / 2,
@@ -1524,8 +2396,8 @@
     const dy = enemy.y - p.y;
     const distance = Math.max(0.2, Math.hypot(dx, dy));
     const relativeAngle = normalizeAngle(Math.atan2(dy, dx) - p.angle);
-    const giantBoss = enemy.modularEntry?.category === "giant";
-    const worldHeight = giantBoss ? 1.7 : (enemy.boss ? 1.28 : 0.92);
+    const massiveBoss = isMassiveEnemy(enemy);
+    const worldHeight = massiveBoss ? 1.62 : (enemy.boss ? 1.28 : 0.92);
     const projection = projectFpsEntity(distance, relativeAngle, worldHeight, 1);
     return {
       x: clamp(projection.screenX, 8, W - 8),
@@ -1583,13 +2455,18 @@
     spawnImpactParticles(enemy, material, mode);
     if (mode === "side") {
       const direction = normalized.direction || Math.sign(enemy.x - game.side.player.x) || 1;
-      enemy.knockbackVx = direction * (material === "armor" ? 75 : 125);
+      const knockback = isMassiveEnemy(enemy)
+        ? 12
+        : (material === "armor" ? 75 : 125);
+      enemy.knockbackVx = direction * knockback;
     } else {
       const p = currentMission().player;
       const dx = enemy.x - p.x;
       const dy = enemy.y - p.y;
       const length = Math.max(0.01, Math.hypot(dx, dy));
-      const force = material === "armor" ? 0.7 : 1.15;
+      const force = isMassiveEnemy(enemy)
+        ? 0.12
+        : (material === "armor" ? 0.7 : 1.15);
       enemy.knockbackX = dx / length * force;
       enemy.knockbackY = dy / length * force;
     }
@@ -1602,7 +2479,9 @@
       game.score += enemy.boss ? 1500 : 180;
       if (enemy.boss) {
         const bossName = String(enemy.modularEntry?.name || "LE DAIMYŌ").toUpperCase();
-        announce(`${bossName} TOMBE — PURIFIEZ L'AUTEL`);
+        announce(mode === "side"
+          ? `${bossName} TOMBE — LA ROUTE DU CHÂTEAU EST OUVERTE`
+          : `${bossName} TOMBE — PURIFIEZ L'AUTEL`);
       }
     }
     return true;
@@ -1639,11 +2518,29 @@
   function interact() {
     if (game.status !== "playing") return;
     if (game.mode === "side") {
-      const entrance = currentSideEntrance();
-      if (isNearSideEntrance()) {
-        enterFps(entrance.mission, false);
-      } else {
+      const portal = nearestSidePortal();
+      if (!portal) {
         announce("APPROCHEZ-VOUS DE L'ENTRÉE");
+        return;
+      }
+      const portalType = portal.type
+        || (Number.isFinite(Number(portal.mission)) ? "fps" : "side");
+      if (["side", "return"].includes(portalType)) {
+        const lockMessage = sidePortalLockMessage(portal);
+        if (lockMessage) {
+          announce(lockMessage);
+          return;
+        }
+        queueSideTravel(
+          portal.destination,
+          portalType === "return" ? "RETOUR AU PLAN PRÉCÉDENT" : "PASSAGE EN PROFONDEUR",
+        );
+      } else if (portalType === "fps" && Number.isFinite(Number(portal.mission))) {
+        enterFps(Number(portal.mission), false);
+      } else if (portalType === "fps") {
+        announce("CET INTÉRIEUR SERA OUVERT PAR UNE MISSION SECONDAIRE");
+      } else {
+        announce("CE PASSAGE EST ENCORE CONDAMNÉ");
       }
       return;
     }
@@ -1665,21 +2562,18 @@
       playAudio("playPickup");
       if (game.fps.current === 0) {
         game.chapter = 1;
-        prepareSideChapter(1);
+        if (!setCurrentSideArea("kurokawa-main-street", "fpsReturn", true)) {
+          prepareSideChapter(1);
+        }
         applyRosterToGame(game);
-        game.ammo = Math.min(12, game.ammo + 3);
+        const rangedWeapon = currentRangedWeapon();
+        const ammoType = rangedAmmoType(rangedWeapon);
+        game.ammo = Math.min(rangedAmmoCapacity(rangedWeapon), game.ammo + 3);
+        game.ammoByType[ammoType] = game.ammo;
+        persistAmmoMap();
         game.health = Math.min(100, game.health + 18);
-        Object.assign(game.side.player, {
-          x: 1045,
-          y: SIDE_GROUND_Y - game.side.player.h,
-          vx: 0,
-          vy: 0,
-          facing: 1,
-          grounded: true,
-          walkDistance: 0,
-        });
         returnToSide(true);
-        announce("PREMIER SCEAU POSÉ — LE DONJON VOUS ATTEND");
+        announce("PREMIER SCEAU POSÉ — PASSEZ PAR LES RUELLES ET LE MARCHÉ");
       } else {
         finishGame(true);
       }
@@ -1689,7 +2583,7 @@
   function switchMode() {
     if (game.status !== "playing" || game.transition > 0.25) return;
     if (game.mode === "side") {
-      if (isNearSideEntrance()) interact();
+      if (nearestSidePortal()) interact();
       else announce("APPROCHEZ D'UNE ENTRÉE ET APPUYEZ SUR E");
       return;
     }
@@ -1787,12 +2681,13 @@
     ctx.translate(-cam, 0);
     drawVillage(side);
     drawSideEntranceWorld();
+    drawActiveSideEncounterBarriers();
     // Les supports jouables (charrette, tonneaux, paille, escalier) vivent
     // dans le même plan que les acteurs, mais passent derrière leurs pieds.
     drawModularWorldProps("world");
     for (const platform of currentSidePlatforms()) drawPlatform(platform);
     for (const item of side.pickups) if (!item.taken) drawPickup(item);
-    for (const projectile of side.projectiles) drawOfuda(projectile.x, projectile.y, Math.sign(projectile.vx));
+    for (const projectile of side.projectiles) drawPlayerProjectile(projectile);
     for (const enemy of side.enemies) if (isEnemyVisible(enemy)) drawZombie2d(enemy);
     drawSamurai2d(side.player);
     drawModularWorldProps("front");
@@ -1800,6 +2695,7 @@
     ctx.restore();
 
     drawSideEntrancePrompt(cam);
+    drawSideMiniMap();
     drawHitConfirm(cam);
     const gateX = currentSideEntrance().x;
     const sx = gateX - cam;
@@ -1811,27 +2707,117 @@
     }
   }
 
-  function drawSideEntranceWorld() {
-    const entrance = currentSideEntrance();
-    const image = bitmapAssets.sideEntrances[game.chapter];
-    const width = game.chapter === 0 ? 166 : 214;
-    const near = isNearSideEntrance(1.18);
+  function drawSideMiniMap() {
+    const graph = window.KageLevels?.mapGraph;
+    if (!graph?.nodes?.length) return;
+    const visited = new Set(game.side.visitedAreas || []);
+    const activeId = game.side.areaId;
+    const ox = W - 128;
+    const oy = 58;
+    const scaleX = 30;
+    const scaleY = 22;
     ctx.save();
-    if (near) {
-      ctx.shadowColor = game.chapter === 0
-        ? "rgba(121, 215, 158, .8)"
-        : "rgba(222, 174, 93, .78)";
-      ctx.shadowBlur = 14;
+    ctx.globalAlpha = 0.84;
+    ctx.fillStyle = "rgba(4, 6, 9, .82)";
+    ctx.fillRect(ox - 9, oy - 12, 126, 58);
+    ctx.strokeStyle = "rgba(231, 207, 145, .34)";
+    ctx.strokeRect(ox - 8.5, oy - 11.5, 125, 57);
+    const nodeById = new Map(graph.nodes.map((node) => [node.id, node]));
+    for (const edge of graph.edges || []) {
+      const from = nodeById.get(edge.from);
+      const to = nodeById.get(edge.to);
+      if (!from || !to || (!visited.has(from.id) && !visited.has(to.id))) continue;
+      ctx.strokeStyle = edge.kind === "side" ? "#7a6955" : "#4c4142";
+      ctx.beginPath();
+      ctx.moveTo(ox + from.mapX * scaleX, oy + from.mapY * scaleY);
+      ctx.lineTo(ox + to.mapX * scaleX, oy + to.mapY * scaleY);
+      ctx.stroke();
     }
-    if (!drawGroundedWorldSprite(image, entrance.x - width / 2, SIDE_GROUND_Y, width)) {
-      drawTorii(entrance.x, game.chapter === 0 ? 185 : 174, game.chapter !== 0);
+    for (const node of graph.nodes) {
+      const x = ox + node.mapX * scaleX;
+      const y = oy + node.mapY * scaleY;
+      ctx.fillStyle = node.id === activeId
+        ? "#d84942"
+        : (visited.has(node.id) ? "#d8bf82" : "#302d31");
+      const size = node.kind === "outdoor" ? 7 : 6;
+      ctx.fillRect(Math.round(x - size / 2), Math.round(y - size / 2), size, size);
     }
+    ctx.fillStyle = "#d8c89e";
+    ctx.font = "bold 6px monospace";
+    ctx.textAlign = "left";
+    ctx.fillText("PLAN DES RUES", ox - 2, oy + 40);
     ctx.restore();
   }
 
+  function drawSideEntranceWorld() {
+    const objective = currentSideEntrance();
+    for (const portal of currentSidePortals()) {
+      const objectiveFpsPortal = portal === objective
+        && portal.type === "fps"
+        && Number.isFinite(Number(portal.mission));
+      const image = objectiveFpsPortal
+        ? bitmapAssets.sideEntrances[game.chapter]
+        : bitmapAssets.depthPortals[portal.visual || "passage-ruelle"];
+      const width = objectiveFpsPortal
+        ? (game.chapter === 0 ? 166 : 214)
+        : ({
+            "passage-ruelle": 72,
+            "porte-minka": 94,
+            "entree-machiya-noren": 94,
+            "porte-kura": 112,
+            "porte-palissade": 84,
+            "porte-laquee": 104,
+            "porte-chateau": 116,
+            "porte-sanctuaire": 92,
+          }[portal.visual] || 88);
+      const near = nearestSidePortal(1.18) === portal;
+      ctx.save();
+      if (near) {
+        ctx.shadowColor = portal.type === "fps"
+          ? "rgba(121, 215, 158, .82)"
+          : "rgba(222, 174, 93, .82)";
+        ctx.shadowBlur = 14;
+      }
+      if (!drawGroundedWorldSprite(image, portal.x - width / 2, SIDE_GROUND_Y, width)) {
+        if (objectiveFpsPortal) {
+          drawTorii(portal.x, game.chapter === 0 ? 185 : 174, game.chapter !== 0);
+        } else {
+          ctx.fillStyle = "#171319";
+          ctx.fillRect(portal.x - 24, SIDE_GROUND_Y - 58, 48, 58);
+          ctx.strokeStyle = "#7e5b3b";
+          ctx.strokeRect(portal.x - 23.5, SIDE_GROUND_Y - 57.5, 47, 57);
+        }
+      }
+      ctx.restore();
+    }
+  }
+
+  function drawActiveSideEncounterBarriers() {
+    const encounter = currentSideMassiveEncounter();
+    if (!encounter?.bounds || game.side.activeEncounterId !== encounter.id) return;
+    const boss = currentSideMassiveBoss(encounter);
+    if (!isEnemyAlive(boss)) return;
+    const positions = [
+      encounter.bounds.x + 4,
+      encounter.bounds.x + encounter.bounds.w - 18,
+    ];
+    for (const x of positions) {
+      ctx.save();
+      ctx.fillStyle = "#25171a";
+      ctx.fillRect(x, SIDE_GROUND_Y - 132, 14, 132);
+      ctx.fillStyle = "#7b382f";
+      for (let y = SIDE_GROUND_Y - 128; y < SIDE_GROUND_Y; y += 20) {
+        ctx.fillRect(x - 4, y, 22, 5);
+      }
+      ctx.fillStyle = "#d58a43";
+      ctx.fillRect(x + 5, SIDE_GROUND_Y - 132, 4, 132);
+      ctx.restore();
+    }
+  }
+
   function drawSideEntrancePrompt(cam) {
-    if (!isNearSideEntrance()) return;
-    const entrance = currentSideEntrance();
+    const entrance = nearestSidePortal();
+    if (!entrance) return;
     const screenX = entrance.x - cam;
     if (screenX < 18 || screenX > W - 18) return;
     const panelWidth = 230;
@@ -1843,7 +2829,7 @@
     ctx.textAlign = "center";
     ctx.fillStyle = "#f0d9a4";
     ctx.font = "bold 9px monospace";
-    ctx.fillText(entrance.label, screenX, panelY + 14);
+    ctx.fillText(String(entrance.label || "PASSAGE").toUpperCase(), screenX, panelY + 14);
     ctx.fillStyle = "#fff0b5";
     ctx.font = "bold 10px monospace";
     ctx.fillText(entrance.prompt, screenX, panelY + 28);
@@ -1935,6 +2921,7 @@
   }
 
   const opaqueBoundsCache = new WeakMap();
+  const opaqueAnimationFrameBoundsCache = new WeakMap();
 
   function opaqueBoundsForImage(image) {
     if (!bitmapReady(image)) return null;
@@ -1982,6 +2969,82 @@
       // petit crop de secours retire quand même la bordure des exports.
     }
     opaqueBoundsCache.set(image, bounds);
+    return bounds;
+  }
+
+  function opaqueAnimationFrameBounds(animationSet, animation, frame) {
+    const image = animationSet && animationSet[animation];
+    if (!bitmapReady(image)) return null;
+    let imageCache = opaqueAnimationFrameBoundsCache.get(image);
+    if (!imageCache) {
+      imageCache = new Map();
+      opaqueAnimationFrameBoundsCache.set(image, imageCache);
+    }
+    const normalizedFrame = Math.floor(frame % 6);
+    if (imageCache.has(normalizedFrame)) return imageCache.get(normalizedFrame);
+    const sourceX = Math.round(normalizedFrame * image.naturalWidth / 6);
+    const sourceRight = Math.round((normalizedFrame + 1) * image.naturalWidth / 6);
+    const frameWidth = Math.max(1, sourceRight - sourceX);
+    const fallback = {
+      x: sourceX,
+      y: 0,
+      w: frameWidth,
+      h: image.naturalHeight,
+    };
+    let bounds = fallback;
+    try {
+      const scale = Math.min(1, 256 / Math.max(frameWidth, image.naturalHeight));
+      const sampleWidth = Math.max(1, Math.round(frameWidth * scale));
+      const sampleHeight = Math.max(1, Math.round(image.naturalHeight * scale));
+      const sampler = document.createElement("canvas");
+      sampler.width = sampleWidth;
+      sampler.height = sampleHeight;
+      const samplerCtx = sampler.getContext("2d", { willReadFrequently: true });
+      samplerCtx.imageSmoothingEnabled = false;
+      samplerCtx.drawImage(
+        image,
+        sourceX,
+        0,
+        frameWidth,
+        image.naturalHeight,
+        0,
+        0,
+        sampleWidth,
+        sampleHeight,
+      );
+      const pixels = samplerCtx.getImageData(0, 0, sampleWidth, sampleHeight).data;
+      let minX = sampleWidth, minY = sampleHeight, maxX = -1, maxY = -1;
+      for (let y = 0; y < sampleHeight; y += 1) {
+        for (let x = 0; x < sampleWidth; x += 1) {
+          if (pixels[(y * sampleWidth + x) * 4 + 3] < 18) continue;
+          minX = Math.min(minX, x);
+          minY = Math.min(minY, y);
+          maxX = Math.max(maxX, x);
+          maxY = Math.max(maxY, y);
+        }
+      }
+      if (maxX >= minX && maxY >= minY) {
+        const inverse = 1 / scale;
+        const pad = Math.ceil(inverse);
+        const x = Math.max(0, Math.floor(minX * inverse) - pad);
+        const y = Math.max(0, Math.floor(minY * inverse) - pad);
+        const right = Math.min(frameWidth, Math.ceil((maxX + 1) * inverse) + pad);
+        const bottom = Math.min(
+          image.naturalHeight,
+          Math.ceil((maxY + 1) * inverse) + pad,
+        );
+        bounds = {
+          x: sourceX + x,
+          y,
+          w: Math.max(1, right - x),
+          h: Math.max(1, bottom - y),
+        };
+      }
+    } catch (_) {
+      // Les tests sans canvas alpha et certains file:// gardent la cellule
+      // entière ; le rendu HTTP utilise automatiquement le crop précis.
+    }
+    imageCache.set(normalizedFrame, bounds);
     return bounds;
   }
 
@@ -2068,8 +3131,27 @@
     return true;
   }
 
+  function worldPropImageByFile(file) {
+    for (const propSet of bitmapAssets.worldProps) {
+      const match = propSet.find((prop) => prop.file === file);
+      if (match?.image) return match.image;
+    }
+    return null;
+  }
+
+  function currentWorldProps() {
+    const areaProps = currentSideArea()?.props;
+    if (Array.isArray(areaProps)) {
+      return areaProps.map((prop) => ({
+        ...prop,
+        image: worldPropImageByFile(prop.file),
+      }));
+    }
+    return bitmapAssets.worldProps[currentSideEnvironmentIndex()] || [];
+  }
+
   function drawModularWorldProps(layer = "back") {
-    const props = bitmapAssets.worldProps[currentSideEnvironmentIndex()] || [];
+    const props = currentWorldProps();
     let drawn = false;
     for (const prop of props) {
       if ((prop.layer || "back") !== layer) continue;
@@ -2082,7 +3164,7 @@
   }
 
   function hasModularChapterProps() {
-    return (bitmapAssets.worldProps[currentSideEnvironmentIndex()] || [])
+    return currentWorldProps()
       .some((prop) => bitmapReady(prop.image));
   }
 
@@ -2248,6 +3330,7 @@
   }
 
   function drawEnemyWeapon(enemy, animation, spriteSize, fps = false) {
+    if (isMassiveEnemy(enemy) && enemy.detachablePartAttached === false) return;
     const weapon = weaponBitmapForEnemy(enemy);
     if (!bitmapReady(weapon)) return;
     const context = fps ? "fps" : "side";
@@ -2276,28 +3359,149 @@
     ctx.restore();
   }
 
+  function playerWeaponMeta(weapon) {
+    const katanaIndex = KATANA_IDS.indexOf(weapon?.id);
+    const legacyMeta = katanaIndex >= 0
+      ? KATANA_WEAPON_META[katanaIndex]
+      : null;
+    const profile = weaponRenderProfile(weapon);
+    const declaredAnchor = weapon?.anchor
+      || weapon?.sprites?.anchor
+      || weapon?.render?.anchor
+      || weapon?.views?.side?.anchor;
+    return {
+      anchor: Array.isArray(declaredAnchor)
+        ? declaredAnchor
+        : (legacyMeta?.anchor || [0.24, 0.56]),
+      sideRotation: legacyMeta?.sideRotation || profile.sideRotation || 0,
+      fpsRotation: legacyMeta?.fpsRotation ?? (-0.84 + (profile.fpsRotation || 0)),
+      profile,
+    };
+  }
+
+  function flexibleComponentParts(weapon, view) {
+    const entries = componentEntriesForWeapon(weapon, view);
+    if (!entries.length) return null;
+    const roleOf = (entry) => `${entry.role || ""}${entry.id || ""}`
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]/gi, "")
+      .toLowerCase();
+    const link = entries.find((entry) => /link|maillon|segment|cord|rope|chaine/.test(roleOf(entry)));
+    const terminal = entries.find((entry) =>
+      /weightb|handleb|poigneeb|ring|anneau|terminal|striking|projectile/.test(roleOf(entry)))
+      || entries.find((entry) => /weight|fundo/.test(roleOf(entry)));
+    const main = entries.find((entry) =>
+      entry !== link
+      && entry !== terminal
+      && /main|blade|lame|sickle|kama|kunai|handlea|poigneea|weighta|grip|staff|haft|handle/.test(roleOf(entry)))
+      || entries.find((entry) => entry !== link && entry !== terminal);
+    if (!main || !link || !terminal) return null;
+    return { main, link, terminal };
+  }
+
+  function drawRepeatedFlexibleLink(image, start, control, end, segments, size) {
+    if (!bitmapReady(image)) return false;
+    for (let index = 1; index < segments; index += 1) {
+      const t = index / segments;
+      const mt = 1 - t;
+      const x = mt * mt * start.x + 2 * mt * t * control.x + t * t * end.x;
+      const y = mt * mt * start.y + 2 * mt * t * control.y + t * t * end.y;
+      const dx = 2 * mt * (control.x - start.x) + 2 * t * (end.x - control.x);
+      const dy = 2 * mt * (control.y - start.y) + 2 * t * (end.y - control.y);
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(Math.atan2(dy, dx));
+      drawWeaponImage(image, {
+        anchor: [0.5, 0.5],
+        maxDimension: size,
+      });
+      ctx.restore();
+    }
+    return true;
+  }
+
+  function drawFlexiblePlayerWeapon(weapon, view, animation, scale = 1) {
+    const parts = flexibleComponentParts(weapon, view)
+      || flexibleComponentParts(weapon, "side");
+    if (!parts) return false;
+    const mainImage = playerComponentBitmap(parts.main);
+    const linkImage = playerComponentBitmap(parts.link);
+    const terminalImage = playerComponentBitmap(parts.terminal);
+    if (![mainImage, linkImage, terminalImage].every(bitmapReady)) return false;
+
+    const attackProgress = game.attackTimer > 0
+      ? clamp(1 - game.attackTimer / Math.max(0.01, game.attackDuration), 0, 1)
+      : 0;
+    const swing = Math.sin(attackProgress * Math.PI);
+    const fps = view === "fps";
+    const reach = (fps ? 118 : 40) * scale;
+    const lift = (fps ? 58 : 18) * scale;
+    const start = { x: (fps ? 18 : 7) * scale, y: (fps ? -2 : 0) * scale };
+    const end = {
+      x: start.x + reach * (0.58 + swing * 0.42),
+      y: start.y + lift * (animation === "attack" ? 0.95 - swing * 1.7 : 0.52),
+    };
+    const control = {
+      x: (start.x + end.x) / 2,
+      y: Math.max(start.y, end.y) + (fps ? 36 : 13) * scale * (1 - swing * 0.78),
+    };
+
+    ctx.save();
+    drawWeaponImage(mainImage, {
+      anchor: Array.isArray(parts.main.anchor) ? parts.main.anchor : [0.22, 0.62],
+      maxDimension: (fps ? 178 : 42) * scale,
+    });
+    drawRepeatedFlexibleLink(
+      linkImage,
+      start,
+      control,
+      end,
+      fps ? 16 : 11,
+      (fps ? 13 : 4.2) * scale,
+    );
+    ctx.translate(end.x, end.y);
+    ctx.rotate(Math.atan2(end.y - control.y, end.x - control.x) + Math.PI * 0.08);
+    drawWeaponImage(terminalImage, {
+      anchor: Array.isArray(parts.terminal.anchor) ? parts.terminal.anchor : [0.5, 0.5],
+      maxDimension: (fps ? 72 : 18) * scale,
+    });
+    ctx.restore();
+    return true;
+  }
+
   function drawPlayerWeapon(animation, frame) {
-    const equippedWeapon = bitmapAssets.weapons[game.weaponIndex];
-    if (!bitmapReady(equippedWeapon)) return;
-    const meta = KATANA_WEAPON_META[game.weaponIndex] || KATANA_WEAPON_META[0];
+    const weapon = currentPlayerWeapon();
+    const equippedWeapon = playerWeaponBitmap(weapon, "side");
+    const meta = playerWeaponMeta(weapon);
     const mount = SIDE_PLAYER_WEAPON_MOUNTS[animation]?.[frame]
       || SIDE_PLAYER_WEAPON_MOUNTS.idle[0];
     const [mountX, mountY, rotation, scale] = mount;
     ctx.save();
     ctx.translate(mountX, mountY);
     ctx.rotate(rotation + (animation === "idle" ? meta.sideRotation * 0.08 : 0));
-    drawWeaponImage(equippedWeapon, {
-      anchor: meta.anchor,
-      maxDimension: 54 * scale,
-      widthBias: 1.08,
-    });
+    const renderScale = scale * meta.profile.sideScale;
+    if (
+      weaponFamilyKey(weapon) !== "flexible"
+      || !drawFlexiblePlayerWeapon(weapon, "side", animation, renderScale)
+    ) {
+      if (!bitmapReady(equippedWeapon)) {
+        ctx.restore();
+        return;
+      }
+      drawWeaponImage(equippedWeapon, {
+        anchor: meta.anchor,
+        maxDimension: 54 * renderScale,
+        widthBias: ["polearm", "staff", "capture"].includes(weaponFamilyKey(weapon)) ? 1.14 : 1.08,
+      });
+    }
     ctx.restore();
   }
 
   function drawProceduralHeldWeapon(attacking) {
     ctx.save();
     ctx.translate(attacking ? 6 : -7, attacking ? 13 : 19);
-    const progress = attacking ? clamp(1 - game.attackTimer / PLAYER_ATTACK_DURATION, 0, 1) : 0;
+    const progress = attacking ? clamp(1 - game.attackTimer / Math.max(0.01, game.attackDuration), 0, 1) : 0;
     ctx.rotate(attacking ? -1.15 + progress * 1.46 : -0.78);
     ctx.fillStyle = "#a5a7ad";
     ctx.fillRect(0, -1, attacking ? 30 : 25, 2);
@@ -2317,7 +3521,7 @@
       return { animation: "hurt", frame: Math.min(5, Math.floor(progress * 6)), moving: false };
     }
     if (game.attackTimer > 0) {
-      const progress = clamp(1 - game.attackTimer / PLAYER_ATTACK_DURATION, 0, 0.999);
+      const progress = clamp(1 - game.attackTimer / Math.max(0.01, game.attackDuration), 0, 0.999);
       return { animation: "attack", frame: Math.min(5, Math.floor(progress * 6)), moving: false };
     }
     const animation = moving ? "move" : "idle";
@@ -2328,17 +3532,13 @@
     };
   }
 
-  function drawFpsWeaponSprite(image, animation, frame, weaponIndex) {
-    if (!bitmapReady(image)) return false;
-    const meta = KATANA_WEAPON_META[weaponIndex] || KATANA_WEAPON_META[0];
-    const baseMeta = KATANA_WEAPON_META[0];
-    const rotationOffset = meta.fpsRotation - baseMeta.fpsRotation;
+  function drawFpsWeaponSprite(image, animation, frame, weapon) {
+    const meta = playerWeaponMeta(weapon);
+    const rotationOffset = meta.fpsRotation - KATANA_WEAPON_META[0].fpsRotation;
     const mount = FPS_PLAYER_WEAPON_MOUNTS[animation]?.[frame]
       || FPS_PLAYER_WEAPON_MOUNTS.idle[0];
     const [mountX, mountY, rotation, scale, alpha] = mount;
     if (alpha <= 0) return true;
-    const drawWidth = Math.round(260 * scale);
-    const drawHeight = Math.max(1, Math.round(drawWidth * image.naturalHeight / image.naturalWidth));
     ctx.save();
     ctx.globalAlpha = alpha;
     ctx.translate(
@@ -2346,29 +3546,39 @@
       Math.round(FPS_VIEWMODEL_RECT.y + FPS_VIEWMODEL_RECT.height * mountY),
     );
     ctx.rotate(rotation + FPS_KATANA_HAND_ALIGNMENT + rotationOffset);
-    ctx.drawImage(
-      image,
-      Math.round(-drawWidth * meta.anchor[0]),
-      Math.round(-drawHeight * meta.anchor[1]),
-      drawWidth,
-      drawHeight,
-    );
+    const renderScale = scale * meta.profile.fpsScale;
+    const drewFlexible = weaponFamilyKey(weapon) === "flexible"
+      && drawFlexiblePlayerWeapon(weapon, "fps", animation, renderScale);
+    if (!drewFlexible) {
+      if (!bitmapReady(image)) {
+        ctx.restore();
+        return false;
+      }
+      drawWeaponImage(image, {
+        anchor: meta.anchor,
+        maxDimension: 272 * renderScale,
+        widthBias: ["polearm", "staff", "capture"].includes(weaponFamilyKey(weapon)) ? 1.16 : 1.04,
+      });
+    }
     ctx.restore();
     return true;
   }
 
   function drawFpsSelectedWeapon() {
     const pose = fpsPlayerPose();
-    const selectedFpsWeapon = bitmapAssets.fpsPlayerWeapons[game.weaponIndex];
+    const weapon = currentPlayerWeapon();
+    const fpsCandidate = playerWeaponBitmap(weapon, "fps");
+    const sideCandidate = playerWeaponBitmap(weapon, "side");
+    const selectedFpsWeapon = bitmapReady(fpsCandidate) ? fpsCandidate : sideCandidate;
     if (
       modularAnimationReady(bitmapAssets.akioFpsBody, pose.animation)
-      && bitmapReady(selectedFpsWeapon)
+      && (bitmapReady(selectedFpsWeapon) || flexibleComponentParts(weapon, "fps"))
     ) {
       drawFpsWeaponSprite(
         selectedFpsWeapon,
         pose.animation,
         pose.frame,
-        game.weaponIndex,
+        weapon,
       );
       drawAnimationSprite(
         bitmapAssets.akioFpsBody,
@@ -2390,11 +3600,11 @@
       return true;
     }
 
-    const equippedWeapon = bitmapAssets.weapons[game.weaponIndex];
+    const equippedWeapon = playerWeaponBitmap(weapon, "side");
     if (!bitmapReady(equippedWeapon)) return false;
-    const meta = KATANA_WEAPON_META[game.weaponIndex] || KATANA_WEAPON_META[0];
+    const meta = playerWeaponMeta(weapon);
     const progress = game.attackTimer > 0
-      ? clamp(1 - game.attackTimer / PLAYER_ATTACK_DURATION, 0, 1)
+      ? clamp(1 - game.attackTimer / Math.max(0.01, game.attackDuration), 0, 1)
       : 0;
     const swing = Math.sin(progress * Math.PI);
     ctx.save();
@@ -2439,6 +3649,24 @@
     return true;
   }
 
+  function drawCroppedAnimationSprite(animationSet, animation, frame, x, y, width, height) {
+    const image = animationSet && animationSet[animation];
+    const bounds = opaqueAnimationFrameBounds(animationSet, animation, frame);
+    if (!bitmapReady(image) || !bounds) return false;
+    ctx.drawImage(
+      image,
+      bounds.x,
+      bounds.y,
+      bounds.w,
+      bounds.h,
+      x,
+      y,
+      width,
+      height,
+    );
+    return true;
+  }
+
   function drawSamurai2d(p) {
     const x = Math.round(p.x);
     const y = Math.round(p.y);
@@ -2467,7 +3695,7 @@
         ) * 6));
       } else if (animation === "attack") {
         frame = Math.min(5, Math.floor(clamp(
-          1 - game.attackTimer / PLAYER_ATTACK_DURATION,
+          1 - game.attackTimer / Math.max(0.01, game.attackDuration),
           0,
           0.999,
         ) * 6));
@@ -2515,8 +3743,24 @@
         ? "hurt"
         : (e.attack > 0 ? "attack" : (moving ? "move" : "idle")));
     if (modularAnimationReady(modularEnemy, animation)) {
+      const massive = isMassiveEnemy(e);
       const elite = spriteIndex === 4;
       const size = elite ? 76 : 66;
+      const renderProfile = e.massiveProfile?.renderProfile
+        || e.massiveProfile?.render
+        || {};
+      const renderWidth = massive
+        ? Math.min(
+            W * clamp(renderProfile.targetWidthRatio || 0.5, 0.34, 0.56),
+            W * clamp(renderProfile.maxWidthRatio || 0.55, 0.4, 0.6),
+          )
+        : size;
+      let renderHeight = massive
+        ? Math.min(
+            H * clamp(renderProfile.targetHeightRatio || 0.49, 0.36, 0.58),
+            H * clamp(renderProfile.maxHeightRatio || 0.56, 0.4, 0.62),
+          )
+        : size;
       let frame;
       if (animation === "death") {
         frame = Math.min(5, Math.floor(clamp(
@@ -2541,6 +3785,15 @@
           (performance.now() + e.seed * 53) / (animation === "move" ? 110 : 175),
         ) % 6;
       }
+      const frameBounds = massive
+        ? opaqueAnimationFrameBounds(modularEnemy, animation, frame)
+        : null;
+      if (massive && frameBounds && renderProfile.preserveSourceAspect !== false) {
+        renderHeight = Math.min(
+          H * clamp(renderProfile.maxHeightRatio || 0.56, 0.4, 0.62),
+          renderWidth * frameBounds.h / Math.max(1, frameBounds.w),
+        );
+      }
       ctx.save();
       ctx.translate(x + e.w / 2, y + e.h + SIDE_ENEMY_BASELINE_OFFSET);
       // Les masters ennemis regardent vers la gauche, contrairement à Akio.
@@ -2552,8 +3805,30 @@
         ctx.scale(ENEMY_HURT_RENDER_SCALE, ENEMY_HURT_RENDER_SCALE);
       }
       if (e.flash > 0) ctx.filter = "brightness(2.2) saturate(.2)";
-      drawAnimationSprite(modularEnemy, animation, frame, -size / 2, -size, size, size);
-      if (animation !== "death") drawEnemyWeapon(e, animation, size);
+      if (massive) {
+        drawCroppedAnimationSprite(
+          modularEnemy,
+          animation,
+          frame,
+          -renderWidth / 2,
+          -renderHeight,
+          renderWidth,
+          renderHeight,
+        );
+      } else {
+        drawAnimationSprite(
+          modularEnemy,
+          animation,
+          frame,
+          -renderWidth / 2,
+          -renderHeight,
+          renderWidth,
+          renderHeight,
+        );
+      }
+      if (animation !== "death") {
+        drawEnemyWeapon(e, animation, Math.max(renderHeight, renderWidth * 0.62));
+      }
       ctx.restore();
       return;
     }
@@ -2599,16 +3874,72 @@
 
   function drawPickup(item) {
     const bob = Math.round(Math.sin(performance.now() / 220 + item.x) * 3);
-    ctx.fillStyle = item.kind === "ammo" ? "#e9dab6" : "#8ec86d";
+    const resource = ["tamahagane", "yomiAsh"].includes(item.kind);
+    ctx.fillStyle = item.kind === "ammo"
+      ? "#e9dab6"
+      : (resource ? (item.kind === "tamahagane" ? "#9db9c3" : "#9486b5") : "#8ec86d");
     ctx.fillRect(item.x - 5, item.y + bob - 10, 10, 13);
     ctx.fillStyle = item.kind === "ammo" ? "#b52d34" : "#e7e1b5";
-    ctx.font = "bold 8px serif"; ctx.textAlign = "center"; ctx.fillText(item.kind === "ammo" ? "札" : "+", item.x, item.y + bob);
+    const glyph = item.kind === "ammo"
+      ? "刃"
+      : (item.kind === "tamahagane" ? "鋼" : (item.kind === "yomiAsh" ? "灰" : "+"));
+    ctx.font = "bold 8px serif";
+    ctx.textAlign = "center";
+    ctx.fillText(glyph, item.x, item.y + bob);
   }
 
   function drawOfuda(x, y, direction) {
     ctx.save(); ctx.translate(Math.round(x), Math.round(y)); ctx.scale(direction, 1);
     ctx.fillStyle = "#eee0b8"; ctx.fillRect(-5, -7, 10, 14);
     ctx.fillStyle = "#b52731"; ctx.fillRect(-1, -5, 2, 10); ctx.fillRect(-3, -1, 6, 2);
+    ctx.restore();
+  }
+
+  function drawPlayerProjectile(projectile) {
+    const weapon = arsenalWeaponById(projectile.weaponId);
+    const image = playerWeaponBitmap(weapon, "side");
+    const family = weaponFamilyKey(weapon);
+    if (family === "bow") {
+      ctx.save();
+      ctx.translate(Math.round(projectile.x), Math.round(projectile.y));
+      ctx.scale(Math.sign(projectile.vx || 1), 1);
+      ctx.fillStyle = "#d9c397";
+      ctx.fillRect(-10, -1, 20, 2);
+      ctx.fillStyle = "#c8d0ce";
+      ctx.beginPath();
+      ctx.moveTo(10, -3);
+      ctx.lineTo(15, 0);
+      ctx.lineTo(10, 3);
+      ctx.fill();
+      ctx.restore();
+      return;
+    }
+    if (family === "firearm") {
+      ctx.save();
+      ctx.translate(Math.round(projectile.x), Math.round(projectile.y));
+      ctx.fillStyle = "#fff3b0";
+      ctx.fillRect(-4, -2, 8, 4);
+      ctx.fillStyle = "#d47635";
+      ctx.fillRect(-8 * Math.sign(projectile.vx || 1), -1, 5, 2);
+      ctx.restore();
+      return;
+    }
+    if (!bitmapReady(image)) {
+      drawOfuda(projectile.x, projectile.y, Math.sign(projectile.vx));
+      return;
+    }
+    const spins = ["throwing", "fan"].includes(family)
+      || /shuriken|makibishi/.test(String(weapon?.id || ""));
+    const angle = spins
+      ? performance.now() * 0.018 * Math.sign(projectile.vx || 1)
+      : (projectile.vx < 0 ? Math.PI : 0);
+    ctx.save();
+    ctx.translate(Math.round(projectile.x), Math.round(projectile.y));
+    ctx.rotate(angle);
+    drawWeaponImage(image, {
+      anchor: [0.5, 0.5],
+      maxDimension: family === "bow" ? 24 : 18,
+    });
     ctx.restore();
   }
 
@@ -3103,6 +4434,7 @@
     for (const obj of visible) drawFpsEnemy(obj.e, obj.dist, obj.angle);
 
     drawFpsParticles(mission.particles);
+    drawFpsRangedProjectile();
     drawFpsWeapon();
     drawHitConfirm();
     drawCrosshair();
@@ -3110,9 +4442,18 @@
   }
 
   function drawFpsEnemy(enemy, distance, angle) {
-    const giantBoss = enemy.modularEntry?.category === "giant";
-    const worldHeight = giantBoss ? 1.9 : (enemy.boss ? 1.55 : 1.14);
-    const aspect = giantBoss ? 0.82 : (enemy.boss ? 0.78 : 0.76);
+    const massiveBoss = isMassiveEnemy(enemy);
+    const profile = enemy.massiveProfile?.renderProfile || {
+      targetWidthRatio: 0.48,
+      targetHeightRatio: 0.52,
+      maxHeightRatio: 0.62,
+      maxWidthRatio: 0.56,
+    };
+    const worldHeight = massiveBoss ? 1.65 : (enemy.boss ? 1.55 : 1.14);
+    const targetPixelWidth = W * (profile.targetWidthRatio || 0.48);
+    const targetPixelHeight = H * (profile.targetHeightRatio || 0.52);
+    const massiveAspect = targetPixelWidth / Math.max(1, targetPixelHeight);
+    const aspect = massiveBoss ? massiveAspect : (enemy.boss ? 0.78 : 0.76);
     const projection = projectFpsEntity(distance, angle, worldHeight, aspect);
 
     const spriteIndex = enemy.spriteIndex ?? (enemy.boss ? 5 : 0);
@@ -3121,21 +4462,29 @@
     const animation = fpsEnemyAnimation(enemy, projection.corrected);
     const frame = fpsEnemyAnimationFrame(enemy, animation, spriteIndex);
     const reactionScale = animation === "hurt" ? ENEMY_HURT_RENDER_SCALE : 1;
-    const renderWidth = projection.width * reactionScale;
-    const renderHeight = projection.height * reactionScale;
+    const maxMassiveHeight = H * clamp(profile.maxHeightRatio || 0.62, 0.4, 0.62);
+    const maxMassiveWidth = W * clamp(profile.maxWidthRatio || 0.56, 0.36, 0.6);
+    const projectedHeight = massiveBoss
+      ? Math.min(projection.height, maxMassiveHeight)
+      : projection.height;
+    const projectedWidth = massiveBoss
+      ? Math.min(projectedHeight * aspect, maxMassiveWidth)
+      : projection.width;
+    const renderWidth = projectedWidth * reactionScale;
+    const renderHeight = projectedHeight * reactionScale;
     const renderLeft = projection.screenX - renderWidth / 2;
     const renderTop = projection.groundY - renderHeight;
     if (renderLeft > W || renderLeft + renderWidth < 0) return;
 
     ctx.save();
-    const clipWidth = renderHeight * (giantBoss ? 1.12 : 1.04);
+    const clipWidth = massiveBoss ? renderWidth * 1.12 : renderHeight * 1.04;
     const clipLeft = projection.screenX - clipWidth / 2;
     if (!clipBillboardToDepth(clipLeft, clipWidth, projection.corrected)) {
       ctx.restore();
       return;
     }
 
-    const shadowWidth = renderWidth * (giantBoss ? 0.58 : 0.42);
+    const shadowWidth = renderWidth * (massiveBoss ? 0.62 : 0.42);
     ctx.fillStyle = "rgba(0, 0, 0, .48)";
     ctx.fillRect(
       Math.round(projection.screenX - shadowWidth / 2),
@@ -3146,15 +4495,18 @@
 
     if (enemy.flash > 0) ctx.filter = "brightness(2.25) saturate(.28)";
     if (modularAnimationReady(modularEnemy, animation)) {
-      drawAnimationSprite(
-        modularEnemy,
-        animation,
-        frame,
-        Math.round(renderLeft),
-        Math.round(renderTop),
-        Math.round(renderWidth),
-        Math.round(renderHeight),
-      );
+      const drawEnemyAnimation = massiveBoss
+        ? drawCroppedAnimationSprite
+        : drawAnimationSprite;
+      drawEnemyAnimation(
+          modularEnemy,
+          animation,
+          frame,
+          Math.round(renderLeft),
+          Math.round(renderTop),
+          Math.round(renderWidth),
+          Math.round(renderHeight),
+        );
       if (animation !== "death" && !enemy.frontlineBlocked) {
         ctx.save();
         ctx.translate(projection.screenX, projection.groundY);
@@ -3386,7 +4738,7 @@
 
   function drawFpsWeapon() {
     const swing = game.attackTimer > 0
-      ? Math.sin((1 - game.attackTimer / PLAYER_ATTACK_DURATION) * Math.PI)
+      ? Math.sin((1 - game.attackTimer / Math.max(0.01, game.attackDuration)) * Math.PI)
       : 0;
 
     if (drawFpsSelectedWeapon()) return;
@@ -3398,6 +4750,39 @@
     ctx.fillStyle = "#c4c8c5"; ctx.fillRect(32, 7, 190, 8);
     ctx.fillStyle = "#f3e8ca"; ctx.fillRect(40, 7, 175, 2);
     ctx.fillStyle = "#a76c38"; ctx.fillRect(26, 1, 8, 28);
+    ctx.restore();
+  }
+
+  function drawFpsRangedProjectile() {
+    if (game.rangedViewTimer <= 0) return;
+    const weapon = arsenalWeaponById(game.lastRangedWeaponId);
+    const image = playerWeaponBitmap(weapon, "fps");
+    const fallback = bitmapReady(image) ? image : playerWeaponBitmap(weapon, "side");
+    if (!bitmapReady(fallback)) return;
+    const progress = clamp(1 - game.rangedViewTimer / 0.2, 0, 1);
+    const family = weaponFamilyKey(weapon);
+    ctx.save();
+    if (["bow", "firearm"].includes(family)) {
+      ctx.translate(W * 0.68, H * (0.79 + Math.sin(progress * Math.PI) * 0.025));
+      ctx.rotate(family === "bow" ? -0.18 : -0.08 + progress * 0.08);
+    } else {
+      ctx.translate(
+        W * (0.68 - progress * 0.18),
+        H * (0.82 - progress * 0.3),
+      );
+      ctx.rotate(
+        ["throwing", "fan"].includes(family)
+          ? progress * Math.PI * 5
+          : -0.3,
+      );
+    }
+    ctx.globalAlpha = 1 - progress * 0.42;
+    drawWeaponImage(fallback, {
+      anchor: [0.5, 0.5],
+      maxDimension: ["bow", "firearm"].includes(family)
+        ? 120
+        : 34 - progress * 18,
+    });
     ctx.restore();
   }
 
@@ -3451,27 +4836,52 @@
     dom.seals.textContent = `${game.seals}/2`;
     dom.score.textContent = game.kills;
     dom.mode.textContent = game.mode === "side" ? "VUE LATÉRALE" : "VUE SUBJECTIVE";
+    const nearbyPortal = game.mode === "side" ? nearestSidePortal() : null;
     dom.hint.textContent = game.mode === "side"
-      ? (isNearSideEntrance()
-        ? `${currentSideEntrance().prompt} · J katana · K ofuda`
-        : "A/D avancer · ESPACE sauter · J katana · K ofuda · E entrer")
-      : "W/S avancer · A/D esquiver · SOURIS tourner · J katana · K ofuda · E sceller";
+      ? (nearbyPortal
+        ? `${nearbyPortal.prompt || "E — ENTRER"} · J arme active · K projectile`
+        : "A/D avancer · ESPACE sauter · J attaquer · K projectile · E porte")
+      : "W/S avancer · A/D esquiver · SOURIS tourner · J arme active · K projectile · E sceller";
     dom.objective.textContent = objectiveText();
+    const activeWeapon = currentPlayerWeapon();
+    if (dom.activeWeaponName) dom.activeWeaponName.textContent = activeWeapon?.name || "KUROKAGE";
+    if (dom.activeWeaponFamily) {
+      dom.activeWeaponFamily.textContent = game.activeWeaponSlot === "secondary"
+        ? "SECONDAIRE"
+        : "PRINCIPALE";
+    }
+    if (dom.hudWeapon) dom.hudWeapon.dataset.weapon = activeWeapon?.id || KATANA_IDS[0];
+    if (dom.hudWeaponIcon) {
+      const preview = activeWeapon?.sprites?.preview || weaponSpritePath(activeWeapon, "side");
+      if (preview && dom.hudWeaponIcon.getAttribute?.("src") !== preview) {
+        dom.hudWeaponIcon.src = preview;
+      }
+    }
 
     const mission = game.mode === "fps" ? currentMission() : null;
-    const boss = mission?.enemies.find((enemy) => enemy.boss && !enemy.dead);
+    const boss = game.mode === "side"
+      ? game.side.enemies.find((enemy) => enemy.boss && !enemy.dead)
+      : mission?.enemies.find((enemy) => enemy.boss && !enemy.dead);
     dom.bossBar.hidden = !boss;
     if (boss) {
-      dom.bossName.textContent = String(boss.modularEntry?.name || "LE DAIMYŌ CORROMPU").toUpperCase();
+      const phase = isMassiveEnemy(boss) ? ` · PHASE ${boss.massivePhase || 1}` : "";
+      dom.bossName.textContent = `${String(boss.modularEntry?.name || "LE DAIMYŌ CORROMPU").toUpperCase()}${phase}`;
       dom.bossHealth.style.width = `${Math.max(0, boss.hp / boss.maxHp) * 100}%`;
     }
   }
 
   function objectiveText() {
     if (game.mode === "side") {
+      const activeMassiveBoss = game.side.enemies.find((enemy) =>
+        isMassiveEnemy(enemy) && isEnemyAlive(enemy));
+      if (activeMassiveBoss) return "Abattre Aka-Ushi pour libérer la route du château";
+      const areaLabel = currentSideArea()?.label;
+      if (areaLabel && game.side.areaId !== sideAreaIdForChapter(game.chapter)) {
+        return `${areaLabel} — trouver une porte vers l'objectif`;
+      }
       return game.chapter === 0
         ? "Atteindre le torii contaminé puis appuyer sur E"
-        : "Atteindre la porte du donjon puis appuyer sur E";
+        : "Suivre les portes des ruelles, du marché et du château";
     }
     const mission = currentMission();
     const remaining = mission.enemies.filter((e) => !e.dead).length;
@@ -3492,15 +4902,68 @@
     rafId = requestAnimationFrame(frame);
   }
 
-  function equipWeapon(idOrIndex) {
-    const numeric = Number(idOrIndex);
-    const index = Number.isInteger(numeric)
-      ? clamp(numeric, 0, KATANA_IDS.length - 1)
-      : KATANA_IDS.indexOf(String(idOrIndex));
-    if (index < 0) return false;
-    game.weaponIndex = index;
-    announce(`ARME ÉQUIPÉE — ${KATANA_NAMES[index]}`);
+  function applyPlayerLoadout(loadout, persist = false) {
+    const previousRangedWeapon = arsenalWeaponById(game.loadout?.ranged);
+    if (game.ammoByType && previousRangedWeapon) {
+      game.ammoByType[rangedAmmoType(previousRangedWeapon)] = game.ammo;
+    }
+    const normalized = normalizePlayerLoadout(loadout);
+    game.loadout = normalized;
+    if (!["primary", "secondary"].includes(game.activeWeaponSlot)) {
+      game.activeWeaponSlot = "primary";
+    }
+    game.activeWeaponId = normalized[game.activeWeaponSlot] || normalized.primary;
+    game.weaponIndex = Math.max(0, KATANA_IDS.indexOf(game.activeWeaponId));
+    const nextRangedWeapon = arsenalWeaponById(normalized.ranged);
+    const nextAmmoType = rangedAmmoType(nextRangedWeapon);
+    const nextCapacity = rangedAmmoCapacity(nextRangedWeapon);
+    game.ammo = clamp(
+      Number(game.ammoByType?.[nextAmmoType] ?? nextCapacity),
+      0,
+      nextCapacity,
+    );
+    game.ammoByType[nextAmmoType] = game.ammo;
+    if (persist) {
+      try { window.KageSave?.setLoadout?.(normalized); } catch (_) { /* facultatif */ }
+      persistAmmoMap();
+    }
+    return { ...normalized };
+  }
+
+  function equipWeapon(idOrSlot) {
+    const value = String(idOrSlot);
+    const numeric = Number(idOrSlot);
+    let slot = ["primary", "secondary"].includes(value) ? value : null;
+    if (!slot && Number.isInteger(numeric) && numeric >= 0 && numeric <= 1) {
+      slot = numeric === 0 ? "primary" : "secondary";
+    }
+    if (slot) {
+      game.activeWeaponSlot = slot;
+      game.activeWeaponId = game.loadout[slot];
+    } else {
+      const weapon = arsenalWeaponById(value);
+      if (!weapon) return false;
+      game.activeWeaponId = weapon.id;
+      const matchingSlot = ["primary", "secondary"].find((key) => game.loadout[key] === weapon.id);
+      if (matchingSlot) game.activeWeaponSlot = matchingSlot;
+    }
+    const selected = currentPlayerWeapon();
+    game.weaponIndex = Math.max(0, KATANA_IDS.indexOf(selected.id));
+    announce(`ARME ACTIVE — ${String(selected.name || selected.id).toUpperCase()}`);
+    if (typeof CustomEvent === "function" && typeof window.dispatchEvent === "function") {
+      window.dispatchEvent(new CustomEvent("yomi:weapon-changed", {
+        detail: {
+          loadout: { ...game.loadout },
+          weaponId: selected.id,
+          slot: game.activeWeaponSlot,
+        },
+      }));
+    }
     return true;
+  }
+
+  function swapActiveWeapon() {
+    return equipWeapon(game.activeWeaponSlot === "primary" ? "secondary" : "primary");
   }
 
   function onKeyDown(event) {
@@ -3517,7 +4980,11 @@
     if (k.toLowerCase() === "e") interact();
     if (k.toLowerCase() === "v") switchMode();
     if (k.toLowerCase() === "m") toggleAudio();
-    if (/^[0-9]$/.test(k)) equipWeapon(k === "0" ? 9 : Number(k) - 1);
+    if (k === "1") equipWeapon("primary");
+    if (k === "2") equipWeapon("secondary");
+    if (k === "3") performRanged();
+    if (k.toLowerCase() === "q") swapActiveWeapon();
+    if (k.toLowerCase() === "i") openLoadout();
   }
 
   function onKeyUp(event) {
@@ -3533,7 +5000,9 @@
     else if (action === "attack") performAttack();
     else if (action === "ranged") performRanged();
     else if (action === "interact") interact();
-    else if (action === "weapon-next") equipWeapon((game.weaponIndex + 1) % KATANA_IDS.length);
+    else if (action === "weapon-next" || action === "weapon-swap") swapActiveWeapon();
+    else if (action === "loadout") openLoadout();
+    else if (action === "loadout-close") closeLoadout();
     else if (action === "title") returnToTitle();
   }
 
@@ -3549,6 +5018,37 @@
     input.keys.clear();
     input.lookPointerId = null;
     if (game.status === "playing") togglePause();
+  });
+  window.addEventListener("yomi:loadout-opened", (event) => {
+    if (game.status === "loadout") return;
+    const requestedContext = event.detail?.context;
+    game.loadoutReturnStatus = requestedContext === "pause"
+      ? "paused"
+      : (game.status === "playing" ? "playing" : "briefing");
+    game.status = "loadout";
+    document.body.dataset.state = "loadout";
+    showOnly(dom.dojo);
+    document.exitPointerLock?.();
+  });
+  window.addEventListener("yomi:loadout-applied", (event) => {
+    applyPlayerLoadout(event.detail?.loadout, false);
+    const shouldStart = game.loadoutReturnStatus === "briefing"
+      || event.detail?.context === "briefing";
+    if (shouldStart) {
+      startGame();
+    } else {
+      closeLoadout();
+      window.dispatchEvent?.(new CustomEvent("yomi:weapon-changed", {
+        detail: {
+          loadout: { ...game.loadout },
+          weaponId: game.activeWeaponId,
+          slot: game.activeWeaponSlot,
+        },
+      }));
+    }
+  });
+  window.addEventListener("yomi:loadout-closed", () => {
+    if (game.status === "loadout") closeLoadout();
   });
   document.addEventListener("mousemove", (event) => {
     if (game.status === "playing" && game.mode === "fps" && document.pointerLockElement === canvas) {
@@ -3637,11 +5137,24 @@
     attack: performAttack,
     ranged: performRanged,
     equipWeapon,
+    swapWeapon: swapActiveWeapon,
+    applyLoadout: (loadout) => applyPlayerLoadout(loadout, true),
+    openLoadout,
+    closeLoadout,
     interact,
     getState: () => ({
       status: game.status, mode: game.mode, chapter: game.chapter, health: game.health,
       stamina: game.stamina, ammo: game.ammo, seals: game.seals, kills: game.kills,
-      weapon: KATANA_IDS[game.weaponIndex],
+      ammoType: rangedAmmoType(currentRangedWeapon()),
+      ammoByType: { ...game.ammoByType },
+      weapon: game.activeWeaponId,
+      activeWeapon: game.activeWeaponId,
+      activeWeaponSlot: game.activeWeaponSlot,
+      loadout: { ...game.loadout, omamori: [...(game.loadout.omamori || [])] },
+      sideAreaId: game.side.areaId,
+      visitedAreas: [...(game.side.visitedAreas || [])],
+      nearbyPortal: nearestSidePortal()?.id || null,
+      pendingTravel: game.pendingTravel ? { ...game.pendingTravel } : null,
       player2d: { ...game.side.player },
       playerFps: { ...currentMission().player },
       fpsRemaining: currentMission().enemies.filter((e) => !e.dead).length,
@@ -3681,11 +5194,96 @@
       },
       warpToGate: () => {
         const entrance = currentSideEntrance();
-        game.side.player.x = entrance.approachX;
+        game.side.player.x = entrance.approachX ?? entrance.x - 42;
         game.side.player.y = SIDE_GROUND_Y - game.side.player.h;
         game.side.player.vx = 0;
         game.side.player.vy = 0;
         game.side.player.grounded = true;
+      },
+      setSideArea: (areaId, spawnId) => {
+        setCurrentSideArea(String(areaId), spawnId, true);
+        return window.KageGame.getState();
+      },
+      warpToPortal: (portalId) => {
+        const portal = currentSidePortals().find((entry) => entry.id === portalId);
+        if (!portal) return null;
+        game.side.player.x = portal.approachX ?? portal.x - 24;
+        game.side.player.y = SIDE_GROUND_Y - game.side.player.h;
+        game.side.player.vx = 0;
+        game.side.player.vy = 0;
+        game.side.player.grounded = true;
+        return { ...portal };
+      },
+      areaSnapshot: () => ({
+        areaId: game.side.areaId,
+        label: currentSideArea()?.label || "",
+        zoneKind: currentSideArea()?.zoneKind || "legacy",
+        width: game.side.width,
+        visitedAreas: [...(game.side.visitedAreas || [])],
+        portals: currentSidePortals().map((portal) => ({
+          id: portal.id,
+          type: portal.type || "fps",
+          mission: Number.isFinite(Number(portal.mission)) ? Number(portal.mission) : null,
+          x: portal.x,
+          destination: portal.destination ? { ...portal.destination } : null,
+          requiresAction: true,
+          locked: Boolean(sidePortalLockMessage(portal)),
+        })),
+        platforms: currentSidePlatforms().map((platform) => ({ ...platform })),
+        aliveEnemyIds: game.side.enemies
+          .filter(isEnemyAlive)
+          .map((enemy) => enemy.sourceId),
+        remainingPickupIds: game.side.pickups
+          .filter((pickup) => !pickup.taken)
+          .map((pickup) => pickup.sourceId),
+        enemies: game.side.enemies.map((enemy) => ({
+          sourceId: enemy.sourceId,
+          rosterId: enemy.modularEntry?.id || enemy.rosterId || null,
+          profileId: enemy.profileId || enemy.massiveProfile?.id || null,
+          encounterId: enemy.encounterId || null,
+          presentationClass: isMassiveEnemy(enemy) ? "massive" : "standard",
+          boss: Boolean(enemy.boss),
+          x: enemy.x,
+          y: enemy.y,
+          w: enemy.w,
+          h: enemy.h,
+          feetY: enemy.y + enemy.h,
+          hp: enemy.hp,
+          maxHp: enemy.maxHp,
+          phase: enemy.massivePhase || null,
+          detachablePartAttached: enemy.detachablePartAttached !== false,
+          dead: Boolean(enemy.dead || enemy.dying || enemy.hp <= 0),
+        })),
+      }),
+      setMassiveBossHp: (hp) => {
+        const market = game.side.areaStates?.["kurokawa-market-east"];
+        const boss = market?.enemies?.find((enemy) => isMassiveEnemy(enemy))
+          || game.side.enemies.find((enemy) => isMassiveEnemy(enemy));
+        if (!boss) return null;
+        boss.hp = clamp(Number(hp), 0, boss.maxHp);
+        return boss.hp;
+      },
+      massiveBossSnapshot: () => {
+        const market = game.side.areaStates?.["kurokawa-market-east"];
+        const boss = market?.enemies?.find((enemy) => isMassiveEnemy(enemy))
+          || game.side.enemies.find((enemy) => isMassiveEnemy(enemy));
+        if (!boss) return null;
+        const renderProfile = boss.massiveProfile?.renderProfile
+          || boss.massiveProfile?.render
+          || {};
+        return {
+          id: boss.modularEntry?.id || null,
+          name: boss.modularEntry?.name || null,
+          presentationClass: isMassiveEnemy(boss) ? "massive" : "boss",
+          hp: boss.hp,
+          maxHp: boss.maxHp,
+          phase: boss.massivePhase || 1,
+          detachablePartAttached: boss.detachablePartAttached !== false,
+          targetWidthRatio: renderProfile.targetWidthRatio || 0.48,
+          targetHeightRatio: renderProfile.targetHeightRatio || 0.52,
+          maxHeightRatio: renderProfile.maxHeightRatio || 0.62,
+          maxWidthRatio: renderProfile.maxWidthRatio || 0.56,
+        };
       },
       clearFps: () => {
         currentMission().enemies.forEach((enemy) => {
@@ -3722,10 +5320,19 @@
             w: 10,
             taken: pickup.taken,
           })),
-          frontPropFootprints: (bitmapAssets.worldProps[currentSideEnvironmentIndex()] || [])
+          areaId: game.side.areaId,
+          zoneKind: currentSideArea()?.zoneKind || "legacy",
+          visitedAreas: [...(game.side.visitedAreas || [])],
+          portals: currentSidePortals().map((portal) => ({
+            id: portal.id,
+            type: portal.type || "fps",
+            x: portal.x,
+            destination: portal.destination ? { ...portal.destination } : null,
+          })),
+          frontPropFootprints: currentWorldProps()
             .filter((prop) => prop.layer === "front")
             .map((prop) => ({ x: prop.x, w: prop.width, file: prop.file })),
-          props: (bitmapAssets.worldProps[currentSideEnvironmentIndex()] || [])
+          props: currentWorldProps()
             .map((prop) => ({
               x: prop.x,
               w: prop.width,
