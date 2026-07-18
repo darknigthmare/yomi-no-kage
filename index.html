@@ -9,7 +9,7 @@
       content="Yomi no Kage, un jeu d'action pixel-art alternant plateforme 2D et FPS rétro dans un Japon féodal ravagé par une épidémie zombie."
     />
     <title>Yomi no Kage — L'Ombre du Shogun</title>
-    <link rel="stylesheet" href="styles.css?v=21" />
+    <link rel="stylesheet" href="styles.css?v=22" />
   </head>
   <body>
     <main class="game-shell" aria-label="Yomi no Kage, jeu d'action pixel-art">
@@ -219,6 +219,14 @@
         </div>
       </section>
 
+      <div
+        id="touch-look"
+        class="touch-look"
+        aria-label="Zone tactile : glisser horizontalement pour tourner la caméra"
+      >
+        <span>GLISSER POUR TOURNER</span>
+      </div>
+
       <div id="touch-controls" class="touch-controls" aria-label="Commandes tactiles">
         <div class="touch-cluster movement">
           <button class="touch-button left" data-input="left" type="button" aria-label="Gauche">◀</button>
@@ -229,6 +237,7 @@
         <div class="touch-cluster actions">
           <button class="touch-button small" data-action="switch" type="button" aria-label="Changer de vue">VUE</button>
           <button class="touch-button small" data-action="interact" type="button" aria-label="Interagir">E</button>
+          <button class="touch-button small" data-action="weapon-next" type="button" aria-label="Katana suivant">刀</button>
           <button class="touch-button ranged" data-action="ranged" type="button" aria-label="Lancer un ofuda">札</button>
           <button class="touch-button attack" data-action="attack" type="button" aria-label="Attaquer au katana">斬</button>
         </div>
@@ -237,7 +246,7 @@
 
     <noscript>Ce jeu nécessite JavaScript pour fonctionner.</noscript>
     <script src="audio.js?v=3"></script>
-    <script src="game.js?v=21"></script>
+    <script src="game.js?v=22"></script>
     <script src="cinematic.js?v=4"></script>
   </body>
 </html>

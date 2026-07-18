@@ -621,6 +621,11 @@ body[data-state="playing"] .icon-button, body[data-state="paused"] .icon-button 
 .end-stats b { margin-top: 0.35rem; color: #eddbb5; font-size: clamp(1rem, 2vw, 1.6rem); }
 
 /* Commandes tactiles */
+.touch-look { position: absolute; inset: 3.7rem 0.55rem 7.7rem 42%; z-index: 19; display: none; place-items: center; border: 1px dashed rgba(105, 210, 200, 0.16); background: linear-gradient(90deg, transparent, rgba(8, 11, 16, 0.12)); color: rgba(197, 235, 224, 0.3); pointer-events: auto; touch-action: none; }
+.touch-look span { padding: 0.32rem 0.48rem; border: 1px solid rgba(105, 210, 200, 0.12); background: rgba(7, 10, 15, 0.35); font-size: clamp(0.42rem, 1.5vw, 0.62rem); font-weight: 800; letter-spacing: 0.12em; }
+.touch-look.looking { border-color: rgba(105, 210, 200, 0.44); color: rgba(225, 247, 239, 0.58); }
+.touch-look.used { border-color: transparent; background: transparent; }
+.touch-look.used span { opacity: 0; }
 .touch-controls { position: absolute; inset: auto 0 0; z-index: 20; display: none; justify-content: space-between; padding: 0.6rem max(0.7rem, env(safe-area-inset-right)) max(0.7rem, env(safe-area-inset-bottom)) max(0.7rem, env(safe-area-inset-left)); pointer-events: none; }
 .touch-cluster { position: relative; width: 8.6rem; height: 7rem; pointer-events: auto; }
 .touch-button { position: absolute; display: grid; width: 2.8rem; height: 2.8rem; place-items: center; border: 1px solid rgba(242, 230, 202, 0.46); border-radius: 2px; background: rgba(15, 18, 24, 0.7); color: rgba(242, 230, 202, 0.85); box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6); font-weight: 900; touch-action: none; }
@@ -633,12 +638,14 @@ body[data-state="playing"] .icon-button, body[data-state="paused"] .icon-button 
 .actions .small { width: 2.35rem; height: 2.1rem; font-size: 0.58rem; }
 .actions .small[data-action="switch"] { top: 0; left: 0; }
 .actions .small[data-action="interact"] { top: 0; left: 2.7rem; }
+.actions .small[data-action="weapon-next"] { top: 0; left: 5.4rem; font-size: 0.92rem; }
 .touch-button.pressed { translate: 2px 2px; background: rgba(227, 65, 65, 0.8); }
 
 noscript { position: fixed; z-index: 100; inset: 0; display: grid; place-items: center; padding: 2rem; background: #090b10; color: white; text-align: center; }
 
 @media (pointer: coarse), (max-width: 760px) {
   body[data-state="playing"] .touch-controls { display: flex; }
+  body[data-state="playing"].fps-mode .touch-look { display: grid; }
   .hud-bottom { bottom: 0; padding-bottom: 0.35rem; }
   .hud-bottom p { display: none; }
   .hud-bottom .pixel-button { display: none; }
@@ -679,6 +686,7 @@ noscript { position: fixed; z-index: 100; inset: 0; display: grid; place-items: 
   .crest { display: none; }
   .hud-resources span:nth-child(2) { display: none; }
   .touch-controls { padding-bottom: 3.4rem; }
+  .touch-look { bottom: 10.5rem; }
   .prologue-stage::before { opacity: 0.78; }
   .prologue-image { inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; }
   .prologue-copy { right: 1rem; bottom: 5.2rem; left: 1rem; width: auto; }

@@ -104,6 +104,23 @@ require("./game.js");
     global.KageGame.debug.assetStatus().roster.characters,
     modularRegistry.counts.characters,
   );
+  const renderTuning = global.KageGame.debug.renderTuning();
+  assert.equal(renderTuning.enemyHurtScale, 0.92);
+  assert.ok(renderTuning.sideWalkDistancePerFrame > 10);
+  global.KageGame.debug.setPlayer2d({
+    x: 24,
+    y: 273,
+    vx: 112,
+    vy: 0,
+    grounded: true,
+    walkDistance: 0,
+  });
+  global.KageGame.debug.step(0.05);
+  state = global.KageGame.getState();
+  assert.ok(
+    state.player2d.walkDistance > 0,
+    "La cadence de marche doit avancer avec la distance réellement parcourue",
+  );
 
   // L'arche signale l'entrée sans changer de vue et sans former un mur
   // invisible : le joueur reste libre d'explorer derrière.
@@ -147,6 +164,21 @@ require("./game.js");
       && platform.h <= platform.visualHeight),
     "Le rendu et le sommet de collision des plateformes doivent rester cohérents",
   );
+  const villageSupports = new Set(
+    villageWorld.platforms.map((platform) => platform.owner || platform.surface),
+  );
+  for (const support of ["charrette-cassee", "kura-entrepot-riz", "tas-paille"]) {
+    assert.ok(
+      villageSupports.has(support),
+      `Le parcours doit inclure le support naturel ${support}`,
+    );
+  }
+  const well = villageWorld.props.find((prop) => prop.file === "puits-pierre");
+  assert.deepEqual(
+    { layer: well.layer, bottomY: well.bottomY, w: well.w },
+    { layer: "back", bottomY: 294, w: 48 },
+    "Le puits doit rester dans le plan arrière, à l'échelle du sol",
+  );
   const overlaps = (a, b) => a.x < b.x + b.w && a.x + a.w > b.x;
   assert.ok(
     villageWorld.platforms.every((platform) =>
@@ -182,6 +214,22 @@ require("./game.js");
   state = global.KageGame.getState();
   assert.equal(state.mode, "fps");
   assert.equal(state.fpsRemaining, 7);
+  for (let i = 0; i < 4; i += 1) global.KageGame.debug.step(0.25);
+  const angleBeforeSwipe = global.KageGame.getState().playerFps.angle;
+  const attackBeforeSwipe = global.KageGame.getState().attackTimer;
+  assert.equal(global.KageGame.debug.lookFps(48, 640), true);
+  state = global.KageGame.getState();
+  assert.notEqual(
+    state.playerFps.angle,
+    angleBeforeSwipe,
+    "Un glissement tactile horizontal doit tourner la vue FPS",
+  );
+  assert.equal(
+    state.attackTimer,
+    attackBeforeSwipe,
+    "Tourner au tactile ne doit pas déclencher un coup de katana",
+  );
+  assert.equal(global.KageGame.debug.worldSnapshot().fps.touchLook, true);
 
   global.KageGame.debug.clearFps();
   global.KageGame.debug.warpToAltar();

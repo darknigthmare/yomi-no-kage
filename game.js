@@ -25,9 +25,16 @@
   const PLAYER_DEATH_DURATION = 0.9;
   const ENEMY_HURT_DURATION = 0.34;
   const ENEMY_DEATH_DURATION = 0.78;
+  const ENEMY_HURT_RENDER_SCALE = 0.92;
   const SIDE_ENEMY_BASELINE_OFFSET = 4;
   const SIDE_GROUND_Y = 300;
   const SIDE_GROUND_DEPTH = 60;
+  const SIDE_WALK_DISTANCE_PER_FRAME = 64 / 6;
+  const FPS_TOUCH_LOOK_SENSITIVITY = 0.0045;
+  // Les lames sources vont de la tsuka vers la pointe, de gauche à droite.
+  // Cette correction les fait monter légèrement vers la droite depuis les
+  // mains, au lieu de les faire repartir derrière l'avant-bras gauche.
+  const FPS_KATANA_HAND_ALIGNMENT = 0.42;
   const KATANA_IDS = [
     "01-kurokage", "02-shogun-no-in", "03-hinezumi", "04-shirogane", "05-yomibane",
     "06-kegare-kiri", "07-takekaze", "08-raijin-no-tsume", "09-akatsuki", "10-mujo",
@@ -71,21 +78,38 @@
   ];
   const SIDE_PLATFORM_LAYOUTS = [
     [
-      { x: 80, y: 262, w: 132, h: 8, visualHeight: 27 },
-      { x: 382, y: 236, w: 118, h: 8, visualHeight: 27 },
-      { x: 628, y: 264, w: 116, h: 8, visualHeight: 27 },
-      { x: 1058, y: 260, w: 142, h: 8, visualHeight: 29 },
-      { x: 1422, y: 234, w: 122, h: 8, visualHeight: 27 },
-      { x: 1688, y: 262, w: 136, h: 8, visualHeight: 28 },
-      { x: 2105, y: 244, w: 118, h: 8, visualHeight: 27 },
-      { x: 2300, y: 264, w: 126, h: 8, visualHeight: 27 },
+      { x: 49, y: 254, w: 158, h: 8, visualHeight: 24, visual: false, owner: "minka-chaume-brulee", surface: "toit-maison-brulee" },
+      { x: 226, y: 272, w: 58, h: 8, visualHeight: 24, visual: false, owner: "barriere-village", surface: "barriere" },
+      { x: 318, y: 238, w: 64, h: 8, visualHeight: 24, visual: false, owner: "tour-guet-ouest", surface: "balcon-tour" },
+      { x: 506, y: 258, w: 24, h: 8, visualHeight: 24, visual: false, owner: "tonneau-acces", surface: "tonneau" },
+      { x: 541, y: 239, w: 164, h: 8, visualHeight: 24, visual: false, owner: "minka-tuiles-intacte", surface: "auvent-minka" },
+      { x: 552, y: 210, w: 142, h: 8, visualHeight: 24, visual: false, owner: "minka-tuiles-intacte", surface: "toit-minka" },
+      { x: 1013, y: 270, w: 52, h: 8, visualHeight: 24, visual: false, owner: "charrette-cassee", surface: "charrette" },
+      { x: 1068, y: 231, w: 62, h: 8, visualHeight: 24, visual: false, owner: "kura-entrepot-riz", surface: "auvent-grange" },
+      { x: 1072, y: 190, w: 126, h: 8, visualHeight: 24, visual: false, owner: "kura-entrepot-riz", surface: "toit-grange" },
+      { x: 1385, y: 258, w: 48, h: 8, visualHeight: 24, visual: false, owner: "tas-paille", surface: "paille-basse" },
+      { x: 1395, y: 225, w: 28, h: 8, visualHeight: 24, visual: false, owner: "tas-paille", surface: "paille-haute" },
+      { x: 1775, y: 258, w: 28, h: 8, visualHeight: 24, visual: false, owner: "tonneau-quartier-brule", surface: "tonneau" },
+      { x: 1820, y: 225, w: 150, h: 8, visualHeight: 24, visual: false, owner: "minka-est", surface: "toit-maison-brulee" },
+      { x: 2178, y: 264, w: 82, h: 8, visualHeight: 32, tile: "step", surface: "marche-tour" },
+      { x: 2258, y: 228, w: 68, h: 8, visualHeight: 24, visual: false, owner: "tour-guet-est", surface: "balcon-tour" },
     ],
     [
-      { x: 1080, y: 264, w: 128, h: 8, visualHeight: 33 },
-      { x: 1330, y: 238, w: 126, h: 8, visualHeight: 33 },
-      { x: 1590, y: 264, w: 128, h: 8, visualHeight: 34 },
-      { x: 1872, y: 242, w: 80, h: 8, visualHeight: 32 },
-      { x: 2312, y: 264, w: 92, h: 8, visualHeight: 33 },
+      { x: 1000, y: 222, w: 170, h: 8, visualHeight: 24, visual: false, owner: "tour-chateau", surface: "toit-tour-bas" },
+      { x: 1015, y: 178, w: 145, h: 8, visualHeight: 24, visual: false, owner: "tour-chateau", surface: "toit-tour-milieu" },
+      { x: 1030, y: 135, w: 115, h: 8, visualHeight: 24, visual: false, owner: "tour-chateau", surface: "toit-tour-haut" },
+      { x: 1140, y: 286, w: 78, h: 8, visualHeight: 24, visual: false, owner: "escalier-bois", surface: "escalier-1" },
+      { x: 1146, y: 270, w: 66, h: 8, visualHeight: 24, visual: false, owner: "escalier-bois", surface: "escalier-2" },
+      { x: 1152, y: 254, w: 54, h: 8, visualHeight: 24, visual: false, owner: "escalier-bois", surface: "escalier-3" },
+      { x: 1158, y: 238, w: 42, h: 8, visualHeight: 24, visual: false, owner: "escalier-bois", surface: "escalier-4" },
+      { x: 1164, y: 222, w: 30, h: 8, visualHeight: 24, visual: false, owner: "escalier-bois", surface: "escalier-5" },
+      { x: 1225, y: 264, w: 170, h: 8, visualHeight: 24, visual: false, owner: "mur-shoji", surface: "coursive-shoji" },
+      { x: 1460, y: 258, w: 150, h: 8, visualHeight: 24, visual: false, owner: "alcove-tatami", surface: "estrade-tatami" },
+      { x: 1715, y: 242, w: 145, h: 8, visualHeight: 30, tile: "roof", surface: "toit-porte-laquee" },
+      { x: 1914, y: 234, w: 46, h: 8, visualHeight: 28, tile: "beam", surface: "poutre-cedre" },
+      { x: 2048, y: 264, w: 78, h: 8, visualHeight: 24, visual: false, owner: "racines-donjon", surface: "racines" },
+      { x: 2130, y: 274, w: 72, h: 8, visualHeight: 30, tile: "short", surface: "marche-porte" },
+      { x: 2320, y: 264, w: 90, h: 8, visualHeight: 30, tile: "ledge", surface: "coursive-finale" },
     ],
   ];
   const SIDE_CHAPTER_RULES = [
@@ -93,7 +117,7 @@
       minX: 6,
       maxX: 2479,
       cameraMinX: 0,
-      enemyXs: [330, 510, 990, 1030, 1210, 1400, 1640, 1880, 2240, 2440],
+      enemyXs: [296, 430, 735, 845, 925, 1260, 1500, 1680, 2070, 2430],
       pickups: [
         { x: 600, kind: "ammo" },
         { x: 1280, kind: "health" },
@@ -104,7 +128,7 @@
       minX: 960,
       maxX: 2479,
       cameraMinX: 900,
-      enemyXs: [1000, 1230, 1310, 1465, 1490, 1730, 2420, 2450],
+      enemyXs: [970, 1398, 1695, 1880, 1980, 2220, 2420, 2450],
       pickups: [
         { x: 1240, kind: "ammo" },
         { x: 1570, kind: "health" },
@@ -297,6 +321,10 @@
       {
         ground: loadBitmap("assets/modular/environments/kurokawa/platforms/sol-terre-centre.png"),
         ledge: loadBitmap("assets/modular/environments/kurokawa/platforms/plateforme-bois-longue.png"),
+        short: loadBitmap("assets/modular/environments/kurokawa/platforms/plateforme-bois-courte.png"),
+        step: loadBitmap("assets/modular/environments/kurokawa/platforms/marche-bois.png"),
+        thatch: loadBitmap("assets/modular/environments/kurokawa/platforms/plateforme-chaume.png"),
+        roof: loadBitmap("assets/modular/environments/kurokawa/platforms/plateforme-toit-tuile.png"),
       },
       {
         ground: loadBitmap("assets/modular/environments/bamboo-shrine/platforms/sol-pierre-centre.png"),
@@ -305,6 +333,10 @@
       {
         ground: loadBitmap("assets/modular/environments/daimyo-castle/platforms/sol-tatami-centre.png"),
         ledge: loadBitmap("assets/modular/environments/daimyo-castle/platforms/plateforme-cedre-longue.png"),
+        short: loadBitmap("assets/modular/environments/daimyo-castle/platforms/plateforme-cedre-courte.png"),
+        step: loadBitmap("assets/modular/environments/daimyo-castle/platforms/marche-chateau.png"),
+        beam: loadBitmap("assets/modular/environments/daimyo-castle/platforms/plateforme-poutre.png"),
+        roof: loadBitmap("assets/modular/environments/daimyo-castle/platforms/plateforme-toit-tuile.png"),
       },
     ],
     sideEntrances: [
@@ -319,15 +351,18 @@
     worldProps: [
       loadPropSet("assets/modular/environments/kurokawa", [
         { file: "minka-chaume-brulee", x: 42, width: 175 },
-        { file: "barriere-village", x: 220, width: 86, layer: "front" },
-        { file: "tour-guet-kurokawa", x: 315, width: 82 },
+        { file: "barriere-village", x: 220, width: 68, layer: "world" },
+        { file: "tour-guet-kurokawa", x: 305, width: 82 },
+        { file: "tonneau-provisions", x: 500, width: 36, layer: "world" },
         { file: "minka-tuiles-intacte", x: 535, width: 175 },
-        { file: "foyer-incendie", x: 760, width: 76, layer: "front" },
-        { file: "kura-entrepot-riz", x: 1010, width: 145 },
-        { file: "charrette-cassee", x: 1325, width: 74, layer: "front" },
-        { file: "puits-pierre", x: 1570, width: 54, layer: "front" },
+        { file: "foyer-incendie", x: 760, width: 54, bottomY: 294 },
+        { file: "charrette-cassee", x: 990, width: 78, layer: "world" },
+        { file: "kura-entrepot-riz", x: 1060, width: 150 },
+        { file: "tas-paille", x: 1374, width: 70, layer: "world" },
+        { file: "puits-pierre", x: 1570, width: 48, bottomY: 294 },
+        { file: "tonneau-provisions", x: 1770, width: 36, layer: "world" },
         { file: "minka-chaume-brulee", x: 1810, width: 175 },
-        { file: "autel-route", x: 2040, width: 58, layer: "front" },
+        { file: "autel-route", x: 2040, width: 48, bottomY: 294 },
         { file: "tour-guet-kurokawa", x: 2250, width: 82 },
       ]),
       loadPropSet("assets/modular/environments/bamboo-shrine", [
@@ -344,15 +379,16 @@
       ]),
       loadPropSet("assets/modular/environments/daimyo-castle", [
         { file: "tour-chateau", x: 990, width: 180 },
+        { file: "escalier-bois", x: 1140, width: 80, layer: "world" },
         { file: "mur-shoji", x: 1215, width: 190 },
         { file: "alcove-tatami", x: 1450, width: 175 },
         { file: "porte-laquee", x: 1705, width: 170 },
         { file: "pilier-cedre", x: 1910, width: 48 },
-        { file: "brasero-fer", x: 1270, width: 38, layer: "front" },
-        { file: "armure-vide", x: 1515, width: 42, layer: "front" },
-        { file: "paravent-dechire", x: 1760, width: 105, layer: "front" },
-        { file: "ratelier-vide", x: 1960, width: 85, layer: "front" },
-        { file: "racines-donjon", x: 2045, width: 80, layer: "front" },
+        { file: "brasero-fer", x: 1270, width: 32, bottomY: 294 },
+        { file: "armure-vide", x: 1515, width: 38, layer: "world" },
+        { file: "paravent-dechire", x: 1612, width: 80, layer: "front", bottomY: 304 },
+        { file: "ratelier-vide", x: 1960, width: 78, layer: "world" },
+        { file: "racines-donjon", x: 2045, width: 80, layer: "world" },
       ]),
     ],
     enemies: [
@@ -568,6 +604,8 @@
   const input = {
     keys: new Set(),
     jumpQueued: false,
+    lookPointerId: null,
+    lookLastX: 0,
   };
 
   const MAPS = [
@@ -724,6 +762,7 @@
         h: 27,
         facing: 1,
         grounded: true,
+        walkDistance: 0,
       },
       enemies: makeSideEnemies(0),
       projectiles: [],
@@ -954,6 +993,7 @@
     // Les portes restent des déclencheurs manuels, jamais des murs invisibles :
     // Akio peut traverser leur plan 2D et continuer à explorer derrière.
     const chapterRules = currentSideRules();
+    const previousX = p.x;
     p.x = clamp(
       p.x + p.vx * dt,
       chapterRules.minX,
@@ -980,6 +1020,13 @@
         p.grounded = true;
         break;
       }
+    }
+    const horizontalTravel = Math.abs(p.x - previousX);
+    if (p.grounded && horizontalTravel > 0.01) {
+      p.walkDistance = (p.walkDistance || 0) + horizontalTravel;
+    } else if (p.grounded && Math.abs(p.vx) <= 8) {
+      // Un nouveau départ commence toujours sur une pose de contact franche.
+      p.walkDistance = 0;
     }
     if (p.y > H + 30) damagePlayer(100);
 
@@ -1138,6 +1185,21 @@
     // avant que le joueur ait réellement récupéré le contrôle de la caméra.
     if (game.transition <= 0.05) updateFpsEnemies(mission, dt);
     updateParticles(mission.particles, dt);
+  }
+
+  function applyFpsLookDelta(deltaX, viewportWidth = W) {
+    if (
+      game.status !== "playing"
+      || game.mode !== "fps"
+      || game.transition > 0.05
+      || game.playerStagger > 0
+    ) return false;
+    const responsiveScale = clamp(W / Math.max(320, Number(viewportWidth) || W), 0.55, 1.35);
+    const turn = clamp(Number(deltaX) || 0, -64, 64)
+      * FPS_TOUCH_LOOK_SENSITIVITY
+      * responsiveScale;
+    currentMission().player.angle = normalizeAngle(currentMission().player.angle + turn);
+    return Math.abs(turn) > 0;
   }
 
   function moveFpsPlayer(mission, dx, dy) {
@@ -1614,6 +1676,7 @@
           vy: 0,
           facing: 1,
           grounded: true,
+          walkDistance: 0,
         });
         returnToSide(true);
         announce("PREMIER SCEAU POSÉ — LE DONJON VOUS ATTEND");
@@ -1640,6 +1703,7 @@
   function enterFps(index, automatic) {
     if (game.status !== "playing") return;
     input.keys.clear();
+    input.lookPointerId = null;
     game.side.player.vx = 0;
     game.side.player.vy = 0;
     game.fps.current = clamp(index, 0, 1);
@@ -1657,6 +1721,7 @@
 
   function returnToSide(automatic) {
     input.keys.clear();
+    input.lookPointerId = null;
     game.mode = "side";
     game.invulnerable = Math.max(game.invulnerable, 1);
     game.side.player.vx = 0;
@@ -1722,6 +1787,9 @@
     ctx.translate(-cam, 0);
     drawVillage(side);
     drawSideEntranceWorld();
+    // Les supports jouables (charrette, tonneaux, paille, escalier) vivent
+    // dans le même plan que les acteurs, mais passent derrière leurs pieds.
+    drawModularWorldProps("world");
     for (const platform of currentSidePlatforms()) drawPlatform(platform);
     for (const item of side.pickups) if (!item.taken) drawPickup(item);
     for (const projectile of side.projectiles) drawOfuda(projectile.x, projectile.y, Math.sign(projectile.vx));
@@ -2103,7 +2171,9 @@
   }
 
   function drawPlatform(p) {
-    const tile = bitmapAssets.platformTiles[currentSideEnvironmentIndex()]?.ledge;
+    if (p.visual === false) return;
+    const tiles = bitmapAssets.platformTiles[currentSideEnvironmentIndex()];
+    const tile = tiles?.[p.tile || "ledge"] || tiles?.ledge;
     const visualHeight = p.visualHeight || Math.max(18, p.h);
     // Une plateforme correspond à un sprite complet, jamais à une répétition
     // de ses cordes et de ses embouts. Son bord supérieur est exactement la
@@ -2258,8 +2328,11 @@
     };
   }
 
-  function drawFpsWeaponSprite(image, animation, frame) {
+  function drawFpsWeaponSprite(image, animation, frame, weaponIndex) {
     if (!bitmapReady(image)) return false;
+    const meta = KATANA_WEAPON_META[weaponIndex] || KATANA_WEAPON_META[0];
+    const baseMeta = KATANA_WEAPON_META[0];
+    const rotationOffset = meta.fpsRotation - baseMeta.fpsRotation;
     const mount = FPS_PLAYER_WEAPON_MOUNTS[animation]?.[frame]
       || FPS_PLAYER_WEAPON_MOUNTS.idle[0];
     const [mountX, mountY, rotation, scale, alpha] = mount;
@@ -2272,11 +2345,11 @@
       Math.round(FPS_VIEWMODEL_RECT.x + FPS_VIEWMODEL_RECT.width * mountX),
       Math.round(FPS_VIEWMODEL_RECT.y + FPS_VIEWMODEL_RECT.height * mountY),
     );
-    ctx.rotate(rotation);
+    ctx.rotate(rotation + FPS_KATANA_HAND_ALIGNMENT + rotationOffset);
     ctx.drawImage(
       image,
-      Math.round(-drawWidth * 0.26),
-      Math.round(-drawHeight * 0.52),
+      Math.round(-drawWidth * meta.anchor[0]),
+      Math.round(-drawHeight * meta.anchor[1]),
       drawWidth,
       drawHeight,
     );
@@ -2295,6 +2368,7 @@
         selectedFpsWeapon,
         pose.animation,
         pose.frame,
+        game.weaponIndex,
       );
       drawAnimationSprite(
         bitmapAssets.akioFpsBody,
@@ -2397,8 +2471,10 @@
           0,
           0.999,
         ) * 6));
+      } else if (moving) {
+        frame = Math.floor((p.walkDistance || 0) / SIDE_WALK_DISTANCE_PER_FRAME) % 6;
       } else {
-        frame = Math.floor(performance.now() / (moving ? 95 : 165)) % 6;
+        frame = Math.floor(performance.now() / 165) % 6;
       }
       ctx.save();
       ctx.translate(x + p.w / 2, y + p.h);
@@ -2469,6 +2545,12 @@
       ctx.translate(x + e.w / 2, y + e.h + SIDE_ENEMY_BASELINE_OFFSET);
       // Les masters ennemis regardent vers la gauche, contrairement à Akio.
       ctx.scale(e.facing < 0 ? 1 : -1, 1);
+      if (animation === "hurt") {
+        // Les planches de réaction ont une silhouette plus large que l'idle.
+        // On les ramène autour du même pivot de pieds pour éviter l'effet
+        // involontaire de gonflement à chaque impact.
+        ctx.scale(ENEMY_HURT_RENDER_SCALE, ENEMY_HURT_RENDER_SCALE);
+      }
       if (e.flash > 0) ctx.filter = "brightness(2.2) saturate(.2)";
       drawAnimationSprite(modularEnemy, animation, frame, -size / 2, -size, size, size);
       if (animation !== "death") drawEnemyWeapon(e, animation, size);
@@ -2485,6 +2567,9 @@
       // Les planches sources regardent à gauche ; on inverse seulement quand
       // l'IA se retourne vers la droite.
       ctx.scale(e.facing < 0 ? 1 : -1, 1);
+      if (!dying && (e.hurtTimer > 0 || e.flash > 0)) {
+        ctx.scale(ENEMY_HURT_RENDER_SCALE, ENEMY_HURT_RENDER_SCALE);
+      }
       if (e.flash > 0) ctx.filter = "brightness(2.2) saturate(.2)";
       if (dying) {
         const deathProgress = clamp(1 - (e.deathTimer || 0) / ENEMY_DEATH_DURATION, 0, 1);
@@ -3029,30 +3114,34 @@
     const worldHeight = giantBoss ? 1.9 : (enemy.boss ? 1.55 : 1.14);
     const aspect = giantBoss ? 0.82 : (enemy.boss ? 0.78 : 0.76);
     const projection = projectFpsEntity(distance, angle, worldHeight, aspect);
-    const left = projection.screenX - projection.width / 2;
-    if (left > W || left + projection.width < 0) return;
 
     const spriteIndex = enemy.spriteIndex ?? (enemy.boss ? 5 : 0);
     const fpsEnemy = fpsAnimationSetForRosterEntry(enemy.modularEntry);
     const modularEnemy = fpsEnemy || animationSetForEnemy(enemy, spriteIndex);
     const animation = fpsEnemyAnimation(enemy, projection.corrected);
     const frame = fpsEnemyAnimationFrame(enemy, animation, spriteIndex);
+    const reactionScale = animation === "hurt" ? ENEMY_HURT_RENDER_SCALE : 1;
+    const renderWidth = projection.width * reactionScale;
+    const renderHeight = projection.height * reactionScale;
+    const renderLeft = projection.screenX - renderWidth / 2;
+    const renderTop = projection.groundY - renderHeight;
+    if (renderLeft > W || renderLeft + renderWidth < 0) return;
 
     ctx.save();
-    const clipWidth = projection.height * (giantBoss ? 1.12 : 1.04);
+    const clipWidth = renderHeight * (giantBoss ? 1.12 : 1.04);
     const clipLeft = projection.screenX - clipWidth / 2;
     if (!clipBillboardToDepth(clipLeft, clipWidth, projection.corrected)) {
       ctx.restore();
       return;
     }
 
-    const shadowWidth = projection.width * (giantBoss ? 0.58 : 0.42);
+    const shadowWidth = renderWidth * (giantBoss ? 0.58 : 0.42);
     ctx.fillStyle = "rgba(0, 0, 0, .48)";
     ctx.fillRect(
       Math.round(projection.screenX - shadowWidth / 2),
-      Math.round(projection.groundY - Math.max(2, projection.height * 0.025)),
+      Math.round(projection.groundY - Math.max(2, renderHeight * 0.025)),
       Math.round(shadowWidth),
-      Math.max(2, Math.round(projection.height * 0.05)),
+      Math.max(2, Math.round(renderHeight * 0.05)),
     );
 
     if (enemy.flash > 0) ctx.filter = "brightness(2.25) saturate(.28)";
@@ -3061,15 +3150,15 @@
         modularEnemy,
         animation,
         frame,
-        Math.round(left),
-        Math.round(projection.top),
-        Math.round(projection.width),
-        Math.round(projection.height),
+        Math.round(renderLeft),
+        Math.round(renderTop),
+        Math.round(renderWidth),
+        Math.round(renderHeight),
       );
       if (animation !== "death" && !enemy.frontlineBlocked) {
         ctx.save();
         ctx.translate(projection.screenX, projection.groundY);
-        drawEnemyWeapon(enemy, animation, projection.height, true);
+        drawEnemyWeapon(enemy, animation, renderHeight, true);
         ctx.restore();
       }
       ctx.restore();
@@ -3088,10 +3177,10 @@
       }
       ctx.drawImage(
         generatedEnemy,
-        Math.round(left),
-        Math.round(projection.top),
-        Math.round(projection.width),
-        Math.round(projection.height),
+        Math.round(renderLeft),
+        Math.round(renderTop),
+        Math.round(renderWidth),
+        Math.round(renderHeight),
       );
       ctx.restore();
       ctx.restore();
@@ -3444,6 +3533,7 @@
     else if (action === "attack") performAttack();
     else if (action === "ranged") performRanged();
     else if (action === "interact") interact();
+    else if (action === "weapon-next") equipWeapon((game.weaponIndex + 1) % KATANA_IDS.length);
     else if (action === "title") returnToTitle();
   }
 
@@ -3457,6 +3547,7 @@
   window.addEventListener("keyup", onKeyUp);
   window.addEventListener("blur", () => {
     input.keys.clear();
+    input.lookPointerId = null;
     if (game.status === "playing") togglePause();
   });
   document.addEventListener("mousemove", (event) => {
@@ -3465,12 +3556,51 @@
     }
   });
   canvas.addEventListener("pointerdown", (event) => {
+    // Sur mobile, le canvas ne doit jamais confondre un geste de caméra avec
+    // un coup. Les attaques tactiles ont leurs boutons dédiés.
+    if (event.pointerType === "touch") return;
     if (game.status !== "playing") return;
     if (game.mode === "fps" && canvas.requestPointerLock && matchMedia("(pointer: fine)").matches) canvas.requestPointerLock()?.catch?.(() => {});
     if (event.button === 0) performAttack();
     if (event.button === 2) performRanged();
   });
   canvas.addEventListener("contextmenu", (event) => event.preventDefault());
+
+  const touchLookZone = document.getElementById("touch-look");
+  const resetTouchLook = (event) => {
+    if (
+      event
+      && input.lookPointerId !== null
+      && event.pointerId !== input.lookPointerId
+    ) return;
+    input.lookPointerId = null;
+    input.lookLastX = 0;
+    touchLookZone?.classList.remove("looking");
+  };
+  touchLookZone?.addEventListener("pointerdown", (event) => {
+    if (game.status !== "playing" || game.mode !== "fps") return;
+    event.preventDefault();
+    input.lookPointerId = event.pointerId;
+    input.lookLastX = event.clientX;
+    touchLookZone.setPointerCapture?.(event.pointerId);
+    touchLookZone.classList.add("looking");
+  });
+  touchLookZone?.addEventListener("pointermove", (event) => {
+    if (event.pointerId !== input.lookPointerId) return;
+    event.preventDefault();
+    const deltaX = event.clientX - input.lookLastX;
+    input.lookLastX = event.clientX;
+    const viewportWidth = canvas.getBoundingClientRect?.().width
+      || touchLookZone.offsetWidth
+      || W;
+    if (applyFpsLookDelta(deltaX, viewportWidth)) {
+      touchLookZone.classList.add("used");
+    }
+  });
+  touchLookZone?.addEventListener("pointerup", resetTouchLook);
+  touchLookZone?.addEventListener("pointercancel", resetTouchLook);
+  touchLookZone?.addEventListener("lostpointercapture", resetTouchLook);
+
   dom.startButton.addEventListener("click", showBriefing);
   dom.audioButton.addEventListener("click", toggleAudio);
 
@@ -3537,6 +3667,12 @@
         Object.assign(currentMission().player, patch);
         return { ...currentMission().player };
       },
+      lookFps: (deltaX, viewportWidth = W) => applyFpsLookDelta(deltaX, viewportWidth),
+      renderTuning: () => ({
+        enemyHurtScale: ENEMY_HURT_RENDER_SCALE,
+        sideWalkDistancePerFrame: SIDE_WALK_DISTANCE_PER_FRAME,
+        fpsKatanaHandAlignment: FPS_KATANA_HAND_ALIGNMENT,
+      }),
       setFpsEnemy: (index, patch = {}) => {
         const enemies = currentMission().enemies;
         const enemy = enemies[clamp(Number(index) || 0, 0, enemies.length - 1)];
@@ -3589,11 +3725,20 @@
           frontPropFootprints: (bitmapAssets.worldProps[currentSideEnvironmentIndex()] || [])
             .filter((prop) => prop.layer === "front")
             .map((prop) => ({ x: prop.x, w: prop.width, file: prop.file })),
+          props: (bitmapAssets.worldProps[currentSideEnvironmentIndex()] || [])
+            .map((prop) => ({
+              x: prop.x,
+              w: prop.width,
+              file: prop.file,
+              layer: prop.layer || "back",
+              bottomY: prop.bottomY ?? SIDE_GROUND_Y,
+            })),
           entrancePassThrough: currentSideEntrance().collision === "passThrough",
           fps: {
             scheme: scheme.id,
             floorTile: scheme.floorTile,
             floorProjection: "world-uv-floor-cast",
+            touchLook: Boolean(touchLookZone),
             wallTiles: {
               boundary: fpsWallTileIndex({ mapX: 0, mapY: 1 }),
               core: fpsWallTileIndex({ mapX: 7, mapY: 7 }),
@@ -3647,10 +3792,10 @@
         backgrounds: bitmapAssets.sideBackgrounds.map(bitmapReady),
         parallaxBackgrounds: bitmapAssets.parallaxBackgrounds.map((set) =>
           Object.fromEntries(["sky", "far", "mid", "near"].map((layer) => [layer, bitmapReady(set[layer])]))),
-        platformTiles: bitmapAssets.platformTiles.map((set) => ({
-          ground: bitmapReady(set.ground),
-          ledge: bitmapReady(set.ledge),
-        })),
+        platformTiles: bitmapAssets.platformTiles.map((set) =>
+          Object.fromEntries(
+            Object.entries(set).map(([name, image]) => [name, bitmapReady(image)]),
+          )),
         worldProps: bitmapAssets.worldProps.map((set) => ({
           ready: set.filter((prop) => bitmapReady(prop.image)).length,
           total: set.length,
