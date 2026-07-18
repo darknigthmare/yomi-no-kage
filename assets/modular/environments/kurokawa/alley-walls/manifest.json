@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "packId": "kurokawa-alley-walls",
+  "generationTool": "OpenAI ImageGen",
+  "purpose": "Twenty modular, interchangeable wall silhouettes for Kurokawa streets and alleys.",
+  "prompt": "Create one strict 5 by 4 sprite atlas containing exactly twenty separate modular wall sections for a side-view pixel-art action game set in a zombie-infested feudal Japanese town. Match the supplied Yomi no Kage pixel-art reference: crisp deliberate pixels, dark ink outlines, muted cedar, plaster, charcoal and ember palette, coherent left-side gameplay perspective, transparent-ready cyan chroma background, no text, no characters, no weapons, no floor and no merged scenery. Every cell must contain one complete grounded wall module with clean margins and consistent scale: intact plaster, smoke-stained plaster, exposed lath, burned cedar, rain-dark planks, lower kura, upper kura, service door, barred window, rain shutters, inner alley corner, outer alley corner, rain chain, broken awning, empty alcove, quarantine wall, Yomi roots, collapsed breach, jokamachi stone and burned shop.",
+  "sourceImage": "source/wall-atlas-imagegen-raw.png",
+  "alphaAtlas": "source/wall-atlas-alpha.png",
+  "gridManifest": "sprites/manifest.json",
+  "grid": {
+    "columns": 5,
+    "rows": 4
+  },
+  "sprites": [
+    "mur-platre-intact",
+    "mur-platre-fume",
+    "mur-platre-lattis",
+    "mur-cedre-brule",
+    "mur-planches-pluie",
+    "mur-kura-bas",
+    "mur-kura-haut",
+    "mur-porte-service",
+    "mur-fenetre-barreaux",
+    "mur-volets-pluie",
+    "angle-ruelle-rentrant",
+    "angle-ruelle-sortant",
+    "mur-gouttiere-chaine",
+    "mur-auvent-brise",
+    "mur-alcove-vide",
+    "mur-quarantaine",
+    "mur-racines-yomi",
+    "mur-breche-effondree",
+    "mur-pierre-jokamachi",
+    "mur-echoppe-brulee"
+  ]
+}

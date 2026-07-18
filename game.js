@@ -18,7 +18,7 @@
   ctx.setTransform(RENDER_SCALE_X, 0, 0, RENDER_SCALE_Y, 0, 0);
   const TAU = Math.PI * 2;
   const FOV = Math.PI / 3;
-  const ASSET_VERSION = "20260718-hero-v2";
+  const ASSET_VERSION = "20260718-coherence-v1";
   const PLAYER_ATTACK_DURATION = 0.34;
   const PLAYER_ATTACK_ACTIVE_AT = 0.38;
   const PLAYER_HURT_DURATION = 0.72;
@@ -34,11 +34,33 @@
   // Les lames sources vont de la tsuka vers la pointe, de gauche à droite.
   // Cette correction les fait monter légèrement vers la droite depuis les
   // mains, au lieu de les faire repartir derrière l'avant-bras gauche.
-  const FPS_KATANA_HAND_ALIGNMENT = 0.42;
+  const FPS_KATANA_HAND_ALIGNMENT = 1.06;
   const KATANA_IDS = [
     "01-kurokage", "02-shogun-no-in", "03-hinezumi", "04-shirogane", "05-yomibane",
     "06-kegare-kiri", "07-takekaze", "08-raijin-no-tsume", "09-akatsuki", "10-mujo",
   ];
+  const ALLEY_WALL_IDS = Object.freeze([
+    "mur-platre-intact",
+    "mur-platre-fume",
+    "mur-platre-lattis",
+    "mur-cedre-brule",
+    "mur-planches-pluie",
+    "mur-kura-bas",
+    "mur-kura-haut",
+    "mur-porte-service",
+    "mur-fenetre-barreaux",
+    "mur-volets-pluie",
+    "angle-ruelle-rentrant",
+    "angle-ruelle-sortant",
+    "mur-gouttiere-chaine",
+    "mur-auvent-brise",
+    "mur-alcove-vide",
+    "mur-quarantaine",
+    "mur-racines-yomi",
+    "mur-breche-effondree",
+    "mur-pierre-jokamachi",
+    "mur-echoppe-brulee",
+  ]);
   const KATANA_NAMES = [
     "KUROKAGE", "SHOGUN NO IN", "HINEZUMI", "SHIROGANE", "YOMIBANE",
     "KEGARE-KIRI", "TAKEKAZE", "RAIJIN NO TSUME", "AKATSUKI", "MUJO",
@@ -77,6 +99,57 @@
     fan: { sideScale: 0.74, sideRotation: 0.04, fpsScale: 0.78, fpsRotation: 0.05 },
     capture: { sideScale: 1.26, sideRotation: -0.12, fpsScale: 1.12, fpsRotation: -0.12 },
   };
+  const PLAYER_WEAPON_POSE_OFFSETS = Object.freeze({
+    side: Object.freeze({
+      katana: 0,
+      blade: 0,
+      shortBlade: 0.12,
+      polearm: -0.08,
+      heavy: 0.08,
+      staff: -0.04,
+      flexible: 0,
+      bow: -0.78,
+      firearm: 0.44,
+      throwing: 0.38,
+      fan: 0.22,
+      capture: -0.08,
+    }),
+    fps: Object.freeze({
+      katana: 0,
+      blade: 0,
+      shortBlade: 0.18,
+      polearm: 0.08,
+      heavy: 0.3,
+      staff: 0.08,
+      flexible: 0,
+      bow: -0.16,
+      firearm: 1.02,
+      throwing: 0.88,
+      fan: 0.82,
+      capture: 0.08,
+    }),
+  });
+  const ENEMY_WEAPON_PRESENTATION = Object.freeze({
+    blade: Object.freeze({ anchor: [0.13, 0.84], rotation: 0, scale: 1 }),
+    short: Object.freeze({ anchor: [0.16, 0.8], rotation: 0.12, scale: 0.76 }),
+    pole: Object.freeze({ anchor: [0.1, 0.88], rotation: -0.08, scale: 1.18 }),
+    heavy: Object.freeze({ anchor: [0.12, 0.88], rotation: 0.08, scale: 1.05 }),
+    chain: Object.freeze({ anchor: [0.18, 0.72], rotation: 0, scale: 0.94 }),
+    guard: Object.freeze({ anchor: [0.5, 0.86], rotation: 0.18, scale: 0.82 }),
+    fan: Object.freeze({ anchor: [0.5, 0.9], rotation: 0.2, scale: 0.82 }),
+  });
+  const ENEMY_FPS_DIRECTIONAL_WEAPON = Object.freeze({
+    front: Object.freeze({ x: 0.2, y: 0.08, rotation: 0, scale: 0.84 }),
+    back: Object.freeze({ x: 0.16, y: 0.04, rotation: 0.1, scale: 0.82 }),
+    left: Object.freeze({ x: 0, y: 0, rotation: 0, scale: 1 }),
+    right: Object.freeze({ x: 0, y: 0, rotation: 0, scale: 1 }),
+  });
+  const MASSIVE_EQUIPMENT_MOUNTS = Object.freeze({
+    "joug-tranchant-aka-ushi": Object.freeze({
+      side: Object.freeze({ x: -0.44, y: -0.59, rotation: 0.02, scale: 1.2 }),
+      fps: Object.freeze({ x: -0.42, y: -0.56, rotation: 0.02, scale: 0.56 }),
+    }),
+  });
 
   function fallbackWeaponEntry(id) {
     const katanaIndex = KATANA_IDS.indexOf(String(id));
@@ -384,10 +457,10 @@
       hurt: { x: -0.22, y: -0.43, scale: 0.54, rotation: 0.12 },
     },
     fps: {
-      idle: { x: 0.18, y: -0.4, scale: 0.34, rotation: -0.28 },
-      move: { x: 0.16, y: -0.39, scale: 0.32, rotation: -0.22 },
-      attack: { x: 0.22, y: -0.42, scale: 0.44, rotation: -0.9, arc: 1.55 },
-      hurt: { x: 0.08, y: -0.36, scale: 0.3, rotation: 0.16 },
+      idle: { x: -0.18, y: -0.4, scale: 0.34, rotation: -0.28 },
+      move: { x: -0.16, y: -0.39, scale: 0.32, rotation: -0.22 },
+      attack: { x: -0.22, y: -0.42, scale: 0.44, rotation: -0.9, arc: 1.55 },
+      hurt: { x: -0.08, y: -0.36, scale: 0.3, rotation: 0.16 },
     },
   };
   ctx.imageSmoothingEnabled = false;
@@ -615,6 +688,17 @@
         roof: loadBitmap("assets/modular/environments/daimyo-castle/platforms/plateforme-toit-tuile.png"),
       },
     ],
+    groundVisuals: {
+      "castle-stone": loadBitmap(
+        "assets/modular/environments/daimyo-castle/platforms/bord-pierre.png",
+      ),
+      "tatami-clean": loadBitmap(
+        "assets/modular/environments/daimyo-castle/platforms/sol-tatami-centre.png",
+      ),
+      "tatami-tainted": loadBitmap(
+        "assets/modular/environments/daimyo-castle/platforms/sol-tatami-souille.png",
+      ),
+    },
     sideEntrances: [
       loadBitmap("assets/modular/environments/bamboo-shrine/props/grand-torii.png"),
       loadBitmap("assets/modular/environments/daimyo-castle/props/porte-chateau.png"),
@@ -627,10 +711,16 @@
       "porte-palissade": loadBitmap("assets/modular/environments/depth-portals/sprites/breche-palissade.png"),
       "escalier-etage": loadBitmap("assets/modular/environments/depth-portals/sprites/escalier-etage.png"),
       "trappe-cave": loadBitmap("assets/modular/environments/depth-portals/sprites/trappe-cave.png"),
-      "porte-laquee": loadBitmap("assets/modular/environments/depth-portals/sprites/porte-cour-interieure.png"),
-      "porte-chateau": loadBitmap("assets/modular/environments/depth-portals/sprites/porte-kura.png"),
+      "porte-laquee": loadBitmap("assets/modular/environments/daimyo-castle/props/porte-laquee.png"),
+      "porte-chateau": loadBitmap("assets/modular/environments/daimyo-castle/props/porte-chateau.png"),
       "porte-sanctuaire": loadBitmap("assets/modular/environments/depth-portals/sprites/entree-machiya-noren.png"),
     },
+    alleyWalls: Object.fromEntries(
+      ALLEY_WALL_IDS.map((id) => [
+        id,
+        loadBitmap(`assets/modular/environments/kurokawa/alley-walls/sprites/${id}.png`),
+      ]),
+    ),
     fpsWallAtlas: loadBitmap("assets/generated/props/fps-wall-texture-atlas.png"),
     fpsAltars: [
       loadBitmap("assets/modular/environments/bamboo-shrine/props/autel-purification.png"),
@@ -829,19 +919,20 @@
     enemy.modularEntry = entry;
     enemy.impactMaterial = impactMaterialForEntry(entry, enemy);
     const massiveProfile = massiveBossProfileFor(entry);
+    const detachablePart = massiveProfile?.detachableParts
+      ?.find((part) => part.separateSprite);
     if (massiveProfile) {
       enemy.presentationClass = "massive";
       enemy.massiveProfile = massiveProfile;
       if (!Number.isFinite(enemy.massivePhase)) enemy.massivePhase = 1;
-      if (typeof enemy.detachablePartAttached !== "boolean") {
-        enemy.detachablePartAttached = true;
-      }
+      const initialPhaseId = massiveProfile.phases?.[0]?.id;
+      enemy.detachablePartAttached = !detachablePart?.attachPhase
+        || detachablePart.attachPhase === initialPhaseId;
     }
     const modularWeapons = modularRoster.weapons.filter((weapon) =>
       String(weapon.file || "").startsWith("assets/modular/weapons/"),
     );
-    const detachableWeaponId = massiveProfile?.detachableParts
-      ?.find((part) => part.separateSprite)?.weaponId;
+    const detachableWeaponId = detachablePart?.weaponId;
     const requestedWeapon = modularWeapons.find((weapon) =>
       weapon.id === entry.weaponId
       || weapon.id === entry.weapon
@@ -900,7 +991,7 @@
   async function loadModularRoster() {
     if (typeof fetch !== "function") return;
     try {
-      const response = await fetch("assets/modular/registry.json?v=20260717-5", { cache: "no-store" });
+      const response = await fetch("assets/modular/registry.json?v=20260718-6", { cache: "no-store" });
       if (!response.ok) throw new Error(`registre HTTP ${response.status}`);
       const registry = await response.json();
       modularRoster.characters = Array.isArray(registry.characters) ? registry.characters : [];
@@ -1023,6 +1114,48 @@
     3 * Math.PI / 4,
     -Math.PI / 4,
   ];
+  const SIDE_AI_PROFILES = Object.freeze({
+    walker: Object.freeze({
+      sight: 220,
+      hearing: 118,
+      memory: 2.3,
+      leash: 330,
+      patrolRadius: 92,
+      patrolWait: 0.72,
+    }),
+    sentinel: Object.freeze({
+      sight: 255,
+      hearing: 105,
+      memory: 3,
+      leash: 235,
+      patrolRadius: 54,
+      patrolWait: 1.15,
+    }),
+    brute: Object.freeze({
+      sight: 185,
+      hearing: 145,
+      memory: 3.4,
+      leash: 280,
+      patrolRadius: 68,
+      patrolWait: 1.05,
+    }),
+    boss: Object.freeze({
+      sight: 420,
+      hearing: 360,
+      memory: 6,
+      leash: 760,
+      patrolRadius: 0,
+      patrolWait: 0,
+    }),
+  });
+  const FPS_AI_DEFAULTS = Object.freeze({
+    sight: 8.5,
+    hearing: 2.6,
+    memory: 3.25,
+    fov: Math.PI * 0.72,
+    patrolRadius: 1.35,
+    patrolWait: 0.8,
+  });
 
   let game = createGameState();
   let lastTime = performance.now();
@@ -1093,6 +1226,78 @@
       || "legacy-castle";
   }
 
+  function sidePlatformById(area, platformId) {
+    if (!platformId || !Array.isArray(area?.platforms)) return null;
+    return area.platforms.find((platform) => platform.id === platformId) || null;
+  }
+
+  function sideEnemyAiProfileName(definition, massive) {
+    if (massive || definition.boss) return "boss";
+    if (definition.ai?.profile) return definition.ai.profile;
+    if (definition.platformId) return "sentinel";
+    if (definition.roster === "special") return "brute";
+    return "walker";
+  }
+
+  function createSideEnemyAi(definition, area, width, height, index, massive) {
+    const profileName = sideEnemyAiProfileName(definition, massive);
+    const defaults = SIDE_AI_PROFILES[profileName] || SIDE_AI_PROFILES.walker;
+    const authored = definition.ai || {};
+    const platform = sidePlatformById(area, definition.platformId);
+    const patrol = authored.patrol || {};
+    const homeX = Number(definition.x) || 0;
+    const homeY = Number.isFinite(definition.y)
+      ? definition.y
+      : SIDE_GROUND_Y - height;
+    const radius = Number.isFinite(patrol.radius)
+      ? patrol.radius
+      : defaults.patrolRadius;
+    const areaMin = Number.isFinite(area?.minX) ? area.minX : 6;
+    const areaMax = Number.isFinite(area?.maxX)
+      ? area.maxX
+      : Math.max(areaMin + width, (area?.width || 2500) - width - 6);
+    const platformMin = platform ? platform.x + 2 : areaMin;
+    const platformMax = platform
+      ? platform.x + platform.w - width - 2
+      : areaMax - width;
+    const patrolMinX = clamp(
+      Number.isFinite(patrol.minX) ? patrol.minX : homeX - radius,
+      platformMin,
+      Math.max(platformMin, platformMax),
+    );
+    const patrolMaxX = clamp(
+      Number.isFinite(patrol.maxX) ? patrol.maxX : homeX + radius,
+      patrolMinX,
+      Math.max(patrolMinX, platformMax),
+    );
+    return {
+      profile: profileName,
+      state: massive ? "idle" : "patrol",
+      previousState: null,
+      stateTime: index * 0.11,
+      reason: "spawn",
+      homeX,
+      homeY,
+      homeFacing: definition.facing || -1,
+      platformId: definition.platformId || null,
+      patrolMinX,
+      patrolMaxX,
+      patrolDirection: definition.facing || (index % 2 ? -1 : 1),
+      waitTime: index % 3 * 0.18,
+      sight: Number(authored.perception?.sight ?? defaults.sight),
+      hearing: Number(authored.perception?.hearing ?? defaults.hearing),
+      memoryDuration: Number(authored.perception?.memory ?? defaults.memory),
+      memoryTime: 0,
+      leash: Number(authored.leash ?? defaults.leash),
+      lastKnownX: null,
+      targetVisible: false,
+      targetAudible: false,
+      moveVelocity: 0,
+      stuckTime: 0,
+      lastX: homeX,
+    };
+  }
+
   function makeSideEnemiesForArea(areaId, chapter = 0) {
     const area = sideAreaById(areaId);
     const definitions = area?.enemies;
@@ -1107,7 +1312,7 @@
       const height = definition.h || (massive ? 82 : 24);
       const hp = definition.hp
         || (massive ? 42 : (definition.roster === "special" || i > 6 ? 3 : 2));
-      return {
+      const enemy = {
         sourceId: definition.id || `${areaId}-enemy-${i + 1}`,
         rosterHint: definition.roster || null,
         rosterId: definition.rosterId || null,
@@ -1136,7 +1341,10 @@
         massivePhase: massive ? 1 : null,
         detachablePartAttached: massive ? true : null,
         seed: chapter * 101 + i * 13.7,
+        platformId: definition.platformId || null,
       };
+      enemy.ai = createSideEnemyAi(definition, area, width, height, i, massive);
+      return enemy;
     });
   }
 
@@ -1233,6 +1441,34 @@
     }
   }
 
+  function createFpsEnemyAi(x, y, index, boss = false) {
+    const patrolAngle = index * 2.399963 + (boss ? Math.PI : 0);
+    return {
+      state: boss ? "idle" : "patrol",
+      previousState: null,
+      stateTime: index * 0.09,
+      reason: "spawn",
+      homeX: x,
+      homeY: y,
+      heading: normalizeAngle(patrolAngle),
+      patrolAngle,
+      patrolDirection: index % 2 ? -1 : 1,
+      patrolRadius: boss ? 0.55 : FPS_AI_DEFAULTS.patrolRadius,
+      patrolWait: (index % 3) * 0.2,
+      sight: boss ? 11.5 : FPS_AI_DEFAULTS.sight,
+      hearing: boss ? 4.2 : FPS_AI_DEFAULTS.hearing,
+      fov: boss ? Math.PI * 1.25 : FPS_AI_DEFAULTS.fov,
+      memoryDuration: boss ? 5.2 : FPS_AI_DEFAULTS.memory,
+      memoryTime: 0,
+      lastKnownX: null,
+      lastKnownY: null,
+      targetVisible: false,
+      targetAudible: false,
+      stuckTime: 0,
+      movedDistance: 0,
+    };
+  }
+
   function makeFpsMission(index) {
     const def = FPS_DEFS[index];
     const formationCount = def.enemies.length + (def.boss ? 1 : 0);
@@ -1245,6 +1481,7 @@
       spriteIndex: i % 5,
       engagementSlot: i,
       engagementAngle: formationPhase + i * Math.PI * 2 / formationCount,
+      ai: createFpsEnemyAi(entry[0], entry[1], i, false),
     }));
     if (def.boss) {
       enemies.push({
@@ -1254,6 +1491,7 @@
         flash: 0, boss: true, spriteIndex: 5, impactMaterial: "armor",
         engagementSlot: enemies.length,
         engagementAngle: formationPhase + enemies.length * Math.PI * 2 / formationCount,
+        ai: createFpsEnemyAi(def.boss[0], def.boss[1], enemies.length, true),
       });
     }
     return {
@@ -1404,6 +1642,81 @@
       return encounter;
     }
     return null;
+  }
+
+  function sidePortalBlocksMovement(portal) {
+    if (portal?.collision !== "solidDoor") return false;
+    const portalType = portal.type
+      || (Number.isFinite(Number(portal.mission)) ? "fps" : "side");
+    if (
+      portalType === "fps"
+      && !Number.isFinite(Number(portal.mission))
+    ) {
+      // Les intérieurs secondaires encore non jouables restent des points
+      // d'interaction manuels, mais ne coupent jamais la rue principale.
+      return false;
+    }
+    if (sidePortalLockMessage(portal)) return true;
+    if (
+      portal.unlockEncounterId
+      && sideEncounterComplete(portal.unlockEncounterId)
+    ) return false;
+    return portal.state !== "open";
+  }
+
+  function sidePortalBarrier(portal) {
+    const width = Math.max(8, Number(portal.blockWidth) || 18);
+    const left = Number.isFinite(portal.blockX)
+      ? Number(portal.blockX)
+      : Number(portal.x) - width / 2;
+    return {
+      left,
+      right: left + width,
+    };
+  }
+
+  function sideBlockedPortals() {
+    return currentSidePortals().filter(sidePortalBlocksMovement);
+  }
+
+  function resolveSideDoorCollision(previousX, candidateX, width) {
+    let resolvedX = candidateX;
+    for (const portal of sideBlockedPortals()) {
+      const isChapterObjective = portal === currentSideEntrance()
+        && (portal.type || "fps") === "fps"
+        && Number.isFinite(Number(portal.mission));
+      if (
+        isChapterObjective
+        && Number.isFinite(portal.blockX)
+        && resolvedX > portal.blockX
+      ) {
+        resolvedX = portal.blockX;
+        continue;
+      }
+      const barrier = sidePortalBarrier(portal);
+      const previousRight = previousX + width;
+      const candidateRight = resolvedX + width;
+      const collisionPlane = Number(portal.x);
+      const previousCenter = previousX + width / 2;
+      const candidateCenter = resolvedX + width / 2;
+      if (previousCenter <= collisionPlane && candidateCenter > collisionPlane) {
+        resolvedX = collisionPlane - width;
+      } else if (previousCenter >= collisionPlane && candidateCenter < collisionPlane) {
+        resolvedX = collisionPlane;
+      } else if (previousRight <= barrier.left + 1 && candidateRight > barrier.left) {
+        resolvedX = barrier.left - width;
+      } else if (previousX >= barrier.right - 1 && resolvedX < barrier.right) {
+        resolvedX = barrier.right;
+      } else if (
+        resolvedX < barrier.right
+        && candidateRight > barrier.left
+      ) {
+        resolvedX = resolvedX + width / 2 < (barrier.left + barrier.right) / 2
+          ? barrier.left - width
+          : barrier.right;
+      }
+    }
+    return resolvedX;
   }
 
   function sidePortalDistance(portal) {
@@ -1703,14 +2016,10 @@
       chapterRules.minX,
       Math.min(chapterRules.maxX, side.width - p.w - 6),
     );
-    const entrance = currentSideEntrance();
-    if (
-      entrance.collision === "solidDoor"
-      && Number.isFinite(entrance.blockX)
-      && p.x > entrance.blockX
-    ) {
-      p.x = entrance.blockX;
-      if (p.vx > 0) p.vx = 0;
+    const resolvedDoorX = resolveSideDoorCollision(previousX, p.x, p.w);
+    if (resolvedDoorX !== p.x) {
+      p.x = resolvedDoorX;
+      p.vx = 0;
     }
     const activeEncounter = updateSideEncounterLock();
     const previousBottom = p.y + p.h;
@@ -1759,16 +2068,55 @@
   function updateMassiveEnemyPhase(enemy, particles, mode) {
     if (
       !isMassiveEnemy(enemy)
+      || enemy.dead
+      || enemy.dying
+      || enemy.hp <= 0
       || enemy.maxHp <= 0
-      || enemy.hp / enemy.maxHp > 0.5
-      || (enemy.massivePhase || 1) !== 1
     ) return false;
-    enemy.massivePhase = 2;
-    enemy.detachablePartAttached = false;
+    const phases = enemy.massiveProfile?.phases || [];
+    const ratio = enemy.hp / enemy.maxHp;
+    let targetPhase = 1;
+    for (let index = 0; index < phases.length; index += 1) {
+      const phase = phases[index];
+      if (Array.isArray(phase.healthRange)) {
+        const high = Number(phase.healthRange[0]);
+        const low = Number(phase.healthRange[1]);
+        if (ratio <= high && ratio > low) targetPhase = index + 1;
+      } else if (
+        Number.isFinite(Number(phase.threshold))
+        && ratio <= Number(phase.threshold)
+      ) {
+        targetPhase = index + 1;
+      }
+    }
+    const previousPhase = enemy.massivePhase || 1;
+    if (targetPhase <= previousPhase) return false;
+    enemy.massivePhase = targetPhase;
+    const phaseId = phases[targetPhase - 1]?.id || `phase-${targetPhase}`;
+    const detachablePart = enemy.massiveProfile?.detachableParts
+      ?.find((part) => part.separateSprite);
+    const wasAttached = enemy.detachablePartAttached !== false;
+    if (detachablePart?.attachPhase === phaseId) {
+      enemy.detachablePartAttached = true;
+    }
+    if (detachablePart?.detachTransition === `phase-${targetPhase}`) {
+      enemy.detachablePartAttached = false;
+    }
     enemy.attack = 0;
     enemy.attackCooldown = 0.45;
     game.shake = Math.max(game.shake, 12);
-    announce("AKA-USHI BRISE SON JOUG — PHASE DE FURIE");
+    const bossName = String(
+      enemy.massiveProfile?.name
+      || enemy.modularEntry?.name
+      || "BOSS MASSIF",
+    ).toUpperCase();
+    if (!wasAttached && enemy.detachablePartAttached) {
+      announce(`${bossName} DÉPLOIE SON ARME — PHASE ${targetPhase}`);
+    } else if (wasAttached && enemy.detachablePartAttached === false) {
+      announce(`${bossName} BRISE SON ÉQUIPEMENT — PHASE ${targetPhase}`);
+    } else {
+      announce(`${bossName} ENTRE EN FURIE — PHASE ${targetPhase}`);
+    }
     const screen = mode === "fps";
     const originX = screen ? W / 2 : enemy.x + enemy.w / 2;
     const originY = screen ? H * 0.46 : enemy.y + enemy.h * 0.42;
@@ -1813,7 +2161,7 @@
     };
   }
 
-  function canOccupySideEnemy(enemy, candidateX) {
+  function legacyCanOccupySideEnemy(enemy, candidateX) {
     const rules = currentSideRules();
     if (candidateX < rules.minX || candidateX + enemy.w > rules.maxX) return false;
     // Les plateformes sont à sens unique et les props de premier plan sont
@@ -1828,7 +2176,7 @@
     });
   }
 
-  function updateSideEnemies(dt) {
+  function legacyUpdateSideEnemies(dt) {
     const p = game.side.player;
     for (const enemy of game.side.enemies) {
       if (enemy.dead) continue;
@@ -1890,6 +2238,308 @@
           enemy.attackCooldown = profile.attackDuration + profile.recovery;
         }
       }
+    }
+  }
+
+  function ensureSideEnemyAi(enemy) {
+    if (enemy.ai) return enemy.ai;
+    const definition = {
+      x: enemy.x,
+      y: enemy.y,
+      facing: enemy.facing,
+      boss: enemy.boss,
+      platformId: enemy.platformId,
+    };
+    enemy.ai = createSideEnemyAi(
+      definition,
+      currentSideArea(),
+      enemy.w,
+      enemy.h,
+      Math.round(Math.abs(enemy.seed || 0)),
+      isMassiveEnemy(enemy),
+    );
+    return enemy.ai;
+  }
+
+  function transitionEnemyAi(enemy, nextState, reason = "") {
+    const ai = ensureSideEnemyAi(enemy);
+    if (ai.state === nextState) return false;
+    ai.previousState = ai.state;
+    ai.state = nextState;
+    ai.stateTime = 0;
+    ai.reason = reason;
+    return true;
+  }
+
+  function sideEnemyCanSeePlayer(enemy, player, ai) {
+    const enemyCenter = enemy.x + enemy.w / 2;
+    const playerCenter = player.x + player.w / 2;
+    const dx = playerCenter - enemyCenter;
+    const feetGap = Math.abs((player.y + player.h) - (enemy.y + enemy.h));
+    const inFront = Math.sign(dx) === enemy.facing
+      || Math.abs(dx) <= Math.max(28, enemy.w * 0.7);
+    return feetGap < 55 && inFront && Math.abs(dx) <= ai.sight;
+  }
+
+  function sideEnemyCanHearPlayer(enemy, player, ai) {
+    const distance = Math.abs(
+      player.x + player.w / 2 - (enemy.x + enemy.w / 2),
+    );
+    const noisy = Math.abs(player.vx) > 92
+      || game.attackTimer > 0
+      || game.rangedViewTimer > 0;
+    return noisy && distance <= ai.hearing;
+  }
+
+  function recordEnemyStimulus(enemy, targetX, reason = "perception") {
+    const ai = ensureSideEnemyAi(enemy);
+    ai.lastKnownX = Number(targetX);
+    ai.memoryTime = ai.memoryDuration;
+    if (!["attack", "hurt", "dying"].includes(ai.state)) {
+      transitionEnemyAi(enemy, "pursue", reason);
+    }
+  }
+
+  function sideEnemyNavigationBand(enemy) {
+    const ai = ensureSideEnemyAi(enemy);
+    const rules = currentSideRules();
+    const platform = sidePlatformById(currentSideArea(), ai.platformId);
+    let minX = rules.minX;
+    let maxX = Math.min(rules.maxX - enemy.w, game.side.width - enemy.w - 8);
+    if (platform) {
+      minX = Math.max(minX, platform.x + 2);
+      maxX = Math.min(maxX, platform.x + platform.w - enemy.w - 2);
+    }
+    const encounter = currentSideMassiveEncounter();
+    if (
+      encounter?.bounds
+      && (
+        enemy.encounterId === encounter.id
+        || game.side.activeEncounterId === encounter.id
+      )
+    ) {
+      minX = Math.max(minX, encounter.bounds.x + 12);
+      maxX = Math.min(maxX, encounter.bounds.x + encounter.bounds.w - enemy.w - 12);
+    }
+    return { minX, maxX: Math.max(minX, maxX) };
+  }
+
+  function canOccupySideEnemy(enemy, candidateX) {
+    const band = sideEnemyNavigationBand(enemy);
+    if (candidateX < band.minX || candidateX > band.maxX) return false;
+    const candidateRight = candidateX + enemy.w;
+    const crossesClosedSolidDoor = currentSidePortals()
+      .filter((portal) =>
+        portal.collision === "solidDoor"
+        && sidePortalBlocksMovement(portal))
+      .some((portal) => {
+        const barrier = sidePortalBarrier(portal);
+        return candidateX < barrier.right && candidateRight > barrier.left;
+      });
+    if (crossesClosedSolidDoor) return false;
+    const candidateCenter = candidateX + enemy.w / 2;
+    return game.side.enemies.every((other) => {
+      if (other === enemy || !isEnemyVisible(other)) return true;
+      const otherCenter = other.x + other.w / 2;
+      const spacing = (enemy.w + other.w) / 2 + 5;
+      return Math.abs(candidateCenter - otherCenter) >= spacing;
+    });
+  }
+
+  function moveSideEnemyToward(enemy, targetX, speed, dt) {
+    const ai = ensureSideEnemyAi(enemy);
+    const center = enemy.x + enemy.w / 2;
+    const direction = Math.sign(targetX - center);
+    if (!direction) {
+      ai.moveVelocity = 0;
+      return false;
+    }
+    enemy.facing = direction;
+    const previousX = enemy.x;
+    const candidateX = enemy.x + direction * speed * dt;
+    if (canOccupySideEnemy(enemy, candidateX)) {
+      enemy.x = candidateX;
+      ai.moveVelocity = (enemy.x - previousX) / Math.max(dt, 0.001);
+      ai.stuckTime = 0;
+      return true;
+    }
+    ai.moveVelocity = 0;
+    ai.stuckTime += dt;
+    return false;
+  }
+
+  function updateSideEnemyPatrol(enemy, profile, dt) {
+    const ai = ensureSideEnemyAi(enemy);
+    if (ai.waitTime > 0) {
+      ai.waitTime = Math.max(0, ai.waitTime - dt);
+      ai.moveVelocity = 0;
+      return;
+    }
+    const targetX = ai.patrolDirection > 0 ? ai.patrolMaxX : ai.patrolMinX;
+    if (Math.abs(enemy.x - targetX) <= 3) {
+      ai.patrolDirection *= -1;
+      enemy.facing = ai.patrolDirection;
+      ai.waitTime = (SIDE_AI_PROFILES[ai.profile]?.patrolWait || 0.75)
+        + (Math.abs(enemy.seed || 0) % 3) * 0.12;
+      ai.moveVelocity = 0;
+      return;
+    }
+    moveSideEnemyToward(enemy, targetX + enemy.w / 2, profile.speed * 0.62, dt);
+  }
+
+  function updateSideEnemies(dt) {
+    const player = game.side.player;
+    for (const enemy of game.side.enemies) {
+      if (enemy.dead) continue;
+      const ai = ensureSideEnemyAi(enemy);
+      ai.stateTime += dt;
+      ai.moveVelocity = 0;
+      enemy.flash = Math.max(0, enemy.flash - dt);
+      enemy.hurtTimer = Math.max(0, enemy.hurtTimer - dt);
+      enemy.attackCooldown = Math.max(0, enemy.attackCooldown - dt);
+      updateMassiveEnemyPhase(enemy, game.side.particles, "side");
+      enemy.knockbackVx = approach(enemy.knockbackVx, 0, 420 * dt);
+      if (Math.abs(enemy.knockbackVx) > 0.1) {
+        const band = sideEnemyNavigationBand(enemy);
+        const candidateX = clamp(
+          enemy.x + enemy.knockbackVx * dt,
+          band.minX,
+          band.maxX,
+        );
+        if (canOccupySideEnemy(enemy, candidateX)) enemy.x = candidateX;
+      }
+
+      if (enemy.dying) {
+        transitionEnemyAi(enemy, "dying", "fatal-hit");
+        enemy.deathTimer = Math.max(0, enemy.deathTimer - dt);
+        if (enemy.deathTimer <= 0) {
+          enemy.dead = true;
+          transitionEnemyAi(enemy, "dead", "death-animation-complete");
+        }
+        continue;
+      }
+      if (enemy.hurtTimer > 0) {
+        transitionEnemyAi(enemy, "hurt", "impact");
+        enemy.attack = 0;
+        continue;
+      }
+      if (ai.state === "hurt") {
+        transitionEnemyAi(
+          enemy,
+          Number.isFinite(ai.lastKnownX) ? "pursue" : "returnHome",
+          "recovered",
+        );
+      }
+
+      const profile = sideEnemyCombatProfile(enemy);
+      const playerCenter = player.x + player.w / 2;
+      const enemyCenter = enemy.x + enemy.w / 2;
+      const dx = playerCenter - enemyCenter;
+      const feetGap = Math.abs((player.y + player.h) - (enemy.y + enemy.h));
+      ai.targetVisible = sideEnemyCanSeePlayer(enemy, player, ai);
+      ai.targetAudible = sideEnemyCanHearPlayer(enemy, player, ai);
+      if (ai.targetVisible || ai.targetAudible) {
+        recordEnemyStimulus(
+          enemy,
+          playerCenter,
+          ai.targetVisible ? "sight" : "hearing",
+        );
+      } else if (ai.memoryTime > 0) {
+        ai.memoryTime = Math.max(0, ai.memoryTime - dt);
+      }
+
+      if (enemy.attack > 0) {
+        transitionEnemyAi(enemy, "attack", "attack-active");
+        enemy.attack = Math.max(0, enemy.attack - dt);
+        const progress = 1 - enemy.attack / enemy.attackDuration;
+        if (!enemy.attackHitApplied && progress >= profile.activeAt) {
+          enemy.attackHitApplied = true;
+          const targetStillInFront = Math.sign(dx) === enemy.facing
+            || Math.abs(dx) < Math.max(10, enemy.w * 0.7);
+          if (
+            targetStillInFront
+            && Math.abs(dx) <= profile.reach + 6
+            && feetGap < 55
+          ) {
+            const damaged = damagePlayer(profile.damage, {
+              mode: "side",
+              direction: Math.sign(dx) || enemy.facing,
+            });
+            if (damaged) playAudio("playZombie");
+          }
+        }
+        if (enemy.attack <= 0) {
+          transitionEnemyAi(enemy, "pursue", "attack-recovery");
+        }
+        continue;
+      }
+
+      if (
+        ai.state === "pursue"
+        && !ai.targetVisible
+        && !ai.targetAudible
+        && ai.memoryTime <= 0
+      ) {
+        transitionEnemyAi(enemy, "investigate", "lost-target");
+        ai.waitTime = 1.15;
+      }
+
+      if (ai.state === "pursue") {
+        const targetX = ai.targetVisible || ai.targetAudible
+          ? playerCenter
+          : ai.lastKnownX;
+        const beyondLeash = !isMassiveEnemy(enemy)
+          && Math.abs(enemy.x - ai.homeX) > ai.leash
+          && !ai.targetVisible;
+        if (beyondLeash || !Number.isFinite(targetX)) {
+          transitionEnemyAi(enemy, "returnHome", "leash");
+        } else {
+          enemy.facing = Math.sign(targetX - enemyCenter) || enemy.facing;
+          if (Math.abs(dx) <= profile.reach && feetGap < 55 && ai.targetVisible) {
+            if (enemy.attackCooldown <= 0 && game.transition <= 0.05) {
+              enemy.attackDuration = profile.attackDuration;
+              enemy.attack = profile.attackDuration;
+              enemy.attackHitApplied = false;
+              enemy.attackCooldown = profile.attackDuration + profile.recovery;
+              transitionEnemyAi(enemy, "attack", "in-range");
+            }
+          } else {
+            moveSideEnemyToward(enemy, targetX, profile.speed, dt);
+          }
+        }
+      } else if (ai.state === "investigate") {
+        if (Number.isFinite(ai.lastKnownX) && Math.abs(enemyCenter - ai.lastKnownX) > 7) {
+          moveSideEnemyToward(enemy, ai.lastKnownX, profile.speed * 0.74, dt);
+        } else {
+          ai.waitTime = Math.max(0, ai.waitTime - dt);
+          if (ai.waitTime <= 0) {
+            transitionEnemyAi(enemy, "returnHome", "investigation-complete");
+          }
+        }
+      } else if (ai.state === "returnHome") {
+        const homeCenter = ai.homeX + enemy.w / 2;
+        if (Math.abs(enemy.x - ai.homeX) <= 3) {
+          enemy.x = ai.homeX;
+          enemy.facing = ai.homeFacing;
+          ai.lastKnownX = null;
+          transitionEnemyAi(enemy, "patrol", "home");
+        } else {
+          moveSideEnemyToward(enemy, homeCenter, profile.speed * 0.7, dt);
+        }
+      } else if (ai.state === "idle") {
+        if (!isMassiveEnemy(enemy) && ai.stateTime > 0.65) {
+          transitionEnemyAi(enemy, "patrol", "idle-complete");
+        }
+      } else {
+        updateSideEnemyPatrol(enemy, profile, dt);
+      }
+
+      if (ai.stuckTime > 0.72 && ai.state === "patrol") {
+        ai.patrolDirection *= -1;
+        ai.stuckTime = 0;
+        ai.waitTime = 0.4;
+      }
+      ai.lastX = enemy.x;
     }
   }
 
@@ -2150,7 +2800,7 @@
     };
   }
 
-  function updateFpsEnemies(mission, dt) {
+  function legacyUpdateFpsEnemies(mission, dt) {
     const p = mission.player;
     for (const enemy of mission.enemies) {
       if (enemy.dead) continue;
@@ -2228,6 +2878,314 @@
           enemy.attackHitApplied = false;
           enemy.attackCooldown = profile.attackDuration + profile.recovery;
         }
+      }
+    }
+  }
+
+  function ensureFpsEnemyAi(enemy) {
+    if (enemy.ai) return enemy.ai;
+    enemy.ai = createFpsEnemyAi(
+      enemy.x,
+      enemy.y,
+      enemy.engagementSlot || enemy.spriteIndex || 0,
+      Boolean(enemy.boss),
+    );
+    return enemy.ai;
+  }
+
+  function transitionFpsEnemyAi(enemy, nextState, reason = "") {
+    const ai = ensureFpsEnemyAi(enemy);
+    if (ai.state === nextState) return false;
+    ai.previousState = ai.state;
+    ai.state = nextState;
+    ai.stateTime = 0;
+    ai.reason = reason;
+    return true;
+  }
+
+  function fpsCanSeePlayer(mission, enemy, ai) {
+    const dx = mission.player.x - enemy.x;
+    const dy = mission.player.y - enemy.y;
+    const distance = Math.hypot(dx, dy);
+    if (distance > ai.sight) return false;
+    const targetHeading = Math.atan2(dy, dx);
+    if (Math.abs(normalizeAngle(targetHeading - ai.heading)) > ai.fov / 2) {
+      return false;
+    }
+    return lineOfSight(
+      mission,
+      enemy.x,
+      enemy.y,
+      mission.player.x,
+      mission.player.y,
+    );
+  }
+
+  function fpsCanHearPlayer(mission, enemy, ai) {
+    const distance = Math.hypot(
+      mission.player.x - enemy.x,
+      mission.player.y - enemy.y,
+    );
+    const playerMoving = key("w")
+      || key("s")
+      || key("a")
+      || key("d")
+      || key("ArrowUp")
+      || key("ArrowDown");
+    return distance <= ai.hearing
+      && (playerMoving || game.attackTimer > 0 || game.rangedViewTimer > 0);
+  }
+
+  function moveFpsEnemyToward(mission, enemy, targetX, targetY, pace, dt) {
+    const ai = ensureFpsEnemyAi(enemy);
+    const dx = targetX - enemy.x;
+    const dy = targetY - enemy.y;
+    const beforeX = enemy.x;
+    const beforeY = enemy.y;
+    const moved = moveFpsEnemyWithSteering(mission, enemy, dx, dy, pace);
+    const movementX = enemy.x - beforeX;
+    const movementY = enemy.y - beforeY;
+    const movedDistance = Math.hypot(movementX, movementY);
+    if (moved && movedDistance > 0.0001) {
+      ai.heading = Math.atan2(movementY, movementX);
+      ai.movedDistance += movedDistance;
+      ai.moveVelocity = movedDistance / Math.max(dt, 0.001);
+      ai.stuckTime = 0;
+    } else {
+      ai.moveVelocity = 0;
+      ai.stuckTime += dt;
+    }
+    return moved;
+  }
+
+  function updateFpsEnemyPatrol(mission, enemy, profile, dt) {
+    const ai = ensureFpsEnemyAi(enemy);
+    if (ai.patrolWait > 0) {
+      ai.patrolWait = Math.max(0, ai.patrolWait - dt);
+      return;
+    }
+    const targetX = ai.homeX + Math.cos(ai.patrolAngle) * ai.patrolRadius;
+    const targetY = ai.homeY + Math.sin(ai.patrolAngle) * ai.patrolRadius;
+    if (Math.hypot(targetX - enemy.x, targetY - enemy.y) <= 0.18) {
+      ai.patrolAngle = normalizeAngle(
+        ai.patrolAngle + ai.patrolDirection * (Math.PI * 0.56),
+      );
+      ai.heading = ai.patrolAngle;
+      ai.patrolWait = FPS_AI_DEFAULTS.patrolWait
+        + (Math.abs(enemy.spriteIndex || 0) % 3) * 0.15;
+      return;
+    }
+    moveFpsEnemyToward(
+      mission,
+      enemy,
+      targetX,
+      targetY,
+      profile.speed * 0.38 * dt,
+      dt,
+    );
+    if (ai.stuckTime > 0.75) {
+      ai.patrolAngle = normalizeAngle(ai.patrolAngle + Math.PI * 0.72);
+      ai.heading = ai.patrolAngle;
+      ai.stuckTime = 0;
+      ai.patrolWait = 0.28;
+    }
+  }
+
+  function updateFpsEnemies(mission, dt) {
+    const player = mission.player;
+    for (const enemy of mission.enemies) {
+      if (enemy.dead) continue;
+      const ai = ensureFpsEnemyAi(enemy);
+      ai.stateTime += dt;
+      ai.moveVelocity = 0;
+      enemy.flash = Math.max(0, enemy.flash - dt);
+      enemy.hurtTimer = Math.max(0, enemy.hurtTimer - dt);
+      enemy.attackCooldown = Math.max(0, enemy.attackCooldown - dt);
+      enemy.knockbackX = approach(enemy.knockbackX, 0, 2.8 * dt);
+      enemy.knockbackY = approach(enemy.knockbackY, 0, 2.8 * dt);
+      updateMassiveEnemyPhase(enemy, mission.particles, "fps");
+      if (Math.hypot(enemy.knockbackX, enemy.knockbackY) > 0.01) {
+        const nx = enemy.x + enemy.knockbackX * dt;
+        const ny = enemy.y + enemy.knockbackY * dt;
+        const radius = fpsEnemyRadius(enemy);
+        if (canOccupyFps(mission, nx, enemy.y, radius, enemy)) enemy.x = nx;
+        if (canOccupyFps(mission, enemy.x, ny, radius, enemy)) enemy.y = ny;
+      }
+
+      if (enemy.dying) {
+        transitionFpsEnemyAi(enemy, "dying", "fatal-hit");
+        enemy.deathTimer = Math.max(0, enemy.deathTimer - dt);
+        if (enemy.deathTimer <= 0) {
+          enemy.dead = true;
+          transitionFpsEnemyAi(enemy, "dead", "death-animation-complete");
+        }
+        continue;
+      }
+      if (enemy.hurtTimer > 0) {
+        transitionFpsEnemyAi(enemy, "hurt", "impact");
+        enemy.attack = 0;
+        continue;
+      }
+      if (ai.state === "hurt") {
+        transitionFpsEnemyAi(enemy, "pursue", "recovered");
+      }
+
+      const profile = fpsEnemyCombatProfile(enemy);
+      const dx = player.x - enemy.x;
+      const dy = player.y - enemy.y;
+      const distance = Math.hypot(dx, dy);
+      const targetHeading = Math.atan2(dy, dx);
+      ai.targetVisible = fpsCanSeePlayer(mission, enemy, ai);
+      ai.targetAudible = fpsCanHearPlayer(mission, enemy, ai);
+      if (ai.targetVisible || ai.targetAudible) {
+        ai.lastKnownX = player.x;
+        ai.lastKnownY = player.y;
+        ai.memoryTime = ai.memoryDuration;
+        if (!["attack", "hurt"].includes(ai.state)) {
+          transitionFpsEnemyAi(
+            enemy,
+            "pursue",
+            ai.targetVisible ? "sight" : "hearing",
+          );
+        }
+      } else if (ai.memoryTime > 0) {
+        ai.memoryTime = Math.max(0, ai.memoryTime - dt);
+      }
+
+      const frontlineBlocked = fpsFrontlineBlocked(mission, enemy);
+      enemy.frontlineBlocked = frontlineBlocked;
+      if (enemy.attack > 0) {
+        transitionFpsEnemyAi(enemy, "attack", "attack-active");
+        enemy.attack = Math.max(0, enemy.attack - dt);
+        const progress = 1 - enemy.attack / enemy.attackDuration;
+        if (!enemy.attackHitApplied && progress >= profile.activeAt) {
+          enemy.attackHitApplied = true;
+          const targetInFront = Math.abs(
+            normalizeAngle(targetHeading - ai.heading),
+          ) <= Math.PI * 0.38;
+          if (
+            targetInFront
+            && distance <= profile.reach + 0.12
+            && lineOfSight(mission, enemy.x, enemy.y, player.x, player.y)
+          ) {
+            const damaged = damagePlayer(profile.damage, {
+              mode: "fps",
+              sourceX: enemy.x,
+              sourceY: enemy.y,
+            });
+            if (damaged) playAudio("playZombie");
+          }
+        }
+        if (enemy.attack <= 0) {
+          transitionFpsEnemyAi(enemy, "pursue", "attack-recovery");
+        }
+        continue;
+      }
+
+      if (
+        ai.state === "pursue"
+        && !ai.targetVisible
+        && !ai.targetAudible
+        && ai.memoryTime <= 0
+      ) {
+        transitionFpsEnemyAi(enemy, "investigate", "lost-target");
+        ai.patrolWait = 1.2;
+      }
+
+      if (ai.state === "pursue") {
+        const targetX = ai.targetVisible || ai.targetAudible
+          ? player.x
+          : ai.lastKnownX;
+        const targetY = ai.targetVisible || ai.targetAudible
+          ? player.y
+          : ai.lastKnownY;
+        if (!Number.isFinite(targetX) || !Number.isFinite(targetY)) {
+          transitionFpsEnemyAi(enemy, "returnHome", "no-target");
+        } else {
+          const engagementGoal = ai.targetVisible && distance < profile.reach + 2
+            ? fpsEngagementGoal(mission, enemy, profile)
+            : null;
+          const goalX = engagementGoal?.x ?? targetX;
+          const goalY = engagementGoal?.y ?? targetY;
+          const goalDistance = Math.hypot(goalX - enemy.x, goalY - enemy.y);
+          const shouldReposition = Boolean(engagementGoal && goalDistance > 0.16);
+          let moved = false;
+          if (
+            (distance > profile.reach || shouldReposition)
+            && (!frontlineBlocked || engagementGoal)
+          ) {
+            moved = moveFpsEnemyToward(
+              mission,
+              enemy,
+              goalX,
+              goalY,
+              profile.speed * dt,
+              dt,
+            );
+          } else {
+            ai.heading = targetHeading;
+          }
+          if (
+            ai.targetVisible
+            && distance <= profile.reach + 0.12
+            && !frontlineBlocked
+            && (!shouldReposition || !moved)
+            && enemy.attackCooldown <= 0
+          ) {
+            ai.heading = targetHeading;
+            enemy.attackDuration = profile.attackDuration;
+            enemy.attack = profile.attackDuration;
+            enemy.attackHitApplied = false;
+            enemy.attackCooldown = profile.attackDuration + profile.recovery;
+            transitionFpsEnemyAi(enemy, "attack", "in-range");
+          }
+        }
+      } else if (ai.state === "investigate") {
+        const targetX = ai.lastKnownX;
+        const targetY = ai.lastKnownY;
+        if (
+          Number.isFinite(targetX)
+          && Number.isFinite(targetY)
+          && Math.hypot(targetX - enemy.x, targetY - enemy.y) > 0.2
+        ) {
+          moveFpsEnemyToward(
+            mission,
+            enemy,
+            targetX,
+            targetY,
+            profile.speed * 0.64 * dt,
+            dt,
+          );
+        } else {
+          ai.patrolWait = Math.max(0, ai.patrolWait - dt);
+          ai.heading = normalizeAngle(ai.heading + dt * 0.8);
+          if (ai.patrolWait <= 0) {
+            transitionFpsEnemyAi(enemy, "returnHome", "investigation-complete");
+          }
+        }
+      } else if (ai.state === "returnHome") {
+        if (Math.hypot(ai.homeX - enemy.x, ai.homeY - enemy.y) <= 0.18) {
+          enemy.x = ai.homeX;
+          enemy.y = ai.homeY;
+          ai.lastKnownX = null;
+          ai.lastKnownY = null;
+          transitionFpsEnemyAi(enemy, "patrol", "home");
+        } else {
+          moveFpsEnemyToward(
+            mission,
+            enemy,
+            ai.homeX,
+            ai.homeY,
+            profile.speed * 0.55 * dt,
+            dt,
+          );
+        }
+      } else if (ai.state === "idle") {
+        if (!enemy.boss && ai.stateTime > 0.7) {
+          transitionFpsEnemyAi(enemy, "patrol", "idle-complete");
+        }
+      } else {
+        updateFpsEnemyPatrol(mission, enemy, profile, dt);
       }
     }
   }
@@ -2469,6 +3427,22 @@
         : (material === "armor" ? 0.7 : 1.15);
       enemy.knockbackX = dx / length * force;
       enemy.knockbackY = dy / length * force;
+    }
+    if (mode === "side") {
+      recordEnemyStimulus(
+        enemy,
+        game.side.player.x + game.side.player.w / 2,
+        "damage",
+      );
+    } else if (enemy.ai) {
+      const p = currentMission().player;
+      enemy.ai.lastKnownX = p.x;
+      enemy.ai.lastKnownY = p.y;
+      enemy.ai.memoryTime = enemy.ai.memoryDuration;
+      enemy.ai.previousState = enemy.ai.state;
+      enemy.ai.state = "pursue";
+      enemy.ai.reason = "damage";
+      enemy.ai.stateTime = 0;
     }
     if (enemy.hp <= 0) {
       enemy.dying = true;
@@ -2788,6 +3762,29 @@
           ctx.strokeRect(portal.x - 23.5, SIDE_GROUND_Y - 57.5, 47, 57);
         }
       }
+      if (sidePortalBlocksMovement(portal)) {
+        const barrierWidth = Math.max(36, Math.round(width * 0.72));
+        const barY = SIDE_GROUND_Y - Math.max(28, Math.round(width * 0.42));
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = "#28191a";
+        ctx.fillRect(
+          Math.round(portal.x - barrierWidth / 2),
+          Math.round(barY),
+          barrierWidth,
+          7,
+        );
+        ctx.fillStyle = "#8b4932";
+        ctx.fillRect(
+          Math.round(portal.x - barrierWidth / 2 + 3),
+          Math.round(barY + 2),
+          barrierWidth - 6,
+          3,
+        );
+        ctx.fillStyle = "#d5a45b";
+        ctx.fillRect(Math.round(portal.x - 4), Math.round(barY - 2), 8, 11);
+        ctx.fillStyle = "#26171b";
+        ctx.fillRect(Math.round(portal.x - 1), Math.round(barY + 2), 2, 4);
+      }
       ctx.restore();
     }
   }
@@ -2797,6 +3794,10 @@
     if (!encounter?.bounds || game.side.activeEncounterId !== encounter.id) return;
     const boss = currentSideMassiveBoss(encounter);
     if (!isEnemyAlive(boss)) return;
+    const authoredBarriers = currentWorldProps().some((prop) =>
+      prop.destructible
+      && /barriere/i.test(String(prop.file || "")));
+    if (authoredBarriers) return;
     const positions = [
       encounter.bounds.x + 4,
       encounter.bounds.x + encounter.bounds.w - 18,
@@ -2837,18 +3838,48 @@
 
   function drawSideBackdrop(cam) {
     const environmentIndex = currentSideEnvironmentIndex();
+    const backdropProfile = currentSideArea()?.backdropProfile || "";
+    const interiorBackdrop = bitmapAssets.sideBackgrounds[2];
+    if (
+      ["castle-residence", "castle-donjon"].includes(backdropProfile)
+      && bitmapReady(interiorBackdrop)
+    ) {
+      ctx.drawImage(interiorBackdrop, 0, 0, W, H);
+      ctx.fillStyle = backdropProfile === "castle-donjon"
+        ? "rgba(35, 6, 13, .34)"
+        : "rgba(10, 8, 12, .16)";
+      ctx.fillRect(0, 0, W, H);
+      const beamOffset = -((cam * 0.035) % 160);
+      ctx.fillStyle = backdropProfile === "castle-donjon"
+        ? "rgba(32, 14, 18, .72)"
+        : "rgba(43, 26, 24, .58)";
+      for (let x = beamOffset - 20; x < W + 20; x += 160) {
+        ctx.fillRect(Math.round(x), 0, 7, H);
+        ctx.fillRect(Math.round(x - 12), 57, 31, 6);
+      }
+      return;
+    }
     const parallax = bitmapAssets.parallaxBackgrounds[environmentIndex];
     if (parallax && bitmapReady(parallax.sky)) {
-      drawParallaxLayer(parallax.sky, cam, 0);
-      drawParallaxLayer(parallax.far, cam, 0.035);
-      drawParallaxLayer(
-        parallax.mid,
-        cam,
-        0.09,
-        SIDE_MIDGROUND_SOURCE_Y[environmentIndex],
-      );
-      drawParallaxLayer(parallax.near, cam, 0.16);
-      ctx.fillStyle = "rgba(4, 6, 11, .12)";
+      drawParallaxLayer(parallax.sky, cam, 0, null, false);
+      drawParallaxLayer(parallax.far, cam, 0.035, null, false);
+      // Les villages et le château ont désormais leurs bâtiments et murs
+      // modulaires. Répéter les couches "mid/near" y créait des maisons
+      // jumelles et des coutures visuelles à chaque largeur d'écran.
+      if (environmentIndex === 1) {
+        drawParallaxLayer(
+          parallax.mid,
+          cam,
+          0.09,
+          SIDE_MIDGROUND_SOURCE_Y[environmentIndex],
+        );
+        drawParallaxLayer(parallax.near, cam, 0.16);
+      }
+      ctx.fillStyle = backdropProfile === "castle-residence"
+        ? "rgba(18, 11, 14, .34)"
+        : (backdropProfile === "castle-donjon"
+          ? "rgba(13, 8, 13, .43)"
+          : "rgba(4, 6, 11, .12)");
       ctx.fillRect(0, 0, W, H);
       return;
     }
@@ -2903,7 +3934,13 @@
     }
   }
 
-  function drawParallaxLayer(image, cam, factor, sourceGroundY = null) {
+  function drawParallaxLayer(
+    image,
+    cam,
+    factor,
+    sourceGroundY = null,
+    repeat = true,
+  ) {
     if (!bitmapReady(image)) return;
     const scale = H / image.naturalHeight;
     const drawY = Number.isFinite(sourceGroundY)
@@ -2911,6 +3948,17 @@
       : 0;
     if (factor === 0) {
       ctx.drawImage(image, 0, drawY, W, H);
+      return;
+    }
+    if (!repeat) {
+      const travel = Math.max(0, game.side.width - W) * factor;
+      ctx.drawImage(
+        image,
+        Math.round(-cam * factor),
+        drawY,
+        Math.ceil(W + travel + 2),
+        H,
+      );
       return;
     }
     const drawWidth = Math.max(W, image.naturalWidth * scale);
@@ -2922,6 +3970,7 @@
 
   const opaqueBoundsCache = new WeakMap();
   const opaqueAnimationFrameBoundsCache = new WeakMap();
+  const weaponVisualMetricsCache = new WeakMap();
 
   function opaqueBoundsForImage(image) {
     if (!bitmapReady(image)) return null;
@@ -2970,6 +4019,69 @@
     }
     opaqueBoundsCache.set(image, bounds);
     return bounds;
+  }
+
+  function weaponVisualMetrics(image) {
+    if (!bitmapReady(image)) return { sourceRotation: 0, coverage: 0 };
+    if (weaponVisualMetricsCache.has(image)) {
+      return weaponVisualMetricsCache.get(image);
+    }
+    let metrics = { sourceRotation: 0, coverage: 0 };
+    try {
+      const sampleScale = Math.min(1, 160 / Math.max(
+        image.naturalWidth,
+        image.naturalHeight,
+      ));
+      const sampleWidth = Math.max(1, Math.round(image.naturalWidth * sampleScale));
+      const sampleHeight = Math.max(1, Math.round(image.naturalHeight * sampleScale));
+      const sampler = document.createElement("canvas");
+      sampler.width = sampleWidth;
+      sampler.height = sampleHeight;
+      const samplerCtx = sampler.getContext("2d", { willReadFrequently: true });
+      samplerCtx.imageSmoothingEnabled = false;
+      samplerCtx.drawImage(image, 0, 0, sampleWidth, sampleHeight);
+      const pixels = samplerCtx.getImageData(0, 0, sampleWidth, sampleHeight).data;
+      let count = 0;
+      let sumX = 0;
+      let sumY = 0;
+      for (let y = 0; y < sampleHeight; y += 1) {
+        for (let x = 0; x < sampleWidth; x += 1) {
+          if (pixels[(y * sampleWidth + x) * 4 + 3] < 32) continue;
+          count += 1;
+          sumX += x;
+          sumY += y;
+        }
+      }
+      if (count > 4) {
+        const centerX = sumX / count;
+        const centerY = sumY / count;
+        let covarianceXX = 0;
+        let covarianceYY = 0;
+        let covarianceXY = 0;
+        for (let y = 0; y < sampleHeight; y += 1) {
+          for (let x = 0; x < sampleWidth; x += 1) {
+            if (pixels[(y * sampleWidth + x) * 4 + 3] < 32) continue;
+            const dx = x - centerX;
+            const dy = y - centerY;
+            covarianceXX += dx * dx;
+            covarianceYY += dy * dy;
+            covarianceXY += dx * dy;
+          }
+        }
+        metrics = {
+          sourceRotation: 0.5 * Math.atan2(
+            covarianceXY * 2,
+            covarianceXX - covarianceYY,
+          ),
+          coverage: count / (sampleWidth * sampleHeight),
+        };
+      }
+    } catch (_) {
+      // Le rendu file:// conserve l'orientation déclarée si la lecture alpha
+      // est interdite. Sous HTTP, chaque arme est normalisée une seule fois.
+    }
+    weaponVisualMetricsCache.set(image, metrics);
+    return metrics;
   }
 
   function opaqueAnimationFrameBounds(animationSet, animation, frame) {
@@ -3132,6 +4244,7 @@
   }
 
   function worldPropImageByFile(file) {
+    if (bitmapAssets.alleyWalls[file]) return bitmapAssets.alleyWalls[file];
     for (const propSet of bitmapAssets.worldProps) {
       const match = propSet.find((prop) => prop.file === file);
       if (match?.image) return match.image;
@@ -3139,25 +4252,41 @@
     return null;
   }
 
+  function worldPropIsVisible(prop) {
+    if (!prop.destructible) return true;
+    const encounter = currentSideMassiveEncounter();
+    if (!encounter) return true;
+    return isEnemyAlive(currentSideMassiveBoss(encounter));
+  }
+
   function currentWorldProps() {
     const areaProps = currentSideArea()?.props;
     if (Array.isArray(areaProps)) {
-      return areaProps.map((prop) => ({
-        ...prop,
-        image: worldPropImageByFile(prop.file),
-      }));
+      return areaProps
+        .filter(worldPropIsVisible)
+        .map((prop) => ({
+          ...prop,
+          image: worldPropImageByFile(prop.file),
+        }));
     }
     return bitmapAssets.worldProps[currentSideEnvironmentIndex()] || [];
   }
 
   function drawModularWorldProps(layer = "back") {
-    const props = currentWorldProps();
+    const props = currentWorldProps()
+      .filter((prop) => (prop.layer || "back") === layer)
+      .sort((a, b) =>
+        (a.bottomY ?? SIDE_GROUND_Y) - (b.bottomY ?? SIDE_GROUND_Y)
+        || a.x - b.x);
     let drawn = false;
     for (const prop of props) {
-      if ((prop.layer || "back") !== layer) continue;
       if (!bitmapReady(prop.image)) continue;
       const bottomY = prop.bottomY ?? SIDE_GROUND_Y;
-      drawGroundedWorldSprite(prop.image, prop.x, bottomY, prop.width);
+      const perspectiveScale = Number(prop.perspectiveScale)
+        || clamp(1 + (bottomY - SIDE_GROUND_Y) * 0.012, 0.86, 1.12);
+      const width = prop.width * perspectiveScale;
+      const centeredX = prop.x - (width - prop.width) / 2;
+      drawGroundedWorldSprite(prop.image, centeredX, bottomY, width);
       drawn = true;
     }
     return drawn;
@@ -3173,11 +4302,14 @@
     const hasGeneratedBackdrop = bitmapReady(bitmapAssets.parallaxBackgrounds[environmentIndex]?.sky)
       || bitmapReady(bitmapAssets.sideBackgrounds[environmentIndex]);
     const tiles = bitmapAssets.platformTiles[environmentIndex];
+    const groundTile = bitmapAssets.groundVisuals[
+      currentSideArea()?.groundVisual
+    ] || tiles?.ground;
     const hasBackProps = drawModularWorldProps("back");
     ctx.fillStyle = hasGeneratedBackdrop ? "rgba(16, 14, 19, .72)" : "#161219";
     ctx.fillRect(0, SIDE_GROUND_Y, side.width, SIDE_GROUND_DEPTH);
     if (!drawContinuousGroundSprite(
-      tiles?.ground,
+      groundTile,
       0,
       SIDE_GROUND_Y,
       side.width,
@@ -3257,6 +4389,25 @@
     const tiles = bitmapAssets.platformTiles[currentSideEnvironmentIndex()];
     const tile = tiles?.[p.tile || "ledge"] || tiles?.ledge;
     const visualHeight = p.visualHeight || Math.max(18, p.h);
+    const structuralFloor = p.routeRole === "structuralFloor"
+      && /storey|floor|gallery/i.test(String(p.owner || p.id || ""));
+    if (structuralFloor && p.y + visualHeight < SIDE_GROUND_Y - 4) {
+      const supportTop = p.y + Math.min(visualHeight, 18);
+      ctx.fillStyle = "#24191a";
+      for (let supportX = p.x + 18; supportX < p.x + p.w - 8; supportX += 92) {
+        ctx.fillRect(Math.round(supportX), supportTop, 7, SIDE_GROUND_Y - supportTop);
+        ctx.fillStyle = "#5b392c";
+        ctx.fillRect(Math.round(supportX + 2), supportTop, 2, SIDE_GROUND_Y - supportTop);
+        ctx.fillStyle = "#24191a";
+      }
+      ctx.fillStyle = "#452c25";
+      ctx.fillRect(
+        p.x + 6,
+        Math.min(SIDE_GROUND_Y - 8, supportTop + 26),
+        Math.max(8, p.w - 12),
+        5,
+      );
+    }
     // Une plateforme correspond à un sprite complet, jamais à une répétition
     // de ses cordes et de ses embouts. Son bord supérieur est exactement la
     // ligne utilisée par la collision.
@@ -3279,12 +4430,16 @@
   }
 
   function weaponKind(weaponAsset = {}) {
-    const text = `${weaponAsset.id || ""} ${weaponAsset.name || ""} ${weaponAsset.file || ""}`.toLowerCase();
-    if (/bouclier|plaque|carapace|joug/.test(text)) return "guard";
-    if (/yari|naginata|shakujo|spear|lance|bambou/.test(text)) return "pole";
-    if (/otsuchi|maillet|belier|masse|marteau|taiko/.test(text)) return "heavy";
-    if (/tanto|jitte|hachiwari|tessen|wakizashi/.test(text)) return "short";
-    if (/chaine|fleau|menotte|ancre/.test(text)) return "chain";
+    const text = `${weaponAsset.weaponClass || ""} ${weaponAsset.animationProfile || ""} ${weaponAsset.family || ""} ${weaponAsset.id || ""} ${weaponAsset.name || ""} ${weaponAsset.file || ""}`
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+    if (/tessen|eventail|warfan|\bfan\b/.test(text)) return "fan";
+    if (/bouclier|plaque|carapace|joug|guard|shield/.test(text)) return "guard";
+    if (/yari|naginata|shakujo|spear|lance|bambou|polearm|sodegarami|sasumata|tsukubo|nagamaki|\bbo\b|\bjo\b/.test(text)) return "pole";
+    if (/otsuchi|maillet|belier|masse|marteau|taiko|kanabo|tetsubo|masakari|\bono\b|hammer|heavy/.test(text)) return "heavy";
+    if (/tanto|jitte|hachiwari|wakizashi|short|dagger/.test(text)) return "short";
+    if (/chaine|fleau|menotte|ancre|kusari|chigiriki|manriki|chain/.test(text)) return "chain";
     return "blade";
   }
 
@@ -3296,6 +4451,7 @@
       heavy: 1.05,
       chain: 0.95,
       guard: 0.8,
+      fan: 0.82,
     }[kind] || 1;
   }
 
@@ -3316,46 +4472,132 @@
     const sourceMax = Math.max(sw, sh, 1);
     const drawWidth = sw / sourceMax * maxDimension * widthBias;
     const drawHeight = sh / sourceMax * maxDimension;
+    const cropAnchor = options.anchorSpace === "crop"
+      ? anchor
+      : [
+          (image.naturalWidth * anchor[0] - sx) / Math.max(1, sw),
+          (image.naturalHeight * anchor[1] - sy) / Math.max(1, sh),
+        ];
     ctx.drawImage(
       image,
       sx,
       sy,
       sw,
       sh,
-      -drawWidth * anchor[0],
-      -drawHeight * anchor[1],
+      -drawWidth * cropAnchor[0],
+      -drawHeight * cropAnchor[1],
       drawWidth,
       drawHeight,
     );
   }
 
-  function drawEnemyWeapon(enemy, animation, spriteSize, fps = false) {
-    if (isMassiveEnemy(enemy) && enemy.detachablePartAttached === false) return;
+  function playerWeaponPoseOffset(weapon, view) {
+    const family = weaponFamilyKey(weapon);
+    return PLAYER_WEAPON_POSE_OFFSETS[view]?.[family] || 0;
+  }
+
+  function normalizedWeaponRotation(image, weapon, view) {
+    const sourceRotation = weaponVisualMetrics(image).sourceRotation || 0;
+    return -sourceRotation + playerWeaponPoseOffset(weapon, view);
+  }
+
+  function playerWeaponAnchor(image, weapon, declaredAnchor) {
+    const family = weaponFamilyKey(weapon);
+    const sourceRotation = weaponVisualMetrics(image).sourceRotation || 0;
+    if (family === "fan") return [0.5, 0.9];
+    if (family === "throwing") return [0.5, 0.5];
+    if (family === "bow") return declaredAnchor || [0.62, 0.5];
+    if (Math.abs(sourceRotation) > 0.28) {
+      return sourceRotation < 0 ? [0.14, 0.86] : [0.14, 0.14];
+    }
+    return declaredAnchor || [0.16, 0.5];
+  }
+
+  function enemyWeaponAnchor(image, enemy, kind) {
+    if (Array.isArray(enemy.weaponAsset?.enemyAnchor)) {
+      return enemy.weaponAsset.enemyAnchor;
+    }
+    if (Array.isArray(enemy.weaponAsset?.anchor)) {
+      return enemy.weaponAsset.anchor;
+    }
+    const presentation = ENEMY_WEAPON_PRESENTATION[kind]
+      || ENEMY_WEAPON_PRESENTATION.blade;
+    const sourceRotation = weaponVisualMetrics(image).sourceRotation || 0;
+    if (kind === "fan" || kind === "guard") return presentation.anchor;
+    if (Math.abs(sourceRotation) > 0.28) {
+      return sourceRotation < 0 ? [0.13, 0.86] : [0.13, 0.14];
+    }
+    return kind === "short" ? [0.16, 0.52] : [0.13, 0.52];
+  }
+
+  function drawWeaponGripOverlay(spriteSize, fps, kind) {
+    if (kind === "guard") return;
+    const size = Math.max(2, Math.round(spriteSize * (fps ? 0.018 : 0.042)));
+    ctx.fillStyle = "#221820";
+    ctx.fillRect(-Math.ceil(size * 0.65), -Math.ceil(size * 0.48), size, size);
+    ctx.fillStyle = "#8f5f45";
+    ctx.fillRect(-Math.ceil(size * 0.25), -Math.ceil(size * 0.2), size, Math.max(1, size - 1));
+  }
+
+  function drawEnemyWeapon(enemy, animation, spriteSize, fps = false, frame = 0) {
+    const detachableId = enemy.massiveProfile?.detachableParts
+      ?.find((part) => part.separateSprite)?.weaponId;
+    if (
+      isMassiveEnemy(enemy)
+      && enemy.detachablePartAttached === false
+      && (!detachableId || enemy.weaponAsset?.id === detachableId)
+    ) return;
     const weapon = weaponBitmapForEnemy(enemy);
     if (!bitmapReady(weapon)) return;
     const context = fps ? "fps" : "side";
     const mount = WEAPON_MOUNTS[context][animation] || WEAPON_MOUNTS[context].idle;
     const kind = weaponKind(enemy.weaponAsset);
-    const maxDimension = spriteSize * mount.scale * weaponScaleForKind(kind);
-    const anchor = Array.isArray(enemy.weaponAsset?.anchor)
-      ? enemy.weaponAsset.anchor
-      : [0.16, 0.5];
+    const presentation = ENEMY_WEAPON_PRESENTATION[kind]
+      || ENEMY_WEAPON_PRESENTATION.blade;
+    const directionProfile = fps
+      ? (ENEMY_FPS_DIRECTIONAL_WEAPON[enemy.viewDirection]
+        || ENEMY_FPS_DIRECTIONAL_WEAPON.left)
+      : { x: 0, y: 0, rotation: 0, scale: 1 };
+    const massiveMount = MASSIVE_EQUIPMENT_MOUNTS[enemy.weaponAsset?.id]?.[context];
+    const mountX = massiveMount?.x ?? (mount.x + directionProfile.x);
+    const mountY = massiveMount?.y ?? (mount.y + directionProfile.y);
+    const mountScale = massiveMount?.scale ?? (mount.scale * directionProfile.scale);
+    const maxDimension = spriteSize
+      * mountScale
+      * weaponScaleForKind(kind)
+      * presentation.scale;
+    const anchor = enemyWeaponAnchor(weapon, enemy, kind);
     const attacking = animation === "attack";
     const attackPhase = attacking
       ? clamp(1 - enemy.attack / Math.max(0.01, enemy.attackDuration || 0.68), 0, 1)
       : 0;
+    const frameNudge = [0, -0.018, -0.01, 0.012, 0.018, 0][frame % 6] || 0;
     ctx.save();
-    ctx.translate(spriteSize * mount.x, spriteSize * mount.y);
+    ctx.translate(
+      spriteSize * (mountX + frameNudge),
+      spriteSize * (mountY + (fps ? frameNudge * 0.35 : -frameNudge * 0.4)),
+    );
     const defaultRotation = Number.isFinite(enemy.weaponAsset?.defaultRotation)
       ? enemy.weaponAsset.defaultRotation * Math.PI / 180
       : 0;
-    ctx.rotate(defaultRotation + mount.rotation + (attacking ? attackPhase * mount.arc : 0));
+    const sourceRotation = weaponVisualMetrics(weapon).sourceRotation || 0;
+    ctx.rotate(
+      defaultRotation
+      - sourceRotation
+      + (massiveMount?.rotation ?? (
+        mount.rotation
+        + presentation.rotation
+        + directionProfile.rotation
+      ))
+      + (attacking ? attackPhase * mount.arc : 0),
+    );
     if (kind === "guard") ctx.scale(0.82, 1.05);
     drawWeaponImage(weapon, {
       anchor,
       maxDimension,
       widthBias: kind === "pole" ? 1.08 : 1,
     });
+    drawWeaponGripOverlay(spriteSize, fps, kind);
     ctx.restore();
   }
 
@@ -3373,8 +4615,12 @@
       anchor: Array.isArray(declaredAnchor)
         ? declaredAnchor
         : (legacyMeta?.anchor || [0.24, 0.56]),
-      sideRotation: legacyMeta?.sideRotation || profile.sideRotation || 0,
-      fpsRotation: legacyMeta?.fpsRotation ?? (-0.84 + (profile.fpsRotation || 0)),
+      sideRotation: legacyMeta
+        ? legacyMeta.sideRotation - KATANA_WEAPON_META[0].sideRotation
+        : (profile.sideRotation || 0),
+      fpsRotation: legacyMeta
+        ? legacyMeta.fpsRotation - KATANA_WEAPON_META[0].fpsRotation
+        : (profile.fpsRotation || 0),
       profile,
     };
   }
@@ -3477,23 +4723,37 @@
     const mount = SIDE_PLAYER_WEAPON_MOUNTS[animation]?.[frame]
       || SIDE_PLAYER_WEAPON_MOUNTS.idle[0];
     const [mountX, mountY, rotation, scale] = mount;
+    const family = weaponFamilyKey(weapon);
+    const rigidOrientation = bitmapReady(equippedWeapon)
+      ? normalizedWeaponRotation(equippedWeapon, weapon, "side")
+      : playerWeaponPoseOffset(weapon, "side");
     ctx.save();
     ctx.translate(mountX, mountY);
-    ctx.rotate(rotation + (animation === "idle" ? meta.sideRotation * 0.08 : 0));
+    ctx.rotate(
+      rotation
+      + meta.sideRotation
+      + (family === "flexible" ? 0 : rigidOrientation),
+    );
     const renderScale = scale * meta.profile.sideScale;
+    let drewFlexible = false;
     if (
-      weaponFamilyKey(weapon) !== "flexible"
-      || !drawFlexiblePlayerWeapon(weapon, "side", animation, renderScale)
+      family === "flexible"
+      && drawFlexiblePlayerWeapon(weapon, "side", animation, renderScale)
     ) {
+      drewFlexible = true;
+    } else {
       if (!bitmapReady(equippedWeapon)) {
         ctx.restore();
         return;
       }
       drawWeaponImage(equippedWeapon, {
-        anchor: meta.anchor,
+        anchor: playerWeaponAnchor(equippedWeapon, weapon, meta.anchor),
         maxDimension: 54 * renderScale,
-        widthBias: ["polearm", "staff", "capture"].includes(weaponFamilyKey(weapon)) ? 1.14 : 1.08,
+        widthBias: ["polearm", "staff", "capture"].includes(family) ? 1.14 : 1.08,
       });
+    }
+    if (drewFlexible || bitmapReady(equippedWeapon)) {
+      drawWeaponGripOverlay(44 * renderScale, false, family);
     }
     ctx.restore();
   }
@@ -3532,9 +4792,28 @@
     };
   }
 
+  function drawFpsPlayerBody(pose = fpsPlayerPose()) {
+    if (!modularAnimationReady(bitmapAssets.akioFpsBody, pose.animation)) {
+      return false;
+    }
+    drawAnimationSprite(
+      bitmapAssets.akioFpsBody,
+      pose.animation,
+      pose.frame,
+      FPS_VIEWMODEL_RECT.x,
+      FPS_VIEWMODEL_RECT.y,
+      FPS_VIEWMODEL_RECT.width,
+      FPS_VIEWMODEL_RECT.height,
+    );
+    return true;
+  }
+
   function drawFpsWeaponSprite(image, animation, frame, weapon) {
     const meta = playerWeaponMeta(weapon);
-    const rotationOffset = meta.fpsRotation - KATANA_WEAPON_META[0].fpsRotation;
+    const family = weaponFamilyKey(weapon);
+    const rigidOrientation = bitmapReady(image)
+      ? normalizedWeaponRotation(image, weapon, "fps")
+      : playerWeaponPoseOffset(weapon, "fps");
     const mount = FPS_PLAYER_WEAPON_MOUNTS[animation]?.[frame]
       || FPS_PLAYER_WEAPON_MOUNTS.idle[0];
     const [mountX, mountY, rotation, scale, alpha] = mount;
@@ -3545,9 +4824,14 @@
       Math.round(FPS_VIEWMODEL_RECT.x + FPS_VIEWMODEL_RECT.width * mountX),
       Math.round(FPS_VIEWMODEL_RECT.y + FPS_VIEWMODEL_RECT.height * mountY),
     );
-    ctx.rotate(rotation + FPS_KATANA_HAND_ALIGNMENT + rotationOffset);
+    ctx.rotate(
+      rotation
+      + FPS_KATANA_HAND_ALIGNMENT
+      + meta.fpsRotation
+      + (family === "flexible" ? 0 : rigidOrientation),
+    );
     const renderScale = scale * meta.profile.fpsScale;
-    const drewFlexible = weaponFamilyKey(weapon) === "flexible"
+    const drewFlexible = family === "flexible"
       && drawFlexiblePlayerWeapon(weapon, "fps", animation, renderScale);
     if (!drewFlexible) {
       if (!bitmapReady(image)) {
@@ -3555,11 +4839,12 @@
         return false;
       }
       drawWeaponImage(image, {
-        anchor: meta.anchor,
+        anchor: playerWeaponAnchor(image, weapon, meta.anchor),
         maxDimension: 272 * renderScale,
-        widthBias: ["polearm", "staff", "capture"].includes(weaponFamilyKey(weapon)) ? 1.16 : 1.04,
+        widthBias: ["polearm", "staff", "capture"].includes(family) ? 1.16 : 1.04,
       });
     }
+    drawWeaponGripOverlay(118 * renderScale, true, family);
     ctx.restore();
     return true;
   }
@@ -3574,20 +4859,12 @@
       modularAnimationReady(bitmapAssets.akioFpsBody, pose.animation)
       && (bitmapReady(selectedFpsWeapon) || flexibleComponentParts(weapon, "fps"))
     ) {
+      drawFpsPlayerBody(pose);
       drawFpsWeaponSprite(
         selectedFpsWeapon,
         pose.animation,
         pose.frame,
         weapon,
-      );
-      drawAnimationSprite(
-        bitmapAssets.akioFpsBody,
-        pose.animation,
-        pose.frame,
-        FPS_VIEWMODEL_RECT.x,
-        FPS_VIEWMODEL_RECT.y,
-        FPS_VIEWMODEL_RECT.width,
-        FPS_VIEWMODEL_RECT.height,
       );
       return true;
     }
@@ -3609,9 +4886,15 @@
     const swing = Math.sin(progress * Math.PI);
     ctx.save();
     ctx.translate(W * (0.76 - swing * 0.12), H * (0.87 - swing * 0.08));
-    ctx.rotate(meta.fpsRotation - swing * 0.82 + progress * 0.24);
+    ctx.rotate(
+      -0.84
+      + meta.fpsRotation
+      + normalizedWeaponRotation(equippedWeapon, weapon, "fps")
+      - swing * 0.82
+      + progress * 0.24,
+    );
     drawWeaponImage(equippedWeapon, {
-      anchor: meta.anchor,
+      anchor: playerWeaponAnchor(equippedWeapon, weapon, meta.anchor),
       maxDimension: 410 + swing * 58,
       widthBias: 1.05,
     });
@@ -3708,10 +4991,10 @@
       ctx.translate(x + p.w / 2, y + p.h);
       ctx.scale(flip, 1);
       if (game.invulnerable > 0 && Math.floor(game.invulnerable * 18) % 2) ctx.globalAlpha = 0.35;
-      // L'arme est rendue derrière les bras : la tsuka reste interchangeable
-      // tout en paraissant réellement tenue par les mains d'Akio.
-      if (animation !== "death") drawPlayerWeapon(animation, frame);
+      // Corps, arme, puis masque de prise : la lame reste lisible devant la
+      // silhouette sans donner l'impression de flotter hors de la main.
       drawAnimationSprite(bitmapAssets.akioModular, animation, frame, -48, -80, 96, 80);
+      if (animation !== "death") drawPlayerWeapon(animation, frame);
       ctx.restore();
       return;
     }
@@ -3734,9 +5017,8 @@
     const x = Math.round(e.x), y = Math.round(e.y);
     const spriteIndex = Math.abs(Math.round(e.seed / 13.7)) % 5;
     const modularEnemy = animationSetForEnemy(e, spriteIndex);
-    const distanceToPlayer = Math.abs(game.side.player.x - e.x);
     const dying = Boolean(e.dying || e.hp <= 0);
-    const moving = distanceToPlayer < 190 && distanceToPlayer > 18;
+    const moving = Math.abs(e.ai?.moveVelocity || 0) > 0.5;
     const animation = dying
       ? "death"
       : (e.hurtTimer > 0 || e.flash > 0
@@ -3805,6 +5087,18 @@
         ctx.scale(ENEMY_HURT_RENDER_SCALE, ENEMY_HURT_RENDER_SCALE);
       }
       if (e.flash > 0) ctx.filter = "brightness(2.2) saturate(.2)";
+      const equipmentBehindBody = Boolean(
+        MASSIVE_EQUIPMENT_MOUNTS[e.weaponAsset?.id],
+      );
+      if (animation !== "death" && equipmentBehindBody) {
+        drawEnemyWeapon(
+          e,
+          animation,
+          Math.max(renderHeight, renderWidth * 0.62),
+          false,
+          frame,
+        );
+      }
       if (massive) {
         drawCroppedAnimationSprite(
           modularEnemy,
@@ -3826,8 +5120,14 @@
           renderHeight,
         );
       }
-      if (animation !== "death") {
-        drawEnemyWeapon(e, animation, Math.max(renderHeight, renderWidth * 0.62));
+      if (animation !== "death" && !equipmentBehindBody) {
+        drawEnemyWeapon(
+          e,
+          animation,
+          Math.max(renderHeight, renderWidth * 0.62),
+          false,
+          frame,
+        );
       }
       ctx.restore();
       return;
@@ -4378,7 +5678,100 @@
     if (enemy.dying || enemy.hp <= 0) return "death";
     if (enemy.hurtTimer > 0 || enemy.flash > 0) return "hurt";
     if (enemy.attack > 0) return "attack";
-    return corrected > 3.2 ? "move" : "idle";
+    return Math.abs(enemy.ai?.moveVelocity || 0) > 0.01 ? "move" : "idle";
+  }
+
+  function fpsEnemyViewDirection(enemy, player = currentMission().player) {
+    const heading = ensureFpsEnemyAi(enemy).heading;
+    const towardViewer = Math.atan2(player.y - enemy.y, player.x - enemy.x);
+    const relative = normalizeAngle(heading - towardViewer);
+    let direction = "front";
+    if (Math.abs(relative) >= Math.PI * 0.75) direction = "back";
+    else if (relative > Math.PI * 0.25) direction = "left";
+    else if (relative < -Math.PI * 0.25) direction = "right";
+    return {
+      direction,
+      mirror: direction === "right"
+        || (direction === "back" && Math.sin(heading) > 0),
+      relative,
+    };
+  }
+
+  function drawDirectionalAnimationSprite(
+    animationSet,
+    animation,
+    frame,
+    centerX,
+    y,
+    width,
+    height,
+    viewFacing,
+  ) {
+    const direction = viewFacing?.direction || "left";
+    if (!["front", "back"].includes(direction)) {
+      ctx.save();
+      ctx.translate(centerX, 0);
+      ctx.scale(viewFacing?.mirror ? -1 : 1, 1);
+      const drawn = drawAnimationSprite(
+        animationSet,
+        animation,
+        frame,
+        -width / 2,
+        y,
+        width,
+        height,
+      );
+      ctx.restore();
+      return drawn;
+    }
+
+    let drawn = false;
+    const drawHalf = (leftHalf, mirror) => {
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(
+        centerX + (leftHalf ? -width / 2 : 0),
+        y,
+        width / 2,
+        height,
+      );
+      ctx.clip();
+      ctx.translate(centerX, 0);
+      ctx.scale(mirror ? -1 : 1, 1);
+      drawn = drawAnimationSprite(
+        animationSet,
+        animation,
+        frame,
+        -width / 2,
+        y,
+        width,
+        height,
+      ) || drawn;
+      ctx.restore();
+    };
+    if (direction === "front") {
+      drawHalf(true, false);
+      drawHalf(false, true);
+      if (animation !== "death") {
+        const eyeSize = clamp(Math.round(width * 0.025), 1, 4);
+        const eyeY = Math.round(y + height * 0.225);
+        const eyeGap = Math.max(2, Math.round(width * 0.055));
+        ctx.fillStyle = "#d8ef75";
+        ctx.fillRect(centerX - eyeGap - eyeSize, eyeY, eyeSize, eyeSize);
+        ctx.fillRect(centerX + eyeGap, eyeY, eyeSize, eyeSize);
+      }
+    } else {
+      drawHalf(true, true);
+      drawHalf(false, false);
+      ctx.fillStyle = "rgba(10, 10, 14, .2)";
+      ctx.fillRect(
+        Math.round(centerX - width * 0.16),
+        Math.round(y + height * 0.08),
+        Math.round(width * 0.32),
+        Math.round(height * 0.27),
+      );
+    }
+    return drawn;
   }
 
   function fpsEnemyAnimationFrame(enemy, animation, spriteIndex) {
@@ -4434,8 +5827,16 @@
     for (const obj of visible) drawFpsEnemy(obj.e, obj.dist, obj.angle);
 
     drawFpsParticles(mission.particles);
-    drawFpsRangedProjectile();
-    drawFpsWeapon();
+    if (game.rangedViewTimer > 0) {
+      const rangedProgress = clamp(1 - game.rangedViewTimer / 0.2, 0, 0.999);
+      drawFpsPlayerBody({
+        animation: "attack",
+        frame: Math.min(5, Math.floor(rangedProgress * 6)),
+      });
+      drawFpsRangedProjectile();
+    } else {
+      drawFpsWeapon();
+    }
     drawHitConfirm();
     drawCrosshair();
     drawMiniMap(mission);
@@ -4461,6 +5862,8 @@
     const modularEnemy = fpsEnemy || animationSetForEnemy(enemy, spriteIndex);
     const animation = fpsEnemyAnimation(enemy, projection.corrected);
     const frame = fpsEnemyAnimationFrame(enemy, animation, spriteIndex);
+    const viewFacing = fpsEnemyViewDirection(enemy);
+    enemy.viewDirection = viewFacing.direction;
     const reactionScale = animation === "hurt" ? ENEMY_HURT_RENDER_SCALE : 1;
     const maxMassiveHeight = H * clamp(profile.maxHeightRatio || 0.62, 0.4, 0.62);
     const maxMassiveWidth = W * clamp(profile.maxWidthRatio || 0.56, 0.36, 0.6);
@@ -4498,20 +5901,54 @@
       const drawEnemyAnimation = massiveBoss
         ? drawCroppedAnimationSprite
         : drawAnimationSprite;
-      drawEnemyAnimation(
+      const drawProjectedWeapon = () => {
+        ctx.save();
+        ctx.translate(projection.screenX, projection.groundY);
+        ctx.scale(viewFacing.mirror ? -1 : 1, 1);
+        drawEnemyWeapon(enemy, animation, renderHeight, true, frame);
+        ctx.restore();
+      };
+      const equipmentBehindBody = Boolean(
+        MASSIVE_EQUIPMENT_MOUNTS[enemy.weaponAsset?.id],
+      );
+      if (
+        animation !== "death"
+        && (viewFacing.direction === "back" || equipmentBehindBody)
+      ) {
+        drawProjectedWeapon();
+      }
+      if (massiveBoss) {
+        ctx.save();
+        ctx.translate(projection.screenX, 0);
+        ctx.scale(viewFacing.mirror ? -1 : 1, 1);
+        drawEnemyAnimation(
           modularEnemy,
           animation,
           frame,
-          Math.round(renderLeft),
+          Math.round(-renderWidth / 2),
           Math.round(renderTop),
           Math.round(renderWidth),
           Math.round(renderHeight),
         );
-      if (animation !== "death" && !enemy.frontlineBlocked) {
-        ctx.save();
-        ctx.translate(projection.screenX, projection.groundY);
-        drawEnemyWeapon(enemy, animation, renderHeight, true);
         ctx.restore();
+      } else {
+        drawDirectionalAnimationSprite(
+          modularEnemy,
+          animation,
+          frame,
+          projection.screenX,
+          Math.round(renderTop),
+          Math.round(renderWidth),
+          Math.round(renderHeight),
+          viewFacing,
+        );
+      }
+      if (
+        animation !== "death"
+        && viewFacing.direction !== "back"
+        && !equipmentBehindBody
+      ) {
+        drawProjectedWeapon();
       }
       ctx.restore();
       return;
@@ -4603,7 +6040,7 @@
       // Le sprite, lui, est centré autour de H / 2 : ce décalage replace
       // l'arme dans la main au lieu de la faire flotter au-dessus de la tête.
       ctx.translate(screenX, H / 2 + spriteSize * 0.46);
-      drawEnemyWeapon(enemy, modularAnimation, spriteSize, true);
+      drawEnemyWeapon(enemy, modularAnimation, spriteSize, true, frame);
       ctx.restore();
       ctx.restore();
       return;
@@ -5241,6 +6678,7 @@
           rosterId: enemy.modularEntry?.id || enemy.rosterId || null,
           profileId: enemy.profileId || enemy.massiveProfile?.id || null,
           encounterId: enemy.encounterId || null,
+          platformId: enemy.platformId || enemy.ai?.platformId || null,
           presentationClass: isMassiveEnemy(enemy) ? "massive" : "standard",
           boss: Boolean(enemy.boss),
           x: enemy.x,
@@ -5253,6 +6691,19 @@
           phase: enemy.massivePhase || null,
           detachablePartAttached: enemy.detachablePartAttached !== false,
           dead: Boolean(enemy.dead || enemy.dying || enemy.hp <= 0),
+          ai: enemy.ai ? {
+            state: enemy.ai.state,
+            previousState: enemy.ai.previousState,
+            reason: enemy.ai.reason,
+            homeX: enemy.ai.homeX,
+            homeY: enemy.ai.homeY,
+            patrolMinX: enemy.ai.patrolMinX,
+            patrolMaxX: enemy.ai.patrolMaxX,
+            lastKnownX: enemy.ai.lastKnownX,
+            memoryTime: enemy.ai.memoryTime,
+            targetVisible: enemy.ai.targetVisible,
+            targetAudible: enemy.ai.targetAudible,
+          } : null,
         })),
       }),
       setMassiveBossHp: (hp) => {
@@ -5312,7 +6763,9 @@
           platforms: currentSidePlatforms().map((platform) => ({ ...platform })),
           enemies: game.side.enemies.map((enemy) => ({
             x: enemy.x,
+            y: enemy.y,
             w: enemy.w,
+            h: enemy.h,
             dead: enemy.dead,
           })),
           pickups: game.side.pickups.map((pickup) => ({
@@ -5366,12 +6819,23 @@
           stagger: game.playerStagger,
         },
         sideEnemies: game.side.enemies.map((enemy) => ({
+          sourceId: enemy.sourceId,
+          platformId: enemy.platformId || enemy.ai?.platformId || null,
           hp: enemy.hp,
           maxHp: enemy.maxHp,
           dying: enemy.dying,
           dead: enemy.dead,
           hurtTimer: enemy.hurtTimer,
           material: enemy.impactMaterial,
+          ai: enemy.ai ? {
+            state: enemy.ai.state,
+            homeX: enemy.ai.homeX,
+            homeY: enemy.ai.homeY,
+            patrolMinX: enemy.ai.patrolMinX,
+            patrolMaxX: enemy.ai.patrolMaxX,
+            lastKnownX: enemy.ai.lastKnownX,
+            memoryTime: enemy.ai.memoryTime,
+          } : null,
         })),
         fpsEnemies: currentMission().enemies.map((enemy) => ({
           x: enemy.x,
@@ -5380,6 +6844,16 @@
           dead: enemy.dead,
           radius: fpsEnemyRadius(enemy),
           engagementSlot: enemy.engagementSlot,
+          viewDirection: enemy.viewDirection || null,
+          ai: enemy.ai ? {
+            state: enemy.ai.state,
+            heading: enemy.ai.heading,
+            homeX: enemy.ai.homeX,
+            homeY: enemy.ai.homeY,
+            lastKnownX: enemy.ai.lastKnownX,
+            lastKnownY: enemy.ai.lastKnownY,
+            memoryTime: enemy.ai.memoryTime,
+          } : null,
         })),
         particles: game.mode === "side"
           ? game.side.particles.map((particle) => particle.kind)
@@ -5425,7 +6899,8 @@
   showOnly(dom.title);
   loadModularRoster();
   if (typeof location !== "undefined") {
-    const preview = new URLSearchParams(location.search).get("preview");
+    const previewParams = new URLSearchParams(location.search);
+    const preview = previewParams.get("preview");
     const previewModes = new Set([
       "kurokawa",
       "bamboo",
@@ -5441,6 +6916,11 @@
         || preview === "fps-castle";
       game.chapter = castlePreview ? 1 : 0;
       prepareSideChapter(game.chapter);
+      const previewAreaId = previewParams.get("area");
+      const previewSpawnId = previewParams.get("spawn");
+      if (previewAreaId && sideAreaById(previewAreaId)) {
+        setCurrentSideArea(previewAreaId, previewSpawnId || undefined, true);
+      }
       applyRosterToGame(game);
       if (preview?.startsWith("gate-")) {
         game.invulnerable = 999;
@@ -5457,6 +6937,18 @@
         game.invulnerable = 999;
         enterFps(game.chapter, false);
         game.transition = 0;
+      } else if (Number.isFinite(Number(previewParams.get("x")))) {
+        const targetX = clamp(
+          Number(previewParams.get("x")),
+          currentSideRules().minX,
+          currentSideRules().maxX - game.side.player.w,
+        );
+        game.side.player.x = targetX;
+        game.side.player.y = SIDE_GROUND_Y - game.side.player.h;
+        game.side.player.vx = 0;
+        game.side.player.vy = 0;
+        game.side.player.grounded = true;
+        game.side.cameraX = clamp(targetX - W * 0.45, 0, game.side.width - W);
       }
       updateHud();
     }

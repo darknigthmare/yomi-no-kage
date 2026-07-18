@@ -1,0 +1,270 @@
+{
+  "schema": 1,
+  "source": "assets/modular/environments/kurokawa/alley-walls/source/wall-atlas-alpha.png",
+  "grid": {
+    "columns": 5,
+    "rows": 4
+  },
+  "sprites": [
+    {
+      "id": "mur-platre-intact",
+      "file": "mur-platre-intact.png",
+      "sourceCell": [
+        0,
+        0
+      ],
+      "size": [
+        232,
+        187
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "mur-platre-fume",
+      "file": "mur-platre-fume.png",
+      "sourceCell": [
+        1,
+        0
+      ],
+      "size": [
+        256,
+        186
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "mur-platre-lattis",
+      "file": "mur-platre-lattis.png",
+      "sourceCell": [
+        2,
+        0
+      ],
+      "size": [
+        242,
+        186
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "mur-cedre-brule",
+      "file": "mur-cedre-brule.png",
+      "sourceCell": [
+        3,
+        0
+      ],
+      "size": [
+        297,
+        186
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "mur-planches-pluie",
+      "file": "mur-planches-pluie.png",
+      "sourceCell": [
+        4,
+        0
+      ],
+      "size": [
+        247,
+        186
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "mur-kura-bas",
+      "file": "mur-kura-bas.png",
+      "sourceCell": [
+        0,
+        1
+      ],
+      "size": [
+        244,
+        157
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "mur-kura-haut",
+      "file": "mur-kura-haut.png",
+      "sourceCell": [
+        1,
+        1
+      ],
+      "size": [
+        259,
+        208
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "mur-porte-service",
+      "file": "mur-porte-service.png",
+      "sourceCell": [
+        2,
+        1
+      ],
+      "size": [
+        244,
+        187
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "mur-fenetre-barreaux",
+      "file": "mur-fenetre-barreaux.png",
+      "sourceCell": [
+        3,
+        1
+      ],
+      "size": [
+        297,
+        186
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "mur-volets-pluie",
+      "file": "mur-volets-pluie.png",
+      "sourceCell": [
+        4,
+        1
+      ],
+      "size": [
+        247,
+        186
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "angle-ruelle-rentrant",
+      "file": "angle-ruelle-rentrant.png",
+      "sourceCell": [
+        0,
+        2
+      ],
+      "size": [
+        227,
+        251
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "angle-ruelle-sortant",
+      "file": "angle-ruelle-sortant.png",
+      "sourceCell": [
+        1,
+        2
+      ],
+      "size": [
+        243,
+        251
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "mur-gouttiere-chaine",
+      "file": "mur-gouttiere-chaine.png",
+      "sourceCell": [
+        2,
+        2
+      ],
+      "size": [
+        249,
+        256
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "mur-auvent-brise",
+      "file": "mur-auvent-brise.png",
+      "sourceCell": [
+        3,
+        2
+      ],
+      "size": [
+        301,
+        256
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "mur-alcove-vide",
+      "file": "mur-alcove-vide.png",
+      "sourceCell": [
+        4,
+        2
+      ],
+      "size": [
+        249,
+        251
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "mur-quarantaine",
+      "file": "mur-quarantaine.png",
+      "sourceCell": [
+        0,
+        3
+      ],
+      "size": [
+        232,
+        180
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "mur-racines-yomi",
+      "file": "mur-racines-yomi.png",
+      "sourceCell": [
+        1,
+        3
+      ],
+      "size": [
+        248,
+        182
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "mur-breche-effondree",
+      "file": "mur-breche-effondree.png",
+      "sourceCell": [
+        2,
+        3
+      ],
+      "size": [
+        250,
+        180
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "mur-pierre-jokamachi",
+      "file": "mur-pierre-jokamachi.png",
+      "sourceCell": [
+        3,
+        3
+      ],
+      "size": [
+        304,
+        180
+      ],
+      "nonEmpty": true
+    },
+    {
+      "id": "mur-echoppe-brulee",
+      "file": "mur-echoppe-brulee.png",
+      "sourceCell": [
+        4,
+        3
+      ],
+      "size": [
+        249,
+        180
+      ],
+      "nonEmpty": true
+    }
+  ]
+}

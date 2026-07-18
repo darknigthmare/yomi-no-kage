@@ -113,7 +113,7 @@ report.environmentSprites = environmentFiles.length;
 report.environmentLayers = environmentFiles.filter((file) => /[\\/]layers[\\/]/i.test(file)).length;
 report.environmentProps = environmentFiles.filter((file) => /[\\/]props[\\/]/i.test(file)).length;
 report.environmentPlatforms = environmentFiles.filter((file) => /[\\/]platforms[\\/]/i.test(file)).length;
-assert(report.environmentSprites === 84, `sprites de décor: ${report.environmentSprites}, exactement 84 attendus`);
+assert(report.environmentSprites === 104, `sprites de décor: ${report.environmentSprites}, exactement 104 attendus`);
 assert(report.environmentLayers === 12, `couches de parallaxe: ${report.environmentLayers}, exactement 12 attendues`);
 assert(report.environmentProps === 36, `accessoires de décor: ${report.environmentProps}, exactement 36 attendus`);
 assert(report.environmentPlatforms === 36, `tuiles de plateforme: ${report.environmentPlatforms}, exactement 36 attendues`);

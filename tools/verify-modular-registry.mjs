@@ -49,8 +49,8 @@ const expectedCounts = {
   animationSheets: 485,
   framePngs: 2910,
   weapons: 58,
-  environmentSprites: 84,
-  catalogAssets: 239,
+  environmentSprites: 104,
+  catalogAssets: 259,
 };
 
 for (const [key, expected] of Object.entries(expectedCounts)) {

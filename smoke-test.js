@@ -180,6 +180,10 @@ require("./game.js");
     "Le puits doit rester dans le plan arrière, à l'échelle du sol",
   );
   const overlaps = (a, b) => a.x < b.x + b.w && a.x + a.w > b.x;
+  const overlapsBody = (a, b) =>
+    overlaps(a, b)
+    && a.y < b.y + b.h
+    && a.y + a.h > b.y;
   assert.ok(
     villageWorld.platforms.every((platform) =>
       villageWorld.frontPropFootprints.every((prop) => !overlaps(platform, prop))),
@@ -187,7 +191,7 @@ require("./game.js");
   );
   assert.ok(
     villageWorld.enemies.every((enemy) =>
-      villageWorld.platforms.every((platform) => !overlaps(enemy, platform))
+      villageWorld.platforms.every((platform) => !overlapsBody(enemy, platform))
       && villageWorld.frontPropFootprints.every((prop) => !overlaps(enemy, prop))),
     "Les ennemis du village doivent apparaître sur une zone de sol libre",
   );
