@@ -2,9 +2,9 @@
 
 **Date de l’audit :** 19 juillet 2026  
 **Base auditée :** `20260719-street-composition-v2`  
-**Périmètre :** parcours neuf, prologue, briefing, dōjō, jeu 2D, deux intérieurs FPS, combat, IA, animations, arsenal, sauvegarde, audio, accessibilité, desktop et mobile.
+**Périmètre :** parcours neuf, prologue, briefing, dōjō, jeu 2D, cinq intérieurs FPS, combat, IA, animations, arsenal, sauvegarde, audio, accessibilité, desktop et mobile.
 
-> **Statut important :** les corrections de la passe du 19 juillet sont **VALIDÉES LOCALEMENT**. Les tests automatisés, les parcours UI desktop/mobile et les nouvelles captures comparatives passent. Le déploiement public reste la dernière validation externe.
+> **Statut important :** les corrections de la passe du 19 juillet sont **VALIDÉES LOCALEMENT ET EN PRODUCTION**. Les tests automatisés, les parcours UI desktop/mobile et les nouvelles captures comparatives passent. Le build public répond sur [`yomi-no-kage.vercel.app`](https://yomi-no-kage.vercel.app/) avec les versions attendues des scripts et les ressources de jeu contrôlées.
 >
 > Les constats et captures P0 décrivent **l’état de départ de cette passe**, avant les modifications concurrentes. Certains liens peuvent donc déjà montrer une valeur corrigée en cours de travail ; cela ne constitue pas une validation finale.
 
@@ -12,7 +12,7 @@
 
 `Yomi no Kage` possède désormais une identité visuelle forte, un prologue crédible, une base de combat nettement plus riche qu’un simple bouton d’attaque, une architecture de sprites modulaire et six zones 2D composées à la main. L’écran titre, la cinématique et l’entrée du village donnent l’impression d’un vrai jeu.
 
-En revanche, **la campagne jouable reste un vertical slice** :
+En revanche, **la campagne jouable reste un vertical slice**. Au début de cette passe :
 
 - le trajet complet est estimé à **4–6 minutes en connaissant la route**, **10–18 minutes lors d’une première partie**, ou **15–25 minutes en combattant et explorant davantage** ;
 - un rang S demande encore de terminer en moins de **360 secondes**, ce qui confirme une durée de démonstration ([`game.js`, rang de fin](../../game.js#L4492-L4507)) ;
@@ -369,7 +369,7 @@ Points manquants :
 
 Ces objectifs correspondent à la feuille de route existante ([`GAME_DESIGN_ROADMAP.md`](../../GAME_DESIGN_ROADMAP.md#L238-L252)) mais doivent venir **après** un premier chapitre réellement fini.
 
-## Corrections de cette passe — APPLIQUÉES ET VALIDÉES LOCALEMENT
+## Corrections de cette passe — APPLIQUÉES ET VALIDÉES
 
 Les éléments suivants ont été exécutés et contrôlés :
 
@@ -381,6 +381,7 @@ Les éléments suivants ont été exécutés et contrôlés :
 6. **Sauvegarde :** confirmation de nouvelle chronique et reprise au foyer clarifiée.
 7. **Audio :** pas synchronisés au déplacement 2D et différenciés par surface.
 8. **Revalidation locale :** toutes les suites Node passent ; briefing, dōjō, pause/paramètres et confirmation ont été rejoués dans le navigateur intégré.
+9. **Production :** commit `07e215b` publié sur `main`, alias `yomi-no-kage.vercel.app` mis à jour, réponse HTTP 200, versions `styles v26`, `level-data v8`, `game v30` et `cinematic v7` confirmées dans le build public.
 
 ## Roadmap réaliste vers un vrai jeu
 
