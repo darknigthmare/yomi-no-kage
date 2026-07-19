@@ -25,6 +25,27 @@ def alpha_bbox(image: Image.Image) -> tuple[int, int, int, int] | None:
     return image.getchannel("A").getbbox()
 
 
+def requires_transparent_corners(source: Path) -> bool:
+    """Réserve la règle des coins transparents aux sprites isolés.
+
+    Les calques de parallaxe, atlas, sources de travail et modules de mur
+    raccordables occupent légitimement les bords de leur image.
+    """
+    normalized = source.as_posix().lower()
+    stem = source.stem.lower()
+    if "/layers/" in normalized:
+        return False
+    if "atlas" in stem:
+        return False
+    if "/sources/" in normalized:
+        return False
+    if "/alley-walls/sprites/" in normalized and stem.startswith(
+        ("mur-", "angle-ruelle-")
+    ):
+        return False
+    return True
+
+
 def validate_rgba(image: Image.Image, source: Path) -> None:
     if image.mode != "RGBA":
         raise ValueError(f"{source}: mode {image.mode}, RGBA requis")
@@ -36,7 +57,7 @@ def validate_rgba(image: Image.Image, source: Path) -> None:
         alpha.getpixel((0, height - 1)),
         alpha.getpixel((width - 1, height - 1)),
     )
-    if any(corners):
+    if requires_transparent_corners(source) and any(corners):
         raise ValueError(f"{source}: les quatre coins doivent être transparents")
     if alpha_bbox(image) is None:
         raise ValueError(f"{source}: aucun sujet opaque détecté")

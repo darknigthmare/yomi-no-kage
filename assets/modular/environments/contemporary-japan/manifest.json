@@ -1,0 +1,134 @@
+{
+  "schema": 1,
+  "id": "contemporary-japan",
+  "name": "Tokyo contemporain en quarantaine",
+  "lore": "La faille du Yomi projette Akio dans un Tokyo contemporain où la même contamination a survécu sous une quarantaine moderne.",
+  "gameplay": "Rues, station et équipements urbains forment des routes horizontales lisibles, avec accès en profondeur et plateformes architecturales cohérentes.",
+  "generationTool": "OpenAI ImageGen built-in",
+  "prompts": {},
+  "renderStandard": {
+    "resolution": [
+      1664,
+      936
+    ],
+    "layerOrderBackToFront": [
+      "sky",
+      "far",
+      "mid",
+      "near"
+    ],
+    "skyOpaque": true,
+    "transparentLayers": true,
+    "atlasGrid": {
+      "columns": 4,
+      "rows": 3
+    }
+  },
+  "layers": {
+    "sky": {
+      "id": "sky",
+      "file": "assets/modular/environments/contemporary-japan/layers/sky.png",
+      "source": "assets/modular/environments/contemporary-japan/layers/source/sky-imagegen-raw.png",
+      "mode": "RGB",
+      "size": [
+        1664,
+        936
+      ],
+      "opaque": true
+    },
+    "far": {
+      "id": "far",
+      "file": "assets/modular/environments/contemporary-japan/layers/far.png",
+      "source": "assets/modular/environments/contemporary-japan/layers/source/far-imagegen-raw.png",
+      "mode": "RGBA",
+      "size": [
+        1664,
+        936
+      ],
+      "sourceScale": 0.839133,
+      "placement": [
+        0,
+        271
+      ],
+      "alphaBounds": [
+        0,
+        601,
+        1664,
+        791
+      ],
+      "keyRed": 6,
+      "keyGreen": 248,
+      "keyBlue": 4,
+      "keyHex": "#06f804",
+      "keyKind": "green",
+      "transparentPixels": 1401723,
+      "partialAlphaPixels": 2924,
+      "despilledPixels": 2924
+    },
+    "mid": {
+      "id": "mid",
+      "file": "assets/modular/environments/contemporary-japan/layers/mid.png",
+      "source": "assets/modular/environments/contemporary-japan/layers/source/mid-imagegen-raw.png",
+      "mode": "RGBA",
+      "size": [
+        1664,
+        936
+      ],
+      "sourceScale": 0.766114,
+      "placement": [
+        0,
+        381
+      ],
+      "alphaBounds": [
+        13,
+        437,
+        1650,
+        880
+      ],
+      "keyRed": 3,
+      "keyGreen": 250,
+      "keyBlue": 3,
+      "keyHex": "#03fa03",
+      "keyKind": "green",
+      "transparentPixels": 717406,
+      "partialAlphaPixels": 2599,
+      "despilledPixels": 2599
+    },
+    "near": {
+      "id": "near",
+      "file": "assets/modular/environments/contemporary-japan/layers/near.png",
+      "source": "assets/modular/environments/contemporary-japan/layers/source/near-imagegen-raw.png",
+      "mode": "RGBA",
+      "size": [
+        1664,
+        936
+      ],
+      "sourceScale": 0.76682,
+      "placement": [
+        0,
+        380
+      ],
+      "alphaBounds": [
+        0,
+        380,
+        1664,
+        936
+      ],
+      "keyRed": 6,
+      "keyGreen": 249,
+      "keyBlue": 6,
+      "keyHex": "#06f906",
+      "keyKind": "green",
+      "transparentPixels": 1283266,
+      "partialAlphaPixels": 6901,
+      "despilledPixels": 6901
+    }
+  },
+  "propsManifest": "assets/modular/environments/contemporary-japan/props/manifest.json",
+  "platformsManifest": "assets/modular/environments/contemporary-japan/platforms/manifest.json",
+  "totals": {
+    "layers": 4,
+    "props": 12,
+    "platforms": 12
+  }
+}

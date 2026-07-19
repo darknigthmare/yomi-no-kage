@@ -1,0 +1,465 @@
+{
+  "schema": 2,
+  "zoneId": "kai-forest",
+  "assetType": "prop",
+  "count": 12,
+  "source": "assets/modular/environments/kai-forest/props/source/atlas-imagegen-raw.png",
+  "alphaSourceDerivedAtBuild": true,
+  "grid": {
+    "columns": 4,
+    "rows": 3
+  },
+  "gridBoundaries": {
+    "x": [
+      0,
+      384,
+      768,
+      1160,
+      1536
+    ],
+    "y": [
+      0,
+      352,
+      683,
+      1024
+    ]
+  },
+  "renderPolicy": {
+    "projection": "front-orthographic",
+    "transparentPadding": 8,
+    "bottomTransparentPadding": 4,
+    "weaponsOrCharactersBakedIn": false
+  },
+  "chroma": {
+    "keyRed": 250,
+    "keyGreen": 2,
+    "keyBlue": 247,
+    "keyHex": "#fa02f7",
+    "keyKind": "magenta",
+    "transparentPixels": 1030018,
+    "partialAlphaPixels": 1434,
+    "despilledPixels": 1434
+  },
+  "sprites": [
+    {
+      "id": "ancient-cedar-trunk",
+      "file": "ancient-cedar-trunk.png",
+      "sourceCell": [
+        0,
+        0
+      ],
+      "size": [
+        352,
+        316
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        344,
+        312
+      ],
+      "sourceBounds": [
+        36,
+        45,
+        372,
+        349
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "hollow-fallen-log",
+      "file": "hollow-fallen-log.png",
+      "sourceCell": [
+        1,
+        0
+      ],
+      "size": [
+        327,
+        236
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        319,
+        232
+      ],
+      "sourceBounds": [
+        432,
+        121,
+        743,
+        345
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "charcoal-burner-shelter",
+      "file": "charcoal-burner-shelter.png",
+      "sourceCell": [
+        2,
+        0
+      ],
+      "size": [
+        369,
+        293
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        361,
+        289
+      ],
+      "sourceBounds": [
+        806,
+        64,
+        1159,
+        345
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "moss-stone-lantern",
+      "file": "moss-stone-lantern.png",
+      "sourceCell": [
+        3,
+        0
+      ],
+      "size": [
+        160,
+        288
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        152,
+        284
+      ],
+      "sourceBounds": [
+        1291,
+        75,
+        1435,
+        351
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "woodcutter-cart",
+      "file": "woodcutter-cart.png",
+      "sourceCell": [
+        0,
+        1
+      ],
+      "size": [
+        320,
+        192
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        312,
+        188
+      ],
+      "sourceBounds": [
+        43,
+        472,
+        347,
+        652
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "stacked-logs",
+      "file": "stacked-logs.png",
+      "sourceCell": [
+        1,
+        1
+      ],
+      "size": [
+        335,
+        203
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        327,
+        199
+      ],
+      "sourceBounds": [
+        415,
+        458,
+        734,
+        649
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "rope-ward-gate",
+      "file": "rope-ward-gate.png",
+      "sourceCell": [
+        2,
+        1
+      ],
+      "size": [
+        310,
+        256
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        302,
+        252
+      ],
+      "sourceBounds": [
+        820,
+        405,
+        1114,
+        649
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "forest-spring-basin",
+      "file": "forest-spring-basin.png",
+      "sourceCell": [
+        3,
+        1
+      ],
+      "size": [
+        285,
+        235
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        277,
+        231
+      ],
+      "sourceBounds": [
+        1216,
+        429,
+        1485,
+        652
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "collapsed-quarantine-tent",
+      "file": "collapsed-quarantine-tent.png",
+      "sourceCell": [
+        0,
+        2
+      ],
+      "size": [
+        354,
+        250
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        346,
+        246
+      ],
+      "sourceBounds": [
+        23,
+        728,
+        361,
+        966
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "infected-root-cluster",
+      "file": "infected-root-cluster.png",
+      "sourceCell": [
+        1,
+        2
+      ],
+      "size": [
+        314,
+        270
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        306,
+        266
+      ],
+      "sourceBounds": [
+        417,
+        708,
+        715,
+        966
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "campfire-ring",
+      "file": "campfire-ring.png",
+      "sourceCell": [
+        2,
+        2
+      ],
+      "size": [
+        274,
+        153
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        266,
+        149
+      ],
+      "sourceBounds": [
+        799,
+        821,
+        1057,
+        962
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "yomi-cave-arch",
+      "file": "yomi-cave-arch.png",
+      "sourceCell": [
+        3,
+        2
+      ],
+      "size": [
+        392,
+        278
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        384,
+        274
+      ],
+      "sourceBounds": [
+        1123,
+        710,
+        1499,
+        976
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    }
+  ]
+}

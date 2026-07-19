@@ -1,0 +1,465 @@
+{
+  "schema": 2,
+  "zoneId": "tsuru-fields",
+  "assetType": "prop",
+  "count": 12,
+  "source": "assets/modular/environments/tsuru-fields/props/source/atlas-imagegen-raw.png",
+  "alphaSourceDerivedAtBuild": true,
+  "grid": {
+    "columns": 4,
+    "rows": 3
+  },
+  "gridBoundaries": {
+    "x": [
+      0,
+      350,
+      705,
+      1050,
+      1402
+    ],
+    "y": [
+      0,
+      374,
+      748,
+      1122
+    ]
+  },
+  "renderPolicy": {
+    "projection": "front-orthographic",
+    "transparentPadding": 8,
+    "bottomTransparentPadding": 4,
+    "weaponsOrCharactersBakedIn": false
+  },
+  "chroma": {
+    "keyRed": 250,
+    "keyGreen": 2,
+    "keyBlue": 250,
+    "keyHex": "#fa02fa",
+    "keyKind": "magenta",
+    "transparentPixels": 1036413,
+    "partialAlphaPixels": 2124,
+    "despilledPixels": 2124
+  },
+  "sprites": [
+    {
+      "id": "field-hut",
+      "file": "field-hut.png",
+      "sourceCell": [
+        0,
+        0
+      ],
+      "size": [
+        313,
+        303
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        305,
+        299
+      ],
+      "sourceBounds": [
+        44,
+        69,
+        341,
+        360
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "irrigation-water-wheel",
+      "file": "irrigation-water-wheel.png",
+      "sourceCell": [
+        1,
+        0
+      ],
+      "size": [
+        283,
+        285
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        275,
+        281
+      ],
+      "sourceBounds": [
+        400,
+        87,
+        667,
+        360
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "farm-cart",
+      "file": "farm-cart.png",
+      "sourceCell": [
+        2,
+        0
+      ],
+      "size": [
+        365,
+        231
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        357,
+        227
+      ],
+      "sourceBounds": [
+        724,
+        141,
+        1073,
+        360
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "bound-rice-sheaf",
+      "file": "bound-rice-sheaf.png",
+      "sourceCell": [
+        3,
+        0
+      ],
+      "size": [
+        198,
+        298
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        190,
+        294
+      ],
+      "sourceBounds": [
+        1148,
+        74,
+        1330,
+        360
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "irrigation-sluice",
+      "file": "irrigation-sluice.png",
+      "sourceCell": [
+        0,
+        1
+      ],
+      "size": [
+        274,
+        257
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        266,
+        253
+      ],
+      "sourceBounds": [
+        46,
+        463,
+        304,
+        708
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "field-footbridge",
+      "file": "field-footbridge.png",
+      "sourceCell": [
+        1,
+        1
+      ],
+      "size": [
+        359,
+        171
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        351,
+        167
+      ],
+      "sourceBounds": [
+        360,
+        549,
+        703,
+        708
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "scarecrow",
+      "file": "scarecrow.png",
+      "sourceCell": [
+        2,
+        1
+      ],
+      "size": [
+        269,
+        301
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        261,
+        297
+      ],
+      "sourceBounds": [
+        752,
+        419,
+        1005,
+        708
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "wooden-granary",
+      "file": "wooden-granary.png",
+      "sourceCell": [
+        3,
+        1
+      ],
+      "size": [
+        313,
+        292
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        305,
+        288
+      ],
+      "sourceBounds": [
+        1067,
+        428,
+        1364,
+        708
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "straw-bales",
+      "file": "straw-bales.png",
+      "sourceCell": [
+        0,
+        2
+      ],
+      "size": [
+        300,
+        228
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        292,
+        224
+      ],
+      "sourceBounds": [
+        37,
+        835,
+        321,
+        1051
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "field-marker",
+      "file": "field-marker.png",
+      "sourceCell": [
+        1,
+        2
+      ],
+      "size": [
+        210,
+        251
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        202,
+        247
+      ],
+      "sourceBounds": [
+        400,
+        812,
+        594,
+        1051
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "burning-crop-pile",
+      "file": "burning-crop-pile.png",
+      "sourceCell": [
+        2,
+        2
+      ],
+      "size": [
+        295,
+        278
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        287,
+        274
+      ],
+      "sourceBounds": [
+        719,
+        787,
+        998,
+        1053
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "yomi-warp-torii",
+      "file": "yomi-warp-torii.png",
+      "sourceCell": [
+        3,
+        2
+      ],
+      "size": [
+        336,
+        284
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        328,
+        280
+      ],
+      "sourceBounds": [
+        1053,
+        783,
+        1373,
+        1055
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    }
+  ]
+}

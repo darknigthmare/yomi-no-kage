@@ -71,6 +71,24 @@
       drone: [38.89, 58.27],
       droneGain: 0.032,
     },
+    modern: {
+      bpm: 92,
+      melody: [57, null, 60, null, 64, 62, null, 57, null, 65, 64, null, 60, null, null, null],
+      pulseEvery: 4,
+      pulseGain: 0.042,
+      voice: "triangle",
+      drone: [43.65, 87.31],
+      droneGain: 0.022,
+    },
+    cyber: {
+      bpm: 108,
+      melody: [45, 57, null, 58, 64, null, 61, 57, 45, null, 65, 64, 58, null, 57, null],
+      pulseEvery: 2,
+      pulseGain: 0.058,
+      voice: "sawtooth",
+      drone: [36.71, 73.42],
+      droneGain: 0.034,
+    },
     combat: {
       bpm: 112,
       melody: [57, null, 60, 64, 62, null, 60, null, 57, 60, null, 65, 64, null, 60, null],
@@ -432,6 +450,9 @@
         stone: { frequency: 960, gain: 0.08, type: "highpass" },
         tatami: { frequency: 280, gain: 0.07, type: "lowpass" },
         water: { frequency: 640, gain: 0.09, type: "bandpass" },
+        metal: { frequency: 1420, gain: 0.075, type: "highpass" },
+        asphalt: { frequency: 360, gain: 0.08, type: "bandpass" },
+        tech: { frequency: 1760, gain: 0.068, type: "highpass" },
         earth: { frequency: 190, gain: 0.085, type: "lowpass" },
       };
       const profile = profiles[material] || profiles.earth;

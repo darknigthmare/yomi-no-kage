@@ -1,0 +1,465 @@
+{
+  "schema": 2,
+  "zoneId": "cyberpunk-japan",
+  "assetType": "prop",
+  "count": 12,
+  "source": "assets/modular/environments/cyberpunk-japan/props/source/atlas-imagegen-raw.png",
+  "alphaSourceDerivedAtBuild": true,
+  "grid": {
+    "columns": 4,
+    "rows": 3
+  },
+  "gridBoundaries": {
+    "x": [
+      0,
+      406,
+      768,
+      1152,
+      1536
+    ],
+    "y": [
+      0,
+      341,
+      677,
+      1024
+    ]
+  },
+  "renderPolicy": {
+    "projection": "front-orthographic",
+    "transparentPadding": 8,
+    "bottomTransparentPadding": 4,
+    "weaponsOrCharactersBakedIn": false
+  },
+  "chroma": {
+    "keyRed": 5,
+    "keyGreen": 248,
+    "keyBlue": 3,
+    "keyHex": "#05f803",
+    "keyKind": "green",
+    "transparentPixels": 1115084,
+    "partialAlphaPixels": 2949,
+    "despilledPixels": 2949
+  },
+  "sprites": [
+    {
+      "id": "temporal-torii",
+      "file": "temporal-torii.png",
+      "sourceCell": [
+        0,
+        0
+      ],
+      "size": [
+        328,
+        282
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        320,
+        278
+      ],
+      "sourceBounds": [
+        69,
+        46,
+        381,
+        316
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "shrine-tech-altar",
+      "file": "shrine-tech-altar.png",
+      "sourceCell": [
+        1,
+        0
+      ],
+      "size": [
+        277,
+        263
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        269,
+        259
+      ],
+      "sourceBounds": [
+        472,
+        65,
+        733,
+        316
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "ventilation-tower",
+      "file": "ventilation-tower.png",
+      "sourceCell": [
+        2,
+        0
+      ],
+      "size": [
+        207,
+        299
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        199,
+        295
+      ],
+      "sourceBounds": [
+        856,
+        32,
+        1047,
+        319
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "energy-barrier-post",
+      "file": "energy-barrier-post.png",
+      "sourceCell": [
+        3,
+        0
+      ],
+      "size": [
+        238,
+        284
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        230,
+        280
+      ],
+      "sourceBounds": [
+        1219,
+        47,
+        1441,
+        319
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "maglev-maintenance-car",
+      "file": "maglev-maintenance-car.png",
+      "sourceCell": [
+        0,
+        1
+      ],
+      "size": [
+        351,
+        123
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        343,
+        119
+      ],
+      "sourceBounds": [
+        45,
+        463,
+        380,
+        574
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "drone-charging-dock",
+      "file": "drone-charging-dock.png",
+      "sourceCell": [
+        1,
+        1
+      ],
+      "size": [
+        252,
+        223
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        244,
+        219
+      ],
+      "sourceBounds": [
+        481,
+        392,
+        717,
+        603
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "sealed-cargo-crate",
+      "file": "sealed-cargo-crate.png",
+      "sourceCell": [
+        2,
+        1
+      ],
+      "size": [
+        247,
+        200
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        239,
+        196
+      ],
+      "sourceBounds": [
+        829,
+        415,
+        1060,
+        603
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "vending-terminal",
+      "file": "vending-terminal.png",
+      "sourceCell": [
+        3,
+        1
+      ],
+      "size": [
+        184,
+        221
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        176,
+        217
+      ],
+      "sourceBounds": [
+        1220,
+        397,
+        1388,
+        606
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "coolant-pipe",
+      "file": "coolant-pipe.png",
+      "sourceCell": [
+        0,
+        2
+      ],
+      "size": [
+        372,
+        147
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        364,
+        143
+      ],
+      "sourceBounds": [
+        48,
+        757,
+        404,
+        892
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "cyber-shrine-lantern",
+      "file": "cyber-shrine-lantern.png",
+      "sourceCell": [
+        1,
+        2
+      ],
+      "size": [
+        160,
+        264
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        152,
+        260
+      ],
+      "sourceBounds": [
+        519,
+        679,
+        663,
+        931
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "transit-access-gate",
+      "file": "transit-access-gate.png",
+      "sourceCell": [
+        2,
+        2
+      ],
+      "size": [
+        280,
+        244
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        272,
+        240
+      ],
+      "sourceBounds": [
+        804,
+        699,
+        1068,
+        931
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "damaged-power-relay",
+      "file": "damaged-power-relay.png",
+      "sourceCell": [
+        3,
+        2
+      ],
+      "size": [
+        233,
+        255
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        225,
+        251
+      ],
+      "sourceBounds": [
+        1215,
+        686,
+        1432,
+        929
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    }
+  ]
+}

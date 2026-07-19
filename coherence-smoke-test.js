@@ -467,7 +467,7 @@ function findAreaProp(propId) {
         memoryTime: 99,
       },
     });
-    for (let index = 0; index < 30; index += 1) {
+    for (let index = 0; index < 60; index += 1) {
       runtime.KageGame.debug.step(0.1);
     }
     const target = runtime.KageGame.debug.areaSnapshot().enemies[targetIndex];

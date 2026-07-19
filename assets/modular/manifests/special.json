@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "category": "special",
-  "count": 20,
+  "count": 24,
   "generationTool": "OpenAI ImageGen built-in",
   "generationPolicy": "Un appel ImageGen distinct par personnage. Les armes, outils et accessoires de combat restent des sprites séparés.",
   "animationStandard": {
@@ -863,6 +863,258 @@
         "frames": "assets/modular/characters/special/s20-mekura-oracle/frames"
       },
       "prompt": "Use case: stylized-concept\nAsset type: production modular special-enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original special enemy identity, the Mekura Oracle: an infected rural shrine seer from Kan'ei Japan, 1638, elderly woman with long silver-black hair tied low, both eyes covered by a plain aged-bone cloth bandage, layered deep-indigo miko-style kosode under an ink-black sleeveless mantle, lacquer-red waist cord, dark split hakama, white tabi and straw sandals, faint sick-green markings only on her hands. No gore.\nRequired atlas: STRICTLY 6 columns × 5 rows, exactly 30 full-body poses of the same character; equal invisible cells, identical scale, camera, baseline and padding, with no silhouette crossing into neighboring cells. Rows: 1 listening prophetic idle, 2 left-facing careful glide walk, 3 empty-handed rosary-and-bell divination body motion, 4 hurt recoil, 5 death collapse; six sequential frames each.\nInvariants: same woman, eye bandage, clothing, proportions and colors in every cell; pure lateral left-facing side view only; fully visible head-to-toe in every pose.\nStyle: polished authentic 16-bit pixel art, crisp large square pixels, hard clusters, ink-black, deep-indigo, lacquer-red, aged-bone and subtle sick-green palette.\nBackdrop: one continuous perfectly flat solid #ff00ff background.\nCritical: BOTH HANDS EMPTY IN EVERY FRAME. No rosary, beads, bell, staff, charm, ofuda, weapon, pouch, prop, object or attached combat gear; ritual implements are separate sprites.\nAvoid: text, labels, logo, watermark, border, frame, visible grid, scenery, ground, shadow, gradient, texture, glow aura, spirit, smoke, particles, blood, extra character, other view, magenta or pink on the character."
+    },
+    {
+      "id": "new-modern-riot-host",
+      "name": "Hôte antiémeute",
+      "subtitle": "Rempart contaminé",
+      "lore": [
+        "Ce policier antiémeute protégeait l'accès au portail lorsque les premiers infectés contemporains ont rompu le cordon.",
+        "Son équipement a survécu au passage temporel et transforme maintenant sa masse contaminée en rempart mobile."
+      ],
+      "stats": {
+        "hp": 140,
+        "damage": 18,
+        "speed": 0.72,
+        "posture": 84
+      },
+      "pattern": "Avance sous garde, pousse le joueur contre le décor puis contre-attaque après avoir absorbé un coup léger.",
+      "weaponId": "jitte",
+      "weaponRoleOriginal": "future-modern-baton",
+      "nom": "Hôte antiémeute",
+      "role": "Rempart contaminé",
+      "gameplay": "140 PV, 18 dégâts, vitesse 0.72. Blindé lent, poussée de contrôle et contre après garde.",
+      "era": "contemporary-japan",
+      "zoneAffinity": "endgame-modern-japan",
+      "viewCoverage": "2d-lateral-only",
+      "animationContract": {
+        "rows": [
+          "idle",
+          "move",
+          "attack",
+          "hurt",
+          "death"
+        ],
+        "framesPerAnimation": 6,
+        "facing": "left",
+        "weaponsBakedIntoBody": false,
+        "fpsEightWay": false
+      },
+      "weapon": {
+        "id": "jitte",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/special/new-modern-riot-host",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/special/new-modern-riot-host/source-master.png",
+        "masterAlpha": "assets/modular/characters/special/new-modern-riot-host/master-alpha.png",
+        "master": "assets/modular/characters/special/new-modern-riot-host/master.png",
+        "sprite": "assets/modular/characters/special/new-modern-riot-host/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/special/new-modern-riot-host/sheets/idle.png",
+          "move": "assets/modular/characters/special/new-modern-riot-host/sheets/move.png",
+          "attack": "assets/modular/characters/special/new-modern-riot-host/sheets/attack.png",
+          "hurt": "assets/modular/characters/special/new-modern-riot-host/sheets/hurt.png",
+          "death": "assets/modular/characters/special/new-modern-riot-host/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/special/new-modern-riot-host/frames"
+      },
+      "sourceGeneration": {
+        "tool": "OpenAI ImageGen",
+        "sourceBackground": "#ff00ff",
+        "normalizationTool": "tools/build-cross-era-enemy-sheets.py"
+      },
+      "prompt": "Planche maître originale d'un hôte antiémeute contaminé du Japon contemporain, armure sombre et visière violette, strictement en vue latérale gauche. Produire exactement 6 colonnes par 5 lignes et 30 poses cohérentes : idle, marche lourde, poussée à mains vides, impact et mort, six images chacune. Même casque, armure, taille et ligne de sol partout. Les deux mains restent vides, sans matraque ni bouclier, car le jitte est monté séparément. Fond chroma magenta uniforme, aucun texte, décor, accessoire intégré ou vue FPS."
+    },
+    {
+      "id": "new-modern-response-officer",
+      "name": "Agent d'intervention",
+      "subtitle": "Tireur de confinement",
+      "lore": [
+        "Cette unité d'intervention suivit un signal de détresse jusque dans la faille, ignorant que la ville de l'autre côté avait quatre siècles de retard.",
+        "La contamination a conservé sa discipline de tir, mais elle ne distingue plus une cible d'un survivant."
+      ],
+      "stats": {
+        "hp": 96,
+        "damage": 22,
+        "speed": 1.0,
+        "posture": 55
+      },
+      "pattern": "Vise brièvement, tire une courte rafale puis change de position avant de recommencer son cycle.",
+      "weaponId": "bajozutsu",
+      "weaponRoleOriginal": "future-modern-service-pistol",
+      "nom": "Agent d'intervention",
+      "role": "Tireur de confinement",
+      "gameplay": "96 PV, 22 dégâts, vitesse 1.0. Tireur à télégraphe lisible qui se repositionne après chaque rafale.",
+      "era": "contemporary-japan",
+      "zoneAffinity": "endgame-modern-japan",
+      "viewCoverage": "2d-lateral-only",
+      "animationContract": {
+        "rows": [
+          "idle",
+          "move",
+          "attack",
+          "hurt",
+          "death"
+        ],
+        "framesPerAnimation": 6,
+        "facing": "left",
+        "weaponsBakedIntoBody": false,
+        "fpsEightWay": false
+      },
+      "weapon": {
+        "id": "bajozutsu",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/special/new-modern-response-officer",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/special/new-modern-response-officer/source-master.png",
+        "masterAlpha": "assets/modular/characters/special/new-modern-response-officer/master-alpha.png",
+        "master": "assets/modular/characters/special/new-modern-response-officer/master.png",
+        "sprite": "assets/modular/characters/special/new-modern-response-officer/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/special/new-modern-response-officer/sheets/idle.png",
+          "move": "assets/modular/characters/special/new-modern-response-officer/sheets/move.png",
+          "attack": "assets/modular/characters/special/new-modern-response-officer/sheets/attack.png",
+          "hurt": "assets/modular/characters/special/new-modern-response-officer/sheets/hurt.png",
+          "death": "assets/modular/characters/special/new-modern-response-officer/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/special/new-modern-response-officer/frames"
+      },
+      "sourceGeneration": {
+        "tool": "OpenAI ImageGen",
+        "sourceBackground": "#ff00ff",
+        "normalizationTool": "tools/build-cross-era-enemy-sheets.py"
+      },
+      "prompt": "Planche maître originale d'un agent d'intervention contaminé du Japon contemporain, tenue tactique sombre et masque respiratoire au cou, strictement en vue latérale gauche. Produire exactement 6 colonnes par 5 lignes et 30 poses cohérentes : idle, marche, visée à mains vides, impact et mort, six images chacune. Même visage, équipement porté, proportions et ligne de sol dans chaque cellule. Les mains restent vides ; le bajozutsu représentant son arme de service est un sprite séparé. Fond chroma magenta uniforme, aucun texte, décor, arme intégrée ou vue FPS."
+    },
+    {
+      "id": "new-cyber-drone-corpse",
+      "name": "Cadavre-porteur de drone",
+      "subtitle": "Relais nécro-technique",
+      "lore": [
+        "Les mégacorporations du futur ont greffé des relais tactiques aux morts avant même que le virus du Yomi n'atteigne leur époque.",
+        "Désormais le corps avance comme une antenne vivante, guidé par les impulsions d'un essaim invisible."
+      ],
+      "stats": {
+        "hp": 125,
+        "damage": 17,
+        "speed": 0.88,
+        "posture": 68
+      },
+      "pattern": "Émet une impulsion de drone, accroche la cible avec son câble puis la tire dans une zone dangereuse.",
+      "weaponId": "manrikigusari",
+      "weaponRoleOriginal": "future-cyber-control-cable",
+      "nom": "Cadavre-porteur de drone",
+      "role": "Relais nécro-technique",
+      "gameplay": "125 PV, 17 dégâts, vitesse 0.88. Contrôle de zone, impulsion télégraphiée et traction par câble.",
+      "era": "cyberpunk-japan",
+      "zoneAffinity": "endgame-cyberpunk-japan",
+      "viewCoverage": "2d-lateral-only",
+      "animationContract": {
+        "rows": [
+          "idle",
+          "move",
+          "attack",
+          "hurt",
+          "death"
+        ],
+        "framesPerAnimation": 6,
+        "facing": "left",
+        "weaponsBakedIntoBody": false,
+        "fpsEightWay": false
+      },
+      "weapon": {
+        "id": "manrikigusari",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/special/new-cyber-drone-corpse",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/special/new-cyber-drone-corpse/source-master.png",
+        "masterAlpha": "assets/modular/characters/special/new-cyber-drone-corpse/master-alpha.png",
+        "master": "assets/modular/characters/special/new-cyber-drone-corpse/master.png",
+        "sprite": "assets/modular/characters/special/new-cyber-drone-corpse/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/special/new-cyber-drone-corpse/sheets/idle.png",
+          "move": "assets/modular/characters/special/new-cyber-drone-corpse/sheets/move.png",
+          "attack": "assets/modular/characters/special/new-cyber-drone-corpse/sheets/attack.png",
+          "hurt": "assets/modular/characters/special/new-cyber-drone-corpse/sheets/hurt.png",
+          "death": "assets/modular/characters/special/new-cyber-drone-corpse/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/special/new-cyber-drone-corpse/frames"
+      },
+      "sourceGeneration": {
+        "tool": "OpenAI ImageGen",
+        "sourceBackground": "#00ff00",
+        "normalizationTool": "tools/build-cross-era-enemy-sheets.py"
+      },
+      "prompt": "Planche maître originale d'un cadavre cybernétique japonais portant un module de drone dorsal néon, strictement en vue latérale gauche. Produire exactement 6 colonnes par 5 lignes et 30 poses cohérentes : idle, marche, commande à mains vides, impact et mort, six images chacune. Même corps, module dorsal, échelle et ligne de sol dans toutes les cellules. Aucune chaîne ni arme ne doit être intégrée ; le câble manrikigusari est un sprite séparé segmentable. Fond chroma vert uniforme, aucun texte, décor ou prétendue couverture FPS."
+    },
+    {
+      "id": "new-cyber-oni-frame",
+      "name": "Châssis Oni",
+      "subtitle": "Briseur cybernétique",
+      "lore": [
+        "Ce châssis de siège emprunte la silhouette d'un oni pour terroriser les quartiers autonomes du Japon futuriste.",
+        "Le virus a colonisé ses interfaces organiques et converti son protocole de pacification en rituel de massacre."
+      ],
+      "stats": {
+        "hp": 210,
+        "damage": 28,
+        "speed": 0.65,
+        "posture": 120
+      },
+      "pattern": "Encaisse en avançant, déclenche un écrasement blindé puis expose brièvement son noyau pendant la récupération.",
+      "weaponId": "kanabo",
+      "weaponRoleOriginal": "future-cyber-shock-kanabo",
+      "nom": "Châssis Oni",
+      "role": "Briseur cybernétique",
+      "gameplay": "210 PV, 28 dégâts, vitesse 0.65. Brute blindée avec écrasement massif et fenêtre de vulnérabilité.",
+      "era": "cyberpunk-japan",
+      "zoneAffinity": "endgame-cyberpunk-japan",
+      "viewCoverage": "2d-lateral-only",
+      "animationContract": {
+        "rows": [
+          "idle",
+          "move",
+          "attack",
+          "hurt",
+          "death"
+        ],
+        "framesPerAnimation": 6,
+        "facing": "left",
+        "weaponsBakedIntoBody": false,
+        "fpsEightWay": false
+      },
+      "weapon": {
+        "id": "kanabo",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/special/new-cyber-oni-frame",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/special/new-cyber-oni-frame/source-master.png",
+        "masterAlpha": "assets/modular/characters/special/new-cyber-oni-frame/master-alpha.png",
+        "master": "assets/modular/characters/special/new-cyber-oni-frame/master.png",
+        "sprite": "assets/modular/characters/special/new-cyber-oni-frame/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/special/new-cyber-oni-frame/sheets/idle.png",
+          "move": "assets/modular/characters/special/new-cyber-oni-frame/sheets/move.png",
+          "attack": "assets/modular/characters/special/new-cyber-oni-frame/sheets/attack.png",
+          "hurt": "assets/modular/characters/special/new-cyber-oni-frame/sheets/hurt.png",
+          "death": "assets/modular/characters/special/new-cyber-oni-frame/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/special/new-cyber-oni-frame/frames"
+      },
+      "sourceGeneration": {
+        "tool": "OpenAI ImageGen",
+        "sourceBackground": "#00ff00",
+        "normalizationTool": "tools/build-cross-era-enemy-sheets.py"
+      },
+      "prompt": "Planche maître originale d'un châssis Oni cybernétique japonais massif, armure noire et magenta avec noyaux cyan, strictement en vue latérale gauche. Produire exactement 6 colonnes par 5 lignes et 30 poses cohérentes : idle, marche lourde, écrasement à mains vides, impact et mort, six images chacune. Même casque cornu, armure, gabarit et ligne de sol dans chaque cellule. Aucun kanabo ni accessoire de combat intégré : l'arme est un sprite séparé. Fond chroma vert uniforme, aucun texte, décor ou animation FPS inventée."
     }
   ]
 }

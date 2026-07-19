@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "category": "regular",
-  "count": 20,
+  "count": 22,
   "generationTool": "OpenAI ImageGen built-in",
   "generationPolicy": "Un appel ImageGen distinct par personnage. Les armes, outils et accessoires de combat restent des sprites séparés.",
   "animationStandard": {
@@ -863,6 +863,132 @@
         "frames": "assets/modular/characters/regular/r20-komuso-wanderer/frames"
       },
       "prompt": "Use case: stylized-concept\nAsset type: production modular enemy animation master sheet for a 16-bit side-scrolling game\nPrimary request: Create exactly one original enemy identity, the Komuso Wanderer: an infected itinerant komusō monk from Kan'ei Japan, 1638, slender adult figure wearing a historically grounded woven tengai basket hat fully covering the face, dark-indigo monk robes, aged-bone shoulder layer, muted lacquer-red cord, split leggings, white tabi and straw sandals; a faint sick-green glow shows only through two narrow basket gaps. No gore.\nRequired atlas layout: STRICTLY 6 columns × 5 rows, exactly 30 separate full-body poses of this same character. Equal invisible cells, identical scale and camera, consistent baseline, generous padding, nothing crosses cell boundaries. Rows top-to-bottom: row 1 six-frame idle; row 2 six-frame gliding left-facing walk; row 3 six-frame empty-handed flute-staff thrust body motion; row 4 six-frame hurt recoil; row 5 six-frame death collapse. Columns are sequential phases left to right.\nCharacter invariants: same basket hat, clothing, proportions and colors in all cells; pure lateral view facing left only; every pose fully visible head-to-toe.\nStyle/medium: polished authentic 16-bit pixel art, crisp large square pixels, hard clusters, limited ink-black/deep-indigo/lacquer-red/aged-bone/subtle-sick-green palette.\nScene/backdrop: one continuous perfectly flat solid #ff00ff chroma-key background.\nCritical modular constraint: BOTH HANDS EMPTY IN EVERY FRAME. No shakuhachi, staff, weapon, instrument, tool, prop, object, bag, sheath, scabbard or attached item other than worn clothing and tengai hat; weapon sprite will be layered separately.\nAvoid: no text, labels, number, logo, watermark, frame, border, cell outline, grid line, scenery, ground, shadow, gradient, texture, glow aura, particles, smoke, blood, extra character, front/right/rear view or magenta/pink on character."
+    },
+    {
+      "id": "new-modern-commuter",
+      "name": "Navetteur contaminé",
+      "subtitle": "Errant de quai",
+      "lore": [
+        "Arraché à une gare du Japon contemporain par la faille de Kurokawa, ce salarié n'a jamais compris dans quel siècle il venait de tomber.",
+        "Le virus demeure biologique, mais son passage dans le Yomi a condensé ses réflexes en brusques charges de prédateur."
+      ],
+      "stats": {
+        "hp": 52,
+        "damage": 10,
+        "speed": 1.05,
+        "posture": 26
+      },
+      "pattern": "Approche en titubant, marque une courte pause puis enchaîne une saisie et une frappe en deux temps.",
+      "weaponId": "tanto",
+      "weaponRoleOriginal": "future-modern-emergency-blade",
+      "nom": "Navetteur contaminé",
+      "role": "Errant de quai",
+      "gameplay": "52 PV, 10 dégâts, vitesse 1.05. Approche lente suivie d'une saisie soudaine en deux temps.",
+      "era": "contemporary-japan",
+      "zoneAffinity": "endgame-modern-japan",
+      "viewCoverage": "2d-lateral-only",
+      "animationContract": {
+        "rows": [
+          "idle",
+          "move",
+          "attack",
+          "hurt",
+          "death"
+        ],
+        "framesPerAnimation": 6,
+        "facing": "left",
+        "weaponsBakedIntoBody": false,
+        "fpsEightWay": false
+      },
+      "weapon": {
+        "id": "tanto",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/regular/new-modern-commuter",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/regular/new-modern-commuter/source-master.png",
+        "masterAlpha": "assets/modular/characters/regular/new-modern-commuter/master-alpha.png",
+        "master": "assets/modular/characters/regular/new-modern-commuter/master.png",
+        "sprite": "assets/modular/characters/regular/new-modern-commuter/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/regular/new-modern-commuter/sheets/idle.png",
+          "move": "assets/modular/characters/regular/new-modern-commuter/sheets/move.png",
+          "attack": "assets/modular/characters/regular/new-modern-commuter/sheets/attack.png",
+          "hurt": "assets/modular/characters/regular/new-modern-commuter/sheets/hurt.png",
+          "death": "assets/modular/characters/regular/new-modern-commuter/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/regular/new-modern-commuter/frames"
+      },
+      "sourceGeneration": {
+        "tool": "OpenAI ImageGen",
+        "sourceBackground": "#ff00ff",
+        "normalizationTool": "tools/build-cross-era-enemy-sheets.py"
+      },
+      "prompt": "Planche maître originale d'un navetteur japonais contemporain infecté, strictement en vue latérale gauche. Produire exactement 6 colonnes par 5 lignes et 30 poses cohérentes : idle, marche, attaque à mains vides, impact et mort, six images chacune. Même visage, vêtements, échelle et ligne de sol dans chaque cellule. Les deux mains doivent rester vides, sans arme, étui ni accessoire de combat, car le tanto est un sprite séparé. Fond chroma magenta uniforme, aucun texte, décor, ombre portée ou vue FPS."
+    },
+    {
+      "id": "new-cyber-neon-shinobi",
+      "name": "Shinobi néon",
+      "subtitle": "Assassin de faille",
+      "lore": [
+        "Dans le Japon cyberpunk au-delà du portail, des cellules shinobi ont remplacé leurs serments par des protocoles gravés dans la chair.",
+        "Cette unité infectée franchit les ruptures temporelles pour éliminer tout témoin capable de refermer la faille."
+      ],
+      "stats": {
+        "hp": 68,
+        "damage": 15,
+        "speed": 1.55,
+        "posture": 34
+      },
+      "pattern": "Feinte à mi-distance, dash latéral puis exécute une rafale de trois frappes avant un bref temps de récupération.",
+      "weaponId": "wakizashi",
+      "weaponRoleOriginal": "future-cyber-mono-wakizashi",
+      "nom": "Shinobi néon",
+      "role": "Assassin de faille",
+      "gameplay": "68 PV, 15 dégâts, vitesse 1.55. Assassin mobile avec feinte, dash et combo de trois frappes.",
+      "era": "cyberpunk-japan",
+      "zoneAffinity": "endgame-cyberpunk-japan",
+      "viewCoverage": "2d-lateral-only",
+      "animationContract": {
+        "rows": [
+          "idle",
+          "move",
+          "attack",
+          "hurt",
+          "death"
+        ],
+        "framesPerAnimation": 6,
+        "facing": "left",
+        "weaponsBakedIntoBody": false,
+        "fpsEightWay": false
+      },
+      "weapon": {
+        "id": "wakizashi",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "folder": "assets/modular/characters/regular/new-cyber-neon-shinobi",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/regular/new-cyber-neon-shinobi/source-master.png",
+        "masterAlpha": "assets/modular/characters/regular/new-cyber-neon-shinobi/master-alpha.png",
+        "master": "assets/modular/characters/regular/new-cyber-neon-shinobi/master.png",
+        "sprite": "assets/modular/characters/regular/new-cyber-neon-shinobi/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/regular/new-cyber-neon-shinobi/sheets/idle.png",
+          "move": "assets/modular/characters/regular/new-cyber-neon-shinobi/sheets/move.png",
+          "attack": "assets/modular/characters/regular/new-cyber-neon-shinobi/sheets/attack.png",
+          "hurt": "assets/modular/characters/regular/new-cyber-neon-shinobi/sheets/hurt.png",
+          "death": "assets/modular/characters/regular/new-cyber-neon-shinobi/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/regular/new-cyber-neon-shinobi/frames"
+      },
+      "sourceGeneration": {
+        "tool": "OpenAI ImageGen",
+        "sourceBackground": "#00ff00",
+        "normalizationTool": "tools/build-cross-era-enemy-sheets.py"
+      },
+      "prompt": "Planche maître originale d'un shinobi infecté du Japon cyberpunk, armure noire segmentée et accents néon, strictement en vue latérale gauche. Produire exactement 6 colonnes par 5 lignes et 30 poses cohérentes : idle, course, attaque à mains vides, impact et mort, six images chacune. Conserver le même casque, les mêmes proportions, la même échelle et la même ligne de sol. Les mains restent vides et le wakizashi est un sprite séparé interchangeable. Fond chroma vert uniforme, aucun texte, décor, arme intégrée ou prétendue animation FPS."
     }
   ]
 }

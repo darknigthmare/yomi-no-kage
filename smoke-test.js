@@ -101,18 +101,33 @@ require("./game.js");
   assert.equal(state.chapter, 0);
   assert.equal(state.seals, 0);
   const initialWorld = global.KageGame.debug.worldSnapshot();
-  assert.equal(initialWorld.areaId, "kurokawa-main-street");
+  assert.equal(initialWorld.areaId, "kai-forest-pass");
   assert.equal(initialWorld.zoneKind, "outdoor");
   assert.equal(initialWorld.propSource, "kage-levels");
   assert.equal(initialWorld.levelSchema, 2);
-  assert.equal(initialWorld.levelBuildId, "20260719-street-composition-v2");
+  assert.equal(initialWorld.levelBuildId, "20260719-world-expansion-v3");
   assert.equal(
     initialWorld.props.length,
-    global.KageLevels.areas["kurokawa-main-street"].props.length,
+    global.KageLevels.areas["kai-forest-pass"].props.length,
     "Le smoke test doit valider le niveau authored, jamais le fallback legacy",
   );
+  assert.equal(
+    global.KageLevels.areas["kai-forest-pass"].environmentIndex,
+    5,
+    "Le prologue doit démarrer dans le pack forêt dédié",
+  );
+
+  // La suite du smoke historique couvre Kurokawa : elle y entre
+  // explicitement après avoir validé le nouveau départ dans la forêt.
+  global.KageGame.debug.setSideArea("kurokawa-main-street", "prologue");
+  const mainStreetWorld = global.KageGame.debug.worldSnapshot();
+  assert.equal(mainStreetWorld.areaId, "kurokawa-main-street");
+  assert.equal(
+    mainStreetWorld.props.length,
+    global.KageLevels.areas["kurokawa-main-street"].props.length,
+  );
   assert.ok(
-    initialWorld.props.filter((prop) =>
+    mainStreetWorld.props.filter((prop) =>
       prop.compositionRole === "second-plane-building").length >= 8,
     "La grande rue doit posséder une vraie ligne de bâtiments au second plan",
   );
@@ -334,8 +349,63 @@ require("./game.js");
   global.KageGame.debug.warpToAltar();
   global.KageGame.interact();
   state = global.KageGame.getState();
-  assert.equal(state.status, "ended");
+  assert.equal(state.status, "playing");
+  assert.equal(state.mode, "side");
   assert.equal(state.seals, 2);
+  for (let i = 0; i < 4; i += 1) global.KageGame.debug.step(0.25);
+  const postDaimyoWorld = global.KageGame.debug.worldSnapshot();
+  const openedDaimyoDoor = postDaimyoWorld.portals
+    .find((portal) => portal.id === "final-donjon-fps");
+  assert.equal(
+    postDaimyoWorld.objectivePortalId,
+    "castle-to-contemporary-warp",
+    "Après le daimyō, le marqueur d'objectif doit viser la faille temporelle",
+  );
+  assert.equal(
+    openedDaimyoDoor?.blocksMovement,
+    false,
+    "La porte du daimyō doit s'ouvrir après le second sceau",
+  );
+
+  // Le second sceau ouvre désormais le vrai endgame temporel au lieu de
+  // terminer la partie devant la salle du daimyō.
+  assert.equal(
+    global.KageGame.debug.warpToPortal("castle-to-contemporary-warp")?.id,
+    "castle-to-contemporary-warp",
+  );
+  global.KageGame.interact();
+  assert.equal(
+    global.KageGame.getState().portalConfirmation?.id,
+    "castle-donjon:castle-to-contemporary-warp",
+  );
+  global.KageGame.interact();
+  for (let i = 0; i < 4; i += 1) global.KageGame.debug.step(0.25);
+  state = global.KageGame.getState();
+  assert.equal(state.sideAreaId, "tokyo-contemporary-rift");
+
+  assert.equal(
+    global.KageGame.debug.warpToPortal("modern-to-cyber")?.id,
+    "modern-to-cyber",
+  );
+  global.KageGame.debug.clearSide();
+  global.KageGame.interact();
+  for (let i = 0; i < 4; i += 1) global.KageGame.debug.step(0.25);
+  state = global.KageGame.getState();
+  assert.equal(state.sideAreaId, "neo-edo-cyber-rift");
+
+  assert.equal(
+    global.KageGame.debug.warpToPortal("cyber-yomi-core")?.id,
+    "cyber-yomi-core",
+  );
+  global.KageGame.debug.clearSide();
+  global.KageGame.interact();
+  assert.equal(
+    global.KageGame.getState().portalConfirmation?.id,
+    "neo-edo-cyber-rift:cyber-yomi-core",
+  );
+  global.KageGame.interact();
+  state = global.KageGame.getState();
+  assert.equal(state.status, "ended");
 
   // Partie fraîche : le coup ne porte qu'à sa frame active, une seule fois.
   await global.KageGame.start();

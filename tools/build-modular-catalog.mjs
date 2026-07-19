@@ -170,6 +170,7 @@ if (fs.existsSync(environmentManifestPath)) {
       const group = zone[groupName] || {};
       for (const file of group.items || []) {
         metadataByFile.set(file, {
+          ...metadataByFile.get(file),
           lore: zone.lore || "",
           gameplay: zone.gameplay || "",
           prompt: group.prompt || "",
@@ -225,7 +226,16 @@ for (const category of categoryOrder) {
       lore: asText(metadata.lore) || `Créature originale du bestiaire ${categoryLabels[category].toLowerCase()} de Kurokawa.`,
       gameplay: metadata.gameplay || "Cinq animations modulaires et arme indépendante.",
       prompt: metadata.prompt || "",
+      stats: metadata.stats || null,
+      pattern: metadata.pattern || null,
       weaponId: metadata.weaponId || metadata.weapon || metadata.equipment?.weaponId || metadata.weaponRole || null,
+      weaponRoleOriginal: metadata.weaponRoleOriginal || null,
+      era: metadata.era || null,
+      zoneAffinity: metadata.zoneAffinity || null,
+      viewCoverage: metadata.viewCoverage || sprite.viewCoverage?.mode || sprite.animationContract?.view || null,
+      animationContract: metadata.animationContract || sprite.animationContract || null,
+      weaponsBakedIntoBody: sprite.weaponsBakedIntoBody === true,
+      sourceGeneration: metadata.sourceGeneration || null,
       file: toWebPath(masterFile),
       sprite: toWebPath(spriteFile),
       animations,
@@ -235,6 +245,11 @@ for (const category of categoryOrder) {
           sprite.animations?.[animation]?.map((frame) => toWebPath(path.join(folder, frame.file))) || [],
         ]),
       ),
+      weaponRig: sprite.weaponRig || null,
+      attachmentRigs: sprite.attachmentRigs || null,
+      weaponRenderOrder: sprite.weaponRig?.renderOrder
+        || sprite.renderOrder
+        || ["weapon", "body"],
       generationTool: metadata.generationTool || "OpenAI ImageGen built-in",
       manifest: metadata.sourceFile || null,
     };
@@ -250,13 +265,16 @@ for (const category of categoryOrder) {
         fpsFrames: fpsFramePaths(fpsFolder, fpsSprite),
         fpsSprite: toWebPath(fpsSpriteFile),
         fpsGeneration: metadata.fpsPrompt || fpsSprite.generationTool || fpsSprite.sourceView || "FPS billboard sprites",
+        fpsWeaponRig: fpsSprite.weaponRig || null,
+        fpsRenderOrder: fpsSprite.weaponRig?.renderOrder
+          || fpsSprite.renderOrder
+          || ["body", "weapon"],
       });
     }
 
     if (category === "player" && entry.name === "akio" && fpsSprite) {
       Object.assign(character, {
         fpsWeaponMounts: fpsWeaponMounts(fpsSprite),
-        fpsRenderOrder: fpsSprite.renderOrder || ["weapon", "body"],
         fpsWeaponsBakedIntoBody: fpsSprite.weaponsBakedIntoBody === true,
         fpsWeaponSprites: loreKatanaFpsSprites(),
       });
@@ -295,6 +313,19 @@ function assetFromPng(filePath, type) {
     family: metadata.family || metadata.group || null,
     generationTool: metadata.generationTool || "OpenAI ImageGen built-in",
     manifest: metadata.sourceFile || null,
+    projection: metadata.projection || undefined,
+    view: metadata.view || undefined,
+    depthUsage: metadata.depthUsage || undefined,
+    backgroundOnly: typeof metadata.backgroundOnly === "boolean" ? metadata.backgroundOnly : undefined,
+    renderLayer: metadata.renderLayer || undefined,
+    collision: metadata.collision || undefined,
+    alphaMode: metadata.alphaMode || undefined,
+    transparentPadding: Number.isFinite(metadata.transparentPadding) ? metadata.transparentPadding : undefined,
+    groundAnchor: metadata.groundAnchor || undefined,
+    contactMode: metadata.contactMode || undefined,
+    baseline: metadata.baseline || undefined,
+    variantOf: metadata.variantOf || undefined,
+    backgroundVariant: metadata.backgroundVariant || undefined,
   };
 }
 
@@ -304,7 +335,7 @@ const weaponPngs = [
 ]
   .filter((file) => file.toLowerCase().endsWith(".png"))
   .filter((file) => !/(^|[\\/])(source|sources|tmp|atlases|components)([\\/]|$)/i.test(file))
-  .filter((file) => !/(source|raw|alpha|contact|atlas|preview)/i.test(path.basename(file)));
+  .filter((file) => !/(?:^|[-_.])(source|raw|alpha|contact|atlas|preview)(?:[-_.]|$)/i.test(path.basename(file)));
 const weapons = weaponPngs.map((file) => {
   const weapon = assetFromPng(file, "weapon");
   const isGeneratedLoreKatana = loreKatanaIdPattern.test(weapon.id)
@@ -329,7 +360,7 @@ const weapons = weaponPngs.map((file) => {
 const environmentPngs = walkFiles(path.join(modularRoot, "environments"))
   .filter((file) => file.toLowerCase().endsWith(".png"))
   .filter((file) => !/(^|[\\/])(source|sources|tmp|depth-portals)([\\/]|$)/i.test(file))
-  .filter((file) => !/(source|raw|alpha|contact|atlas|preview)/i.test(path.basename(file)));
+  .filter((file) => !/(?:^|[-_.])(source|raw|alpha|contact|atlas|preview)(?:[-_.]|$)/i.test(path.basename(file)));
 const environments = environmentPngs.map((file) => {
   const normalized = toWebPath(file).toLowerCase();
   const type = /\/layers\//.test(normalized)
@@ -360,15 +391,28 @@ const characterAssets = characters.map((character) => ({
   lore: character.lore,
   gameplay: character.gameplay,
   prompt: character.prompt,
+  stats: character.stats,
+  pattern: character.pattern,
   animations: character.animations,
   frames: character.frames,
   weaponId: character.weaponId,
+  weaponRoleOriginal: character.weaponRoleOriginal,
+  era: character.era,
+  zoneAffinity: character.zoneAffinity,
+  viewCoverage: character.viewCoverage,
+  animationContract: character.animationContract,
+  weaponsBakedIntoBody: character.weaponsBakedIntoBody,
+  sourceGeneration: character.sourceGeneration,
+  weaponRig: character.weaponRig,
+  attachmentRigs: character.attachmentRigs,
+  weaponRenderOrder: character.weaponRenderOrder,
   generationTool: character.generationTool,
   manifest: character.manifest,
   fpsAnimations: character.fpsAnimations,
   fpsFrames: character.fpsFrames,
   fpsSprite: character.fpsSprite,
   fpsGeneration: character.fpsGeneration,
+  fpsWeaponRig: character.fpsWeaponRig,
   fpsWeaponMounts: character.fpsWeaponMounts,
   fpsRenderOrder: character.fpsRenderOrder,
   fpsWeaponsBakedIntoBody: character.fpsWeaponsBakedIntoBody,
@@ -429,6 +473,13 @@ fs.writeFileSync(outputRegistry, `${JSON.stringify({
   schema: 1,
   generatedAt: new Date().toISOString(),
   animationStandard: { animations: animationNames, framesPerAnimation: 6, weaponsBakedIntoBodies: false },
+  weaponRigStandard: {
+    schema: 1,
+    coordinateSpace: "frame-normalized",
+    fields: ["primaryHand", "secondaryHand", "angle", "scale", "layer"],
+    layers: ["behind-body", "front-body", "hidden"],
+    renderOrder: ["body", "weapon"],
+  },
   counts,
   characters,
   weapons,

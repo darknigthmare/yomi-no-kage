@@ -263,7 +263,7 @@
 
   const KageLevels = {
     schema: 2,
-    buildId: "20260719-street-composition-v2",
+    buildId: "20260719-world-expansion-v3",
     campaignId: "yomi-no-kage",
     startAreaId: "kurokawa-main-street",
     startSpawnId: "prologue",
@@ -744,7 +744,7 @@
             ["minka-tuiles-intacte", 1605, 156],
             ["kura-entrepot-riz", 1890, 142],
             ["minka-chaume-brulee", 2160, 154],
-            ["tour-guet-kurokawa", 2380, 72],
+            ["tour-guet-kurokawa-3q-arriere-plan", 2380, 72],
           ]),
           ...architectureRun(
             "main-west-plaster",
@@ -991,7 +991,7 @@
             ["minka-tuiles-intacte", 585, 156],
             ["kura-entrepot-riz", 875, 142],
             ["minka-tuiles-intacte", 1150, 154],
-            ["tour-guet-kurokawa", 1450, 70],
+            ["tour-guet-kurokawa-3q-arriere-plan", 1450, 70],
             ["kura-entrepot-riz", 1725, 145],
             ["minka-chaume-brulee", 2010, 156],
             ["minka-tuiles-intacte", 2290, 152],
@@ -1183,7 +1183,7 @@
             ["kura-entrepot-riz", 300, 142],
             ["minka-chaume-brulee", 575, 156],
             ["minka-tuiles-intacte", 850, 158],
-            ["tour-guet-kurokawa", 2180, 72],
+            ["tour-guet-kurokawa-3q-arriere-plan", 2180, 72],
             ["kura-entrepot-riz", 2380, 118],
           ]),
           ...architectureRun(
@@ -2090,11 +2090,25 @@
     const value = String(surface || "").toLowerCase();
     if (value.includes("tatami")) return "tatami";
     if (value.includes("root")) return "infectedRoots";
+    if (value.includes("tech")) return "techMetal";
+    if (value.includes("asphalt") || value.includes("concrete")) return "asphalt";
+    if (value.includes("metal")) return "metal";
     if (value.includes("stone") || value.includes("pierre")) return "castleStone";
     if (value.includes("thatch") || value.includes("chaume")) return "thatchRoof";
     if (value.includes("roof") || value.includes("tuile")) return "ceramicRoof";
     if (area.environmentIndex === 2) return "castleCedar";
     return "villageWood";
+  }
+
+  function groundSurfaceProfileId(surface, area) {
+    const value = String(surface || "").toLowerCase();
+    if (value.includes("tech")) return "techStreet";
+    if (value.includes("asphalt") || value.includes("concrete")) return "asphalt";
+    if (value.includes("metal")) return "metal";
+    if (value.includes("stone") || value.includes("pierre")) return "castleStone";
+    if (value.includes("tatami")) return "tatami";
+    if (area.environmentIndex === 2) return "castleStone";
+    return "earthRoad";
   }
 
   function propSurfaceProfileId(prop, area) {
@@ -2136,11 +2150,8 @@
       ground.depthBand = ground.depthBand || "gameplay-ground";
       ground.baseline = ground.baseline || `ground-${ground.y}`;
       ground.baselineY = ground.baselineY ?? ground.y;
-      ground.surfaceProfile = ground.surfaceProfile || (
-        String(ground.surface || "").toLowerCase().includes("tatami")
-          ? "tatami"
-          : (area.environmentIndex === 2 ? "castleStone" : "earthRoad")
-      );
+      ground.surfaceProfile = ground.surfaceProfile
+        || groundSurfaceProfileId(ground.surface, area);
       ground.colliderProfile = ground.colliderProfile || {
         type: "solidGround",
         x: ground.x,
@@ -2224,6 +2235,580 @@
       enemy.baseline = enemy.baseline || (enemy.platformId ? `platform-${enemy.platformId}` : "ground-300");
     }
   }
+
+  /*
+   * Extension jouable du monde. Ces zones utilisent les mêmes contrats
+   * spatiaux que Kurokawa : route principale horizontale, plateformes
+   * optionnelles attachées à des props identifiés et passages manuels.
+   * Elles restent déclaratives afin que la carte, la sauvegarde et les
+   * aperçus puissent charger exactement la même géographie.
+   */
+  function campaignPortal(
+    id,
+    x,
+    destination,
+    label,
+    prompt,
+    visual = "route-torii",
+  ) {
+    return {
+      id,
+      linkId: id,
+      x,
+      interactionRange: 58,
+      collision: "portal",
+      type: "side",
+      destination,
+      state: "open",
+      visual,
+      label,
+      prompt,
+    };
+  }
+
+  function campaignArea({
+    id,
+    chapterId,
+    label,
+    objective,
+    objectivePortalId,
+    environmentIndex,
+    rosterPoolId,
+    width = 3200,
+    spawns,
+    props,
+    platforms,
+    portals,
+    enemies,
+    surface = "earth",
+    regionId = "kai",
+    settlementId = "tsuru",
+    districtId = id,
+    chapterTags = [],
+    continuityProfile,
+  }) {
+    return {
+      id,
+      chapterId,
+      chapterTags,
+      regionId,
+      settlementId,
+      districtId,
+      rosterPoolId,
+      label,
+      objective,
+      objectivePortalId,
+      zoneKind: "outdoor",
+      continuityProfile,
+      environmentIndex,
+      width,
+      minX: 6,
+      maxX: width - 21,
+      cameraMinX: 0,
+      routeMetrics: {
+        mainRoute: "horizontal",
+        mainRouteLength: width - 80,
+        requiredClimb: 0,
+        optionalUpperRoutes: platforms.length,
+      },
+      spawns,
+      groundSegments: [
+        {
+          id: `${id}-ground`,
+          x: 0,
+          y: HORIZONTAL_GROUND_Y,
+          w: width,
+          h: 60,
+          collision: "solid",
+          surface,
+          routeRole: "main",
+        },
+      ],
+      platforms,
+      props,
+      portals,
+      enemies,
+      pickups: [
+        { id: `${id}-ofuda-west`, x: 720, y: 266, kind: "ammo", amount: 3 },
+        { id: `${id}-yomogi`, x: Math.round(width * 0.52), y: 266, kind: "health", amount: 24 },
+        { id: `${id}-ofuda-east`, x: width - 620, y: 266, kind: "ammo", amount: 3 },
+      ],
+      checkpoints: [
+        {
+          id: `${id}-checkpoint`,
+          x: Math.round(width * 0.5),
+          spawnId: "checkpoint",
+          persistent: true,
+        },
+      ],
+      encounters: [],
+    };
+  }
+
+  Object.assign(KageLevels.rosterPools, {
+    "kai-forest-route": {
+      chapterTags: ["forest", "kaido", "yomi-infected"],
+      factions: ["shogunate-expedition", "yomi-infected"],
+      regular: [
+        "r06-yama-woodcutter",
+        "r09-haka-digger",
+        "r20-komuso-wanderer",
+      ],
+      special: ["s05-raimei-yamabushi", "s19-wana-trapper"],
+      miniboss: ["mb-09-pisteur-kegare"],
+    },
+    "kai-bamboo-route": {
+      chapterTags: ["bamboo", "shigure", "yomi-infected"],
+      factions: ["shogunate-expedition", "yomi-infected"],
+      regular: ["r14-kaido-bandit", "r20-komuso-wanderer"],
+      special: ["s01-kusa-shinobi", "s02-doku-kunoichi", "s16-kage-mai-dancer"],
+      miniboss: ["mb-06-shinobi-brumes"],
+    },
+    "tsuru-fields-route": {
+      chapterTags: ["rice-fields", "irrigation", "yomi-infected"],
+      factions: ["tsuru-farmers", "yomi-infected"],
+      regular: ["r05-kome-porter", "r17-umaya-groom", "r19-kago-bearer"],
+      special: ["s13-kegare-sumotori", "s19-wana-trapper"],
+      miniboss: ["mb-17-sumotori-namazu"],
+    },
+    "tokyo-contemporary-rift": {
+      chapterTags: ["contemporary", "quarantine", "temporal-rift"],
+      factions: ["tokyo-response", "yomi-infected"],
+      regular: ["new-modern-commuter"],
+      special: ["new-modern-riot-host", "new-modern-response-officer"],
+      miniboss: [],
+    },
+    "neo-edo-cyber-rift": {
+      chapterTags: ["cyberpunk", "neo-edo", "temporal-rift"],
+      factions: ["neo-edo-security", "yomi-infected"],
+      regular: ["new-cyber-neon-shinobi"],
+      special: ["new-cyber-drone-corpse", "new-cyber-oni-frame"],
+      miniboss: [],
+    },
+  });
+
+  Object.assign(KageLevels.areas, {
+    "kai-forest-pass": campaignArea({
+      id: "kai-forest-pass",
+      objectivePortalId: "forest-to-bamboo",
+      chapterId: "forest",
+      label: "Forêt noyée de Kai",
+      objective: "Traverser le col forestier et rejoindre la bambouseraie de Shigure",
+      environmentIndex: 5,
+      rosterPoolId: "kai-forest-route",
+      width: 3300,
+      continuityProfile: "natural-canopy",
+      chapterTags: ["forest", "kaido", "act-01"],
+      spawns: {
+        prologue: { x: 120, y: PLAYER_GROUND_Y, facing: 1 },
+        westReturn: { x: 150, y: PLAYER_GROUND_Y, facing: 1 },
+        eastReturn: { x: 3120, y: PLAYER_GROUND_Y, facing: -1 },
+        checkpoint: { x: 1650, y: PLAYER_GROUND_Y, facing: 1 },
+      },
+      platforms: [
+        { id: "forest-cart-top", x: 548, y: 258, w: 92, h: 8, visual: false, owner: "forest-cart", surface: "wood", collision: "oneWay", routeRole: "optionalUpper" },
+        { id: "forest-log-top", x: 1000, y: 256, w: 176, h: 8, visual: false, owner: "forest-hollow-log", surface: "wood", collision: "oneWay", routeRole: "optionalUpper" },
+        { id: "forest-shelter-roof", x: 1570, y: 218, w: 188, h: 8, visual: false, owner: "forest-shelter", surface: "thatch", collision: "oneWay", routeRole: "optionalUpper" },
+        { id: "forest-root-bridge", x: 2180, y: 246, w: 172, h: 8, tile: "ledge", surface: "root", collision: "oneWay", routeRole: "optionalUpper" },
+        { id: "forest-cave-step", x: 2790, y: 252, w: 112, h: 8, tile: "step", surface: "stone", collision: "oneWay", routeRole: "optionalUpper" },
+      ],
+      props: [
+        { id: "forest-cedar-west", file: "ancient-cedar-trunk", x: 210, width: 124, layer: "back" },
+        { id: "forest-cart", file: "woodcutter-cart", x: 525, width: 124, layer: "world" },
+        { id: "forest-logs", file: "stacked-logs", x: 760, width: 118, layer: "world" },
+        { id: "forest-hollow-log", file: "hollow-fallen-log", x: 980, width: 214, layer: "world" },
+        { id: "forest-lantern-west", file: "moss-stone-lantern", x: 1320, width: 42, layer: "world" },
+        { id: "forest-shelter", file: "charcoal-burner-shelter", x: 1545, width: 238, layer: "back" },
+        { id: "forest-campfire", file: "campfire-ring", x: 1870, width: 62, layer: "world" },
+        { id: "forest-roots", file: "infected-root-cluster", x: 2180, width: 170, layer: "world" },
+        { id: "forest-spring", file: "forest-spring-basin", x: 2440, width: 86, layer: "world" },
+        { id: "forest-tent", file: "collapsed-quarantine-tent", x: 2610, width: 132, layer: "back" },
+        { id: "forest-cave", file: "yomi-cave-arch", x: 2860, width: 170, layer: "back" },
+        { id: "forest-ward-east", file: "rope-ward-gate", x: 3090, width: 102, layer: "world" },
+      ],
+      portals: [
+        campaignPortal(
+          "forest-to-bamboo",
+          3200,
+          { areaId: "shigure-bamboo-grove", spawnId: "westReturn" },
+          "Bambouseraie de Shigure",
+          "E — SUIVRE LE SENTIER DE BAMBOUS",
+        ),
+      ],
+      enemies: [
+        { id: "forest-enemy-01", rosterId: "r06-yama-woodcutter", x: 470, y: 276, facing: -1 },
+        { id: "forest-enemy-02", rosterId: "s19-wana-trapper", x: 830, y: 276, facing: -1 },
+        { id: "forest-enemy-03", rosterId: "r20-komuso-wanderer", x: 1210, y: 276, facing: -1 },
+        { id: "forest-enemy-04", rosterId: "s05-raimei-yamabushi", x: 1510, y: 276, facing: -1 },
+        { id: "forest-enemy-05", rosterId: "r09-haka-digger", x: 2020, y: 276, facing: -1 },
+        { id: "forest-enemy-06", rosterId: "mb-09-pisteur-kegare", roster: "miniboss", x: 2540, y: 276, facing: -1 },
+        { id: "forest-enemy-07", rosterId: "r06-yama-woodcutter", x: 3000, y: 276, facing: -1 },
+      ],
+    }),
+
+    "shigure-bamboo-grove": campaignArea({
+      id: "shigure-bamboo-grove",
+      objectivePortalId: "bamboo-to-fields",
+      chapterId: "bamboo",
+      label: "Bambouseraie de Shigure",
+      objective: "Suivre le sentier de bambous jusqu’aux rizières de Tsuru",
+      environmentIndex: 1,
+      rosterPoolId: "kai-bamboo-route",
+      width: 3200,
+      continuityProfile: "bamboo-curtain",
+      chapterTags: ["bamboo", "shrine", "act-02"],
+      spawns: {
+        westReturn: { x: 140, y: PLAYER_GROUND_Y, facing: 1 },
+        eastReturn: { x: 3020, y: PLAYER_GROUND_Y, facing: -1 },
+        checkpoint: { x: 1600, y: PLAYER_GROUND_Y, facing: 1 },
+      },
+      platforms: [
+        { id: "bamboo-bridge-top", x: 515, y: 256, w: 172, h: 8, visual: false, owner: "bamboo-bridge", surface: "wood", collision: "oneWay", routeRole: "optionalUpper" },
+        { id: "bamboo-cut-stack", x: 930, y: 252, w: 130, h: 8, tile: "ledge", surface: "bamboo", collision: "oneWay", routeRole: "optionalUpper" },
+        { id: "bamboo-shrine-roof", x: 1530, y: 214, w: 206, h: 8, visual: false, owner: "bamboo-shrine", surface: "roofTile", collision: "oneWay", routeRole: "optionalUpper" },
+        { id: "bamboo-root-platform", x: 2130, y: 244, w: 180, h: 8, tile: "ledge", surface: "root", collision: "oneWay", routeRole: "optionalUpper" },
+        { id: "bamboo-torii-beam", x: 2670, y: 230, w: 146, h: 8, visual: false, owner: "bamboo-grand-torii", surface: "wood", collision: "oneWay", routeRole: "optionalUpper" },
+      ],
+      props: [
+        { id: "bamboo-west-wall", file: "bambous-hauts", x: 80, width: 116, layer: "back" },
+        { id: "bamboo-stone-lantern-west", file: "lanterne-pierre", x: 330, width: 40, layer: "world" },
+        { id: "bamboo-bridge", file: "pont-bois", x: 500, width: 196, layer: "world" },
+        { id: "bamboo-cut-west", file: "bambous-coupes", x: 900, width: 150, layer: "world" },
+        { id: "bamboo-small-torii", file: "petit-torii", x: 1210, width: 102, layer: "back" },
+        { id: "bamboo-shrine", file: "sanctuaire-rural", x: 1495, width: 250, layer: "back" },
+        { id: "bamboo-basin", file: "bassin-purification", x: 1810, width: 70, layer: "world" },
+        { id: "bamboo-roots", file: "racines-contaminees", x: 2110, width: 196, layer: "world" },
+        { id: "bamboo-bell", file: "cloche-sanctuaire", x: 2390, width: 84, layer: "world" },
+        { id: "bamboo-grand-torii", file: "grand-torii", x: 2640, width: 190, layer: "back" },
+        { id: "bamboo-ritual-barrier", file: "barriere-rituelle", x: 2930, width: 126, layer: "world" },
+      ],
+      portals: [
+        campaignPortal(
+          "bamboo-to-forest",
+          90,
+          { areaId: "kai-forest-pass", spawnId: "eastReturn" },
+          "Forêt de Kai",
+          "E — REVENIR DANS LA FORÊT",
+        ),
+        campaignPortal(
+          "bamboo-to-fields",
+          3090,
+          { areaId: "tsuru-rice-fields", spawnId: "westReturn" },
+          "Rizières de Tsuru",
+          "E — DESCENDRE VERS LES RIZIÈRES",
+        ),
+      ],
+      enemies: [
+        { id: "bamboo-enemy-01", rosterId: "r14-kaido-bandit", x: 410, y: 276, facing: -1 },
+        { id: "bamboo-enemy-02", rosterId: "s01-kusa-shinobi", x: 760, y: 276, facing: -1 },
+        { id: "bamboo-enemy-03", rosterId: "s02-doku-kunoichi", x: 1120, y: 276, facing: -1 },
+        { id: "bamboo-enemy-04", rosterId: "r20-komuso-wanderer", x: 1510, y: 276, facing: -1 },
+        { id: "bamboo-enemy-05", rosterId: "s16-kage-mai-dancer", x: 1980, y: 276, facing: -1 },
+        { id: "bamboo-enemy-06", rosterId: "mb-06-shinobi-brumes", roster: "miniboss", x: 2460, y: 276, facing: -1 },
+        { id: "bamboo-enemy-07", rosterId: "s01-kusa-shinobi", x: 2880, y: 276, facing: -1 },
+      ],
+    }),
+
+    "tsuru-rice-fields": campaignArea({
+      id: "tsuru-rice-fields",
+      objectivePortalId: "fields-to-kurokawa",
+      chapterId: "fields",
+      label: "Rizières de Tsuru",
+      objective: "Franchir les rizières et gagner la porte ouest de Kurokawa",
+      environmentIndex: 6,
+      rosterPoolId: "tsuru-fields-route",
+      width: 3400,
+      continuityProfile: "rural-horizon",
+      chapterTags: ["rice-fields", "irrigation", "act-03"],
+      spawns: {
+        westReturn: { x: 140, y: PLAYER_GROUND_Y, facing: 1 },
+        eastReturn: { x: 3220, y: PLAYER_GROUND_Y, facing: -1 },
+        checkpoint: { x: 1700, y: PLAYER_GROUND_Y, facing: 1 },
+      },
+      platforms: [
+        { id: "fields-cart-top", x: 510, y: 258, w: 132, h: 8, visual: false, owner: "fields-cart", surface: "wood", collision: "oneWay", routeRole: "optionalUpper" },
+        { id: "fields-bridge-top", x: 1050, y: 252, w: 176, h: 8, visual: false, owner: "fields-bridge", surface: "wood", collision: "oneWay", routeRole: "optionalUpper" },
+        { id: "fields-hut-roof", x: 1640, y: 216, w: 200, h: 8, visual: false, owner: "fields-hut", surface: "thatch", collision: "oneWay", routeRole: "optionalUpper" },
+        { id: "fields-bales-top", x: 2300, y: 250, w: 150, h: 8, visual: false, owner: "fields-bales", surface: "thatch", collision: "oneWay", routeRole: "optionalUpper" },
+        { id: "fields-granary-roof", x: 2780, y: 214, w: 196, h: 8, visual: false, owner: "fields-granary", surface: "roofTile", collision: "oneWay", routeRole: "optionalUpper" },
+      ],
+      props: [
+        { id: "fields-wheel", file: "irrigation-water-wheel", x: 190, width: 150, layer: "back" },
+        { id: "fields-cart", file: "farm-cart", x: 485, width: 176, layer: "world" },
+        { id: "fields-sheaf", file: "bound-rice-sheaf", x: 760, width: 90, layer: "world" },
+        { id: "fields-bridge", file: "field-footbridge", x: 1020, width: 224, layer: "world" },
+        { id: "fields-sluice", file: "irrigation-sluice", x: 1340, width: 112, layer: "world" },
+        { id: "fields-hut", file: "field-hut", x: 1600, width: 250, layer: "back" },
+        { id: "fields-scarecrow", file: "scarecrow", x: 2000, width: 84, layer: "world" },
+        { id: "fields-bales", file: "straw-bales", x: 2270, width: 182, layer: "world" },
+        { id: "fields-fire", file: "burning-crop-pile", x: 2530, width: 100, layer: "world" },
+        { id: "fields-granary", file: "wooden-granary", x: 2740, width: 238, layer: "back" },
+        { id: "fields-marker", file: "field-marker", x: 3090, width: 54, layer: "world" },
+        { id: "fields-yomi-torii", file: "yomi-warp-torii", x: 3220, width: 140, layer: "back" },
+      ],
+      portals: [
+        campaignPortal(
+          "fields-to-bamboo",
+          90,
+          { areaId: "shigure-bamboo-grove", spawnId: "eastReturn" },
+          "Bambouseraie de Shigure",
+          "E — REVENIR À LA BAMBOUSERAIE",
+        ),
+        campaignPortal(
+          "fields-to-kurokawa",
+          3290,
+          { areaId: "kurokawa-main-street", spawnId: "prologue" },
+          "Ville fortifiée de Kurokawa",
+          "E — ENTRER DANS KUROKAWA",
+        ),
+      ],
+      enemies: [
+        { id: "fields-enemy-01", rosterId: "r05-kome-porter", x: 430, y: 276, facing: -1 },
+        { id: "fields-enemy-02", rosterId: "r17-umaya-groom", x: 820, y: 276, facing: -1 },
+        { id: "fields-enemy-03", rosterId: "s19-wana-trapper", x: 1190, y: 276, facing: -1 },
+        { id: "fields-enemy-04", rosterId: "r19-kago-bearer", x: 1600, y: 276, facing: -1 },
+        { id: "fields-enemy-05", rosterId: "s13-kegare-sumotori", x: 2100, y: 276, facing: -1 },
+        { id: "fields-enemy-06", rosterId: "mb-17-sumotori-namazu", roster: "miniboss", x: 2580, y: 276, facing: -1 },
+        { id: "fields-enemy-07", rosterId: "r05-kome-porter", x: 3090, y: 276, facing: -1 },
+      ],
+    }),
+
+    "tokyo-contemporary-rift": campaignArea({
+      id: "tokyo-contemporary-rift",
+      objectivePortalId: "modern-to-cyber",
+      chapterId: "contemporary",
+      label: "Tokyo contemporain — quarantaine Yomi",
+      objective: "Rompre le cordon de quarantaine et atteindre la faille vers Neo-Edo",
+      environmentIndex: 3,
+      rosterPoolId: "tokyo-contemporary-rift",
+      width: 3300,
+      continuityProfile: "urban-facades",
+      regionId: "tokyo",
+      settlementId: "tokyo",
+      districtId: "rift-quarantine",
+      surface: "asphalt",
+      chapterTags: ["contemporary", "temporal-rift", "end-game-01"],
+      spawns: {
+        warpArrival: { x: 130, y: PLAYER_GROUND_Y, facing: 1 },
+        checkpoint: { x: 1650, y: PLAYER_GROUND_Y, facing: 1 },
+      },
+      platforms: [
+        { id: "modern-car-top", x: 650, y: 258, w: 150, h: 8, visual: false, owner: "modern-emergency-car", surface: "metal", collision: "oneWay", routeRole: "optionalUpper" },
+        { id: "modern-koban-roof", x: 1030, y: 216, w: 190, h: 8, visual: false, owner: "modern-koban", surface: "roofTile", collision: "oneWay", routeRole: "optionalUpper" },
+        { id: "modern-scaffold-mid", x: 1510, y: 236, w: 210, h: 8, visual: false, owner: "modern-scaffold", surface: "metal", collision: "oneWay", routeRole: "optionalUpper" },
+        { id: "modern-station-canopy", x: 2140, y: 224, w: 230, h: 8, tile: "ledge", surface: "metal", collision: "oneWay", routeRole: "optionalUpper" },
+        { id: "modern-barrier-step", x: 2740, y: 260, w: 120, h: 8, tile: "short", surface: "metal", collision: "oneWay", routeRole: "optionalUpper" },
+      ],
+      props: [
+        { id: "modern-warp", file: "yomi-warp-arch", x: 70, width: 150, layer: "back" },
+        { id: "modern-metro", file: "metro-entrance", x: 300, width: 190, layer: "back" },
+        { id: "modern-vending", file: "vending-machine", x: 540, width: 52, layer: "world" },
+        { id: "modern-emergency-car", file: "emergency-car", x: 625, width: 190, layer: "world" },
+        { id: "modern-koban", file: "koban", x: 995, width: 250, layer: "back" },
+        { id: "modern-pole", file: "utility-pole", x: 1320, width: 54, layer: "world" },
+        { id: "modern-scaffold", file: "construction-scaffold", x: 1470, width: 280, layer: "back" },
+        { id: "modern-generator", file: "emergency-generator", x: 1840, width: 108, layer: "world" },
+        { id: "modern-shrine", file: "neighborhood-shrine", x: 2020, width: 180, layer: "back" },
+        { id: "modern-bicycle", file: "city-bicycle", x: 2360, width: 90, layer: "world" },
+        { id: "modern-barrier", file: "quarantine-barrier", x: 2690, width: 180, layer: "world" },
+        { id: "modern-pump", file: "rainwater-pump", x: 2990, width: 90, layer: "world" },
+      ],
+      portals: [
+        campaignPortal(
+          "modern-to-cyber",
+          3190,
+          { areaId: "neo-edo-cyber-rift", spawnId: "warpArrival" },
+          "Faille vers Neo-Edo",
+          "E — TRAVERSER LA FAILLE TEMPORELLE",
+        ),
+      ],
+      enemies: [
+        { id: "modern-enemy-01", rosterId: "new-modern-commuter", x: 460, y: 276, facing: -1 },
+        { id: "modern-enemy-02", rosterId: "new-modern-riot-host", roster: "special", x: 820, y: 276, facing: -1 },
+        { id: "modern-enemy-03", rosterId: "new-modern-response-officer", roster: "special", x: 1210, y: 276, facing: -1 },
+        { id: "modern-enemy-04", rosterId: "new-modern-commuter", x: 1620, y: 276, facing: -1 },
+        { id: "modern-enemy-05", rosterId: "new-modern-riot-host", roster: "special", x: 2060, y: 276, facing: -1 },
+        { id: "modern-enemy-06", rosterId: "new-modern-response-officer", roster: "special", x: 2520, y: 276, facing: -1 },
+        { id: "modern-enemy-07", rosterId: "new-modern-commuter", x: 3000, y: 276, facing: -1 },
+      ],
+    }),
+
+    "neo-edo-cyber-rift": campaignArea({
+      id: "neo-edo-cyber-rift",
+      objectivePortalId: "cyber-yomi-core",
+      chapterId: "cyberpunk",
+      label: "Neo-Edo — secteur du Shōgun Zéro",
+      objective: "Traverser le secteur et localiser le cœur de la faille Yomi",
+      environmentIndex: 4,
+      rosterPoolId: "neo-edo-cyber-rift",
+      width: 3500,
+      continuityProfile: "urban-facades",
+      regionId: "neo-edo",
+      settlementId: "neo-tokyo",
+      districtId: "shogun-zero-sector",
+      surface: "techStreet",
+      chapterTags: ["cyberpunk", "temporal-rift", "end-game-02"],
+      spawns: {
+        warpArrival: { x: 130, y: PLAYER_GROUND_Y, facing: 1 },
+        checkpoint: { x: 1750, y: PLAYER_GROUND_Y, facing: 1 },
+      },
+      platforms: [
+        { id: "cyber-crate-top", x: 590, y: 258, w: 110, h: 8, visual: false, owner: "cyber-crate", surface: "metal", collision: "oneWay", routeRole: "optionalUpper" },
+        { id: "cyber-transit-roof", x: 1020, y: 216, w: 220, h: 8, visual: false, owner: "cyber-transit", surface: "metal", collision: "oneWay", routeRole: "optionalUpper" },
+        { id: "cyber-catwalk", x: 1540, y: 228, w: 260, h: 8, tile: "ledge", surface: "metal", collision: "oneWay", routeRole: "optionalUpper" },
+        { id: "cyber-shrine-roof", x: 2160, y: 214, w: 230, h: 8, visual: false, owner: "cyber-shrine", surface: "metal", collision: "oneWay", routeRole: "optionalUpper" },
+        { id: "cyber-relay-step", x: 2860, y: 252, w: 150, h: 8, tile: "short", surface: "metal", collision: "oneWay", routeRole: "optionalUpper" },
+      ],
+      props: [
+        { id: "cyber-warp", file: "temporal-torii", x: 70, width: 160, layer: "back" },
+        { id: "cyber-terminal", file: "vending-terminal", x: 340, width: 74, layer: "world" },
+        { id: "cyber-crate", file: "sealed-cargo-crate", x: 560, width: 140, layer: "world" },
+        { id: "cyber-transit", file: "transit-access-gate", x: 980, width: 260, layer: "back" },
+        { id: "cyber-vent", file: "ventilation-tower", x: 1330, width: 120, layer: "back" },
+        { id: "cyber-coolant", file: "coolant-pipe", x: 1550, width: 230, layer: "world" },
+        { id: "cyber-drone-dock", file: "drone-charging-dock", x: 1890, width: 132, layer: "world" },
+        { id: "cyber-shrine", file: "shrine-tech-altar", x: 2120, width: 260, layer: "back" },
+        { id: "cyber-lantern", file: "cyber-shrine-lantern", x: 2490, width: 62, layer: "world" },
+        { id: "cyber-maglev", file: "maglev-maintenance-car", x: 2670, width: 250, layer: "world" },
+        { id: "cyber-relay", file: "damaged-power-relay", x: 3050, width: 120, layer: "world" },
+        { id: "cyber-energy-post", file: "energy-barrier-post", x: 3290, width: 66, layer: "world" },
+      ],
+      portals: [
+        {
+          id: "cyber-yomi-core",
+          linkId: "cyber-yomi-core",
+          x: 3390,
+          interactionRange: 64,
+          collision: "portal",
+          type: "ending",
+          state: "open",
+          label: "Cœur de la faille Yomi",
+          prompt: "E — SCELLER LA FAILLE À TRAVERS LES SIÈCLES",
+        },
+      ],
+      enemies: [
+        { id: "cyber-enemy-01", rosterId: "new-cyber-neon-shinobi", x: 430, y: 276, facing: -1 },
+        { id: "cyber-enemy-02", rosterId: "new-cyber-drone-corpse", roster: "special", x: 820, y: 276, facing: -1 },
+        { id: "cyber-enemy-03", rosterId: "new-cyber-oni-frame", roster: "special", x: 1260, y: 276, facing: -1 },
+        { id: "cyber-enemy-04", rosterId: "new-cyber-neon-shinobi", x: 1730, y: 276, facing: -1 },
+        { id: "cyber-enemy-05", rosterId: "new-cyber-drone-corpse", roster: "special", x: 2200, y: 276, facing: -1 },
+        { id: "cyber-enemy-06", rosterId: "new-cyber-oni-frame", roster: "special", x: 2700, y: 276, facing: -1 },
+        { id: "cyber-enemy-07", rosterId: "new-cyber-neon-shinobi", x: 3200, y: 276, facing: -1 },
+      ],
+    }),
+  });
+
+  KageLevels.startAreaId = "kai-forest-pass";
+  KageLevels.startSpawnId = "prologue";
+  KageLevels.chapters.village.entryAreaId = "kai-forest-pass";
+  KageLevels.chapters.village.areaIds = [
+    "kai-forest-pass",
+    "shigure-bamboo-grove",
+    "tsuru-rice-fields",
+    ...KageLevels.chapters.village.areaIds,
+  ];
+  KageLevels.worldActs = [
+    { id: "act-01-forest", areaIds: ["kai-forest-pass"], environmentIndex: 5 },
+    { id: "act-02-bamboo", areaIds: ["shigure-bamboo-grove"], environmentIndex: 1 },
+    { id: "act-03-fields", areaIds: ["tsuru-rice-fields"], environmentIndex: 6 },
+    { id: "act-04-city", areaIds: ["kurokawa-main-street", "kurokawa-back-street", "kurokawa-market-east"], environmentIndex: 0 },
+    { id: "act-05-castle", areaIds: ["castle-lower-court", "castle-residence", "castle-donjon"], environmentIndex: 2 },
+    { id: "act-06-contemporary", areaIds: ["tokyo-contemporary-rift"], environmentIndex: 3 },
+    { id: "act-07-cyberpunk", areaIds: ["neo-edo-cyber-rift"], environmentIndex: 4 },
+  ];
+
+  KageLevels.mapGraph.nodes.push(
+    { id: "kai-forest-pass", mapX: -3, mapY: 0, kind: "outdoor" },
+    { id: "shigure-bamboo-grove", mapX: -2, mapY: 0, kind: "outdoor" },
+    { id: "tsuru-rice-fields", mapX: -1, mapY: 0, kind: "outdoor" },
+    { id: "tokyo-contemporary-rift", mapX: 4, mapY: 0, kind: "temporal" },
+    { id: "neo-edo-cyber-rift", mapX: 5, mapY: 0, kind: "temporal" },
+  );
+  KageLevels.mapGraph.edges.push(
+    { id: "forest-bamboo-route", from: "kai-forest-pass", to: "shigure-bamboo-grove", kind: "side", bidirectional: true },
+    { id: "bamboo-fields-route", from: "shigure-bamboo-grove", to: "tsuru-rice-fields", kind: "side", bidirectional: true },
+    { id: "fields-kurokawa-route", from: "tsuru-rice-fields", to: "kurokawa-main-street", kind: "side", bidirectional: true },
+    { id: "castle-contemporary-warp", from: "castle-donjon", to: "tokyo-contemporary-rift", kind: "warp", bidirectional: true },
+    { id: "contemporary-cyber-warp", from: "tokyo-contemporary-rift", to: "neo-edo-cyber-rift", kind: "warp", bidirectional: true },
+  );
+
+  KageLevels.areas["kurokawa-main-street"].portals.unshift(
+    campaignPortal(
+      "kurokawa-to-fields",
+      120,
+      { areaId: "tsuru-rice-fields", spawnId: "eastReturn" },
+      "Rizières de Tsuru",
+      "E — REPRENDRE LA ROUTE DES RIZIÈRES",
+    ),
+  );
+  KageLevels.areas["castle-donjon"].portals.push(
+    campaignPortal(
+      "castle-to-contemporary-warp",
+      2340,
+      { areaId: "tokyo-contemporary-rift", spawnId: "warpArrival" },
+      "Faille du Yomi",
+      "E — ENTRER DANS LE JAPON CONTEMPORAIN",
+    ),
+  );
+
+  KageLevels.areas["castle-donjon"].spawns.warpReturn = {
+    x: 2260,
+    y: PLAYER_GROUND_Y,
+    facing: -1,
+  };
+  KageLevels.areas["tokyo-contemporary-rift"].spawns.cyberReturn = {
+    x: 3060,
+    y: PLAYER_GROUND_Y,
+    facing: -1,
+  };
+  KageLevels.areas["tokyo-contemporary-rift"].portals.unshift({
+    ...campaignPortal(
+      "modern-to-castle",
+      90,
+      { areaId: "castle-donjon", spawnId: "warpReturn" },
+      "Faille vers le donjon",
+      "E — REVENIR AU JAPON FÉODAL",
+      "faille-moderne",
+    ),
+    type: "return",
+  });
+  KageLevels.areas["neo-edo-cyber-rift"].portals.unshift({
+    ...campaignPortal(
+      "cyber-to-modern",
+      90,
+      { areaId: "tokyo-contemporary-rift", spawnId: "cyberReturn" },
+      "Faille vers Tokyo",
+      "E — REVENIR AU JAPON CONTEMPORAIN",
+      "faille-cyber",
+    ),
+    type: "return",
+  });
+
+  const objectivePortalIds = {
+    "kurokawa-main-street": "alley-to-back-street",
+    "kurokawa-back-street": "passage-to-market",
+    "kurokawa-market-east": "road-to-castle",
+    "castle-lower-court": "door-to-residence",
+    "castle-residence": "corridor-to-donjon",
+    "castle-donjon": "final-donjon-fps",
+  };
+  Object.entries(objectivePortalIds).forEach(([areaId, portalId]) => {
+    KageLevels.areas[areaId].objectivePortalId = portalId;
+  });
+
+  const castleWarp = KageLevels.areas["castle-donjon"].portals
+    .find((portal) => portal.id === "castle-to-contemporary-warp");
+  castleWarp.requiresConfirmation = true;
+  castleWarp.visual = "faille-moderne";
+  const modernWarp = KageLevels.areas["tokyo-contemporary-rift"].portals
+    .find((portal) => portal.id === "modern-to-cyber");
+  modernWarp.requiresAreaClear = true;
+  modernWarp.visual = "faille-moderne";
+  const cyberCore = KageLevels.areas["neo-edo-cyber-rift"].portals
+    .find((portal) => portal.id === "cyber-yomi-core");
+  cyberCore.requiresAreaClear = true;
+  cyberCore.requiresConfirmation = true;
+  cyberCore.visual = "faille-cyber";
 
   Object.values(KageLevels.areas).forEach(normalizeAreaVisualData);
 

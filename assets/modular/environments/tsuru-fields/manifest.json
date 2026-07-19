@@ -1,0 +1,141 @@
+{
+  "schema": 1,
+  "id": "tsuru-fields",
+  "name": "Rizières de Tsuru",
+  "lore": "Les rizières de Tsuru, autrefois grenier du domaine, ont été noyées pour ralentir les infectés avant que la peste n'empoisonne les canaux.",
+  "gameplay": "Un niveau rural ouvert alternant digues, passerelles, toits de grange, canaux et raccourcis en profondeur autour des cultures condamnées.",
+  "generationTool": "OpenAI ImageGen built-in",
+  "prompts": {
+    "sky": "Opaque storm sky over the flooded Tsuru rice fields, with cold dawn light and distant plague smoke; no terrain or characters.",
+    "far": "Distant rural hills, levees and tree silhouettes behind Tsuru fields, isolated on a flat magenta chroma background.",
+    "mid": "Coherent middle-distance rice-field band with watermill, hut, bridges and flooded paddies, isolated on magenta chroma.",
+    "near": "Near rice-field framing of reeds, water channels, broken fencing and muddy banks with an open center, isolated on magenta chroma.",
+    "props": "Twelve separate front-orthographic Tsuru field props in a strict 4 by 3 magenta-chroma atlas.",
+    "platforms": "Twelve separate side-orthographic paddy dikes, planks, roofs, stone ledges and hazards in a strict 4 by 3 magenta-chroma atlas."
+  },
+  "renderStandard": {
+    "resolution": [
+      1664,
+      936
+    ],
+    "layerOrderBackToFront": [
+      "sky",
+      "far",
+      "mid",
+      "near"
+    ],
+    "skyOpaque": true,
+    "transparentLayers": true,
+    "atlasGrid": {
+      "columns": 4,
+      "rows": 3
+    }
+  },
+  "layers": {
+    "sky": {
+      "id": "sky",
+      "file": "assets/modular/environments/tsuru-fields/layers/sky.png",
+      "source": "assets/modular/environments/tsuru-fields/layers/source/sky-imagegen-raw.png",
+      "mode": "RGB",
+      "size": [
+        1664,
+        936
+      ],
+      "opaque": true
+    },
+    "far": {
+      "id": "far",
+      "file": "assets/modular/environments/tsuru-fields/layers/far.png",
+      "source": "assets/modular/environments/tsuru-fields/layers/source/far-imagegen-raw.png",
+      "mode": "RGBA",
+      "size": [
+        1664,
+        936
+      ],
+      "sourceScale": 0.994687,
+      "placement": [
+        0,
+        0
+      ],
+      "alphaBounds": [
+        0,
+        417,
+        1663,
+        936
+      ],
+      "keyRed": 251,
+      "keyGreen": 3,
+      "keyBlue": 249,
+      "keyHex": "#fb03f9",
+      "keyKind": "magenta",
+      "transparentPixels": 846956,
+      "partialAlphaPixels": 313,
+      "despilledPixels": 313
+    },
+    "mid": {
+      "id": "mid",
+      "file": "assets/modular/environments/tsuru-fields/layers/mid.png",
+      "source": "assets/modular/environments/tsuru-fields/layers/source/mid-imagegen-raw.png",
+      "mode": "RGBA",
+      "size": [
+        1664,
+        936
+      ],
+      "sourceScale": 0.994687,
+      "placement": [
+        0,
+        0
+      ],
+      "alphaBounds": [
+        12,
+        209,
+        1652,
+        768
+      ],
+      "keyRed": 245,
+      "keyGreen": 2,
+      "keyBlue": 241,
+      "keyHex": "#f502f1",
+      "keyKind": "magenta",
+      "transparentPixels": 1120443,
+      "partialAlphaPixels": 4384,
+      "despilledPixels": 4384
+    },
+    "near": {
+      "id": "near",
+      "file": "assets/modular/environments/tsuru-fields/layers/near.png",
+      "source": "assets/modular/environments/tsuru-fields/layers/source/near-imagegen-raw.png",
+      "mode": "RGBA",
+      "size": [
+        1664,
+        936
+      ],
+      "sourceScale": 0.994687,
+      "placement": [
+        0,
+        0
+      ],
+      "alphaBounds": [
+        0,
+        22,
+        1663,
+        936
+      ],
+      "keyRed": 251,
+      "keyGreen": 3,
+      "keyBlue": 249,
+      "keyHex": "#fb03f9",
+      "keyKind": "magenta",
+      "transparentPixels": 1081612,
+      "partialAlphaPixels": 3649,
+      "despilledPixels": 3649
+    }
+  },
+  "propsManifest": "assets/modular/environments/tsuru-fields/props/manifest.json",
+  "platformsManifest": "assets/modular/environments/tsuru-fields/platforms/manifest.json",
+  "totals": {
+    "layers": 4,
+    "props": 12,
+    "platforms": 12
+  }
+}

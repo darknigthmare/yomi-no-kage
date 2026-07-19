@@ -22,7 +22,7 @@
     special: "SPÉCIAUX",
     miniboss: "SOUS-BOSS",
     boss: "BOSS",
-    giant: "BOSS GÉANTS",
+    giant: "BOSS MASSIFS",
     environment: "DÉCORS",
     "environment-layer": "FONDS PARALLAXE",
     platform: "PLATEFORMES",
@@ -227,7 +227,7 @@
     if (event.target === dialog) dialog.close();
   });
 
-  fetch("assets/modular/catalog.json?v=20260717-3")
+  fetch("assets/modular/catalog.json?v=20260719-4")
     .then((response) => {
       if (!response.ok) throw new Error(`Catalogue indisponible (${response.status})`);
       return response.json();

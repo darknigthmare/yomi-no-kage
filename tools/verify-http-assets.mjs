@@ -3,7 +3,7 @@ import http from "node:http";
 import https from "node:https";
 
 const baseUrl = process.argv[2] || "http://127.0.0.1:8765/";
-const expectedLevelBuildId = "20260719-street-composition-v2";
+const expectedLevelBuildId = "20260719-world-expansion-v3";
 const indexSource = fs.readFileSync("index.html", "utf8");
 const registry = JSON.parse(fs.readFileSync("assets/modular/registry.json", "utf8"));
 const catalog = JSON.parse(fs.readFileSync("assets/modular/catalog.json", "utf8"));
@@ -25,26 +25,36 @@ const refs = new Set([
   "assets/generated/cinematics/prologue-05-serment.png",
   "assets/generated/cinematics/prologue-06-kurokawa.png",
 ]);
+
+function isRuntimeDeployFile(file) {
+  const normalized = String(file || "").replaceAll("\\", "/");
+  return Boolean(normalized)
+    && !/(^|\/)(audit|tools|tmp)\//i.test(normalized)
+    && !/\/frames\//i.test(normalized)
+    && !/\/sources?\//i.test(normalized)
+    && !/\/sources-(?:v2|alpha-v2)\//i.test(normalized)
+    && !/(?:^|[-_.])source(?:[-_.]|$)/i.test(normalized.split("/").at(-1))
+    && !/\/master(?:-alpha)?\.png$/i.test(normalized)
+    && !/\/source-master\.png$/i.test(normalized);
+}
 for (const match of indexSource.matchAll(/\b(?:src|href)=["']([^"'#]+)["']/gi)) {
   const ref = match[1];
   if (!/^(?:[a-z]+:|\/\/|data:)/i.test(ref)) refs.add(ref);
 }
 
-for (const asset of catalog.assets) refs.add(asset.file);
+for (const asset of catalog.assets) {
+  if (isRuntimeDeployFile(asset.file)) refs.add(asset.file);
+}
 for (const character of registry.characters) {
-  refs.add(character.sprite);
   Object.values(character.animations).forEach((file) => refs.add(file));
-  Object.values(character.frames).flat().forEach((file) => refs.add(file));
   if (character.fpsAnimations) Object.values(character.fpsAnimations).forEach((file) => refs.add(file));
-  if (character.fpsFrames) Object.values(character.fpsFrames).flat().forEach((file) => refs.add(file));
-  if (character.fpsSprite) refs.add(character.fpsSprite);
   if (character.fpsWeaponSprites) Object.values(character.fpsWeaponSprites).forEach((file) => refs.add(file));
 }
 for (const weapon of registry.weapons || []) {
-  if (weapon.file) refs.add(weapon.file);
+  if (isRuntimeDeployFile(weapon.file)) refs.add(weapon.file);
   if (weapon.fpsAnimations) Object.values(weapon.fpsAnimations).forEach((file) => refs.add(file));
-  if (weapon.fpsSprite) refs.add(weapon.fpsSprite);
-  if (weapon.fpsSpriteMeta) refs.add(weapon.fpsSpriteMeta);
+  if (isRuntimeDeployFile(weapon.fpsSprite)) refs.add(weapon.fpsSprite);
+  if (isRuntimeDeployFile(weapon.fpsSpriteMeta)) refs.add(weapon.fpsSpriteMeta);
 }
 
 const urls = [...refs];

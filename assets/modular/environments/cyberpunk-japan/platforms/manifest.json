@@ -1,0 +1,465 @@
+{
+  "schema": 2,
+  "zoneId": "cyberpunk-japan",
+  "assetType": "platform",
+  "count": 12,
+  "source": "assets/modular/environments/cyberpunk-japan/platforms/source/atlas-imagegen-raw.png",
+  "alphaSourceDerivedAtBuild": true,
+  "grid": {
+    "columns": 4,
+    "rows": 3
+  },
+  "gridBoundaries": {
+    "x": [
+      0,
+      445,
+      770,
+      1129,
+      1536
+    ],
+    "y": [
+      0,
+      341,
+      683,
+      1024
+    ]
+  },
+  "renderPolicy": {
+    "projection": "side-orthographic",
+    "transparentPadding": 8,
+    "bottomTransparentPadding": 8,
+    "weaponsOrCharactersBakedIn": false
+  },
+  "chroma": {
+    "keyRed": 8,
+    "keyGreen": 246,
+    "keyBlue": 17,
+    "keyHex": "#08f611",
+    "keyKind": "green",
+    "transparentPixels": 1168080,
+    "partialAlphaPixels": 2248,
+    "despilledPixels": 2248
+  },
+  "sprites": [
+    {
+      "id": "tech-street-left",
+      "file": "tech-street-left.png",
+      "sourceCell": [
+        0,
+        0
+      ],
+      "size": [
+        282,
+        145
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        274,
+        137
+      ],
+      "sourceBounds": [
+        75,
+        165,
+        341,
+        294
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "tech-street-center",
+      "file": "tech-street-center.png",
+      "sourceCell": [
+        1,
+        0
+      ],
+      "size": [
+        370,
+        129
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        362,
+        121
+      ],
+      "sourceBounds": [
+        414,
+        181,
+        768,
+        294
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "tech-street-right",
+      "file": "tech-street-right.png",
+      "sourceCell": [
+        2,
+        0
+      ],
+      "size": [
+        255,
+        145
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        247,
+        137
+      ],
+      "sourceBounds": [
+        839,
+        165,
+        1078,
+        294
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "tech-street-cracked",
+      "file": "tech-street-cracked.png",
+      "sourceCell": [
+        3,
+        0
+      ],
+      "size": [
+        330,
+        125
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        322,
+        117
+      ],
+      "sourceBounds": [
+        1148,
+        185,
+        1462,
+        294
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "service-platform-long",
+      "file": "service-platform-long.png",
+      "sourceCell": [
+        0,
+        1
+      ],
+      "size": [
+        402,
+        149
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        394,
+        141
+      ],
+      "sourceBounds": [
+        57,
+        460,
+        443,
+        593
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "service-platform-short",
+      "file": "service-platform-short.png",
+      "sourceCell": [
+        1,
+        1
+      ],
+      "size": [
+        227,
+        148
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        219,
+        140
+      ],
+      "sourceBounds": [
+        509,
+        461,
+        720,
+        593
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "transit-platform",
+      "file": "transit-platform.png",
+      "sourceCell": [
+        2,
+        1
+      ],
+      "size": [
+        343,
+        192
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        335,
+        184
+      ],
+      "sourceBounds": [
+        776,
+        408,
+        1103,
+        584
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "shrine-tech-roof",
+      "file": "shrine-tech-roof.png",
+      "sourceCell": [
+        3,
+        1
+      ],
+      "size": [
+        357,
+        188
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        349,
+        180
+      ],
+      "sourceBounds": [
+        1138,
+        421,
+        1479,
+        593
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "coolant-catwalk",
+      "file": "coolant-catwalk.png",
+      "sourceCell": [
+        0,
+        2
+      ],
+      "size": [
+        404,
+        187
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        396,
+        179
+      ],
+      "sourceBounds": [
+        53,
+        709,
+        441,
+        880
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "illuminated-step",
+      "file": "illuminated-step.png",
+      "sourceCell": [
+        1,
+        2
+      ],
+      "size": [
+        256,
+        196
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        248,
+        188
+      ],
+      "sourceBounds": [
+        477,
+        700,
+        717,
+        880
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "debris-ramp",
+      "file": "debris-ramp.png",
+      "sourceCell": [
+        2,
+        2
+      ],
+      "size": [
+        342,
+        191
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        334,
+        183
+      ],
+      "sourceBounds": [
+        765,
+        705,
+        1091,
+        880
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "energy-trench",
+      "file": "energy-trench.png",
+      "sourceCell": [
+        3,
+        2
+      ],
+      "size": [
+        363,
+        142
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        355,
+        134
+      ],
+      "sourceBounds": [
+        1132,
+        754,
+        1479,
+        880
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    }
+  ]
+}

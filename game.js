@@ -18,11 +18,18 @@
   ctx.setTransform(RENDER_SCALE_X, 0, 0, RENDER_SCALE_Y, 0, 0);
   const TAU = Math.PI * 2;
   const FOV = Math.PI / 3;
-  const ASSET_VERSION = "20260718-coherence-v1";
+  const ASSET_VERSION = "20260719-world-expansion-v3";
   const REQUIRED_LEVEL_SCHEMA = 2;
-  const REQUIRED_LEVEL_BUILD_ID = "20260719-street-composition-v2";
+  const REQUIRED_LEVEL_BUILD_ID = "20260719-world-expansion-v3";
   const ALLOW_LEGACY_LAYOUT = typeof location !== "undefined"
     && new URLSearchParams(location.search).get("legacy-layout") === "1";
+  const ENVIRONMENT_PREVIEW_INDICES = Object.freeze({
+    contemporary: 3,
+    cyberpunk: 4,
+    forest: 5,
+    fields: 6,
+  });
+  let previewEnvironmentIndex = null;
   const levelContract = typeof window !== "undefined" ? window.KageLevels : null;
   const levelContractValid = Boolean(
     levelContract
@@ -215,8 +222,27 @@
   });
   const MASSIVE_EQUIPMENT_MOUNTS = Object.freeze({
     "joug-tranchant-aka-ushi": Object.freeze({
-      side: Object.freeze({ x: -0.44, y: -0.59, rotation: 0.02, scale: 1.2 }),
-      fps: Object.freeze({ x: -0.42, y: -0.56, rotation: 0.02, scale: 0.56 }),
+      // Le joug est une pièce d'armure centrée sur les épaules, pas une arme
+      // tenue à la main. Son ancre correspond au creux du collier et il doit
+      // donc passer devant le torse dans les deux projections.
+      side: Object.freeze({
+        // Aka-Ushi regarde à gauche dans le master : son cou se trouve
+        // en avant du centre de la masse du corps.
+        x: -0.2,
+        y: -0.64,
+        rotation: 0,
+        scale: 1.1,
+        anchor: Object.freeze([0.5, 0.52]),
+        layer: "front-body",
+      }),
+      fps: Object.freeze({
+        x: 0,
+        y: -0.6,
+        rotation: 0,
+        scale: 0.64,
+        anchor: Object.freeze([0.5, 0.52]),
+        layer: "front-body",
+      }),
     }),
   });
 
@@ -426,7 +452,7 @@
       ],
     },
   ];
-  const SIDE_MIDGROUND_SOURCE_Y = [696, 792, 791];
+  const SIDE_MIDGROUND_SOURCE_Y = [696, 792, 791, null, null, 815, 765];
   const SPIRIT_IMPACT_IDS = new Set([
     "04-onryo-miko",
     "s04-onibi-adept",
@@ -791,11 +817,19 @@
       // L'ancien panorama frontal FPS ne doit ni charger ni apparaître dans
       // les pièces latérales du château.
       null,
+      null,
+      null,
+      null,
+      null,
     ],
     parallaxBackgrounds: [
       loadParallaxSet("assets/modular/environments/kurokawa"),
       loadParallaxSet("assets/modular/environments/bamboo-shrine"),
       loadParallaxSet("assets/modular/environments/daimyo-castle"),
+      loadParallaxSet("assets/modular/environments/contemporary-japan"),
+      loadParallaxSet("assets/modular/environments/cyberpunk-japan"),
+      loadParallaxSet("assets/modular/environments/kai-forest"),
+      loadParallaxSet("assets/modular/environments/tsuru-fields"),
     ],
     platformTiles: [
       {
@@ -817,6 +851,50 @@
         step: loadBitmap("assets/modular/environments/daimyo-castle/platforms/marche-chateau.png"),
         beam: loadBitmap("assets/modular/environments/daimyo-castle/platforms/plateforme-poutre.png"),
         roof: loadBitmap("assets/modular/environments/daimyo-castle/platforms/plateforme-toit-tuile.png"),
+      },
+      {
+        ground: loadBitmap("assets/modular/environments/contemporary-japan/platforms/asphalt-center.png"),
+        ledge: loadBitmap("assets/modular/environments/contemporary-japan/platforms/concrete-curb-long.png"),
+        short: loadBitmap("assets/modular/environments/contemporary-japan/platforms/concrete-curb-short.png"),
+        step: loadBitmap("assets/modular/environments/contemporary-japan/platforms/concrete-step.png"),
+        beam: loadBitmap("assets/modular/environments/contemporary-japan/platforms/footbridge-platform.png"),
+        roof: loadBitmap("assets/modular/environments/contemporary-japan/platforms/station-canopy.png"),
+        scaffold: loadBitmap("assets/modular/environments/contemporary-japan/platforms/scaffold-platform.png"),
+        ramp: loadBitmap("assets/modular/environments/contemporary-japan/platforms/rubble-ramp.png"),
+        hazard: loadBitmap("assets/modular/environments/contemporary-japan/platforms/drainage-hazard.png"),
+      },
+      {
+        ground: loadBitmap("assets/modular/environments/cyberpunk-japan/platforms/tech-street-center.png"),
+        ledge: loadBitmap("assets/modular/environments/cyberpunk-japan/platforms/service-platform-long.png"),
+        short: loadBitmap("assets/modular/environments/cyberpunk-japan/platforms/service-platform-short.png"),
+        step: loadBitmap("assets/modular/environments/cyberpunk-japan/platforms/illuminated-step.png"),
+        beam: loadBitmap("assets/modular/environments/cyberpunk-japan/platforms/transit-platform.png"),
+        roof: loadBitmap("assets/modular/environments/cyberpunk-japan/platforms/shrine-tech-roof.png"),
+        scaffold: loadBitmap("assets/modular/environments/cyberpunk-japan/platforms/coolant-catwalk.png"),
+        ramp: loadBitmap("assets/modular/environments/cyberpunk-japan/platforms/debris-ramp.png"),
+        hazard: loadBitmap("assets/modular/environments/cyberpunk-japan/platforms/energy-trench.png"),
+      },
+      {
+        ground: loadBitmap("assets/modular/environments/kai-forest/platforms/forest-earth-center.png"),
+        ledge: loadBitmap("assets/modular/environments/kai-forest/platforms/long-fallen-log.png"),
+        short: loadBitmap("assets/modular/environments/kai-forest/platforms/short-fallen-log.png"),
+        step: loadBitmap("assets/modular/environments/kai-forest/platforms/moss-stone-steps.png"),
+        beam: loadBitmap("assets/modular/environments/kai-forest/platforms/thick-root-platform.png"),
+        roof: loadBitmap("assets/modular/environments/kai-forest/platforms/moss-stone-platform.png"),
+        scaffold: loadBitmap("assets/modular/environments/kai-forest/platforms/stream-stone-ledge.png"),
+        ramp: loadBitmap("assets/modular/environments/kai-forest/platforms/root-earth-slope.png"),
+        hazard: loadBitmap("assets/modular/environments/kai-forest/platforms/fungus-pit.png"),
+      },
+      {
+        ground: loadBitmap("assets/modular/environments/tsuru-fields/platforms/paddy-dike-center.png"),
+        ledge: loadBitmap("assets/modular/environments/tsuru-fields/platforms/long-plank.png"),
+        short: loadBitmap("assets/modular/environments/tsuru-fields/platforms/short-plank.png"),
+        step: loadBitmap("assets/modular/environments/tsuru-fields/platforms/irrigation-stone-steps.png"),
+        beam: loadBitmap("assets/modular/environments/tsuru-fields/platforms/straw-bale-platform.png"),
+        roof: loadBitmap("assets/modular/environments/tsuru-fields/platforms/field-hut-roof.png"),
+        scaffold: loadBitmap("assets/modular/environments/tsuru-fields/platforms/drainage-stone-ledge.png"),
+        ramp: loadBitmap("assets/modular/environments/tsuru-fields/platforms/muddy-dike-slope.png"),
+        hazard: loadBitmap("assets/modular/environments/tsuru-fields/platforms/flooded-plague-ditch.png"),
       },
     ],
     groundVisuals: {
@@ -845,6 +923,10 @@
       "porte-laquee": loadBitmap("assets/modular/environments/daimyo-castle/props/porte-laquee.png"),
       "porte-chateau": loadBitmap("assets/modular/environments/daimyo-castle/props/porte-chateau.png"),
       "porte-sanctuaire": loadBitmap("assets/modular/environments/depth-portals/sprites/porte-cour-interieure.png"),
+      "route-torii": loadBitmap("assets/modular/environments/bamboo-shrine/props/grand-torii.png"),
+      "route-rizieres": loadBitmap("assets/modular/environments/tsuru-fields/props/yomi-warp-torii.png"),
+      "faille-moderne": loadBitmap("assets/modular/environments/contemporary-japan/props/yomi-warp-arch.png"),
+      "faille-cyber": loadBitmap("assets/modular/environments/cyberpunk-japan/props/temporal-torii.png"),
     },
     alleyWalls: Object.fromEntries(
       ALLEY_WALL_IDS.map((id) => [
@@ -873,6 +955,20 @@
         { file: "minka-chaume-brulee", x: 1810, width: 175 },
         { file: "autel-route", x: 2040, width: 48, bottomY: 294 },
         { file: "tour-guet-kurokawa", x: 2250, width: 82 },
+        {
+          file: "tour-guet-kurokawa-3q-arriere-plan",
+          x: 2380,
+          width: 74,
+          layer: "back",
+          bottomY: 290,
+        },
+        {
+          file: "foyer-incendie-3q-arriere-plan",
+          x: 2160,
+          width: 48,
+          layer: "back",
+          bottomY: 290,
+        },
       ]),
       loadPropSet("assets/modular/environments/bamboo-shrine", [
         { file: "bambous-hauts", x: 75, width: 80 },
@@ -898,6 +994,62 @@
         { file: "paravent-dechire", x: 1612, width: 80, layer: "front", bottomY: 304 },
         { file: "ratelier-vide", x: 1960, width: 78, layer: "world" },
         { file: "racines-donjon", x: 2045, width: 80, layer: "world" },
+      ]),
+      loadPropSet("assets/modular/environments/contemporary-japan", [
+        { file: "metro-entrance", x: 72, width: 148, layer: "back" },
+        { file: "koban", x: 340, width: 128, layer: "back" },
+        { file: "vending-machine", x: 565, width: 50, layer: "world" },
+        { file: "utility-pole", x: 720, width: 44, layer: "back" },
+        { file: "quarantine-barrier", x: 865, width: 104, layer: "world" },
+        { file: "city-bicycle", x: 1065, width: 82, layer: "world" },
+        { file: "emergency-car", x: 1240, width: 136, layer: "world" },
+        { file: "neighborhood-shrine", x: 1495, width: 122, layer: "back" },
+        { file: "construction-scaffold", x: 1735, width: 148, layer: "back" },
+        { file: "emergency-generator", x: 1970, width: 92, layer: "world" },
+        { file: "rainwater-pump", x: 2160, width: 74, layer: "world" },
+        { file: "yomi-warp-arch", x: 2325, width: 132, layer: "back" },
+      ]),
+      loadPropSet("assets/modular/environments/cyberpunk-japan", [
+        { file: "temporal-torii", x: 60, width: 142, layer: "back" },
+        { file: "shrine-tech-altar", x: 340, width: 104, layer: "world" },
+        { file: "ventilation-tower", x: 565, width: 72, layer: "back" },
+        { file: "energy-barrier-post", x: 760, width: 38, layer: "world" },
+        { file: "maglev-maintenance-car", x: 925, width: 184, layer: "back" },
+        { file: "drone-charging-dock", x: 1215, width: 92, layer: "world" },
+        { file: "sealed-cargo-crate", x: 1395, width: 62, layer: "world" },
+        { file: "vending-terminal", x: 1515, width: 54, layer: "world" },
+        { file: "coolant-pipe", x: 1665, width: 112, layer: "back" },
+        { file: "cyber-shrine-lantern", x: 1890, width: 42, layer: "world" },
+        { file: "transit-access-gate", x: 2050, width: 124, layer: "back" },
+        { file: "damaged-power-relay", x: 2305, width: 76, layer: "world" },
+      ]),
+      loadPropSet("assets/modular/environments/kai-forest", [
+        { file: "ancient-cedar-trunk", x: 42, width: 154, layer: "back" },
+        { file: "hollow-fallen-log", x: 285, width: 126, layer: "world" },
+        { file: "charcoal-burner-shelter", x: 500, width: 152, layer: "back" },
+        { file: "moss-stone-lantern", x: 755, width: 42, layer: "world" },
+        { file: "woodcutter-cart", x: 905, width: 118, layer: "world" },
+        { file: "stacked-logs", x: 1115, width: 105, layer: "world" },
+        { file: "rope-ward-gate", x: 1315, width: 126, layer: "back" },
+        { file: "forest-spring-basin", x: 1535, width: 108, layer: "world" },
+        { file: "collapsed-quarantine-tent", x: 1745, width: 122, layer: "back" },
+        { file: "infected-root-cluster", x: 1945, width: 96, layer: "front" },
+        { file: "campfire-ring", x: 2140, width: 78, layer: "world" },
+        { file: "yomi-cave-arch", x: 2320, width: 142, layer: "back" },
+      ]),
+      loadPropSet("assets/modular/environments/tsuru-fields", [
+        { file: "field-hut", x: 48, width: 142, layer: "back" },
+        { file: "irrigation-water-wheel", x: 295, width: 128, layer: "back" },
+        { file: "farm-cart", x: 520, width: 132, layer: "world" },
+        { file: "bound-rice-sheaf", x: 755, width: 58, layer: "world" },
+        { file: "irrigation-sluice", x: 910, width: 112, layer: "back" },
+        { file: "field-footbridge", x: 1125, width: 142, layer: "world" },
+        { file: "scarecrow", x: 1370, width: 60, layer: "world" },
+        { file: "wooden-granary", x: 1530, width: 132, layer: "back" },
+        { file: "straw-bales", x: 1760, width: 102, layer: "world" },
+        { file: "field-marker", x: 1940, width: 62, layer: "world" },
+        { file: "burning-crop-pile", x: 2090, width: 104, layer: "front" },
+        { file: "yomi-warp-torii", x: 2315, width: 132, layer: "back" },
       ]),
     ],
     enemies: [
@@ -1130,6 +1282,29 @@
     enemy.weaponAsset = requestedWeapon || fallbackWeapon || null;
     enemy.weaponFile = enemy.weaponAsset?.file || null;
     enemy.behaviorFamily = enemyBehaviorFamily(enemy, entry);
+    const stats = entry.stats || null;
+    if (stats) {
+      enemy.authoredStats = {
+        hp: Number(stats.hp) || null,
+        damage: Number(stats.damage) || null,
+        speed: Number(stats.speed) || null,
+        posture: Number(stats.posture) || null,
+      };
+      if (
+        !enemy.authoredHp
+        && !isMassiveEnemy(enemy)
+        && enemy.authoredStats.hp
+      ) {
+        const scaledHp = clamp(Math.ceil(enemy.authoredStats.hp / 24), 1, 75);
+        const healthRatio = enemy.maxHp > 0 ? enemy.hp / enemy.maxHp : 1;
+        enemy.maxHp = scaledHp;
+        enemy.hp = Math.max(1, Math.round(scaledHp * healthRatio));
+      }
+      if (enemy.authoredStats.posture) {
+        enemy.maxPosture = clamp(Math.round(enemy.authoredStats.posture), 16, 520);
+        enemy.posture = Math.min(enemy.posture || 0, enemy.maxPosture);
+      }
+    }
   }
 
   function applyRosterToGame(state) {
@@ -1206,7 +1381,10 @@
   async function loadModularRoster() {
     if (typeof fetch !== "function") return;
     try {
-      const response = await fetch("assets/modular/registry.json?v=20260718-6", { cache: "no-store" });
+      const response = await fetch(
+        `assets/modular/registry.json?v=${ASSET_VERSION}`,
+        { cache: "default" },
+      );
       if (!response.ok) throw new Error(`registre HTTP ${response.status}`);
       const registry = await response.json();
       modularRoster.characters = Array.isArray(registry.characters) ? registry.characters : [];
@@ -1630,7 +1808,10 @@
       transition: 0,
       transitionLabel: "",
       pendingTravel: null,
+      portalConfirmation: null,
       activeCheckpointId: null,
+      consumedCheckpointIds: new Set(),
+      takenPickupIds: new Set(),
       restoringProgress: false,
       loadout,
       activeWeaponSlot: "primary",
@@ -1668,10 +1849,15 @@
         highestChapter: chapter,
         areaId,
         spawnId: patch.spawnId || previous?.spawnId || "prologue",
-        checkpoint: patch.checkpoint || previous?.checkpoint || "kurokawa-entry",
+        checkpoint: patch.checkpoint || previous?.checkpoint || "kai-forest-entry",
         health: clamp(Number(patch.health ?? game.health), 1, 100),
         seals: Math.max(0, Number(patch.seals ?? game.seals) || 0),
+        kills: Math.max(0, Number(patch.kills ?? game.kills) || 0),
+        score: Math.max(0, Number(patch.score ?? game.score) || 0),
         elapsed: Math.max(0, Number(patch.elapsed ?? game.elapsed) || 0),
+        visitedAreas: [...new Set(game.side?.visitedAreas || [])],
+        takenPickupIds: [...game.takenPickupIds],
+        consumedCheckpointIds: [...game.consumedCheckpointIds],
         started: patch.started !== false,
         completed: Boolean(patch.completed),
       });
@@ -1687,8 +1873,19 @@
     game.chapter = clamp(Number(progress.chapter) || 0, 0, 1);
     game.health = clamp(Number(progress.health) || 100, 1, 100);
     game.seals = Math.max(0, Number(progress.seals) || 0);
+    game.kills = Math.max(0, Number(progress.kills) || 0);
+    game.score = Math.max(0, Number(progress.score) || 0);
     game.elapsed = Math.max(0, Number(progress.elapsed) || 0);
+    game.takenPickupIds = new Set(progress.takenPickupIds || []);
+    game.consumedCheckpointIds = new Set(progress.consumedCheckpointIds || []);
+    game.side.visitedAreas = [...new Set([
+      ...(progress.visitedAreas || []),
+      game.side.areaId,
+    ])];
     game.activeCheckpointId = progress.checkpoint || null;
+    if (game.activeCheckpointId) {
+      game.consumedCheckpointIds.add(game.activeCheckpointId);
+    }
     const fallbackAreaId = sideAreaIdForChapter(game.chapter);
     const areaId = sideAreaById(progress.areaId) ? progress.areaId : fallbackAreaId;
     const area = sideAreaById(areaId);
@@ -1815,6 +2012,7 @@
             : (definition.roster === "special" || i > 6 ? 3 : 2)));
       const enemy = {
         sourceId: definition.id || `${areaId}-enemy-${i + 1}`,
+        authoredHp: Number.isFinite(Number(definition.hp)),
         rosterHint: definition.roster || null,
         rosterId: definition.rosterId || null,
         profileId: definition.profileId || null,
@@ -2073,7 +2271,9 @@
   }
 
   function currentSideEnvironmentIndex() {
-    return currentSideArea()?.environmentIndex ?? (game.chapter === 0 ? 0 : 2);
+    return previewEnvironmentIndex
+      ?? currentSideArea()?.environmentIndex
+      ?? (game.chapter === 0 ? 0 : 2);
   }
 
   function currentSideArea() {
@@ -2131,6 +2331,26 @@
     return SIDE_ENTRANCES[game.chapter] || SIDE_ENTRANCES[0];
   }
 
+  function currentSideObjectivePortal() {
+    const area = currentSideArea();
+    const portals = area?.portals || [];
+    if (game.side.areaId === "castle-donjon" && game.seals >= 2) {
+      const temporalWarp = portals.find(
+        (portal) => portal.id === "castle-to-contemporary-warp",
+      );
+      if (temporalWarp) return temporalWarp;
+    }
+    const activeMissionPortal = portals.find((portal) =>
+      portal.type === "fps"
+      && fpsMissionIndexForPortal(portal) === game.chapter);
+    if (activeMissionPortal) return activeMissionPortal;
+    const authoredObjective = portals.find(
+      (portal) => portal.id === area?.objectivePortalId,
+    );
+    if (authoredObjective) return authoredObjective;
+    return currentSideEntrance();
+  }
+
   function currentSidePortals() {
     return (currentSideArea()?.portals || [currentSideEntrance()])
       .filter((portal) => !["disabled", "legacyOnly"].includes(portal.state));
@@ -2152,6 +2372,22 @@
 
   function sidePortalLockMessage(portal) {
     if (
+      portal.id === "castle-to-contemporary-warp"
+      && game.seals < 2
+    ) {
+      return "LA FAILLE RESTE FERMÉE — ABATTEZ LE DAIMYŌ ET POSEZ LE SECOND SCEAU";
+    }
+    if (portal.type === "ending" && game.seals < 2) {
+      return "LE CŒUR DE LA FAILLE REFUSE UN SCEAU INCOMPLET";
+    }
+    if (
+      portal.requiresAreaClear
+      && game.side.enemies.some(isEnemyAlive)
+    ) {
+      const remaining = game.side.enemies.filter(isEnemyAlive).length;
+      return `LA FAILLE RESTE INSTABLE — ${remaining} INFECTÉ${remaining > 1 ? "S" : ""} À ÉLIMINER`;
+    }
+    if (
       portal.destination?.areaId === "castle-lower-court"
       && game.seals < 1
     ) {
@@ -2161,6 +2397,29 @@
       return "AKA-USHI GARDE LA ROUTE — ABATTEZ LE BOSS MASSIF";
     }
     return "";
+  }
+
+  function confirmSidePortal(portal) {
+    if (!portal?.requiresConfirmation) return true;
+    const confirmationId = `${game.side.areaId}:${portal.id}`;
+    const now = performance.now();
+    if (
+      game.portalConfirmation?.id === confirmationId
+      && game.portalConfirmation.expiresAt >= now
+    ) {
+      game.portalConfirmation = null;
+      return true;
+    }
+    game.portalConfirmation = {
+      id: confirmationId,
+      expiresAt: now + 4500,
+    };
+    announce(
+      portal.type === "ending"
+        ? "CONFIRMEZ AVEC E — SCELLER LA FAILLE METTRA FIN À LA CAMPAGNE"
+        : "CONFIRMEZ AVEC E — FRANCHIR LA FAILLE TEMPORELLE",
+    );
+    return false;
   }
 
   function currentSideMassiveEncounter() {
@@ -2213,6 +2472,12 @@
 
   function sidePortalBlocksMovement(portal) {
     if (portal?.collision !== "solidDoor") return false;
+    if (
+      portal.persistentEncounterId === "daimyo-donjon"
+      && game.seals >= 2
+    ) {
+      return false;
+    }
     const portalType = portal.type
       || (fpsMissionIndexForPortal(portal) !== null ? "fps" : "side");
     if (
@@ -2330,6 +2595,9 @@
       };
     }
     const runtime = side.areaStates[areaId];
+    runtime.pickups.forEach((pickup) => {
+      if (game.takenPickupIds.has(pickup.sourceId)) pickup.taken = true;
+    });
     side.areaId = areaId;
     side.width = targetArea.width || 2500;
     side.enemies = runtime.enemies;
@@ -2369,6 +2637,7 @@
 
   function queueSideTravel(destination, label = "PASSAGE VERS UN AUTRE PLAN") {
     if (!destination?.areaId || !sideAreaById(destination.areaId)) return false;
+    game.portalConfirmation = null;
     input.keys.clear();
     game.side.player.vx = 0;
     game.side.player.vy = 0;
@@ -2390,8 +2659,9 @@
     if (!checkpoints.length || game.mode !== "side" || game.status !== "playing") return false;
     const playerCenter = game.side.player.x + game.side.player.w / 2;
     const checkpoint = checkpoints.find((entry) => Math.abs(playerCenter - entry.x) <= 34);
-    if (!checkpoint || game.activeCheckpointId === checkpoint.id) return false;
+    if (!checkpoint || game.consumedCheckpointIds.has(checkpoint.id)) return false;
     game.activeCheckpointId = checkpoint.id;
+    game.consumedCheckpointIds.add(checkpoint.id);
     game.health = Math.min(100, game.health + 20);
     game.playerPosture = 0;
     persistRunProgress({
@@ -2442,6 +2712,11 @@
 
   function sideMusicState(area = currentSideArea()) {
     if (game.side?.activeEncounterId) return { state: "boss", intensity: 0.95 };
+    if (area?.environmentIndex === 3) return { state: "modern", intensity: 0.72 };
+    if (area?.environmentIndex === 4) return { state: "cyber", intensity: 0.78 };
+    if ([1, 5, 6].includes(area?.environmentIndex)) {
+      return { state: "travel", intensity: 0.5 };
+    }
     if (["building", "castle"].includes(area?.zoneKind)) {
       return { state: "interior", intensity: area?.zoneKind === "castle" ? 0.7 : 0.52 };
     }
@@ -2457,6 +2732,9 @@
     ].filter(Boolean).join(" ").toLowerCase();
     if (/eau|water|flaque|ruisseau/.test(token)) return "water";
     if (/tatami|natte/.test(token)) return "tatami";
+    if (/tech|néon|neon|cyber/.test(token)) return "tech";
+    if (/asphalt|asphalte|concrete|béton|beton/.test(token)) return "asphalt";
+    if (/metal|métal|acier|catwalk|échafaud|echafaud/.test(token)) return "metal";
     if (/pierre|stone|tuile|castle|cour|marche/.test(token)) return "stone";
     if (/bois|wood|cèdre|cedre|toit|charrette|grange|poutre|balcon|coursive/.test(token)) return "wood";
     if (["building", "castle"].includes(currentSideArea()?.zoneKind)) return "wood";
@@ -2522,7 +2800,7 @@
     setMusicState(music.state, music.intensity);
     if (!continueRequested) {
       persistRunProgress({
-        checkpoint: "kurokawa-entry",
+        checkpoint: "kai-forest-entry",
         areaId: game.side.areaId,
         spawnId: "prologue",
         started: true,
@@ -2530,7 +2808,7 @@
     }
     announce(continueRequested
       ? "CHRONIQUE REPRISE AU DERNIER FOYER"
-      : "KUROKAWA — LE VILLAGE DES CENDRES");
+      : "FORÊT DE KAI — LA ROUTE DES CENDRES");
     updateHud();
   }
 
@@ -2764,6 +3042,7 @@
     if (p.y > H + 30) damagePlayer(100);
 
     updateSideEnemies(dt);
+    updateDetachedEquipmentHazards(dt);
     updateSideProjectiles(dt);
     updateSidePickups();
     updateSideCheckpoint();
@@ -2817,6 +3096,21 @@
     }
     if (detachablePart?.detachTransition === `phase-${targetPhase}`) {
       enemy.detachablePartAttached = false;
+      if (
+        mode === "side"
+        && detachablePart.detachedCollision === "hazard"
+        && detachablePart.persistsAfterDetach
+      ) {
+        enemy.detachedEquipment = {
+          weaponId: detachablePart.weaponId,
+          x: enemy.x + enemy.w * 0.34,
+          bottomY: SIDE_GROUND_Y,
+          width: Math.max(112, enemy.w * 0.92),
+          damage: 14,
+          cooldown: 0,
+          active: true,
+        };
+      }
     }
     enemy.attack = 0;
     enemy.attackCooldown = 0.45;
@@ -2926,9 +3220,33 @@
     };
   }
 
+  function applyAuthoredCombatStats(enemy, profile) {
+    const stats = enemy.authoredStats;
+    if (!stats) return profile;
+    const speedMultiplier = stats.speed
+      ? clamp(stats.speed, 0.55, 1.65)
+      : 1;
+    return {
+      ...profile,
+      speed: profile.speed * speedMultiplier,
+      damage: stats.damage
+        ? clamp(Math.round(stats.damage), 6, 60)
+        : profile.damage,
+    };
+  }
+
   function legacyCanOccupySideEnemy(enemy, candidateX) {
     const rules = currentSideRules();
     if (candidateX < rules.minX || candidateX + enemy.w > rules.maxX) return false;
+    const candidateTop = enemy.y;
+    const candidateBottom = enemy.y + enemy.h;
+    const overlapsOwnedGroundObstacle = currentSidePlatforms().some((platform) =>
+      platform.ownerPropId
+      && candidateX + enemy.w > platform.x
+      && candidateX < platform.x + platform.w
+      && candidateBottom > platform.y - 2
+      && candidateTop < platform.y + platform.h + 2);
+    if (overlapsOwnedGroundObstacle) return false;
     // Les plateformes sont à sens unique et les props de premier plan sont
     // décoratifs : Akio comme ses adversaires les traversent horizontalement.
     // Les bloquer pour les ennemis seulement créait des zones de combat mortes.
@@ -2975,7 +3293,7 @@
         continue;
       }
 
-      const profile = sideEnemyCombatProfile(enemy);
+      const profile = applyAuthoredCombatStats(enemy, sideEnemyCombatProfile(enemy));
       if (enemy.attack > 0) {
         enemy.attack = Math.max(0, enemy.attack - dt);
         const progress = 1 - enemy.attack / enemy.attackDuration;
@@ -3109,6 +3427,15 @@
         return candidateX < barrier.right && candidateRight > barrier.left;
       });
     if (crossesClosedSolidDoor) return false;
+    const candidateTop = enemy.y;
+    const candidateBottom = enemy.y + enemy.h;
+    const crossesOwnedGroundObstacle = currentSidePlatforms().some((platform) =>
+      platform.ownerPropId
+      && candidateX < platform.x + platform.w
+      && candidateRight > platform.x
+      && candidateBottom > platform.y - 2
+      && candidateTop < platform.y + platform.h + 2);
+    if (crossesOwnedGroundObstacle) return false;
     const candidateCenter = candidateX + enemy.w / 2;
     return game.side.enemies.every((other) => {
       if (other === enemy || !isEnemyVisible(other)) return true;
@@ -3208,7 +3535,7 @@
         );
       }
 
-      const profile = sideEnemyCombatProfile(enemy);
+      const profile = applyAuthoredCombatStats(enemy, sideEnemyCombatProfile(enemy));
       const playerCenter = player.x + player.w / 2;
       const enemyCenter = enemy.x + enemy.w / 2;
       const dx = playerCenter - enemyCenter;
@@ -3375,11 +3702,40 @@
     side.projectiles = side.projectiles.filter((p) => p.life > 0 && !p.dead);
   }
 
+  function updateDetachedEquipmentHazards(dt) {
+    const player = game.side.player;
+    const playerCenter = player.x + player.w / 2;
+    for (const enemy of game.side.enemies) {
+      const hazard = enemy.detachedEquipment;
+      if (!hazard?.active) continue;
+      hazard.cooldown = Math.max(0, Number(hazard.cooldown) - dt);
+      const halfWidth = Math.max(30, Number(hazard.width) * 0.38);
+      const grounded = Math.abs(player.y + player.h - hazard.bottomY) <= 16;
+      if (
+        grounded
+        && hazard.cooldown <= 0
+        && Math.abs(playerCenter - hazard.x) <= halfWidth
+      ) {
+        const damaged = damagePlayer(hazard.damage || 14, {
+          mode: "side",
+          postureDamage: 22,
+          knockback: playerCenter < hazard.x ? -62 : 62,
+          source: "detached-equipment",
+        });
+        if (damaged) {
+          hazard.cooldown = 0.9;
+          announce("LE JOUG BRISÉ LACÈRE LE SOL");
+        }
+      }
+    }
+  }
+
   function updateSidePickups() {
     const p = game.side.player;
     for (const item of game.side.pickups) {
       if (!item.taken && Math.abs(item.x - (p.x + p.w / 2)) < 20 && Math.abs(item.y - p.y) < 36) {
         item.taken = true;
+        game.takenPickupIds.add(item.sourceId);
         let pickupMessage = "DÉCOCTION DE YOMOGI +28";
         if (item.kind === "ammo") {
           const rangedWeapon = currentRangedWeapon();
@@ -3409,6 +3765,7 @@
         game.score += 100;
         playAudio("playPickup");
         announce(pickupMessage);
+        persistRunProgress();
       }
     }
   }
@@ -3705,7 +4062,7 @@
         continue;
       }
 
-      const profile = fpsEnemyCombatProfile(enemy);
+      const profile = applyAuthoredCombatStats(enemy, fpsEnemyCombatProfile(enemy));
       const dx = p.x - enemy.x;
       const dy = p.y - enemy.y;
       const dist = Math.hypot(dx, dy);
@@ -3914,7 +4271,7 @@
         transitionFpsEnemyAi(enemy, "pursue", "recovered");
       }
 
-      const profile = fpsEnemyCombatProfile(enemy);
+      const profile = applyAuthoredCombatStats(enemy, fpsEnemyCombatProfile(enemy));
       const dx = player.x - enemy.x;
       const dy = player.y - enemy.y;
       const distance = Math.hypot(dx, dy);
@@ -4702,10 +5059,19 @@
           announce(lockMessage);
           return;
         }
+        if (!confirmSidePortal(portal)) return;
         queueSideTravel(
           portal.destination,
           portalType === "return" ? "RETOUR AU PLAN PRÉCÉDENT" : "PASSAGE EN PROFONDEUR",
         );
+      } else if (portalType === "ending") {
+        const lockMessage = sidePortalLockMessage(portal);
+        if (lockMessage) {
+          announce(lockMessage);
+          return;
+        }
+        if (!confirmSidePortal(portal)) return;
+        finishGame(true);
       } else if (portalType === "fps" && fpsMissionIndexForPortal(portal) !== null) {
         enterFps(fpsMissionIndexForPortal(portal), false);
       } else if (portalType === "fps") {
@@ -4769,7 +5135,18 @@
         returnToSide(true);
         announce("PREMIER SCEAU POSÉ — PASSEZ PAR LES RUELLES ET LE MARCHÉ");
       } else {
-        finishGame(true);
+        persistRunProgress({
+          completed: false,
+          started: true,
+          chapter: 1,
+          areaId: "castle-donjon",
+          spawnId: "fpsReturn",
+          health: game.health,
+          seals: game.seals,
+        });
+        window.KageSave?.markBossDefeated?.("06-daimyo-corrupted", true);
+        returnToSide(true);
+        announce("DAIMYŌ VAINCU — LA FAILLE DU YOMI S'OUVRE AU-DELÀ DU DONJON");
       }
     }
   }
@@ -4843,11 +5220,26 @@
     dom.end.setAttribute?.("aria-hidden", "false");
     const minutes = Math.floor(game.elapsed / 60);
     const seconds = Math.floor(game.elapsed % 60).toString().padStart(2, "0");
-    const rank = victory ? (game.health >= 75 && game.elapsed < 360 ? "S" : game.health >= 40 ? "A" : "B") : "—";
+    const rank = victory
+      ? (
+          game.health >= 70 && game.kills >= 40 && game.elapsed < 10800
+            ? "S"
+            : (game.health >= 35 && game.kills >= 24 ? "A" : "B")
+        )
+      : "—";
     dom.endGlyph.textContent = victory ? "勝" : "滅";
     dom.endKicker.textContent = victory ? "MISSION ACCOMPLIE" : "LE SANG RETOURNE À LA TERRE";
-    dom.endTitle.textContent = victory ? "L'AUBE REVIENT SUR KUROKAWA" : "L'OMBRE VOUS A DÉVORÉ";
-    dom.endMessage.textContent = victory ? "Les morts reposent. Pour cette nuit." : "Le shogun attendra un samouraï qui ne reviendra jamais.";
+    const temporalEnding = victory && game.side.areaId === "neo-edo-cyber-rift";
+    dom.endTitle.textContent = victory
+      ? (temporalEnding ? "LA FAILLE SE REFERME SUR NEO-EDO" : "L'AUBE REVIENT SUR KUROKAWA")
+      : "L'OMBRE VOUS A DÉVORÉ";
+    dom.endMessage.textContent = victory
+      ? (
+        temporalEnding
+          ? "Akio renvoie l'ombre vers le Yomi. Le Japon respire à travers les siècles."
+          : "Les morts reposent. Pour cette nuit."
+      )
+      : "Le shogun attendra un samouraï qui ne reviendra jamais.";
     dom.endKills.textContent = game.kills;
     dom.endTime.textContent = `${minutes.toString().padStart(2, "0")}:${seconds}`;
     dom.endRank.textContent = rank;
@@ -4925,9 +5317,12 @@
     drawSideEntrancePrompt(cam);
     drawSideMiniMap();
     drawHitConfirm(cam);
-    const gateX = currentSideEntrance().x;
+    const objectivePortal = currentSideObjectivePortal();
+    const gateX = objectivePortal.x;
     const sx = gateX - cam;
-    if (sx > 20 && sx < W - 20 && !isNearSideEntrance()) {
+    const nearObjective = sidePortalDistance(objectivePortal)
+      <= (objectivePortal.interactionRange || 52);
+    if (sx > 20 && sx < W - 20 && !nearObjective) {
       ctx.fillStyle = "#f0d9a4";
       ctx.font = "bold 9px monospace";
       ctx.textAlign = "center";
@@ -4940,16 +5335,24 @@
     if (!graph?.nodes?.length) return;
     const visited = new Set(game.side.visitedAreas || []);
     const activeId = game.side.areaId;
-    const ox = W - 128;
-    const oy = 58;
-    const scaleX = 30;
-    const scaleY = 22;
+    const panelLeft = W - 138;
+    const panelTop = 46;
+    const panelWidth = 132;
+    const panelHeight = 58;
+    const minMapX = Math.min(...graph.nodes.map((node) => node.mapX));
+    const maxMapX = Math.max(...graph.nodes.map((node) => node.mapX));
+    const minMapY = Math.min(...graph.nodes.map((node) => node.mapY));
+    const maxMapY = Math.max(...graph.nodes.map((node) => node.mapY));
+    const scaleX = Math.min(16, (panelWidth - 20) / Math.max(1, maxMapX - minMapX));
+    const scaleY = Math.min(20, (panelHeight - 30) / Math.max(1, maxMapY - minMapY));
+    const ox = panelLeft + 10 - minMapX * scaleX;
+    const oy = panelTop + 10 - minMapY * scaleY;
     ctx.save();
     ctx.globalAlpha = 0.84;
     ctx.fillStyle = "rgba(4, 6, 9, .82)";
-    ctx.fillRect(ox - 9, oy - 12, 126, 58);
+    ctx.fillRect(panelLeft, panelTop, panelWidth, panelHeight);
     ctx.strokeStyle = "rgba(231, 207, 145, .34)";
-    ctx.strokeRect(ox - 8.5, oy - 11.5, 125, 57);
+    ctx.strokeRect(panelLeft + 0.5, panelTop + 0.5, panelWidth - 1, panelHeight - 1);
     const nodeById = new Map(graph.nodes.map((node) => [node.id, node]));
     for (const edge of graph.edges || []) {
       const from = nodeById.get(edge.from);
@@ -4973,7 +5376,7 @@
     ctx.fillStyle = "#d8c89e";
     ctx.font = "bold 6px monospace";
     ctx.textAlign = "left";
-    ctx.fillText("PLAN DES RUES", ox - 2, oy + 40);
+    ctx.fillText("CARTE DE CAMPAGNE", panelLeft + 7, panelTop + panelHeight - 7);
     ctx.restore();
   }
 
@@ -5027,7 +5430,7 @@
   }
 
   function drawSideEntranceWorld() {
-    const objective = currentSideEntrance();
+    const objective = currentSideObjectivePortal();
     for (const portal of currentSidePortals()) {
       const objectiveFpsPortal = portal === objective
         && portal.type === "fps"
@@ -5046,6 +5449,10 @@
             "porte-laquee": 104,
             "porte-chateau": 116,
             "porte-sanctuaire": 92,
+            "route-torii": 116,
+            "route-rizieres": 120,
+            "faille-moderne": 136,
+            "faille-cyber": 144,
           }[portal.visual] || 88);
       const near = nearestSidePortal(1.18) === portal;
       drawPortalDepthVoid(portal, width, objectiveFpsPortal);
@@ -5159,7 +5566,7 @@
       // Les villages et le château ont désormais leurs bâtiments et murs
       // modulaires. Répéter les couches "mid/near" y créait des maisons
       // jumelles et des coutures visuelles à chaque largeur d'écran.
-      if (environmentIndex === 1 || modularCastleInterior) {
+      if ([1, 3, 4, 5, 6].includes(environmentIndex) || modularCastleInterior) {
         drawParallaxLayer(
           parallax.mid,
           cam,
@@ -5879,6 +6286,9 @@
   }
 
   function currentWorldProps() {
+    if (previewEnvironmentIndex !== null) {
+      return coherentFallbackWorldProps(previewEnvironmentIndex);
+    }
     const areaProps = currentSideArea()?.props;
     if (Array.isArray(areaProps)) {
       return areaProps
@@ -5919,6 +6329,19 @@
     return drawn;
   }
 
+  function drawDetachedEnemyEquipment(enemy) {
+    const hazard = enemy.detachedEquipment;
+    const image = weaponBitmapForEnemy(enemy);
+    if (!hazard?.active || !bitmapReady(image)) return false;
+    const width = Math.max(72, Number(hazard.width) || 120);
+    return drawGroundedWorldSprite(
+      image,
+      hazard.x - width / 2,
+      hazard.bottomY || SIDE_GROUND_Y,
+      width,
+    );
+  }
+
   function drawSideDepthScene(side) {
     const sceneEntries = [];
     for (const prop of currentWorldProps()) {
@@ -5934,6 +6357,16 @@
       });
     }
     for (const enemy of side.enemies) {
+      if (enemy.detachedEquipment?.active) {
+        sceneEntries.push({
+          kind: "equipment",
+          payload: enemy,
+          baseline: enemy.detachedEquipment.bottomY || SIDE_GROUND_Y,
+          depthBias: 0.1,
+          tieOrder: 1,
+          x: enemy.detachedEquipment.x,
+        });
+      }
       if (!isEnemyVisible(enemy)) continue;
       sceneEntries.push({
         kind: "enemy",
@@ -5960,6 +6393,7 @@
       || a.x - b.x);
     for (const entry of sceneEntries) {
       if (entry.kind === "prop") drawModularWorldProp(entry.payload);
+      else if (entry.kind === "equipment") drawDetachedEnemyEquipment(entry.payload);
       else if (entry.kind === "enemy") drawZombie2d(entry.payload);
       else drawSamurai2d(entry.payload);
     }
@@ -6166,6 +6600,80 @@
     );
   }
 
+  function weaponRigFrame(rigSet, animation, frame) {
+    const frames = rigSet?.animations?.[animation];
+    if (!Array.isArray(frames) || !frames.length) return null;
+    const normalizedFrame = Math.abs(Math.floor(Number(frame) || 0)) % frames.length;
+    const rig = frames[normalizedFrame];
+    if (
+      !rig
+      || !Array.isArray(rig.primaryHand)
+      || rig.primaryHand.length !== 2
+      || !Array.isArray(rig.secondaryHand)
+      || rig.secondaryHand.length !== 2
+      || !Number.isFinite(rig.angle)
+      || !Number.isFinite(rig.scale)
+    ) return null;
+    return rig;
+  }
+
+  function enemyWeaponRig(enemy, animation, frame, fps = false) {
+    // Les rigs calculés sur les planches latérales restent exacts pour les
+    // profils FPS gauche/droite. En face/dos, les réutiliser décale l'arme
+    // jusqu'au bord du billboard ; on repasse donc sur l'ancre FPS centrée
+    // tant qu'une vraie banque directionnelle de mains n'est pas fournie.
+    if (
+      fps
+      && ["front", "back"].includes(enemy?.viewDirection)
+      && !enemy?.modularEntry?.fpsWeaponRig?.directions?.[enemy.viewDirection]
+    ) {
+      return null;
+    }
+    const directionalFpsRig = fps
+      ? enemy?.modularEntry?.fpsWeaponRig?.directions?.[enemy?.viewDirection]
+      : null;
+    if (directionalFpsRig) {
+      return weaponRigFrame(directionalFpsRig, animation, frame);
+    }
+    if (fps && enemy?.modularEntry?.fpsWeaponRig) {
+      return weaponRigFrame(
+        enemy.modularEntry.fpsWeaponRig,
+        animation,
+        frame,
+      );
+    }
+    return weaponRigFrame(enemy?.modularEntry?.weaponRig, animation, frame);
+  }
+
+  function playerRosterEntry() {
+    return modularRoster.characters.find((entry) =>
+      entry.category === "player" && entry.id === "akio");
+  }
+
+  function playerFrameWeaponRig(animation, frame, view = "side") {
+    const playerEntry = playerRosterEntry();
+    return weaponRigFrame(
+      view === "fps" ? playerEntry?.fpsWeaponRig : playerEntry?.weaponRig,
+      animation,
+      frame,
+    );
+  }
+
+  function weaponLayerForFrame(entry, rig, view = "side") {
+    if (["behind-body", "front-body", "hidden"].includes(rig?.layer)) {
+      return rig.layer;
+    }
+    const declaredOrder = view === "fps"
+      ? entry?.fpsRenderOrder
+      : entry?.weaponRenderOrder;
+    if (Array.isArray(declaredOrder)) {
+      return declaredOrder.indexOf("weapon") <= declaredOrder.indexOf("body")
+        ? "behind-body"
+        : "front-body";
+    }
+    return "front-body";
+  }
+
   function playerWeaponPoseOffset(weapon, view) {
     const family = weaponFamilyKey(weapon);
     return PLAYER_WEAPON_POSE_OFFSETS[view]?.[family] || 0;
@@ -6214,9 +6722,21 @@
     ctx.fillRect(-Math.ceil(size * 0.25), -Math.ceil(size * 0.2), size, Math.max(1, size - 1));
   }
 
-  function drawEnemyWeapon(enemy, animation, spriteSize, fps = false, frame = 0) {
-    const detachableId = enemy.massiveProfile?.detachableParts
-      ?.find((part) => part.separateSprite)?.weaponId;
+  function drawEnemyWeapon(enemy, animation, spriteDimensions, fps = false, frame = 0) {
+    const detachablePart = enemy.massiveProfile?.detachableParts
+      ?.find((part) => part.separateSprite);
+    const detachableId = detachablePart?.weaponId;
+    if (
+      fps
+      && ["front", "back"].includes(enemy?.viewDirection)
+      && !enemy?.modularEntry?.fpsWeaponRig?.directions?.[enemy.viewDirection]
+    ) {
+      // Les billboards historiques ne possèdent pas encore de vraies mains
+      // dessinées de face/dos. Une arme centrée arbitrairement flotte devant
+      // le torse ; on la masque donc dans ces deux directions jusqu'à ce
+      // qu'une planche directionnelle authorée fournisse un socket fiable.
+      return false;
+    }
     if (
       isMassiveEnemy(enemy)
       && enemy.detachablePartAttached === false
@@ -6224,8 +6744,21 @@
     ) return;
     const weapon = weaponBitmapForEnemy(enemy);
     if (!bitmapReady(weapon)) return;
+    const dimensions = typeof spriteDimensions === "number"
+      ? { width: spriteDimensions, height: spriteDimensions }
+      : {
+          width: Math.max(1, Number(spriteDimensions?.width) || 1),
+          height: Math.max(1, Number(spriteDimensions?.height) || 1),
+        };
+    const spriteSize = dimensions.height;
     const context = fps ? "fps" : "side";
     const mount = WEAPON_MOUNTS[context][animation] || WEAPON_MOUNTS[context].idle;
+    const attachmentRig = !fps && detachablePart?.attachPoint
+      ? enemy.modularEntry?.attachmentRigs?.[detachablePart.attachPoint]
+        ?.animations?.[animation]?.[frame % 6]
+      : null;
+    const rig = attachmentRig || enemyWeaponRig(enemy, animation, frame, fps);
+    if (rig?.layer === "hidden" || rig?.scale <= 0) return;
     const kind = weaponKind(enemy.weaponAsset);
     const presentation = ENEMY_WEAPON_PRESENTATION[kind]
       || ENEMY_WEAPON_PRESENTATION.blade;
@@ -6233,20 +6766,37 @@
       ? (ENEMY_FPS_DIRECTIONAL_WEAPON[enemy.viewDirection]
         || ENEMY_FPS_DIRECTIONAL_WEAPON.left)
       : { x: 0, y: 0, rotation: 0, scale: 1 };
-    const massiveMount = MASSIVE_EQUIPMENT_MOUNTS[enemy.weaponAsset?.id]?.[context];
-    const mountX = massiveMount?.x ?? (mount.x + directionProfile.x);
-    const mountY = massiveMount?.y ?? (mount.y + directionProfile.y);
-    const mountScale = massiveMount?.scale ?? (mount.scale * directionProfile.scale);
+    const massiveMount = attachmentRig
+      ? null
+      : MASSIVE_EQUIPMENT_MOUNTS[enemy.weaponAsset?.id]?.[context];
+    const rigPrimary = attachmentRig?.anchor || rig?.primaryHand;
+    const mountX = massiveMount?.x ?? (
+      rigPrimary
+        ? (rigPrimary[0] - 0.5) * dimensions.width / spriteSize
+        : (mount.x + directionProfile.x)
+    );
+    const mountY = massiveMount?.y ?? (
+      rigPrimary
+        ? (rigPrimary[1] - 1) * dimensions.height / spriteSize
+        : (mount.y + directionProfile.y)
+    );
+    const mountScale = massiveMount?.scale ?? (
+      rig
+        ? rig.scale * (fps ? 0.56 : 1)
+        : mount.scale * directionProfile.scale
+    );
     const maxDimension = spriteSize
       * mountScale
-      * weaponScaleForKind(kind)
-      * presentation.scale;
-    const anchor = enemyWeaponAnchor(weapon, enemy, kind);
+      * (massiveMount ? 1 : weaponScaleForKind(kind))
+      * (massiveMount ? 1 : presentation.scale);
+    const anchor = massiveMount?.anchor || enemyWeaponAnchor(weapon, enemy, kind);
     const attacking = animation === "attack";
     const attackPhase = attacking
       ? clamp(1 - enemy.attack / Math.max(0.01, enemy.attackDuration || 0.68), 0, 1)
       : 0;
-    const frameNudge = [0, -0.018, -0.01, 0.012, 0.018, 0][frame % 6] || 0;
+    const frameNudge = rig
+      ? 0
+      : ([0, -0.018, -0.01, 0.012, 0.018, 0][frame % 6] || 0);
     ctx.save();
     ctx.translate(
       spriteSize * (mountX + frameNudge),
@@ -6260,13 +6810,13 @@
       defaultRotation
       - sourceRotation
       + (massiveMount?.rotation ?? (
-        mount.rotation
+        (rig ? rig.angle : mount.rotation)
         + presentation.rotation
-        + directionProfile.rotation
+        + (rig ? 0 : directionProfile.rotation)
       ))
-      + (attacking ? attackPhase * mount.arc : 0),
+      + (attacking && !rig ? attackPhase * mount.arc : 0),
     );
-    if (kind === "guard") ctx.scale(0.82, 1.05);
+    if (kind === "guard" && !massiveMount) ctx.scale(0.82, 1.05);
     drawWeaponImage(weapon, {
       anchor,
       maxDimension,
@@ -6395,9 +6945,15 @@
     const weapon = currentPlayerWeapon();
     const equippedWeapon = playerWeaponBitmap(weapon, "side");
     const meta = playerWeaponMeta(weapon);
-    const mount = SIDE_PLAYER_WEAPON_MOUNTS[animation]?.[frame]
+    const rig = playerFrameWeaponRig(animation, frame, "side");
+    if (rig?.layer === "hidden" || rig?.scale <= 0) return false;
+    const fallbackMount = SIDE_PLAYER_WEAPON_MOUNTS[animation]?.[frame]
       || SIDE_PLAYER_WEAPON_MOUNTS.idle[0];
-    const [mountX, mountY, rotation, scale] = mount;
+    const [fallbackX, fallbackY, fallbackRotation, fallbackScale] = fallbackMount;
+    const mountX = rig ? (rig.primaryHand[0] - 0.5) * 96 : fallbackX;
+    const mountY = rig ? (rig.primaryHand[1] - 1) * 80 : fallbackY;
+    const rotation = rig?.angle ?? fallbackRotation;
+    const scale = rig?.scale ?? fallbackScale;
     const family = weaponFamilyKey(weapon);
     const rigidOrientation = bitmapReady(equippedWeapon)
       ? normalizedWeaponRotation(equippedWeapon, weapon, "side")
@@ -6419,7 +6975,7 @@
     } else {
       if (!bitmapReady(equippedWeapon)) {
         ctx.restore();
-        return;
+        return false;
       }
       drawWeaponImage(equippedWeapon, {
         anchor: playerWeaponAnchor(equippedWeapon, weapon, meta.anchor),
@@ -6431,6 +6987,7 @@
       drawWeaponGripOverlay(44 * renderScale, false, family);
     }
     ctx.restore();
+    return true;
   }
 
   function drawProceduralHeldWeapon(attacking) {
@@ -6490,9 +7047,22 @@
     const rigidOrientation = bitmapReady(image)
       ? normalizedWeaponRotation(image, weapon, "fps")
       : playerWeaponPoseOffset(weapon, "fps");
-    const mount = FPS_PLAYER_WEAPON_MOUNTS[animation]?.[frame]
+    const rig = playerFrameWeaponRig(animation, frame, "fps");
+    if (rig?.layer === "hidden" || rig?.scale <= 0) return true;
+    const fallbackMount = FPS_PLAYER_WEAPON_MOUNTS[animation]?.[frame]
       || FPS_PLAYER_WEAPON_MOUNTS.idle[0];
-    const [mountX, mountY, rotation, scale, alpha] = mount;
+    const [
+      fallbackX,
+      fallbackY,
+      fallbackRotation,
+      fallbackScale,
+      fallbackAlpha,
+    ] = fallbackMount;
+    const mountX = rig?.primaryHand?.[0] ?? fallbackX;
+    const mountY = rig?.primaryHand?.[1] ?? fallbackY;
+    const rotation = rig?.angle ?? fallbackRotation;
+    const scale = rig?.scale ?? fallbackScale;
+    const alpha = rig ? 1 : fallbackAlpha;
     if (alpha <= 0) return true;
     ctx.save();
     ctx.globalAlpha = alpha;
@@ -6536,13 +7106,22 @@
       modularAnimationReady(bitmapAssets.akioFpsBody, pose.animation)
       && (bitmapReady(selectedFpsWeapon) || flexibleComponentParts(weapon, "fps"))
     ) {
-      drawFpsPlayerBody(pose);
-      drawFpsWeaponSprite(
-        selectedFpsWeapon,
-        pose.animation,
-        pose.frame,
-        weapon,
-      );
+      const rig = playerFrameWeaponRig(pose.animation, pose.frame, "fps");
+      const layer = weaponLayerForFrame(playerRosterEntry(), rig, "fps");
+      const drawBody = () => drawFpsPlayerBody(pose);
+      const drawWeapon = () => drawFpsWeaponSprite(
+          selectedFpsWeapon,
+          pose.animation,
+          pose.frame,
+          weapon,
+        );
+      if (layer === "behind-body") {
+        drawWeapon();
+        drawBody();
+      } else {
+        drawBody();
+        if (layer !== "hidden") drawWeapon();
+      }
       return true;
     }
 
@@ -6668,10 +7247,17 @@
       ctx.translate(x + p.w / 2, y + p.h);
       ctx.scale(flip, 1);
       if (game.invulnerable > 0 && Math.floor(game.invulnerable * 18) % 2) ctx.globalAlpha = 0.35;
-      // Corps, arme, puis masque de prise : la lame reste lisible devant la
-      // silhouette sans donner l'impression de flotter hors de la main.
-      drawAnimationSprite(bitmapAssets.akioModular, animation, frame, -48, -80, 96, 80);
-      if (animation !== "death") drawPlayerWeapon(animation, frame);
+      const rig = playerFrameWeaponRig(animation, frame, "side");
+      const layer = weaponLayerForFrame(playerRosterEntry(), rig, "side");
+      const drawBody = () =>
+        drawAnimationSprite(bitmapAssets.akioModular, animation, frame, -48, -80, 96, 80);
+      if (animation !== "death" && layer === "behind-body") {
+        drawPlayerWeapon(animation, frame);
+        drawBody();
+      } else {
+        drawBody();
+        if (animation !== "death" && layer !== "hidden") drawPlayerWeapon(animation, frame);
+      }
       ctx.restore();
       return;
     }
@@ -6764,14 +7350,18 @@
         ctx.scale(ENEMY_HURT_RENDER_SCALE, ENEMY_HURT_RENDER_SCALE);
       }
       if (e.flash > 0) ctx.filter = "brightness(2.2) saturate(.2)";
-      const equipmentBehindBody = Boolean(
-        MASSIVE_EQUIPMENT_MOUNTS[e.weaponAsset?.id],
-      );
+      const frameRig = enemyWeaponRig(e, animation, frame, false);
+      const massiveEquipmentLayer = MASSIVE_EQUIPMENT_MOUNTS[
+        e.weaponAsset?.id
+      ]?.side?.layer;
+      const equipmentBehindBody = massiveEquipmentLayer
+        ? massiveEquipmentLayer === "behind-body"
+        : weaponLayerForFrame(e.modularEntry, frameRig, "side") === "behind-body";
       if (animation !== "death" && equipmentBehindBody) {
         drawEnemyWeapon(
           e,
           animation,
-          Math.max(renderHeight, renderWidth * 0.62),
+          { width: renderWidth, height: renderHeight },
           false,
           frame,
         );
@@ -6801,7 +7391,7 @@
         drawEnemyWeapon(
           e,
           animation,
-          Math.max(renderHeight, renderWidth * 0.62),
+          { width: renderWidth, height: renderHeight },
           false,
           frame,
         );
@@ -7602,12 +8192,22 @@
         ctx.save();
         ctx.translate(projection.screenX, projection.groundY);
         ctx.scale(viewFacing.mirror ? -1 : 1, 1);
-        drawEnemyWeapon(enemy, animation, renderHeight, true, frame);
+        drawEnemyWeapon(
+          enemy,
+          animation,
+          { width: renderWidth, height: renderHeight },
+          true,
+          frame,
+        );
         ctx.restore();
       };
-      const equipmentBehindBody = Boolean(
-        MASSIVE_EQUIPMENT_MOUNTS[enemy.weaponAsset?.id],
-      );
+      const frameRig = enemyWeaponRig(enemy, animation, frame, true);
+      const massiveEquipmentLayer = MASSIVE_EQUIPMENT_MOUNTS[
+        enemy.weaponAsset?.id
+      ]?.fps?.layer;
+      const equipmentBehindBody = massiveEquipmentLayer
+        ? massiveEquipmentLayer === "behind-body"
+        : weaponLayerForFrame(enemy.modularEntry, frameRig, "fps") === "behind-body";
       if (
         animation !== "death"
         && (viewFacing.direction === "back" || equipmentBehindBody)
@@ -8011,7 +8611,9 @@
       const activeMassiveBoss = game.side.enemies.find((enemy) =>
         isMassiveEnemy(enemy) && isEnemyAlive(enemy));
       if (activeMassiveBoss) return "Abattre Aka-Ushi pour libérer la route du château";
-      const areaLabel = currentSideArea()?.label;
+      const activeArea = currentSideArea();
+      if (activeArea?.objective) return activeArea.objective;
+      const areaLabel = activeArea?.label;
       if (areaLabel && game.side.areaId !== sideAreaIdForChapter(game.chapter)) {
         return `${areaLabel} — trouver une porte vers l'objectif`;
       }
@@ -8365,6 +8967,9 @@
       visitedAreas: [...(game.side.visitedAreas || [])],
       nearbyPortal: nearestSidePortal()?.id || null,
       pendingTravel: game.pendingTravel ? { ...game.pendingTravel } : null,
+      portalConfirmation: game.portalConfirmation
+        ? { id: game.portalConfirmation.id }
+        : null,
       player2d: { ...game.side.player },
       playerFps: { ...currentMission().player },
       fpsMissionId: currentMission().id,
@@ -8385,6 +8990,7 @@
       perfectParries: game.perfectParries,
       engagementGrace: game.engagementGrace,
       checkpoint: game.activeCheckpointId,
+      consumedCheckpoints: [...game.consumedCheckpointIds],
       hitConfirm: game.hitConfirm,
     }),
     debug: {
@@ -8460,6 +9066,7 @@
         rosterPoolId: currentSideArea()?.rosterPoolId || null,
         width: game.side.width,
         visitedAreas: [...(game.side.visitedAreas || [])],
+        objectivePortalId: currentSideObjectivePortal()?.id || null,
         portals: currentSidePortals().map((portal) => ({
           id: portal.id,
           type: portal.type || "fps",
@@ -8468,6 +9075,7 @@
           destination: portal.destination ? { ...portal.destination } : null,
           requiresAction: true,
           locked: Boolean(sidePortalLockMessage(portal)),
+          blocksMovement: sidePortalBlocksMovement(portal),
         })),
         platforms: currentSidePlatforms().map((platform) => ({ ...platform })),
         aliveEnemyIds: game.side.enemies
@@ -8535,6 +9143,9 @@
           maxHp: boss.maxHp,
           phase: boss.massivePhase || 1,
           detachablePartAttached: boss.detachablePartAttached !== false,
+          detachedHazard: boss.detachedEquipment
+            ? { ...boss.detachedEquipment }
+            : null,
           targetWidthRatio: renderProfile.targetWidthRatio || 0.48,
           targetHeightRatio: renderProfile.targetHeightRatio || 0.52,
           maxHeightRatio: renderProfile.maxHeightRatio || 0.62,
@@ -8548,6 +9159,16 @@
           enemy.dead = true;
           enemy.attack = 0;
         });
+      },
+      clearSide: () => {
+        game.side.enemies.forEach((enemy) => {
+          enemy.hp = 0;
+          enemy.dying = false;
+          enemy.dead = true;
+          enemy.attack = 0;
+          enemy.attackCooldown = 0;
+        });
+        return game.side.enemies.length;
       },
       warpToAltar: () => { const m = currentMission(); m.player.x = m.altar.x; m.player.y = m.altar.y; },
       worldSnapshot: () => {
@@ -8598,11 +9219,14 @@
             total: ALLEY_WALL_IDS.length,
           },
           visitedAreas: [...(game.side.visitedAreas || [])],
+          objectivePortalId: currentSideObjectivePortal()?.id || null,
           portals: currentSidePortals().map((portal) => ({
             id: portal.id,
             type: portal.type || "fps",
             x: portal.x,
             destination: portal.destination ? { ...portal.destination } : null,
+            locked: Boolean(sidePortalLockMessage(portal)),
+            blocksMovement: sidePortalBlocksMovement(portal),
           })),
           frontPropFootprints: snapshotProps
             .filter((prop) => prop.layer === "front")
@@ -8742,12 +9366,20 @@
     const previewModes = new Set([
       "kurokawa",
       "bamboo",
+      "contemporary",
+      "cyberpunk",
+      "forest",
+      "fields",
       "gate-kurokawa",
       "gate-castle",
       "fps-kurokawa",
       "fps-castle",
     ]);
     if (previewModes.has(preview)) {
+      previewEnvironmentIndex = ENVIRONMENT_PREVIEW_INDICES[preview] ?? null;
+      if (previewEnvironmentIndex !== null) {
+        document.body.dataset.previewEnvironment = preview;
+      }
       startGame();
       const previewAreaId = previewParams.get("area");
       const previewArea = previewAreaId ? sideAreaById(previewAreaId) : null;

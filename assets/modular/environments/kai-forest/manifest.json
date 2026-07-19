@@ -1,0 +1,141 @@
+{
+  "schema": 1,
+  "id": "kai-forest",
+  "name": "Forêt ancienne de Kai",
+  "lore": "Les cèdres sacrés de Kai étouffent une ancienne route de charbonniers, désormais contaminée par des racines venues du Yomi.",
+  "gameplay": "Un niveau forestier horizontal à chemins superposés, troncs franchissables, racines en pente, ruisseaux et haltes de quarantaine abandonnées.",
+  "generationTool": "OpenAI ImageGen built-in",
+  "prompts": {
+    "sky": "Opaque moonlit night sky above the ancient Kai forest, with indigo storm clouds and restrained Yomi haze; no terrain or characters.",
+    "far": "Distant wooded mountain silhouettes and mist bands for Kai forest, isolated on a flat magenta chroma background.",
+    "mid": "Coherent middle-distance band of giant ancient cedars, a charcoal burner shelter and ward ropes, isolated on magenta chroma.",
+    "near": "Near forest framing of roots, ferns, broken branches and fog with an open gameplay center, isolated on magenta chroma.",
+    "props": "Twelve separate front-orthographic Kai forest props in a strict 4 by 3 magenta-chroma atlas.",
+    "platforms": "Twelve separate side-orthographic forest earth, log, root, stone and hazard platforms in a strict 4 by 3 magenta-chroma atlas."
+  },
+  "renderStandard": {
+    "resolution": [
+      1664,
+      936
+    ],
+    "layerOrderBackToFront": [
+      "sky",
+      "far",
+      "mid",
+      "near"
+    ],
+    "skyOpaque": true,
+    "transparentLayers": true,
+    "atlasGrid": {
+      "columns": 4,
+      "rows": 3
+    }
+  },
+  "layers": {
+    "sky": {
+      "id": "sky",
+      "file": "assets/modular/environments/kai-forest/layers/sky.png",
+      "source": "assets/modular/environments/kai-forest/layers/source/sky-imagegen-raw.png",
+      "mode": "RGB",
+      "size": [
+        1664,
+        936
+      ],
+      "opaque": true
+    },
+    "far": {
+      "id": "far",
+      "file": "assets/modular/environments/kai-forest/layers/far.png",
+      "source": "assets/modular/environments/kai-forest/layers/source/far-imagegen-raw.png",
+      "mode": "RGBA",
+      "size": [
+        1664,
+        936
+      ],
+      "sourceScale": 0.994687,
+      "placement": [
+        0,
+        0
+      ],
+      "alphaBounds": [
+        0,
+        448,
+        1663,
+        936
+      ],
+      "keyRed": 251,
+      "keyGreen": 3,
+      "keyBlue": 248,
+      "keyHex": "#fb03f8",
+      "keyKind": "magenta",
+      "transparentPixels": 887868,
+      "partialAlphaPixels": 541,
+      "despilledPixels": 541
+    },
+    "mid": {
+      "id": "mid",
+      "file": "assets/modular/environments/kai-forest/layers/mid.png",
+      "source": "assets/modular/environments/kai-forest/layers/source/mid-imagegen-raw.png",
+      "mode": "RGBA",
+      "size": [
+        1664,
+        936
+      ],
+      "sourceScale": 0.994687,
+      "placement": [
+        0,
+        0
+      ],
+      "alphaBounds": [
+        17,
+        50,
+        1643,
+        844
+      ],
+      "keyRed": 249,
+      "keyGreen": 2,
+      "keyBlue": 249,
+      "keyHex": "#f902f9",
+      "keyKind": "magenta",
+      "transparentPixels": 884858,
+      "partialAlphaPixels": 6719,
+      "despilledPixels": 6719
+    },
+    "near": {
+      "id": "near",
+      "file": "assets/modular/environments/kai-forest/layers/near.png",
+      "source": "assets/modular/environments/kai-forest/layers/source/near-imagegen-raw.png",
+      "mode": "RGBA",
+      "size": [
+        1664,
+        936
+      ],
+      "sourceScale": 0.994687,
+      "placement": [
+        0,
+        0
+      ],
+      "alphaBounds": [
+        0,
+        0,
+        1663,
+        936
+      ],
+      "keyRed": 251,
+      "keyGreen": 4,
+      "keyBlue": 248,
+      "keyHex": "#fb04f8",
+      "keyKind": "magenta",
+      "transparentPixels": 1038506,
+      "partialAlphaPixels": 1357,
+      "despilledPixels": 1357
+    }
+  },
+  "propsManifest": "assets/modular/environments/kai-forest/props/manifest.json",
+  "platformsManifest": "assets/modular/environments/kai-forest/platforms/manifest.json",
+  "totals": {
+    "layers": 4,
+    "props": 12,
+    "platforms": 12
+  }
+}

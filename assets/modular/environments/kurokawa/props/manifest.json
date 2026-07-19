@@ -1,9 +1,21 @@
 {
-  "schema": 1,
+  "schema": 2,
   "source": "assets/modular/environments/kurokawa/props/source/atlas-alpha.png",
   "grid": {
     "columns": 4,
     "rows": 3
+  },
+  "count": 14,
+  "renderStandard": {
+    "gameplayProjection": "front-orthographic",
+    "gameplayDepthUsage": "gameplay-plane",
+    "backgroundVariantProjection": "three-quarter",
+    "backgroundVariantDepthUsage": "background-only",
+    "groundAnchor": [
+      0.5,
+      1.0
+    ],
+    "frontAlphaMode": "binary"
   },
   "sprites": [
     {
@@ -48,7 +60,8 @@
     {
       "id": "tour-guet-kurokawa",
       "file": "tour-guet-kurokawa.png",
-      "sourceCell": [
+      "source": "source/tour-guet-face-alpha.png",
+      "legacySourceCell": [
         3,
         0
       ],
@@ -56,7 +69,26 @@
         196,
         320
       ],
-      "nonEmpty": true
+      "nonEmpty": true,
+      "projection": "front-orthographic",
+      "view": "front",
+      "depthUsage": "gameplay-plane",
+      "backgroundOnly": false,
+      "renderLayer": "world",
+      "alphaMode": "binary",
+      "transparentPadding": 4,
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "contactMode": "opaque-bottom",
+      "baseline": {
+        "mode": "alpha-bottom",
+        "y": 315,
+        "minimumOpaquePixels": 72,
+        "minimumOpaqueRun": 25
+      },
+      "backgroundVariant": "tour-guet-kurokawa-3q-arriere-plan"
     },
     {
       "id": "puits-pierre",
@@ -139,7 +171,8 @@
     {
       "id": "foyer-incendie",
       "file": "foyer-incendie.png",
-      "sourceCell": [
+      "source": "source/foyer-face-alpha.png",
+      "legacySourceCell": [
         2,
         2
       ],
@@ -147,7 +180,26 @@
         274,
         192
       ],
-      "nonEmpty": true
+      "nonEmpty": true,
+      "projection": "front-orthographic",
+      "view": "front",
+      "depthUsage": "gameplay-plane",
+      "backgroundOnly": false,
+      "renderLayer": "world",
+      "alphaMode": "binary",
+      "transparentPadding": 4,
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "contactMode": "opaque-bottom",
+      "baseline": {
+        "mode": "alpha-bottom",
+        "y": 187,
+        "minimumOpaquePixels": 88,
+        "minimumOpaqueRun": 33
+      },
+      "backgroundVariant": "foyer-incendie-3q-arriere-plan"
     },
     {
       "id": "autel-route",
@@ -161,6 +213,62 @@
         227
       ],
       "nonEmpty": true
+    },
+    {
+      "id": "tour-guet-kurokawa-3q-arriere-plan",
+      "file": "tour-guet-kurokawa-3q-arriere-plan.png",
+      "source": "source/atlas-alpha.png",
+      "sourceCell": [
+        3,
+        0
+      ],
+      "size": [
+        196,
+        320
+      ],
+      "nonEmpty": true,
+      "variantOf": "tour-guet-kurokawa",
+      "projection": "three-quarter",
+      "view": "three-quarter",
+      "depthUsage": "background-only",
+      "backgroundOnly": true,
+      "renderLayer": "background",
+      "collision": "none",
+      "alphaMode": "straight-transparent",
+      "transparentPadding": 4,
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "contactMode": "visual-only"
+    },
+    {
+      "id": "foyer-incendie-3q-arriere-plan",
+      "file": "foyer-incendie-3q-arriere-plan.png",
+      "source": "source/atlas-alpha.png",
+      "sourceCell": [
+        2,
+        2
+      ],
+      "size": [
+        274,
+        192
+      ],
+      "nonEmpty": true,
+      "variantOf": "foyer-incendie",
+      "projection": "three-quarter",
+      "view": "three-quarter",
+      "depthUsage": "background-only",
+      "backgroundOnly": true,
+      "renderLayer": "background",
+      "collision": "none",
+      "alphaMode": "straight-transparent",
+      "transparentPadding": 4,
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "contactMode": "visual-only"
     }
   ]
 }

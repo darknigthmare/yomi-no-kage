@@ -1,0 +1,465 @@
+{
+  "schema": 2,
+  "zoneId": "contemporary-japan",
+  "assetType": "platform",
+  "count": 12,
+  "source": "assets/modular/environments/contemporary-japan/platforms/source/atlas-imagegen-raw.png",
+  "alphaSourceDerivedAtBuild": true,
+  "grid": {
+    "columns": 4,
+    "rows": 3
+  },
+  "gridBoundaries": {
+    "x": [
+      0,
+      384,
+      754,
+      1139,
+      1536
+    ],
+    "y": [
+      0,
+      341,
+      657,
+      1024
+    ]
+  },
+  "renderPolicy": {
+    "projection": "side-orthographic",
+    "transparentPadding": 8,
+    "bottomTransparentPadding": 8,
+    "weaponsOrCharactersBakedIn": false
+  },
+  "chroma": {
+    "keyRed": 9,
+    "keyGreen": 249,
+    "keyBlue": 9,
+    "keyHex": "#09f909",
+    "keyKind": "green",
+    "transparentPixels": 1178507,
+    "partialAlphaPixels": 1812,
+    "despilledPixels": 1812
+  },
+  "sprites": [
+    {
+      "id": "asphalt-left",
+      "file": "asphalt-left.png",
+      "sourceCell": [
+        0,
+        0
+      ],
+      "size": [
+        244,
+        164
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        236,
+        156
+      ],
+      "sourceBounds": [
+        75,
+        165,
+        303,
+        313
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "asphalt-center",
+      "file": "asphalt-center.png",
+      "sourceCell": [
+        1,
+        0
+      ],
+      "size": [
+        402,
+        162
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        394,
+        154
+      ],
+      "sourceBounds": [
+        398,
+        167,
+        784,
+        313
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "asphalt-right",
+      "file": "asphalt-right.png",
+      "sourceCell": [
+        2,
+        0
+      ],
+      "size": [
+        221,
+        164
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        213,
+        156
+      ],
+      "sourceBounds": [
+        870,
+        165,
+        1075,
+        313
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "asphalt-cracked",
+      "file": "asphalt-cracked.png",
+      "sourceCell": [
+        3,
+        0
+      ],
+      "size": [
+        308,
+        164
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        300,
+        156
+      ],
+      "sourceBounds": [
+        1168,
+        165,
+        1460,
+        313
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "concrete-curb-long",
+      "file": "concrete-curb-long.png",
+      "sourceCell": [
+        0,
+        1
+      ],
+      "size": [
+        428,
+        97
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        420,
+        89
+      ],
+      "sourceBounds": [
+        53,
+        485,
+        465,
+        566
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "concrete-curb-short",
+      "file": "concrete-curb-short.png",
+      "sourceCell": [
+        1,
+        1
+      ],
+      "size": [
+        188,
+        97
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        180,
+        89
+      ],
+      "sourceBounds": [
+        533,
+        485,
+        705,
+        566
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "footbridge-platform",
+      "file": "footbridge-platform.png",
+      "sourceCell": [
+        2,
+        1
+      ],
+      "size": [
+        325,
+        154
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        317,
+        146
+      ],
+      "sourceBounds": [
+        784,
+        430,
+        1093,
+        568
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "station-canopy",
+      "file": "station-canopy.png",
+      "sourceCell": [
+        3,
+        1
+      ],
+      "size": [
+        348,
+        187
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        340,
+        179
+      ],
+      "sourceBounds": [
+        1142,
+        402,
+        1474,
+        573
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "scaffold-platform",
+      "file": "scaffold-platform.png",
+      "sourceCell": [
+        0,
+        2
+      ],
+      "size": [
+        300,
+        219
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        292,
+        211
+      ],
+      "sourceBounds": [
+        55,
+        659,
+        339,
+        862
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "concrete-step",
+      "file": "concrete-step.png",
+      "sourceCell": [
+        1,
+        2
+      ],
+      "size": [
+        248,
+        193
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        240,
+        185
+      ],
+      "sourceBounds": [
+        430,
+        685,
+        662,
+        862
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "rubble-ramp",
+      "file": "rubble-ramp.png",
+      "sourceCell": [
+        2,
+        2
+      ],
+      "size": [
+        334,
+        177
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        326,
+        169
+      ],
+      "sourceBounds": [
+        757,
+        701,
+        1075,
+        862
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "drainage-hazard",
+      "file": "drainage-hazard.png",
+      "sourceCell": [
+        3,
+        2
+      ],
+      "size": [
+        321,
+        119
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        313,
+        111
+      ],
+      "sourceBounds": [
+        1164,
+        762,
+        1469,
+        865
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    }
+  ]
+}

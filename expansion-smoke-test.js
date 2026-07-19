@@ -358,21 +358,22 @@ async function measureSideAttack(weaponId, targetDistance) {
   await settleRoster();
   assert.equal(global.KageGame.debug.assetStatus().roster.ready, true);
 
-  const villageRoster = global.KageLevels.rosterPools["kai-kurokawa-village"];
-  const villageAllowList = new Set([
-    ...villageRoster.regular,
-    ...villageRoster.special,
-    ...(villageRoster.miniboss || []),
+  const initialArea = global.KageLevels.areas[global.KageLevels.startAreaId];
+  const initialRoster = global.KageLevels.rosterPools[initialArea.rosterPoolId];
+  const initialAllowList = new Set([
+    ...initialRoster.regular,
+    ...initialRoster.special,
+    ...(initialRoster.miniboss || []),
   ]);
-  const villageSnapshot = global.KageGame.debug.areaSnapshot();
-  assert.equal(villageSnapshot.rosterPoolId, "kai-kurokawa-village");
-  villageSnapshot.enemies
+  const initialSnapshot = global.KageGame.debug.areaSnapshot();
+  assert.equal(initialSnapshot.rosterPoolId, initialArea.rosterPoolId);
+  initialSnapshot.enemies
     .filter((enemy) => !enemy.boss && enemy.rosterId)
     .forEach((enemy) => {
-      assert.equal(enemy.rosterPoolId, "kai-kurokawa-village");
+      assert.equal(enemy.rosterPoolId, initialArea.rosterPoolId);
       assert.ok(
-        villageAllowList.has(enemy.rosterId),
-        `${enemy.rosterId} doit appartenir au pool régional de Kai/Kurokawa`,
+        initialAllowList.has(enemy.rosterId),
+        `${enemy.rosterId} doit appartenir au pool régional du niveau initial`,
       );
     });
 
@@ -516,7 +517,7 @@ async function measureSideAttack(weaponId, targetDistance) {
   assert.ok(global.KageGame.getState().visitedAreas.includes("kurokawa-back-street"));
 
   const areas = Object.values(global.KageLevels.areas);
-  assert.equal(areas.length, 6, "La campagne doit exposer six zones 2D");
+  assert.equal(areas.length, 11, "La campagne doit exposer onze zones 2D");
   for (const level of areas) {
     assert.ok(
       String(level.routeMetrics?.mainRoute || "").startsWith("horizontal"),
@@ -535,6 +536,7 @@ async function measureSideAttack(weaponId, targetDistance) {
   // Le premier sceau ouvre l'accès narratif au marché. Aka-Ushi reste ensuite
   // le verrou de gameplay propre à la route du château.
   await global.KageGame.start();
+  global.KageGame.debug.setSideArea("kurokawa-main-street", "prologue");
   global.KageGame.debug.warpToPortal("contaminated-torii");
   global.KageGame.interact();
   assert.equal(global.KageGame.getState().mode, "fps");
@@ -627,6 +629,17 @@ async function measureSideAttack(weaponId, targetDistance) {
     massive.detachablePartAttached,
     false,
     "Le joug séparé doit se détacher lors du passage en phase 2",
+  );
+  assert.equal(
+    massive.detachedEquipment?.active,
+    true,
+    "Le joug détaché doit devenir un hazard persistant actif dans l'arène",
+  );
+  const massiveSnapshot = global.KageGame.debug.massiveBossSnapshot();
+  assert.equal(
+    massiveSnapshot?.detachedHazard?.active,
+    true,
+    "Le snapshot runtime doit exposer le hazard du joug après la transition",
   );
 
   global.KageGame.debug.setSideEnemy(massiveDefinitionIndex, {

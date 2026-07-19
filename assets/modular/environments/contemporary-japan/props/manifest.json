@@ -1,0 +1,465 @@
+{
+  "schema": 2,
+  "zoneId": "contemporary-japan",
+  "assetType": "prop",
+  "count": 12,
+  "source": "assets/modular/environments/contemporary-japan/props/source/atlas-imagegen-raw.png",
+  "alphaSourceDerivedAtBuild": true,
+  "grid": {
+    "columns": 4,
+    "rows": 3
+  },
+  "gridBoundaries": {
+    "x": [
+      0,
+      384,
+      768,
+      1152,
+      1536
+    ],
+    "y": [
+      0,
+      354,
+      669,
+      1024
+    ]
+  },
+  "renderPolicy": {
+    "projection": "front-orthographic",
+    "transparentPadding": 8,
+    "bottomTransparentPadding": 4,
+    "weaponsOrCharactersBakedIn": false
+  },
+  "chroma": {
+    "keyRed": 3,
+    "keyGreen": 248,
+    "keyBlue": 3,
+    "keyHex": "#03f803",
+    "keyKind": "green",
+    "transparentPixels": 1090366,
+    "partialAlphaPixels": 3906,
+    "despilledPixels": 3906
+  },
+  "sprites": [
+    {
+      "id": "metro-entrance",
+      "file": "metro-entrance.png",
+      "sourceCell": [
+        0,
+        0
+      ],
+      "size": [
+        292,
+        257
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        284,
+        253
+      ],
+      "sourceBounds": [
+        85,
+        100,
+        361,
+        345
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "koban",
+      "file": "koban.png",
+      "sourceCell": [
+        1,
+        0
+      ],
+      "size": [
+        260,
+        264
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        252,
+        260
+      ],
+      "sourceBounds": [
+        474,
+        94,
+        718,
+        346
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "vending-machine",
+      "file": "vending-machine.png",
+      "sourceCell": [
+        2,
+        0
+      ],
+      "size": [
+        176,
+        273
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        168,
+        269
+      ],
+      "sourceBounds": [
+        865,
+        86,
+        1025,
+        347
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "utility-pole",
+      "file": "utility-pole.png",
+      "sourceCell": [
+        3,
+        0
+      ],
+      "size": [
+        136,
+        335
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        128,
+        331
+      ],
+      "sourceBounds": [
+        1235,
+        30,
+        1355,
+        353
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "quarantine-barrier",
+      "file": "quarantine-barrier.png",
+      "sourceCell": [
+        0,
+        1
+      ],
+      "size": [
+        278,
+        166
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        270,
+        162
+      ],
+      "sourceBounds": [
+        91,
+        472,
+        353,
+        626
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "city-bicycle",
+      "file": "city-bicycle.png",
+      "sourceCell": [
+        1,
+        1
+      ],
+      "size": [
+        300,
+        192
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        292,
+        188
+      ],
+      "sourceBounds": [
+        437,
+        448,
+        721,
+        628
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "emergency-car",
+      "file": "emergency-car.png",
+      "sourceCell": [
+        2,
+        1
+      ],
+      "size": [
+        313,
+        160
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        305,
+        156
+      ],
+      "sourceBounds": [
+        793,
+        481,
+        1090,
+        629
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "neighborhood-shrine",
+      "file": "neighborhood-shrine.png",
+      "sourceCell": [
+        3,
+        1
+      ],
+      "size": [
+        296,
+        246
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        288,
+        242
+      ],
+      "sourceBounds": [
+        1162,
+        394,
+        1442,
+        628
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "construction-scaffold",
+      "file": "construction-scaffold.png",
+      "sourceCell": [
+        0,
+        2
+      ],
+      "size": [
+        291,
+        266
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        283,
+        262
+      ],
+      "sourceBounds": [
+        84,
+        690,
+        359,
+        944
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "emergency-generator",
+      "file": "emergency-generator.png",
+      "sourceCell": [
+        1,
+        2
+      ],
+      "size": [
+        245,
+        212
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        237,
+        208
+      ],
+      "sourceBounds": [
+        465,
+        744,
+        694,
+        944
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "rainwater-pump",
+      "file": "rainwater-pump.png",
+      "sourceCell": [
+        2,
+        2
+      ],
+      "size": [
+        236,
+        248
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        228,
+        244
+      ],
+      "sourceBounds": [
+        824,
+        708,
+        1044,
+        944
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    },
+    {
+      "id": "yomi-warp-arch",
+      "file": "yomi-warp-arch.png",
+      "sourceCell": [
+        3,
+        2
+      ],
+      "size": [
+        307,
+        285
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        299,
+        281
+      ],
+      "sourceBounds": [
+        1157,
+        671,
+        1448,
+        944
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 4,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "front-orthographic",
+      "depthUsage": "gameplay-plane",
+      "contactMode": "opaque-bottom"
+    }
+  ]
+}

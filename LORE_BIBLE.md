@@ -82,7 +82,8 @@ Yomi.
 2. Le bakufu reçoit les rapports à Edo.
 3. Iemitsu donne son ordre à la troisième veille.
 4. Akio prête serment puis suit la route de Kōshū.
-5. **Trois jours plus tard**, il atteint Kurokawa à l'aube.
+5. **Trois jours plus tard**, il atteint le col forestier de Kai à l'aube et aperçoit la fumée de Kurokawa.
+6. Il traverse la forêt noyée, la bambouseraie de Shigure et les rizières de Tsuru avant d'entrer dans la ville.
 
 ## Vocabulaire de localisation
 

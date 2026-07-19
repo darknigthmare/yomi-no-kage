@@ -1,0 +1,465 @@
+{
+  "schema": 2,
+  "zoneId": "kai-forest",
+  "assetType": "platform",
+  "count": 12,
+  "source": "assets/modular/environments/kai-forest/platforms/source/atlas-imagegen-raw.png",
+  "alphaSourceDerivedAtBuild": true,
+  "grid": {
+    "columns": 4,
+    "rows": 3
+  },
+  "gridBoundaries": {
+    "x": [
+      0,
+      419,
+      768,
+      1148,
+      1536
+    ],
+    "y": [
+      0,
+      341,
+      683,
+      1024
+    ]
+  },
+  "renderPolicy": {
+    "projection": "side-orthographic",
+    "transparentPadding": 8,
+    "bottomTransparentPadding": 8,
+    "weaponsOrCharactersBakedIn": false
+  },
+  "chroma": {
+    "keyRed": 250,
+    "keyGreen": 2,
+    "keyBlue": 249,
+    "keyHex": "#fa02f9",
+    "keyKind": "magenta",
+    "transparentPixels": 1188663,
+    "partialAlphaPixels": 962,
+    "despilledPixels": 962
+  },
+  "sprites": [
+    {
+      "id": "forest-earth-center",
+      "file": "forest-earth-center.png",
+      "sourceCell": [
+        0,
+        0
+      ],
+      "size": [
+        328,
+        178
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        320,
+        170
+      ],
+      "sourceBounds": [
+        105,
+        152,
+        417,
+        314
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "forest-earth-left",
+      "file": "forest-earth-left.png",
+      "sourceCell": [
+        1,
+        0
+      ],
+      "size": [
+        233,
+        206
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        225,
+        198
+      ],
+      "sourceBounds": [
+        494,
+        123,
+        711,
+        313
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "forest-earth-right",
+      "file": "forest-earth-right.png",
+      "sourceCell": [
+        2,
+        0
+      ],
+      "size": [
+        234,
+        200
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        226,
+        192
+      ],
+      "sourceBounds": [
+        850,
+        129,
+        1068,
+        313
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "root-cracked",
+      "file": "root-cracked.png",
+      "sourceCell": [
+        3,
+        0
+      ],
+      "size": [
+        300,
+        181
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        292,
+        173
+      ],
+      "sourceBounds": [
+        1151,
+        148,
+        1435,
+        313
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "long-fallen-log",
+      "file": "long-fallen-log.png",
+      "sourceCell": [
+        0,
+        1
+      ],
+      "size": [
+        439,
+        132
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        431,
+        124
+      ],
+      "sourceBounds": [
+        54,
+        468,
+        477,
+        584
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "short-fallen-log",
+      "file": "short-fallen-log.png",
+      "sourceCell": [
+        1,
+        1
+      ],
+      "size": [
+        215,
+        122
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        207,
+        114
+      ],
+      "sourceBounds": [
+        549,
+        471,
+        748,
+        577
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "thick-root-platform",
+      "file": "thick-root-platform.png",
+      "sourceCell": [
+        2,
+        1
+      ],
+      "size": [
+        273,
+        164
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        265,
+        156
+      ],
+      "sourceBounds": [
+        830,
+        458,
+        1087,
+        606
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "moss-stone-platform",
+      "file": "moss-stone-platform.png",
+      "sourceCell": [
+        3,
+        1
+      ],
+      "size": [
+        324,
+        136
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        316,
+        128
+      ],
+      "sourceBounds": [
+        1154,
+        476,
+        1462,
+        596
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "moss-stone-steps",
+      "file": "moss-stone-steps.png",
+      "sourceCell": [
+        0,
+        2
+      ],
+      "size": [
+        334,
+        157
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        326,
+        149
+      ],
+      "sourceBounds": [
+        49,
+        756,
+        367,
+        897
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "root-earth-slope",
+      "file": "root-earth-slope.png",
+      "sourceCell": [
+        1,
+        2
+      ],
+      "size": [
+        347,
+        211
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        339,
+        203
+      ],
+      "sourceBounds": [
+        418,
+        702,
+        749,
+        897
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "stream-stone-ledge",
+      "file": "stream-stone-ledge.png",
+      "sourceCell": [
+        2,
+        2
+      ],
+      "size": [
+        304,
+        98
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        296,
+        90
+      ],
+      "sourceBounds": [
+        813,
+        815,
+        1101,
+        897
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "fungus-pit",
+      "file": "fungus-pit.png",
+      "sourceCell": [
+        3,
+        2
+      ],
+      "size": [
+        324,
+        168
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        316,
+        160
+      ],
+      "sourceBounds": [
+        1152,
+        745,
+        1460,
+        897
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    }
+  ]
+}

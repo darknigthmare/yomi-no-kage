@@ -7,12 +7,20 @@ const animationNames = ["idle", "move", "attack", "hurt", "death"];
 const expectedCategories = {
   player: 1,
   legacy: 6,
-  regular: 20,
-  special: 20,
+  regular: 22,
+  special: 24,
   miniboss: 20,
   boss: 20,
   giant: 10,
 };
+const crossEra2DIds = new Set([
+  "new-modern-commuter",
+  "new-modern-riot-host",
+  "new-modern-response-officer",
+  "new-cyber-neon-shinobi",
+  "new-cyber-drone-corpse",
+  "new-cyber-oni-frame",
+]);
 
 const errors = [];
 const report = {
@@ -31,6 +39,11 @@ const report = {
   fpsPlayerViewFramePngs: 0,
   fpsPlayerWeaponSprites: 0,
   staleFpsWeaponSets: 0,
+  weaponRigFrames: 0,
+  enemyWeaponRigFrames: 0,
+  fpsEnemyWeaponRigFrames: 0,
+  fpsPlayerWeaponRigFrames: 0,
+  akaUshiNeckRigFrames: 0,
 };
 
 function assert(condition, message) {
@@ -60,6 +73,90 @@ function pngSize(filePath) {
   return { width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20) };
 }
 
+function validateWeaponRig(rig, label) {
+  assert(rig?.schema === 1, `${label}: weaponRig.schema invalide`);
+  assert(rig?.coordinateSpace === "frame-normalized", `${label}: espace weaponRig invalide`);
+  assert(
+    Array.isArray(rig?.renderOrder)
+      && rig.renderOrder.join(",") === "body,weapon",
+    `${label}: ordre weapon/body invalide`,
+  );
+  let count = 0;
+  for (const animation of animationNames) {
+    const frames = rig?.animations?.[animation] || [];
+    assert(frames.length === 6, `${label}: ${animation} n'a pas 6 weaponRig`);
+    for (const [index, frame] of frames.entries()) {
+      count += 1;
+      for (const hand of ["primaryHand", "secondaryHand"]) {
+        assert(
+          Array.isArray(frame?.[hand])
+            && frame[hand].length === 2
+            && frame[hand].every((value) =>
+              Number.isFinite(value) && value >= 0 && value <= 1),
+          `${label}: ${animation}/${index} ${hand} invalide`,
+        );
+      }
+      assert(Number.isFinite(frame?.angle), `${label}: ${animation}/${index} angle invalide`);
+      assert(
+        Number.isFinite(frame?.scale) && frame.scale >= 0 && frame.scale <= 2,
+        `${label}: ${animation}/${index} scale invalide`,
+      );
+      assert(
+        ["behind-body", "front-body", "hidden"].includes(frame?.layer),
+        `${label}: ${animation}/${index} layer invalide`,
+      );
+      assert(
+        animation === "death"
+          ? frame?.layer === "hidden"
+          : frame?.layer === "front-body",
+        `${label}: ${animation}/${index} doit placer l'arme au premier plan`,
+      );
+    }
+  }
+  return count;
+}
+
+function validateAttachmentRig(rig, label) {
+  assert(rig?.schema === 1, `${label}: attachmentRig.schema invalide`);
+  assert(rig?.coordinateSpace === "frame-normalized", `${label}: espace attachmentRig invalide`);
+  assert(
+    Array.isArray(rig?.renderOrder)
+      && rig.renderOrder.join(",") === "body,attachment",
+    `${label}: ordre body/attachment invalide`,
+  );
+  let count = 0;
+  for (const animation of animationNames) {
+    const frames = rig?.animations?.[animation] || [];
+    assert(frames.length === 6, `${label}: ${animation} n'a pas 6 attachmentRig`);
+    for (const [index, frame] of frames.entries()) {
+      count += 1;
+      assert(
+        Array.isArray(frame?.anchor)
+          && frame.anchor.length === 2
+          && frame.anchor.every((value) =>
+            Number.isFinite(value) && value >= 0 && value <= 1),
+        `${label}: ${animation}/${index} anchor invalide`,
+      );
+      assert(Number.isFinite(frame?.angle), `${label}: ${animation}/${index} angle invalide`);
+      assert(
+        Number.isFinite(frame?.scale) && frame.scale >= 0 && frame.scale <= 2,
+        `${label}: ${animation}/${index} scale invalide`,
+      );
+      assert(
+        ["front-body", "hidden"].includes(frame?.layer),
+        `${label}: ${animation}/${index} layer invalide`,
+      );
+      assert(
+        animation === "death"
+          ? frame?.layer === "hidden" && frame?.scale === 0
+          : frame?.layer === "front-body" && frame?.scale > 0,
+        `${label}: ${animation}/${index} visibilité incohérente`,
+      );
+    }
+  }
+  return count;
+}
+
 for (const [category, expectedCount] of Object.entries(expectedCategories)) {
   const categoryPath = path.join(modularRoot, "characters", category);
   const directories = fs.existsSync(categoryPath)
@@ -81,6 +178,33 @@ for (const [category, expectedCount] of Object.entries(expectedCategories)) {
 
     const sprite = readJson(spritePath);
     if (!sprite) continue;
+    if (crossEra2DIds.has(entry.name)) {
+      assert(sprite.schema === 2, `${category}/${entry.name}: sprite.schema doit valoir 2`);
+      assert(
+        sprite.animationContract?.view === "2d-lateral-only"
+          && sprite.animationContract?.fpsEightWay === false,
+        `${category}/${entry.name}: contrat latéral 2D invalide`,
+      );
+      assert(
+        sprite.weaponsBakedIntoBody === false
+          && sprite.animationContract?.weaponsBakedIntoBody === false,
+        `${category}/${entry.name}: arme intégrée au corps`,
+      );
+      assert(
+        sprite.viewCoverage?.mode === "2d-lateral-only"
+          && sprite.viewCoverage?.directions?.join(",") === "left",
+        `${category}/${entry.name}: couverture de vue invalide`,
+      );
+    }
+    const rigFrames = validateWeaponRig(sprite.weaponRig, `${category}/${entry.name}`);
+    report.weaponRigFrames += rigFrames;
+    if (category !== "player") report.enemyWeaponRigFrames += rigFrames;
+    if (entry.name === "giant-02-aka-ushi") {
+      report.akaUshiNeckRigFrames = validateAttachmentRig(
+        sprite.attachmentRigs?.neckRig,
+        `${category}/${entry.name}/neckRig`,
+      );
+    }
     assert(sprite.grid?.columns === 6 && sprite.grid?.rows === 5, `${category}/${entry.name}: grille autre que 6x5`);
     for (const animation of animationNames) {
       const sheetPath = path.join(folder, "sheets", `${animation}.png`);
@@ -97,26 +221,31 @@ for (const [category, expectedCount] of Object.entries(expectedCategories)) {
     report.characters += 1;
   }
 }
+assert(report.weaponRigFrames === 3090, `weaponRig frames: ${report.weaponRigFrames}, 3090 attendues`);
+assert(
+  report.enemyWeaponRigFrames === 3060,
+  `weaponRig ennemis: ${report.enemyWeaponRigFrames}, 3060 attendues`,
+);
 
 const weaponFiles = walkFiles(path.join(modularRoot, "weapons"))
   .filter((file) => file.toLowerCase().endsWith(".png"))
   .filter((file) => !/(^|[\\/])(source|sources|tmp|atlases|components)([\\/]|$)/i.test(file))
-  .filter((file) => !/(source|raw|alpha|contact|atlas|preview)/i.test(path.basename(file)));
+  .filter((file) => !/(?:^|[-_.])(source|raw|alpha|contact|atlas|preview)(?:[-_.]|$)/i.test(path.basename(file)));
 report.weapons = weaponFiles.length;
 assert(report.weapons === 48, `armes séparées: ${report.weapons}, exactement 48 attendues`);
 
 const environmentFiles = walkFiles(path.join(modularRoot, "environments"))
   .filter((file) => file.toLowerCase().endsWith(".png"))
   .filter((file) => !/(^|[\\/])(source|sources|tmp|depth-portals)([\\/]|$)/i.test(file))
-  .filter((file) => !/(source|raw|alpha|contact|atlas|preview)/i.test(path.basename(file)));
+  .filter((file) => !/(?:^|[-_.])(source|raw|alpha|contact|atlas|preview)(?:[-_.]|$)/i.test(path.basename(file)));
 report.environmentSprites = environmentFiles.length;
 report.environmentLayers = environmentFiles.filter((file) => /[\\/]layers[\\/]/i.test(file)).length;
 report.environmentProps = environmentFiles.filter((file) => /[\\/]props[\\/]/i.test(file)).length;
 report.environmentPlatforms = environmentFiles.filter((file) => /[\\/]platforms[\\/]/i.test(file)).length;
-assert(report.environmentSprites === 104, `sprites de décor: ${report.environmentSprites}, exactement 104 attendus`);
-assert(report.environmentLayers === 12, `couches de parallaxe: ${report.environmentLayers}, exactement 12 attendues`);
-assert(report.environmentProps === 36, `accessoires de décor: ${report.environmentProps}, exactement 36 attendus`);
-assert(report.environmentPlatforms === 36, `tuiles de plateforme: ${report.environmentPlatforms}, exactement 36 attendues`);
+assert(report.environmentSprites === 218, `sprites de décor: ${report.environmentSprites}, exactement 218 attendus`);
+assert(report.environmentLayers === 28, `couches de parallaxe: ${report.environmentLayers}, exactement 28 attendues`);
+assert(report.environmentProps === 86, `accessoires de décor: ${report.environmentProps}, exactement 86 attendus`);
+assert(report.environmentPlatforms === 84, `tuiles de plateforme: ${report.environmentPlatforms}, exactement 84 attendues`);
 
 const registryPath = path.join(modularRoot, "registry.json");
 const catalogPath = path.join(modularRoot, "catalog.json");
@@ -125,8 +254,48 @@ assert(fs.existsSync(catalogPath), "catalog.json absent");
 if (fs.existsSync(registryPath)) {
   const registry = readJson(registryPath);
   assert(registry?.characters?.length === report.characters, "registry.json ne contient pas tous les personnages");
-  const fpsCharacters = (registry?.characters || []).filter((entry) => entry.category !== "player");
+  const crossEra2DCharacters = (registry?.characters || [])
+    .filter((entry) => crossEra2DIds.has(entry.id));
+  assert(
+    crossEra2DCharacters.length === crossEra2DIds.size,
+    `registre: ${crossEra2DCharacters.length} ennemis inter-époques, ${crossEra2DIds.size} attendus`,
+  );
+  for (const entry of crossEra2DCharacters) {
+    assert(entry.viewCoverage === "2d-lateral-only", `${entry.id}: registre sans contrat latéral 2D`);
+    assert(entry.animationContract?.fpsEightWay === false, `${entry.id}: fpsEightWay doit rester false`);
+    assert(entry.weaponsBakedIntoBody === false, `${entry.id}: arme intégrée au corps dans le registre`);
+    assert(!entry.fpsSprite, `${entry.id}: sprite FPS 8 directions inventé`);
+  }
+  const akaUshi = (registry?.characters || [])
+    .find((entry) => entry.id === "giant-02-aka-ushi");
+  const akaUshiSprite = akaUshi
+    ? readJson(path.join(root, akaUshi.sprite))
+    : null;
+  const akaUshiCatalog = (readJson(catalogPath)?.assets || [])
+    .find((entry) => entry.id === "giant-02-aka-ushi");
+  assert(report.akaUshiNeckRigFrames === 30, "Aka-Ushi: 30 ancres neckRig attendues");
+  assert(
+    JSON.stringify(akaUshi?.attachmentRigs?.neckRig)
+      === JSON.stringify(akaUshiSprite?.attachmentRigs?.neckRig),
+    "Aka-Ushi: neckRig du registre désynchronisé",
+  );
+  assert(
+    JSON.stringify(akaUshiCatalog?.attachmentRigs?.neckRig)
+      === JSON.stringify(akaUshi?.attachmentRigs?.neckRig),
+    "Aka-Ushi: neckRig du catalogue désynchronisé",
+  );
+  const fpsCharacters = (registry?.characters || [])
+    .filter((entry) => entry.category !== "player" && entry.fpsSprite);
   for (const entry of fpsCharacters) {
+    report.fpsEnemyWeaponRigFrames += validateWeaponRig(
+      entry.fpsWeaponRig,
+      `${entry.category}/${entry.id}/fps`,
+    );
+    const fpsSprite = readJson(path.join(root, entry.fpsSprite));
+    assert(
+      JSON.stringify(entry.fpsWeaponRig) === JSON.stringify(fpsSprite?.weaponRig),
+      `${entry.category}/${entry.id}: weaponRig FPS désynchronisé`,
+    );
     for (const animation of animationNames) {
       const sheetPath = path.join(root, entry.fpsAnimations?.[animation] || "");
       assert(fs.existsSync(sheetPath), `${entry.category}/${entry.id}: planche FPS ${animation} absente`);
@@ -140,6 +309,10 @@ if (fs.existsSync(registryPath)) {
       }
     }
   }
+  assert(
+    report.fpsEnemyWeaponRigFrames === 2880,
+    `weaponRig ennemis FPS: ${report.fpsEnemyWeaponRigFrames}, 2880 attendues`,
+  );
   const loreKatanas = (registry?.weapons || []).filter((weapon) =>
     /^\d{2}-/.test(String(weapon.id || "")) && String(weapon.file || "").startsWith("assets/generated/weapons/"));
   report.staleFpsWeaponSets = (registry?.weapons || [])
@@ -149,6 +322,14 @@ if (fs.existsSync(registryPath)) {
     `anciens composites FPS d'arme encore référencés: ${report.staleFpsWeaponSets}`,
   );
   const player = (registry?.characters || []).find((entry) => entry.category === "player");
+  report.fpsPlayerWeaponRigFrames = validateWeaponRig(
+    player?.fpsWeaponRig,
+    "player/akio/fps",
+  );
+  assert(
+    report.fpsPlayerWeaponRigFrames === 30,
+    `weaponRig joueur FPS: ${report.fpsPlayerWeaponRigFrames}, 30 attendues`,
+  );
   for (const animation of animationNames) {
     const sheetPath = path.join(root, player?.fpsAnimations?.[animation] || "");
     assert(fs.existsSync(sheetPath), `player/akio: planche FPS ${animation} absente`);

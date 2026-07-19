@@ -1,0 +1,465 @@
+{
+  "schema": 2,
+  "zoneId": "tsuru-fields",
+  "assetType": "platform",
+  "count": 12,
+  "source": "assets/modular/environments/tsuru-fields/platforms/source/atlas-imagegen-raw.png",
+  "alphaSourceDerivedAtBuild": true,
+  "grid": {
+    "columns": 4,
+    "rows": 3
+  },
+  "gridBoundaries": {
+    "x": [
+      0,
+      458,
+      768,
+      1130,
+      1536
+    ],
+    "y": [
+      0,
+      341,
+      683,
+      1024
+    ]
+  },
+  "renderPolicy": {
+    "projection": "side-orthographic",
+    "transparentPadding": 8,
+    "bottomTransparentPadding": 8,
+    "weaponsOrCharactersBakedIn": false
+  },
+  "chroma": {
+    "keyRed": 251,
+    "keyGreen": 2,
+    "keyBlue": 249,
+    "keyHex": "#fb02f9",
+    "keyKind": "magenta",
+    "transparentPixels": 1165406,
+    "partialAlphaPixels": 1941,
+    "despilledPixels": 1941
+  },
+  "sprites": [
+    {
+      "id": "paddy-dike-center",
+      "file": "paddy-dike-center.png",
+      "sourceCell": [
+        0,
+        0
+      ],
+      "size": [
+        399,
+        191
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        391,
+        183
+      ],
+      "sourceBounds": [
+        51,
+        145,
+        434,
+        320
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "paddy-dike-left",
+      "file": "paddy-dike-left.png",
+      "sourceCell": [
+        1,
+        0
+      ],
+      "size": [
+        228,
+        193
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        220,
+        185
+      ],
+      "sourceBounds": [
+        515,
+        143,
+        727,
+        320
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "paddy-dike-right",
+      "file": "paddy-dike-right.png",
+      "sourceCell": [
+        2,
+        0
+      ],
+      "size": [
+        207,
+        193
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        199,
+        185
+      ],
+      "sourceBounds": [
+        835,
+        143,
+        1026,
+        320
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "muddy-cracked",
+      "file": "muddy-cracked.png",
+      "sourceCell": [
+        3,
+        0
+      ],
+      "size": [
+        359,
+        190
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        351,
+        182
+      ],
+      "sourceBounds": [
+        1141,
+        146,
+        1484,
+        320
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "long-plank",
+      "file": "long-plank.png",
+      "sourceCell": [
+        0,
+        1
+      ],
+      "size": [
+        464,
+        128
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        456,
+        120
+      ],
+      "sourceBounds": [
+        30,
+        490,
+        478,
+        602
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "short-plank",
+      "file": "short-plank.png",
+      "sourceCell": [
+        1,
+        1
+      ],
+      "size": [
+        219,
+        128
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        211,
+        120
+      ],
+      "sourceBounds": [
+        531,
+        490,
+        734,
+        602
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "straw-bale-platform",
+      "file": "straw-bale-platform.png",
+      "sourceCell": [
+        2,
+        1
+      ],
+      "size": [
+        279,
+        194
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        271,
+        186
+      ],
+      "sourceBounds": [
+        816,
+        416,
+        1079,
+        594
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "field-hut-roof",
+      "file": "field-hut-roof.png",
+      "sourceCell": [
+        3,
+        1
+      ],
+      "size": [
+        377,
+        202
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        369,
+        194
+      ],
+      "sourceBounds": [
+        1133,
+        416,
+        1494,
+        602
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "irrigation-stone-steps",
+      "file": "irrigation-stone-steps.png",
+      "sourceCell": [
+        0,
+        2
+      ],
+      "size": [
+        326,
+        154
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        318,
+        146
+      ],
+      "sourceBounds": [
+        50,
+        759,
+        360,
+        897
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "muddy-dike-slope",
+      "file": "muddy-dike-slope.png",
+      "sourceCell": [
+        1,
+        2
+      ],
+      "size": [
+        332,
+        207
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        324,
+        199
+      ],
+      "sourceBounds": [
+        426,
+        707,
+        742,
+        898
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "drainage-stone-ledge",
+      "file": "drainage-stone-ledge.png",
+      "sourceCell": [
+        2,
+        2
+      ],
+      "size": [
+        315,
+        127
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        307,
+        119
+      ],
+      "sourceBounds": [
+        806,
+        786,
+        1105,
+        897
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    },
+    {
+      "id": "flooded-plague-ditch",
+      "file": "flooded-plague-ditch.png",
+      "sourceCell": [
+        3,
+        2
+      ],
+      "size": [
+        334,
+        148
+      ],
+      "alphaBounds": [
+        8,
+        8,
+        326,
+        140
+      ],
+      "sourceBounds": [
+        1154,
+        768,
+        1472,
+        900
+      ],
+      "transparentPadding": 8,
+      "bottomTransparentPadding": 8,
+      "nonEmpty": true,
+      "alphaMode": "straight-transparent",
+      "groundAnchor": [
+        0.5,
+        1.0
+      ],
+      "projection": "side-orthographic",
+      "collision": "authored-top-edge",
+      "contactMode": "playable-top"
+    }
+  ]
+}

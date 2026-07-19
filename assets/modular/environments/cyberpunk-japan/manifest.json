@@ -1,0 +1,134 @@
+{
+  "schema": 1,
+  "id": "cyberpunk-japan",
+  "name": "Neo-Tokyo sous la pluie de néons",
+  "lore": "Une seconde rupture temporelle mène Akio dans Neo-Tokyo, où le Yomi s'est greffé aux réseaux et aux infrastructures de la cité.",
+  "gameplay": "Passerelles techniques, ruines du maglev et sanctuaires cybernétiques composent un acte final horizontal à embranchements.",
+  "generationTool": "OpenAI ImageGen built-in",
+  "prompts": {},
+  "renderStandard": {
+    "resolution": [
+      1664,
+      936
+    ],
+    "layerOrderBackToFront": [
+      "sky",
+      "far",
+      "mid",
+      "near"
+    ],
+    "skyOpaque": true,
+    "transparentLayers": true,
+    "atlasGrid": {
+      "columns": 4,
+      "rows": 3
+    }
+  },
+  "layers": {
+    "sky": {
+      "id": "sky",
+      "file": "assets/modular/environments/cyberpunk-japan/layers/sky.png",
+      "source": "assets/modular/environments/cyberpunk-japan/layers/source/sky-imagegen-raw.png",
+      "mode": "RGB",
+      "size": [
+        1664,
+        936
+      ],
+      "opaque": true
+    },
+    "far": {
+      "id": "far",
+      "file": "assets/modular/environments/cyberpunk-japan/layers/far.png",
+      "source": "assets/modular/environments/cyberpunk-japan/layers/source/far-imagegen-raw.png",
+      "mode": "RGBA",
+      "size": [
+        1664,
+        936
+      ],
+      "sourceScale": 0.839133,
+      "placement": [
+        0,
+        271
+      ],
+      "alphaBounds": [
+        5,
+        536,
+        1659,
+        868
+      ],
+      "keyRed": 5,
+      "keyGreen": 249,
+      "keyBlue": 17,
+      "keyHex": "#05f911",
+      "keyKind": "green",
+      "transparentPixels": 1204210,
+      "partialAlphaPixels": 5667,
+      "despilledPixels": 5667
+    },
+    "mid": {
+      "id": "mid",
+      "file": "assets/modular/environments/cyberpunk-japan/layers/mid.png",
+      "source": "assets/modular/environments/cyberpunk-japan/layers/source/mid-imagegen-raw.png",
+      "mode": "RGBA",
+      "size": [
+        1664,
+        936
+      ],
+      "sourceScale": 0.76682,
+      "placement": [
+        0,
+        380
+      ],
+      "alphaBounds": [
+        4,
+        426,
+        1656,
+        848
+      ],
+      "keyRed": 3,
+      "keyGreen": 249,
+      "keyBlue": 2,
+      "keyHex": "#03f902",
+      "keyKind": "green",
+      "transparentPixels": 703896,
+      "partialAlphaPixels": 1435,
+      "despilledPixels": 1435
+    },
+    "near": {
+      "id": "near",
+      "file": "assets/modular/environments/cyberpunk-japan/layers/near.png",
+      "source": "assets/modular/environments/cyberpunk-japan/layers/source/near-imagegen-raw.png",
+      "mode": "RGBA",
+      "size": [
+        1664,
+        936
+      ],
+      "sourceScale": 0.767882,
+      "placement": [
+        0,
+        379
+      ],
+      "alphaBounds": [
+        0,
+        379,
+        1664,
+        928
+      ],
+      "keyRed": 5,
+      "keyGreen": 249,
+      "keyBlue": 3,
+      "keyHex": "#05f903",
+      "keyKind": "green",
+      "transparentPixels": 1309026,
+      "partialAlphaPixels": 3397,
+      "despilledPixels": 3397
+    }
+  },
+  "propsManifest": "assets/modular/environments/cyberpunk-japan/props/manifest.json",
+  "platformsManifest": "assets/modular/environments/cyberpunk-japan/platforms/manifest.json",
+  "totals": {
+    "layers": 4,
+    "props": 12,
+    "platforms": 12
+  }
+}

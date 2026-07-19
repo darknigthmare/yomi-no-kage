@@ -506,9 +506,16 @@
       "gameplay": "Se fixe au cou du boss et élargit sa zone de charge.",
       "anchor": [
         0.5,
-        0.45
+        0.52
       ],
-      "defaultRotation": 0
+      "defaultRotation": 0,
+      "projection": "orthographic-side",
+      "attachPoint": "neckRig",
+      "renderLayer": "front-body",
+      "source": "assets/modular/weapons/giant/source/joug-tranchant-aka-ushi-face-alpha.png",
+      "legacySource": "assets/modular/weapons/giant/joug-tranchant-aka-ushi-3q-source.png",
+      "generationTool": "OpenAI ImageGen built-in",
+      "generationPrompt": "Joug d’Aka-Ushi en projection latérale orthographique, fidèle au boss, sans perspective 3/4, avec ouverture de cou lisible et deux lames séparées."
     },
     {
       "id": "belier-bambou-take-mori",

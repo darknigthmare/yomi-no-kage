@@ -2,6 +2,10 @@ tmp/
 .agents/
 .git/
 tools/__pycache__/
+audit/
+tools/
+*smoke-test.js
+smoke-test.js
 
 # Runtime uses animation sheets. Individual frame exports stay in GitHub.
 assets/modular/characters/**/frames/

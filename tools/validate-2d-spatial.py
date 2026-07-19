@@ -34,7 +34,7 @@ except ImportError as exc:  # pragma: no cover - dependency failure is explicit.
 ALPHA_THRESHOLD = 32
 RUNTIME_ALPHA_THRESHOLD = 18
 CONTACT_BAND_RATIO = 0.025
-MIN_GROUND_CONTACT_RATIO = 0.06
+MIN_GROUND_CONTACT_RATIO = 0.05
 BOTTOM_PADDING_RATIO = 0.025
 MAX_BOTTOM_PADDING_PX = 8
 BASELINE_TOLERANCE_PX = 1.0
@@ -62,6 +62,13 @@ WALL_RULES = {
     "outdoor": {"minimum_coverage": 0.42, "maximum_gap": 360.0},
     "building": {"minimum_coverage": 0.65, "maximum_gap": 220.0},
     "castle": {"minimum_coverage": 0.55, "maximum_gap": 260.0},
+}
+
+CONTEXTUAL_CONTINUITY_RULES = {
+    "natural-canopy": {"minimum_back_props": 3, "maximum_center_gap": 1500.0},
+    "bamboo-curtain": {"minimum_back_props": 3, "maximum_center_gap": 1400.0},
+    "rural-horizon": {"minimum_back_props": 3, "maximum_center_gap": 1500.0},
+    "urban-facades": {"minimum_back_props": 4, "maximum_center_gap": 1500.0},
 }
 
 ALLOWED_LAYERS = {"back", "world", "front"}
@@ -669,6 +676,64 @@ def merge_intervals(
 
 
 def validate_wall_coverage(zone: str, area: dict[str, Any]) -> list[Issue]:
+    continuity_profile = area.get("continuityProfile")
+    if continuity_profile:
+        rule = CONTEXTUAL_CONTINUITY_RULES.get(str(continuity_profile))
+        if rule is None:
+            return [
+                Issue(
+                    zone,
+                    "continuity.profile",
+                    zone,
+                    f"unsupported contextual continuity profile {continuity_profile!r}",
+                )
+            ]
+        minimum = float(area.get("minX", 0))
+        maximum = float(area.get("maxX", area.get("width", 0)))
+        back_centers = sorted(
+            float(prop["x"]) + float(prop["width"]) / 2
+            for prop in area.get("props", [])
+            if prop.get("layer") == "back"
+            and finite_number(prop.get("x"))
+            and finite_number(prop.get("width"))
+        )
+        issues: list[Issue] = []
+        if len(back_centers) < rule["minimum_back_props"]:
+            issues.append(
+                Issue(
+                    zone,
+                    "continuity.density",
+                    zone,
+                    (
+                        f"{len(back_centers)} second-plane anchors; "
+                        f"minimum for {continuity_profile} is "
+                        f"{rule['minimum_back_props']}"
+                    ),
+                )
+            )
+        checkpoints = [minimum, *back_centers, maximum]
+        widest_gap = max(
+            (
+                checkpoints[index + 1] - checkpoints[index]
+                for index in range(len(checkpoints) - 1)
+            ),
+            default=0.0,
+        )
+        if widest_gap > rule["maximum_center_gap"]:
+            issues.append(
+                Issue(
+                    zone,
+                    "continuity.gap",
+                    zone,
+                    (
+                        f"widest second-plane gap is {widest_gap:.1f}px; "
+                        f"maximum for {continuity_profile} is "
+                        f"{rule['maximum_center_gap']:.1f}px"
+                    ),
+                )
+            )
+        return issues
+
     zone_kind = str(area.get("zoneKind") or "outdoor")
     rule = WALL_RULES.get(zone_kind, WALL_RULES["outdoor"])
     minimum = float(area.get("minX", 0))

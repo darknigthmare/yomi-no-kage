@@ -1,13 +1,13 @@
 {
   "schema": 1,
   "category": "environments",
-  "count": 3,
+  "count": 7,
   "generationTool": "OpenAI ImageGen built-in",
   "generationPolicy": "Un appel ImageGen distinct pour chaque couche, atlas d’accessoires et atlas de plateformes.",
   "totals": {
-    "layers": 12,
-    "props": 36,
-    "platforms": 36
+    "layers": 28,
+    "props": 86,
+    "platforms": 84
   },
   "renderStandard": {
     "resolution": [
@@ -26,7 +26,11 @@
     },
     "transparentLayers": {
       "mode": "RGBA",
-      "sourceChroma": "#ff00ff"
+      "sourceChroma": "#ff00ff",
+      "sourceChromas": [
+        "#ff00ff",
+        "#00ff00"
+      ]
     },
     "atlasGrid": {
       "columns": 4,
@@ -65,6 +69,100 @@
       "props": {
         "sourceAtlas": "assets/modular/environments/kurokawa/props/source/atlas-imagegen-raw.png",
         "alphaAtlas": "assets/modular/environments/kurokawa/props/source/atlas-alpha.png",
+        "renderPolicy": {
+          "gameplayProps": "front-orthographic",
+          "gameplayDepthUsage": "gameplay-plane",
+          "threeQuarterVariants": "background-only",
+          "threeQuarterCollision": "none"
+        },
+        "profiles": [
+          {
+            "id": "tour-guet-kurokawa",
+            "name": "Tour de guet de Kurokawa — face",
+            "file": "assets/modular/environments/kurokawa/props/tour-guet-kurokawa.png",
+            "source": "assets/modular/environments/kurokawa/props/source/tour-guet-face-alpha.png",
+            "projection": "front-orthographic",
+            "view": "front",
+            "depthUsage": "gameplay-plane",
+            "backgroundOnly": false,
+            "renderLayer": "world",
+            "alphaMode": "binary",
+            "transparentPadding": 4,
+            "groundAnchor": [
+              0.5,
+              1.0
+            ],
+            "contactMode": "opaque-bottom",
+            "baseline": {
+              "mode": "alpha-bottom",
+              "y": 315,
+              "minimumOpaquePixels": 72,
+              "minimumOpaqueRun": 25
+            },
+            "backgroundVariant": "tour-guet-kurokawa-3q-arriere-plan"
+          },
+          {
+            "id": "foyer-incendie",
+            "name": "Foyer d’incendie — face",
+            "file": "assets/modular/environments/kurokawa/props/foyer-incendie.png",
+            "source": "assets/modular/environments/kurokawa/props/source/foyer-face-alpha.png",
+            "projection": "front-orthographic",
+            "view": "front",
+            "depthUsage": "gameplay-plane",
+            "backgroundOnly": false,
+            "renderLayer": "world",
+            "alphaMode": "binary",
+            "transparentPadding": 4,
+            "groundAnchor": [
+              0.5,
+              1.0
+            ],
+            "contactMode": "opaque-bottom",
+            "baseline": {
+              "mode": "alpha-bottom",
+              "y": 187,
+              "minimumOpaquePixels": 88,
+              "minimumOpaqueRun": 33
+            },
+            "backgroundVariant": "foyer-incendie-3q-arriere-plan"
+          },
+          {
+            "id": "tour-guet-kurokawa-3q-arriere-plan",
+            "name": "Tour de guet de Kurokawa — vue 3/4 arrière-plan",
+            "file": "assets/modular/environments/kurokawa/props/tour-guet-kurokawa-3q-arriere-plan.png",
+            "variantOf": "tour-guet-kurokawa",
+            "projection": "three-quarter",
+            "view": "three-quarter",
+            "depthUsage": "background-only",
+            "backgroundOnly": true,
+            "renderLayer": "background",
+            "collision": "none",
+            "alphaMode": "straight-transparent",
+            "groundAnchor": [
+              0.5,
+              1.0
+            ],
+            "contactMode": "visual-only"
+          },
+          {
+            "id": "foyer-incendie-3q-arriere-plan",
+            "name": "Foyer d’incendie — vue 3/4 arrière-plan",
+            "file": "assets/modular/environments/kurokawa/props/foyer-incendie-3q-arriere-plan.png",
+            "variantOf": "foyer-incendie",
+            "projection": "three-quarter",
+            "view": "three-quarter",
+            "depthUsage": "background-only",
+            "backgroundOnly": true,
+            "renderLayer": "background",
+            "collision": "none",
+            "alphaMode": "straight-transparent",
+            "groundAnchor": [
+              0.5,
+              1.0
+            ],
+            "contactMode": "visual-only"
+          }
+        ],
         "prompt": "Create one original 16-bit pixel-art ASSET ATLAS for the plague village zone “Kurokawa” in a side-scrolling game set in fictional late-feudal Japan. STRICT technical layout: exactly 4 columns × 3 rows = exactly 12 equal cells, aligned to a regular invisible grid, with one complete isolated asset centered in every cell, generous uniform empty gutters, nothing crossing a cell boundary, no extra objects. The entire background and every gutter must be perfectly flat, uniform, exact chroma-key magenta #ff00ff. Do not draw grid lines, borders, frames, panels, shadows, ground, labels, numbers, text, Japanese writing, logos, watermarks, characters, creatures, weapons, or UI. Orthographic side-view game sprites, consistent scale within type, crisp hard-edged 16-bit pixel art, limited indigo/charcoal/burnt-wood/muted-red palette, clean silhouette, no antialias fringe. Exact cell contents in reading order left-to-right, top-to-bottom: row 1: (1) intact tiled-roof minka house, (2) burned thatched minka house, (3) small white-plaster rice storehouse kura, (4) wooden village watchtower. Row 2: (5) stone well, (6) leafless scorched persimmon tree, (7) broken handcart, (8) low wooden village barrier. Row 3: (9) sealed provision barrel, (10) bundled haystack, (11) small contained burning hearth with orange embers, (12) tiny roadside protective altar with no writing or religious text. Original designs, no existing-game likeness.",
         "items": [
           "assets/modular/environments/kurokawa/props/minka-tuiles-intacte.png",
@@ -78,7 +176,9 @@
           "assets/modular/environments/kurokawa/props/tonneau-provisions.png",
           "assets/modular/environments/kurokawa/props/tas-paille.png",
           "assets/modular/environments/kurokawa/props/foyer-incendie.png",
-          "assets/modular/environments/kurokawa/props/autel-route.png"
+          "assets/modular/environments/kurokawa/props/autel-route.png",
+          "assets/modular/environments/kurokawa/props/tour-guet-kurokawa-3q-arriere-plan.png",
+          "assets/modular/environments/kurokawa/props/foyer-incendie-3q-arriere-plan.png"
         ]
       },
       "platforms": {
@@ -230,6 +330,274 @@
           "assets/modular/environments/daimyo-castle/platforms/pente-decombres.png",
           "assets/modular/environments/daimyo-castle/platforms/bord-pierre.png",
           "assets/modular/environments/daimyo-castle/platforms/fosse-racines.png"
+        ]
+      }
+    },
+    {
+      "id": "contemporary-japan",
+      "name": "Tokyo contemporain en quarantaine",
+      "lore": "La faille du Yomi projette Akio dans un Tokyo contemporain où la même contamination a survécu sous une quarantaine moderne.",
+      "gameplay": "Rues, station et équipements urbains forment des routes horizontales lisibles, avec accès en profondeur et plateformes architecturales cohérentes.",
+      "packManifest": "assets/modular/environments/contemporary-japan/manifest.json",
+      "layers": {
+        "sky": {
+          "file": "assets/modular/environments/contemporary-japan/layers/sky.png",
+          "source": "assets/modular/environments/contemporary-japan/layers/source/sky-imagegen-raw.png",
+          "prompt": "Opaque storm sky over contemporary Tokyo, moonlit rain and a restrained red Yomi fracture; no architecture or characters."
+        },
+        "far": {
+          "file": "assets/modular/environments/contemporary-japan/layers/far.png",
+          "source": "assets/modular/environments/contemporary-japan/layers/source/far-imagegen-raw.png",
+          "prompt": "Transparent far skyline of contemporary Tokyo on a flat green chroma background."
+        },
+        "mid": {
+          "file": "assets/modular/environments/contemporary-japan/layers/mid.png",
+          "source": "assets/modular/environments/contemporary-japan/layers/source/mid-imagegen-raw.png",
+          "prompt": "Transparent coherent row of Japanese urban façades, station frontage and neighborhood shrine on green chroma."
+        },
+        "near": {
+          "file": "assets/modular/environments/contemporary-japan/layers/near.png",
+          "source": "assets/modular/environments/contemporary-japan/layers/source/near-imagegen-raw.png",
+          "prompt": "Transparent near foreground of wet road edges, cables and quarantine debris with an open gameplay center."
+        }
+      },
+      "props": {
+        "sourceAtlas": "assets/modular/environments/contemporary-japan/props/source/atlas-imagegen-raw.png",
+        "manifest": "assets/modular/environments/contemporary-japan/props/manifest.json",
+        "prompt": "Twelve separate front-orthographic contemporary Japanese street props in a strict 4 by 3 green-chroma atlas.",
+        "items": [
+          "assets/modular/environments/contemporary-japan/props/metro-entrance.png",
+          "assets/modular/environments/contemporary-japan/props/koban.png",
+          "assets/modular/environments/contemporary-japan/props/vending-machine.png",
+          "assets/modular/environments/contemporary-japan/props/utility-pole.png",
+          "assets/modular/environments/contemporary-japan/props/quarantine-barrier.png",
+          "assets/modular/environments/contemporary-japan/props/city-bicycle.png",
+          "assets/modular/environments/contemporary-japan/props/emergency-car.png",
+          "assets/modular/environments/contemporary-japan/props/neighborhood-shrine.png",
+          "assets/modular/environments/contemporary-japan/props/construction-scaffold.png",
+          "assets/modular/environments/contemporary-japan/props/emergency-generator.png",
+          "assets/modular/environments/contemporary-japan/props/rainwater-pump.png",
+          "assets/modular/environments/contemporary-japan/props/yomi-warp-arch.png"
+        ]
+      },
+      "platforms": {
+        "sourceAtlas": "assets/modular/environments/contemporary-japan/platforms/source/atlas-imagegen-raw.png",
+        "manifest": "assets/modular/environments/contemporary-japan/platforms/manifest.json",
+        "prompt": "Twelve separate side-orthographic contemporary street platforms and hazards in a strict 4 by 3 green-chroma atlas.",
+        "items": [
+          "assets/modular/environments/contemporary-japan/platforms/asphalt-left.png",
+          "assets/modular/environments/contemporary-japan/platforms/asphalt-center.png",
+          "assets/modular/environments/contemporary-japan/platforms/asphalt-right.png",
+          "assets/modular/environments/contemporary-japan/platforms/asphalt-cracked.png",
+          "assets/modular/environments/contemporary-japan/platforms/concrete-curb-long.png",
+          "assets/modular/environments/contemporary-japan/platforms/concrete-curb-short.png",
+          "assets/modular/environments/contemporary-japan/platforms/footbridge-platform.png",
+          "assets/modular/environments/contemporary-japan/platforms/station-canopy.png",
+          "assets/modular/environments/contemporary-japan/platforms/scaffold-platform.png",
+          "assets/modular/environments/contemporary-japan/platforms/concrete-step.png",
+          "assets/modular/environments/contemporary-japan/platforms/rubble-ramp.png",
+          "assets/modular/environments/contemporary-japan/platforms/drainage-hazard.png"
+        ]
+      }
+    },
+    {
+      "id": "cyberpunk-japan",
+      "name": "Neo-Tokyo sous la pluie de néons",
+      "lore": "Une seconde rupture temporelle mène Akio dans Neo-Tokyo, où le Yomi s'est greffé aux réseaux et aux infrastructures de la cité.",
+      "gameplay": "Passerelles techniques, ruines du maglev et sanctuaires cybernétiques composent un acte final horizontal à embranchements.",
+      "packManifest": "assets/modular/environments/cyberpunk-japan/manifest.json",
+      "layers": {
+        "sky": {
+          "file": "assets/modular/environments/cyberpunk-japan/layers/sky.png",
+          "source": "assets/modular/environments/cyberpunk-japan/layers/source/sky-imagegen-raw.png",
+          "prompt": "Opaque Neo-Tokyo night sky with rain, distant neon haze and restrained Yomi fracture; no architecture or characters."
+        },
+        "far": {
+          "file": "assets/modular/environments/cyberpunk-japan/layers/far.png",
+          "source": "assets/modular/environments/cyberpunk-japan/layers/source/far-imagegen-raw.png",
+          "prompt": "Transparent far arcology skyline and maglev silhouettes on a flat green chroma background."
+        },
+        "mid": {
+          "file": "assets/modular/environments/cyberpunk-japan/layers/mid.png",
+          "source": "assets/modular/environments/cyberpunk-japan/layers/source/mid-imagegen-raw.png",
+          "prompt": "Transparent coherent Neo-Tokyo façade row mixing cybernetic infrastructure and Japanese rooflines on green chroma."
+        },
+        "near": {
+          "file": "assets/modular/environments/cyberpunk-japan/layers/near.png",
+          "source": "assets/modular/environments/cyberpunk-japan/layers/source/near-imagegen-raw.png",
+          "prompt": "Transparent near foreground of cables, service rails and neon debris with an open gameplay center."
+        }
+      },
+      "props": {
+        "sourceAtlas": "assets/modular/environments/cyberpunk-japan/props/source/atlas-imagegen-raw.png",
+        "manifest": "assets/modular/environments/cyberpunk-japan/props/manifest.json",
+        "prompt": "Twelve separate front-orthographic cyberpunk Japanese props in a strict 4 by 3 green-chroma atlas.",
+        "items": [
+          "assets/modular/environments/cyberpunk-japan/props/temporal-torii.png",
+          "assets/modular/environments/cyberpunk-japan/props/shrine-tech-altar.png",
+          "assets/modular/environments/cyberpunk-japan/props/ventilation-tower.png",
+          "assets/modular/environments/cyberpunk-japan/props/energy-barrier-post.png",
+          "assets/modular/environments/cyberpunk-japan/props/maglev-maintenance-car.png",
+          "assets/modular/environments/cyberpunk-japan/props/drone-charging-dock.png",
+          "assets/modular/environments/cyberpunk-japan/props/sealed-cargo-crate.png",
+          "assets/modular/environments/cyberpunk-japan/props/vending-terminal.png",
+          "assets/modular/environments/cyberpunk-japan/props/coolant-pipe.png",
+          "assets/modular/environments/cyberpunk-japan/props/cyber-shrine-lantern.png",
+          "assets/modular/environments/cyberpunk-japan/props/transit-access-gate.png",
+          "assets/modular/environments/cyberpunk-japan/props/damaged-power-relay.png"
+        ]
+      },
+      "platforms": {
+        "sourceAtlas": "assets/modular/environments/cyberpunk-japan/platforms/source/atlas-imagegen-raw.png",
+        "manifest": "assets/modular/environments/cyberpunk-japan/platforms/manifest.json",
+        "prompt": "Twelve separate side-orthographic cyberpunk street platforms and hazards in a strict 4 by 3 green-chroma atlas.",
+        "items": [
+          "assets/modular/environments/cyberpunk-japan/platforms/tech-street-left.png",
+          "assets/modular/environments/cyberpunk-japan/platforms/tech-street-center.png",
+          "assets/modular/environments/cyberpunk-japan/platforms/tech-street-right.png",
+          "assets/modular/environments/cyberpunk-japan/platforms/tech-street-cracked.png",
+          "assets/modular/environments/cyberpunk-japan/platforms/service-platform-long.png",
+          "assets/modular/environments/cyberpunk-japan/platforms/service-platform-short.png",
+          "assets/modular/environments/cyberpunk-japan/platforms/transit-platform.png",
+          "assets/modular/environments/cyberpunk-japan/platforms/shrine-tech-roof.png",
+          "assets/modular/environments/cyberpunk-japan/platforms/coolant-catwalk.png",
+          "assets/modular/environments/cyberpunk-japan/platforms/illuminated-step.png",
+          "assets/modular/environments/cyberpunk-japan/platforms/debris-ramp.png",
+          "assets/modular/environments/cyberpunk-japan/platforms/energy-trench.png"
+        ]
+      }
+    },
+    {
+      "id": "kai-forest",
+      "name": "Forêt ancienne de Kai",
+      "lore": "Les cèdres sacrés de Kai étouffent une ancienne route de charbonniers, désormais contaminée par des racines venues du Yomi.",
+      "gameplay": "Un niveau forestier horizontal à chemins superposés, troncs franchissables, racines en pente, ruisseaux et haltes de quarantaine abandonnées.",
+      "packManifest": "assets/modular/environments/kai-forest/manifest.json",
+      "layers": {
+        "sky": {
+          "file": "assets/modular/environments/kai-forest/layers/sky.png",
+          "source": "assets/modular/environments/kai-forest/layers/source/sky-imagegen-raw.png",
+          "prompt": "Opaque moonlit night sky above the ancient Kai forest, with indigo storm clouds and restrained Yomi haze; no terrain or characters."
+        },
+        "far": {
+          "file": "assets/modular/environments/kai-forest/layers/far.png",
+          "source": "assets/modular/environments/kai-forest/layers/source/far-imagegen-raw.png",
+          "prompt": "Distant wooded mountain silhouettes and mist bands for Kai forest, isolated on a flat magenta chroma background."
+        },
+        "mid": {
+          "file": "assets/modular/environments/kai-forest/layers/mid.png",
+          "source": "assets/modular/environments/kai-forest/layers/source/mid-imagegen-raw.png",
+          "prompt": "Coherent middle-distance band of giant ancient cedars, a charcoal burner shelter and ward ropes, isolated on magenta chroma."
+        },
+        "near": {
+          "file": "assets/modular/environments/kai-forest/layers/near.png",
+          "source": "assets/modular/environments/kai-forest/layers/source/near-imagegen-raw.png",
+          "prompt": "Near forest framing of roots, ferns, broken branches and fog with an open gameplay center, isolated on magenta chroma."
+        }
+      },
+      "props": {
+        "sourceAtlas": "assets/modular/environments/kai-forest/props/source/atlas-imagegen-raw.png",
+        "manifest": "assets/modular/environments/kai-forest/props/manifest.json",
+        "prompt": "Twelve separate front-orthographic Kai forest props in a strict 4 by 3 magenta-chroma atlas.",
+        "items": [
+          "assets/modular/environments/kai-forest/props/ancient-cedar-trunk.png",
+          "assets/modular/environments/kai-forest/props/hollow-fallen-log.png",
+          "assets/modular/environments/kai-forest/props/charcoal-burner-shelter.png",
+          "assets/modular/environments/kai-forest/props/moss-stone-lantern.png",
+          "assets/modular/environments/kai-forest/props/woodcutter-cart.png",
+          "assets/modular/environments/kai-forest/props/stacked-logs.png",
+          "assets/modular/environments/kai-forest/props/rope-ward-gate.png",
+          "assets/modular/environments/kai-forest/props/forest-spring-basin.png",
+          "assets/modular/environments/kai-forest/props/collapsed-quarantine-tent.png",
+          "assets/modular/environments/kai-forest/props/infected-root-cluster.png",
+          "assets/modular/environments/kai-forest/props/campfire-ring.png",
+          "assets/modular/environments/kai-forest/props/yomi-cave-arch.png"
+        ]
+      },
+      "platforms": {
+        "sourceAtlas": "assets/modular/environments/kai-forest/platforms/source/atlas-imagegen-raw.png",
+        "manifest": "assets/modular/environments/kai-forest/platforms/manifest.json",
+        "prompt": "Twelve separate side-orthographic forest earth, log, root, stone and hazard platforms in a strict 4 by 3 magenta-chroma atlas.",
+        "items": [
+          "assets/modular/environments/kai-forest/platforms/forest-earth-center.png",
+          "assets/modular/environments/kai-forest/platforms/forest-earth-left.png",
+          "assets/modular/environments/kai-forest/platforms/forest-earth-right.png",
+          "assets/modular/environments/kai-forest/platforms/root-cracked.png",
+          "assets/modular/environments/kai-forest/platforms/long-fallen-log.png",
+          "assets/modular/environments/kai-forest/platforms/short-fallen-log.png",
+          "assets/modular/environments/kai-forest/platforms/thick-root-platform.png",
+          "assets/modular/environments/kai-forest/platforms/moss-stone-platform.png",
+          "assets/modular/environments/kai-forest/platforms/moss-stone-steps.png",
+          "assets/modular/environments/kai-forest/platforms/root-earth-slope.png",
+          "assets/modular/environments/kai-forest/platforms/stream-stone-ledge.png",
+          "assets/modular/environments/kai-forest/platforms/fungus-pit.png"
+        ]
+      }
+    },
+    {
+      "id": "tsuru-fields",
+      "name": "Rizières de Tsuru",
+      "lore": "Les rizières de Tsuru, autrefois grenier du domaine, ont été noyées pour ralentir les infectés avant que la peste n'empoisonne les canaux.",
+      "gameplay": "Un niveau rural ouvert alternant digues, passerelles, toits de grange, canaux et raccourcis en profondeur autour des cultures condamnées.",
+      "packManifest": "assets/modular/environments/tsuru-fields/manifest.json",
+      "layers": {
+        "sky": {
+          "file": "assets/modular/environments/tsuru-fields/layers/sky.png",
+          "source": "assets/modular/environments/tsuru-fields/layers/source/sky-imagegen-raw.png",
+          "prompt": "Opaque storm sky over the flooded Tsuru rice fields, with cold dawn light and distant plague smoke; no terrain or characters."
+        },
+        "far": {
+          "file": "assets/modular/environments/tsuru-fields/layers/far.png",
+          "source": "assets/modular/environments/tsuru-fields/layers/source/far-imagegen-raw.png",
+          "prompt": "Distant rural hills, levees and tree silhouettes behind Tsuru fields, isolated on a flat magenta chroma background."
+        },
+        "mid": {
+          "file": "assets/modular/environments/tsuru-fields/layers/mid.png",
+          "source": "assets/modular/environments/tsuru-fields/layers/source/mid-imagegen-raw.png",
+          "prompt": "Coherent middle-distance rice-field band with watermill, hut, bridges and flooded paddies, isolated on magenta chroma."
+        },
+        "near": {
+          "file": "assets/modular/environments/tsuru-fields/layers/near.png",
+          "source": "assets/modular/environments/tsuru-fields/layers/source/near-imagegen-raw.png",
+          "prompt": "Near rice-field framing of reeds, water channels, broken fencing and muddy banks with an open center, isolated on magenta chroma."
+        }
+      },
+      "props": {
+        "sourceAtlas": "assets/modular/environments/tsuru-fields/props/source/atlas-imagegen-raw.png",
+        "manifest": "assets/modular/environments/tsuru-fields/props/manifest.json",
+        "prompt": "Twelve separate front-orthographic Tsuru field props in a strict 4 by 3 magenta-chroma atlas.",
+        "items": [
+          "assets/modular/environments/tsuru-fields/props/field-hut.png",
+          "assets/modular/environments/tsuru-fields/props/irrigation-water-wheel.png",
+          "assets/modular/environments/tsuru-fields/props/farm-cart.png",
+          "assets/modular/environments/tsuru-fields/props/bound-rice-sheaf.png",
+          "assets/modular/environments/tsuru-fields/props/irrigation-sluice.png",
+          "assets/modular/environments/tsuru-fields/props/field-footbridge.png",
+          "assets/modular/environments/tsuru-fields/props/scarecrow.png",
+          "assets/modular/environments/tsuru-fields/props/wooden-granary.png",
+          "assets/modular/environments/tsuru-fields/props/straw-bales.png",
+          "assets/modular/environments/tsuru-fields/props/field-marker.png",
+          "assets/modular/environments/tsuru-fields/props/burning-crop-pile.png",
+          "assets/modular/environments/tsuru-fields/props/yomi-warp-torii.png"
+        ]
+      },
+      "platforms": {
+        "sourceAtlas": "assets/modular/environments/tsuru-fields/platforms/source/atlas-imagegen-raw.png",
+        "manifest": "assets/modular/environments/tsuru-fields/platforms/manifest.json",
+        "prompt": "Twelve separate side-orthographic paddy dikes, planks, roofs, stone ledges and hazards in a strict 4 by 3 magenta-chroma atlas.",
+        "items": [
+          "assets/modular/environments/tsuru-fields/platforms/paddy-dike-center.png",
+          "assets/modular/environments/tsuru-fields/platforms/paddy-dike-left.png",
+          "assets/modular/environments/tsuru-fields/platforms/paddy-dike-right.png",
+          "assets/modular/environments/tsuru-fields/platforms/muddy-cracked.png",
+          "assets/modular/environments/tsuru-fields/platforms/long-plank.png",
+          "assets/modular/environments/tsuru-fields/platforms/short-plank.png",
+          "assets/modular/environments/tsuru-fields/platforms/straw-bale-platform.png",
+          "assets/modular/environments/tsuru-fields/platforms/field-hut-roof.png",
+          "assets/modular/environments/tsuru-fields/platforms/irrigation-stone-steps.png",
+          "assets/modular/environments/tsuru-fields/platforms/muddy-dike-slope.png",
+          "assets/modular/environments/tsuru-fields/platforms/drainage-stone-ledge.png",
+          "assets/modular/environments/tsuru-fields/platforms/flooded-plague-ditch.png"
         ]
       }
     }

@@ -33,24 +33,118 @@ function assertPng(webPath, label) {
   assert(fs.statSync(filePath).size > 80, `${label}: fichier vide ou tronqué (${webPath})`);
 }
 
+function assertWeaponRig(rig, label) {
+  assert(rig?.schema === 1, `${label}: weaponRig.schema doit valoir 1`);
+  assert(
+    rig?.coordinateSpace === "frame-normalized",
+    `${label}: weaponRig.coordinateSpace invalide`,
+  );
+  assert(
+    Array.isArray(rig?.renderOrder)
+      && rig.renderOrder.join(",") === "body,weapon",
+    `${label}: ordre weapon/body invalide`,
+  );
+  let frameCount = 0;
+  for (const animation of ["idle", "move", "attack", "hurt", "death"]) {
+    const frames = rig?.animations?.[animation];
+    assert(Array.isArray(frames) && frames.length === 6, `${label}/${animation}: 6 rigs attendus`);
+    for (const [index, frame] of (frames || []).entries()) {
+      frameCount += 1;
+      for (const hand of ["primaryHand", "secondaryHand"]) {
+        assert(
+          Array.isArray(frame?.[hand])
+            && frame[hand].length === 2
+            && frame[hand].every((value) =>
+              Number.isFinite(value) && value >= 0 && value <= 1),
+          `${label}/${animation}/${index}: ${hand} invalide`,
+        );
+      }
+      assert(Number.isFinite(frame?.angle), `${label}/${animation}/${index}: angle invalide`);
+      assert(
+        Number.isFinite(frame?.scale) && frame.scale >= 0 && frame.scale <= 2,
+        `${label}/${animation}/${index}: scale invalide`,
+      );
+      assert(
+        ["behind-body", "front-body", "hidden"].includes(frame?.layer),
+        `${label}/${animation}/${index}: layer invalide`,
+      );
+      if (animation === "death") {
+        assert(frame?.layer === "hidden", `${label}/${animation}/${index}: arme de mort visible`);
+      } else {
+        assert(frame?.scale > 0, `${label}/${animation}/${index}: arme vivante masquee`);
+        assert(
+          frame?.layer === "front-body",
+          `${label}/${animation}/${index}: arme vivante pas au premier plan`,
+        );
+      }
+    }
+  }
+  return frameCount;
+}
+
+function assertAttachmentRig(rig, label) {
+  assert(rig?.schema === 1, `${label}: attachmentRig.schema doit valoir 1`);
+  assert(
+    rig?.coordinateSpace === "frame-normalized",
+    `${label}: attachmentRig.coordinateSpace invalide`,
+  );
+  assert(
+    Array.isArray(rig?.renderOrder)
+      && rig.renderOrder.join(",") === "body,attachment",
+    `${label}: ordre body/attachment invalide`,
+  );
+  let frameCount = 0;
+  for (const animation of ["idle", "move", "attack", "hurt", "death"]) {
+    const frames = rig?.animations?.[animation];
+    assert(Array.isArray(frames) && frames.length === 6, `${label}/${animation}: 6 ancres attendues`);
+    for (const [index, frame] of (frames || []).entries()) {
+      frameCount += 1;
+      assert(
+        Array.isArray(frame?.anchor)
+          && frame.anchor.length === 2
+          && frame.anchor.every((value) =>
+            Number.isFinite(value) && value >= 0 && value <= 1),
+        `${label}/${animation}/${index}: anchor invalide`,
+      );
+      assert(Number.isFinite(frame?.angle), `${label}/${animation}/${index}: angle invalide`);
+      assert(
+        Number.isFinite(frame?.scale) && frame.scale >= 0 && frame.scale <= 2,
+        `${label}/${animation}/${index}: scale invalide`,
+      );
+      if (animation === "death") {
+        assert(
+          frame?.layer === "hidden" && frame?.scale === 0,
+          `${label}/${animation}/${index}: pièce de mort visible`,
+        );
+      } else {
+        assert(
+          frame?.layer === "front-body" && frame?.scale > 0,
+          `${label}/${animation}/${index}: pièce vivante mal placée`,
+        );
+      }
+    }
+  }
+  return frameCount;
+}
+
 const catalog = readJson(catalogPath);
 const registry = readJson(registryPath);
 if (!catalog || !registry) process.exit(1);
 
 const expectedCounts = {
-  characters: 97,
+  characters: 103,
   players: 1,
-  enemies: 96,
-  regular: 20,
-  special: 20,
+  enemies: 102,
+  regular: 22,
+  special: 24,
   miniboss: 20,
   boss: 20,
   giant: 10,
-  animationSheets: 485,
-  framePngs: 2910,
+  animationSheets: 515,
+  framePngs: 3090,
   weapons: 58,
-  environmentSprites: 104,
-  catalogAssets: 259,
+  environmentSprites: 218,
+  catalogAssets: 379,
 };
 
 for (const [key, expected] of Object.entries(expectedCounts)) {
@@ -74,9 +168,74 @@ for (const asset of catalog.assets || []) {
 }
 
 const animationNames = ["idle", "move", "attack", "hurt", "death"];
+const crossEra2DIds = new Set([
+  "new-modern-commuter",
+  "new-modern-riot-host",
+  "new-modern-response-officer",
+  "new-cyber-neon-shinobi",
+  "new-cyber-drone-corpse",
+  "new-cyber-oni-frame",
+]);
+const catalogById = new Map((catalog.assets || []).map((asset) => [asset.id, asset]));
+let weaponRigFrames = 0;
+let enemyWeaponRigFrames = 0;
+let fpsEnemyWeaponRigFrames = 0;
 for (const character of registry.characters || []) {
   assertPng(character.file, `${character.id}/master`);
   const sprite = readJson(localFile(character.sprite));
+  const characterRigFrames = assertWeaponRig(character.weaponRig, character.id);
+  weaponRigFrames += characterRigFrames;
+  if (character.category !== "player") enemyWeaponRigFrames += characterRigFrames;
+  assert(
+    JSON.stringify(character.weaponRig) === JSON.stringify(sprite?.weaponRig),
+    `${character.id}: weaponRig du registre desynchronise`,
+  );
+  assert(
+    JSON.stringify(catalogById.get(character.id)?.weaponRig)
+      === JSON.stringify(character.weaponRig),
+    `${character.id}: weaponRig du catalogue desynchronise`,
+  );
+  if (character.category !== "player" && character.fpsSprite) {
+    const fpsSprite = readJson(localFile(character.fpsSprite));
+    fpsEnemyWeaponRigFrames += assertWeaponRig(
+      character.fpsWeaponRig,
+      `${character.id}/fps`,
+    );
+    assert(
+      JSON.stringify(character.fpsWeaponRig) === JSON.stringify(fpsSprite?.weaponRig),
+      `${character.id}/fps: weaponRig du registre desynchronise`,
+    );
+    assert(
+      JSON.stringify(catalogById.get(character.id)?.fpsWeaponRig)
+        === JSON.stringify(character.fpsWeaponRig),
+      `${character.id}/fps: weaponRig du catalogue desynchronise`,
+    );
+  }
+  if (crossEra2DIds.has(character.id)) {
+    assert(character.viewCoverage === "2d-lateral-only", `${character.id}: couverture latérale 2D absente`);
+    assert(character.animationContract?.fpsEightWay === false, `${character.id}: fpsEightWay doit rester false`);
+    assert(character.animationContract?.weaponsBakedIntoBody === false, `${character.id}: arme intégrée au contrat`);
+    assert(character.weaponsBakedIntoBody === false, `${character.id}: arme intégrée au corps`);
+    assert(!character.fpsSprite, `${character.id}: couverture FPS inventée`);
+    assert(sprite?.schema === 2, `${character.id}: sprite.schema doit valoir 2`);
+  }
+  if (character.id === "giant-02-aka-ushi") {
+    const neckRigFrames = assertAttachmentRig(
+      character.attachmentRigs?.neckRig,
+      `${character.id}/neckRig`,
+    );
+    assert(neckRigFrames === 30, `${character.id}/neckRig: 30 ancres attendues`);
+    assert(
+      JSON.stringify(character.attachmentRigs?.neckRig)
+        === JSON.stringify(sprite?.attachmentRigs?.neckRig),
+      `${character.id}: neckRig du registre désynchronisé`,
+    );
+    assert(
+      JSON.stringify(catalogById.get(character.id)?.attachmentRigs?.neckRig)
+        === JSON.stringify(character.attachmentRigs?.neckRig),
+      `${character.id}: neckRig du catalogue désynchronisé`,
+    );
+  }
   assert(sprite?.grid?.columns === 6 && sprite?.grid?.rows === 5, `${character.id}: grille autre que 6x5`);
   assert(sprite?.weaponMount?.normalized === true, `${character.id}: point de prise normalisé absent`);
   for (const animation of animationNames) {
@@ -94,6 +253,22 @@ for (const character of registry.characters || []) {
   }
 }
 
+assert(weaponRigFrames === 3090, `weaponRig frames: ${weaponRigFrames}, 3090 attendues`);
+assert(enemyWeaponRigFrames === 3060, `weaponRig ennemis: ${enemyWeaponRigFrames}, 3060 attendues`);
+assert(
+  fpsEnemyWeaponRigFrames === 2880,
+  `weaponRig ennemis FPS: ${fpsEnemyWeaponRigFrames}, 2880 attendues`,
+);
+
+const player = (registry.characters || []).find((character) => character.category === "player");
+const fpsPlayerSprite = player?.fpsSprite ? readJson(localFile(player.fpsSprite)) : null;
+const fpsPlayerRigFrames = assertWeaponRig(player?.fpsWeaponRig, "player/akio/fps");
+assert(fpsPlayerRigFrames === 30, `weaponRig joueur FPS: ${fpsPlayerRigFrames}, 30 attendues`);
+assert(
+  JSON.stringify(player?.fpsWeaponRig) === JSON.stringify(fpsPlayerSprite?.weaponRig),
+  "player/akio/fps: weaponRig du registre desynchronise",
+);
+
 const modularWeapons = (registry.weapons || []).filter((weapon) =>
   String(weapon.file || "").startsWith("assets/modular/weapons/"),
 );
@@ -107,9 +282,40 @@ for (const weapon of modularWeapons) {
 }
 
 for (const character of registry.characters || []) {
-  if (["player", "legacy"].includes(character.category)) continue;
+  if (character.category === "player") continue;
   assert(character.weaponId, `${character.id}: weaponId manquant`);
   assert(modularWeaponIds.has(character.weaponId), `${character.id}: weaponId non résolu (${character.weaponId})`);
+}
+
+const environmentByFile = new Map(
+  (registry.environments || []).map((asset) => [asset.file, asset]),
+);
+for (const [id, file, variantFile] of [
+  [
+    "tour-guet-kurokawa",
+    "assets/modular/environments/kurokawa/props/tour-guet-kurokawa.png",
+    "assets/modular/environments/kurokawa/props/tour-guet-kurokawa-3q-arriere-plan.png",
+  ],
+  [
+    "foyer-incendie",
+    "assets/modular/environments/kurokawa/props/foyer-incendie.png",
+    "assets/modular/environments/kurokawa/props/foyer-incendie-3q-arriere-plan.png",
+  ],
+]) {
+  const front = environmentByFile.get(file);
+  const background = environmentByFile.get(variantFile);
+  assert(front?.projection === "front-orthographic", `${id}: projection frontale absente du registre`);
+  assert(front?.alphaMode === "binary", `${id}: alpha binaire absent du registre`);
+  assert(front?.depthUsage === "gameplay-plane" && front?.backgroundOnly === false, `${id}: usage gameplay invalide`);
+  assert(front?.contactMode === "opaque-bottom" && front?.baseline?.mode === "alpha-bottom", `${id}: contrat de contact absent`);
+  assert(background?.projection === "three-quarter", `${id}: projection 3/4 absente`);
+  assert(
+    background?.depthUsage === "background-only"
+      && background?.backgroundOnly === true
+      && background?.renderLayer === "background"
+      && background?.collision === "none",
+    `${id}: variante 3/4 non reservee a l'arriere-plan`,
+  );
 }
 
 const report = {
@@ -119,6 +325,10 @@ const report = {
   characters: registry.characters?.length || 0,
   modularWeapons: modularWeapons.length,
   environments: registry.environments?.length || 0,
+  weaponRigFrames,
+  enemyWeaponRigFrames,
+  fpsEnemyWeaponRigFrames,
+  fpsPlayerRigFrames,
   errors,
 };
 

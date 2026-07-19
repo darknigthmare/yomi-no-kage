@@ -55,12 +55,12 @@
     },
     {
       image: "assets/generated/cinematics/prologue-06-kurokawa.png",
-      alt: "Après trois jours de voyage, Akio fait face au village en flammes par-delà un grand torii ouvert sur la route.",
+      alt: "Après trois jours de voyage, Akio atteint le col noyé de Kai ; au-delà de la forêt, la fumée de Kurokawa assombrit l'horizon.",
       kicker: "TROIS JOURS PLUS TARD — PROVINCE DE KAI",
-      location: "AU SEUIL DE YOMI",
-      narration: "Trois jours de pluie, de cols déserts et de relais silencieux menèrent Akio jusqu'à Kurokawa.",
+      location: "COL FORESTIER DE KAI",
+      narration: "Trois jours de pluie menèrent Akio aux marches de la province. Entre lui et Kurokawa : la forêt noyée, la bambouseraie de Shigure et les rizières de Tsuru.",
       speaker: "AKIO KAGEYAMA",
-      dialogue: "Que vos noms survivent à cette nuit.",
+      dialogue: "Je suivrai la fumée jusqu'à sa source.",
       duration: 11000,
       motion: "right",
     },
@@ -509,7 +509,7 @@
     speaker.textContent = hasDialogue ? shot.speaker : "";
     line.textContent = hasDialogue ? shot.dialogue : "";
     nextButton.firstChild.textContent = index === shots.length - 1
-      ? "RECEVOIR L'ORDRE "
+      ? "OUVRIR LE BRIEFING "
       : "PLAN SUIVANT ";
     if (previousButton) previousButton.disabled = index === 0;
 
@@ -557,7 +557,7 @@
     event?.preventDefault();
     event?.stopImmediatePropagation();
     if (active) return;
-    if (!newGameStartApproved && hasContinuableChronicle()) {
+    if (previewShotIndex === null && !newGameStartApproved && hasContinuableChronicle()) {
       openNewGameConfirm();
       return;
     }

@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "generationTool": "OpenAI ImageGen built-in",
+  "runtimeFrames": [
+    "assets/generated/cinematics/prologue-01-peste.png",
+    "assets/generated/cinematics/prologue-02-cloche.png",
+    "assets/generated/cinematics/prologue-03-foyers.png",
+    "assets/generated/cinematics/prologue-04-ordre.png",
+    "assets/generated/cinematics/prologue-05-serment.png",
+    "assets/generated/cinematics/prologue-06-kurokawa.png"
+  ],
+  "updatedFrame": {
+    "id": "prologue-06-kurokawa",
+    "source": "assets/generated/cinematics/prologue-06-kurokawa-town-source.png",
+    "output": "assets/generated/cinematics/prologue-06-kurokawa.png",
+    "generatedImage": "call_OQDMOMzuxDmMDYqg8ID8qRme.png",
+    "dimensions": [
+      1672,
+      941
+    ],
+    "prompt": "Preserve Akio Kageyama, his armor, pose, scale and the nocturnal pixel-art palette. Replace the close Kurokawa street with the forest pass of Kai: muddy cedar road in the foreground, bamboo grove in the middle distance, terraced rice fields beyond it, and the burning fortified town only as a small distant silhouette. Remove the foreground torii and any impression that Akio is already inside the city. No text, UI, logo or border."
+  }
+}

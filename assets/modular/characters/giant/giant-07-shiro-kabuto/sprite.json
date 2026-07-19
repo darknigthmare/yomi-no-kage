@@ -431,5 +431,416 @@
       0.6,
       0.66
     ]
+  },
+  "weaponRig": {
+    "schema": 1,
+    "coordinateSpace": "frame-normalized",
+    "facing": "left",
+    "renderOrder": [
+      "body",
+      "weapon"
+    ],
+    "animations": {
+      "idle": [
+        {
+          "primaryHand": [
+            0.7168,
+            0.822
+          ],
+          "secondaryHand": [
+            0.3535,
+            0.7537
+          ],
+          "angle": 0.1858,
+          "scale": 0.7528,
+          "layer": "front-body"
+        },
+        {
+          "primaryHand": [
+            0.8066,
+            0.5537
+          ],
+          "secondaryHand": [
+            0.3418,
+            0.7634
+          ],
+          "angle": -0.4238,
+          "scale": 0.7528,
+          "layer": "front-body"
+        },
+        {
+          "primaryHand": [
+            0.7754,
+            0.4951
+          ],
+          "secondaryHand": [
+            0.334,
+            0.7585
+          ],
+          "angle": -0.538,
+          "scale": 0.7528,
+          "layer": "front-body"
+        },
+        {
+          "primaryHand": [
+            0.7793,
+            0.4512
+          ],
+          "secondaryHand": [
+            0.3457,
+            0.7488
+          ],
+          "angle": -0.6015,
+          "scale": 0.7528,
+          "layer": "front-body"
+        },
+        {
+          "primaryHand": [
+            0.6934,
+            0.8171
+          ],
+          "secondaryHand": [
+            0.3457,
+            0.7537
+          ],
+          "angle": 0.1804,
+          "scale": 0.7528,
+          "layer": "front-body"
+        },
+        {
+          "primaryHand": [
+            0.709,
+            0.8268
+          ],
+          "secondaryHand": [
+            0.3887,
+            0.7585
+          ],
+          "angle": 0.2101,
+          "scale": 0.7528,
+          "layer": "front-body"
+        }
+      ],
+      "move": [
+        {
+          "primaryHand": [
+            0.1348,
+            0.6463
+          ],
+          "secondaryHand": [
+            0.3926,
+            0.7829
+          ],
+          "angle": -2.6543,
+          "scale": 0.7788,
+          "layer": "front-body"
+        },
+        {
+          "primaryHand": [
+            0.1465,
+            0.661
+          ],
+          "secondaryHand": [
+            0.4434,
+            0.822
+          ],
+          "angle": -2.6447,
+          "scale": 0.7788,
+          "layer": "front-body"
+        },
+        {
+          "primaryHand": [
+            0.1504,
+            0.6659
+          ],
+          "secondaryHand": [
+            0.4043,
+            0.822
+          ],
+          "angle": -2.5904,
+          "scale": 0.7788,
+          "layer": "front-body"
+        },
+        {
+          "primaryHand": [
+            0.1465,
+            0.6756
+          ],
+          "secondaryHand": [
+            0.4277,
+            0.8268
+          ],
+          "angle": -2.6482,
+          "scale": 0.7788,
+          "layer": "front-body"
+        },
+        {
+          "primaryHand": [
+            0.1465,
+            0.6707
+          ],
+          "secondaryHand": [
+            0.4199,
+            0.8122
+          ],
+          "angle": -2.664,
+          "scale": 0.7788,
+          "layer": "front-body"
+        },
+        {
+          "primaryHand": [
+            0.1348,
+            0.6805
+          ],
+          "secondaryHand": [
+            0.4004,
+            0.8122
+          ],
+          "angle": -2.6813,
+          "scale": 0.7788,
+          "layer": "front-body"
+        }
+      ],
+      "attack": [
+        {
+          "primaryHand": [
+            0.123,
+            0.527
+          ],
+          "secondaryHand": [
+            0.3574,
+            0.5662
+          ],
+          "angle": -2.9759,
+          "scale": 0.8567,
+          "layer": "front-body"
+        },
+        {
+          "primaryHand": [
+            0.0762,
+            0.5221
+          ],
+          "secondaryHand": [
+            0.3105,
+            0.6985
+          ],
+          "angle": -2.4963,
+          "scale": 0.8567,
+          "layer": "front-body"
+        },
+        {
+          "primaryHand": [
+            0.2207,
+            0.6103
+          ],
+          "secondaryHand": [
+            0.3379,
+            0.6495
+          ],
+          "angle": -2.8188,
+          "scale": 0.76,
+          "layer": "front-body"
+        },
+        {
+          "primaryHand": [
+            0.1113,
+            0.6593
+          ],
+          "secondaryHand": [
+            0.3027,
+            0.7721
+          ],
+          "angle": -2.609,
+          "scale": 0.8566,
+          "layer": "front-body"
+        },
+        {
+          "primaryHand": [
+            0.123,
+            0.6887
+          ],
+          "secondaryHand": [
+            0.2871,
+            0.527
+          ],
+          "angle": 2.3636,
+          "scale": 0.8567,
+          "layer": "front-body"
+        },
+        {
+          "primaryHand": [
+            0.1035,
+            0.6887
+          ],
+          "secondaryHand": [
+            0.2715,
+            0.5564
+          ],
+          "angle": 2.4745,
+          "scale": 0.8485,
+          "layer": "front-body"
+        }
+      ],
+      "hurt": [
+        {
+          "primaryHand": [
+            0.1582,
+            0.5439
+          ],
+          "secondaryHand": [
+            0.2402,
+            0.5976
+          ],
+          "angle": -2.5618,
+          "scale": 0.6013,
+          "layer": "front-body"
+        },
+        {
+          "primaryHand": [
+            0.1777,
+            0.539
+          ],
+          "secondaryHand": [
+            0.248,
+            0.5585
+          ],
+          "angle": -2.871,
+          "scale": 0.5812,
+          "layer": "front-body"
+        },
+        {
+          "primaryHand": [
+            0.2168,
+            0.5732
+          ],
+          "secondaryHand": [
+            0.2793,
+            0.6122
+          ],
+          "angle": -2.5837,
+          "scale": 0.5818,
+          "layer": "front-body"
+        },
+        {
+          "primaryHand": [
+            0.1426,
+            0.5976
+          ],
+          "secondaryHand": [
+            0.3184,
+            0.7098
+          ],
+          "angle": -2.5735,
+          "scale": 0.69,
+          "layer": "front-body"
+        },
+        {
+          "primaryHand": [
+            0.1738,
+            0.6415
+          ],
+          "secondaryHand": [
+            0.3691,
+            0.4805
+          ],
+          "angle": 2.4522,
+          "scale": 0.7009,
+          "layer": "front-body"
+        },
+        {
+          "primaryHand": [
+            0.1465,
+            0.6415
+          ],
+          "secondaryHand": [
+            0.3965,
+            0.4366
+          ],
+          "angle": 2.455,
+          "scale": 0.7009,
+          "layer": "front-body"
+        }
+      ],
+      "death": [
+        {
+          "primaryHand": [
+            0.4941,
+            0.8512
+          ],
+          "secondaryHand": [
+            0.6582,
+            0.8366
+          ],
+          "angle": 0.0,
+          "scale": 0.0,
+          "layer": "hidden"
+        },
+        {
+          "primaryHand": [
+            0.4785,
+            0.8659
+          ],
+          "secondaryHand": [
+            0.6191,
+            0.8561
+          ],
+          "angle": 0.0,
+          "scale": 0.0,
+          "layer": "hidden"
+        },
+        {
+          "primaryHand": [
+            0.4785,
+            0.9146
+          ],
+          "secondaryHand": [
+            0.7168,
+            0.6561
+          ],
+          "angle": 0.0,
+          "scale": 0.0,
+          "layer": "hidden"
+        },
+        {
+          "primaryHand": [
+            0.5215,
+            0.5537
+          ],
+          "secondaryHand": [
+            0.6191,
+            0.6024
+          ],
+          "angle": 0.0,
+          "scale": 0.0,
+          "layer": "hidden"
+        },
+        {
+          "primaryHand": [
+            0.5059,
+            0.5585
+          ],
+          "secondaryHand": [
+            0.5957,
+            0.578
+          ],
+          "angle": 0.0,
+          "scale": 0.0,
+          "layer": "hidden"
+        },
+        {
+          "primaryHand": [
+            0.498,
+            0.9195
+          ],
+          "secondaryHand": [
+            0.6582,
+            0.778
+          ],
+          "angle": 0.0,
+          "scale": 0.0,
+          "layer": "hidden"
+        }
+      ]
+    }
   }
 }
