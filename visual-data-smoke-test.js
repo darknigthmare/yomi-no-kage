@@ -388,7 +388,24 @@ for (const id of [
 }
 
 const fpsMaterials = KageLevels.visualStandards?.fpsMaterials;
-assert(fpsMaterials?.tiles?.length === 8, "bibliothèque FPS sémantique incomplète");
+const surfaceProfiles = KageLevels.visualStandards?.surfaceProfiles;
+for (const [profileId, footstep] of [
+  ["asphalt", "asphalt"],
+  ["metal", "metal"],
+  ["techMetal", "tech"],
+  ["techStreet", "tech"],
+]) {
+  assert(
+    surfaceProfiles?.[profileId]?.footstep === footstep,
+    `profil de surface ${profileId}: SFX ${footstep} absent`,
+  );
+}
+assert(fpsMaterials?.tiles?.length === 24, "bibliothèque FPS sémantique incomplète");
+assert(
+  ["feudal", "contemporary", "cyber"].every((atlasId) =>
+    fpsMaterials?.atlases?.[atlasId]?.src),
+  "banques de textures FPS par époque incomplètes",
+);
 assert(fpsMaterials?.profiles?.["kurokawa-donjon"]?.circulation === "castle-wall", "matériau du donjon non sémantique");
 assert(
   fpsMaterials?.profiles?.["kurokawa-donjon"]?.forbiddenInteriorMaterials?.includes("quarantine-palisade"),

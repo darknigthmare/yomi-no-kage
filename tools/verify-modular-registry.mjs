@@ -132,19 +132,19 @@ const registry = readJson(registryPath);
 if (!catalog || !registry) process.exit(1);
 
 const expectedCounts = {
-  characters: 103,
+  characters: 106,
   players: 1,
-  enemies: 102,
+  enemies: 105,
   regular: 22,
   special: 24,
-  miniboss: 20,
-  boss: 20,
+  miniboss: 21,
+  boss: 22,
   giant: 10,
-  animationSheets: 515,
-  framePngs: 3090,
-  weapons: 58,
+  animationSheets: 530,
+  framePngs: 3180,
+  weapons: 61,
   environmentSprites: 218,
-  catalogAssets: 379,
+  catalogAssets: 385,
 };
 
 for (const [key, expected] of Object.entries(expectedCounts)) {
@@ -168,6 +168,16 @@ for (const asset of catalog.assets || []) {
 }
 
 const animationNames = ["idle", "move", "attack", "hurt", "death"];
+const fpsDirectionNames = [
+  "front",
+  "front-left",
+  "left",
+  "back-left",
+  "back",
+  "back-right",
+  "right",
+  "front-right",
+];
 const crossEra2DIds = new Set([
   "new-modern-commuter",
   "new-modern-riot-host",
@@ -175,11 +185,18 @@ const crossEra2DIds = new Set([
   "new-cyber-neon-shinobi",
   "new-cyber-drone-corpse",
   "new-cyber-oni-frame",
+  "new-modern-metro-colossus",
+  "new-cyber-yomi-hacker",
+  "new-cyber-shogun-zero",
 ]);
 const catalogById = new Map((catalog.assets || []).map((asset) => [asset.id, asset]));
 let weaponRigFrames = 0;
 let enemyWeaponRigFrames = 0;
 let fpsEnemyWeaponRigFrames = 0;
+let fpsDirectionalCharacters = 0;
+let fpsDirectionalSheets = 0;
+let fpsDirectionalFrames = 0;
+let fpsDirectionalRigFrames = 0;
 for (const character of registry.characters || []) {
   assertPng(character.file, `${character.id}/master`);
   const sprite = readJson(localFile(character.sprite));
@@ -210,13 +227,71 @@ for (const character of registry.characters || []) {
         === JSON.stringify(character.fpsWeaponRig),
       `${character.id}/fps: weaponRig du catalogue desynchronise`,
     );
+    assert(
+      JSON.stringify(character.fpsDirections)
+        === JSON.stringify(fpsSprite?.fpsDirections),
+      `${character.id}/fps: fpsDirections du registre désynchronisé`,
+    );
+    assert(
+      JSON.stringify(catalogById.get(character.id)?.fpsDirections)
+        === JSON.stringify(character.fpsDirections),
+      `${character.id}/fps: fpsDirections du catalogue désynchronisé`,
+    );
+    fpsDirectionalCharacters += 1;
+    for (const direction of fpsDirectionNames) {
+      const bank = character.fpsDirections?.[direction];
+      assert(bank, `${character.id}/fps/${direction}: banque absente`);
+      assert(
+        bank?.singleSilhouetteSource === true,
+        `${character.id}/fps/${direction}: source multi-silhouette interdite`,
+      );
+      const cardinal = ["front", "back", "left", "right"].includes(direction);
+      assert(
+        bank?.sourceKind === (
+          cardinal ? "cardinal-bitmap-source" : "derived-diagonal-bitmap"
+        ),
+        `${character.id}/fps/${direction}: type de source invalide`,
+      );
+      if (!cardinal) {
+        const expectedAxial = direction.startsWith("front") ? "front" : "back";
+        const expectedSide = direction.endsWith("left") ? "left" : "right";
+        assert(
+          JSON.stringify(bank?.derivedFrom) === JSON.stringify([expectedAxial])
+            && bank?.orientationToward === expectedSide,
+          `${character.id}/fps/${direction}: derivation mono-silhouette invalide`,
+        );
+      }
+      fpsDirectionalRigFrames += assertWeaponRig(
+        character.fpsWeaponRig?.directions?.[direction],
+        `${character.id}/fps/${direction}`,
+      );
+      for (const animation of animationNames) {
+        assertPng(
+          bank?.animations?.[animation],
+          `${character.id}/fps/${direction}/${animation}`,
+        );
+        fpsDirectionalSheets += 1;
+        const frames = bank?.frames?.[animation];
+        assert(
+          Array.isArray(frames) && frames.length === 6,
+          `${character.id}/fps/${direction}/${animation}: 6 frames attendues`,
+        );
+        for (const [index, frame] of (frames || []).entries()) {
+          assertPng(
+            frame,
+            `${character.id}/fps/${direction}/${animation}/${index}`,
+          );
+          fpsDirectionalFrames += 1;
+        }
+      }
+    }
   }
   if (crossEra2DIds.has(character.id)) {
-    assert(character.viewCoverage === "2d-lateral-only", `${character.id}: couverture latérale 2D absente`);
-    assert(character.animationContract?.fpsEightWay === false, `${character.id}: fpsEightWay doit rester false`);
+    assert(character.viewCoverage === "2d-lateral-plus-fps-eight-way", `${character.id}: couverture FPS 8 directions absente`);
+    assert(character.animationContract?.fpsEightWay === true, `${character.id}: fpsEightWay doit valoir true`);
     assert(character.animationContract?.weaponsBakedIntoBody === false, `${character.id}: arme intégrée au contrat`);
     assert(character.weaponsBakedIntoBody === false, `${character.id}: arme intégrée au corps`);
-    assert(!character.fpsSprite, `${character.id}: couverture FPS inventée`);
+    assert(character.fpsSprite, `${character.id}: couverture FPS absente`);
     assert(sprite?.schema === 2, `${character.id}: sprite.schema doit valoir 2`);
   }
   if (character.id === "giant-02-aka-ushi") {
@@ -253,12 +328,16 @@ for (const character of registry.characters || []) {
   }
 }
 
-assert(weaponRigFrames === 3090, `weaponRig frames: ${weaponRigFrames}, 3090 attendues`);
-assert(enemyWeaponRigFrames === 3060, `weaponRig ennemis: ${enemyWeaponRigFrames}, 3060 attendues`);
+assert(weaponRigFrames === 3180, `weaponRig frames: ${weaponRigFrames}, 3180 attendues`);
+assert(enemyWeaponRigFrames === 3150, `weaponRig ennemis: ${enemyWeaponRigFrames}, 3150 attendues`);
 assert(
-  fpsEnemyWeaponRigFrames === 2880,
-  `weaponRig ennemis FPS: ${fpsEnemyWeaponRigFrames}, 2880 attendues`,
+  fpsEnemyWeaponRigFrames === 3150,
+  `weaponRig ennemis FPS: ${fpsEnemyWeaponRigFrames}, 3150 attendues`,
 );
+assert(fpsDirectionalCharacters === 105, `personnages FPS directionnels: ${fpsDirectionalCharacters}, 105 attendus`);
+assert(fpsDirectionalSheets === 4200, `planches FPS directionnelles: ${fpsDirectionalSheets}, 4200 attendues`);
+assert(fpsDirectionalFrames === 25200, `frames FPS directionnelles: ${fpsDirectionalFrames}, 25200 attendues`);
+assert(fpsDirectionalRigFrames === 25200, `sockets FPS directionnels: ${fpsDirectionalRigFrames}, 25200 attendus`);
 
 const player = (registry.characters || []).find((character) => character.category === "player");
 const fpsPlayerSprite = player?.fpsSprite ? readJson(localFile(player.fpsSprite)) : null;
@@ -272,7 +351,7 @@ assert(
 const modularWeapons = (registry.weapons || []).filter((weapon) =>
   String(weapon.file || "").startsWith("assets/modular/weapons/"),
 );
-assert(modularWeapons.length === 48, `armes modulaires: ${modularWeapons.length}, 48 attendues`);
+assert(modularWeapons.length === 51, `armes modulaires: ${modularWeapons.length}, 51 attendues`);
 const modularWeaponIds = new Set(modularWeapons.map((weapon) => weapon.id));
 for (const weapon of modularWeapons) {
   assert(String(weapon.lore || "").length >= 20, `${weapon.id}: lore d'arme manquant`);
@@ -328,6 +407,10 @@ const report = {
   weaponRigFrames,
   enemyWeaponRigFrames,
   fpsEnemyWeaponRigFrames,
+  fpsDirectionalCharacters,
+  fpsDirectionalSheets,
+  fpsDirectionalFrames,
+  fpsDirectionalRigFrames,
   fpsPlayerRigFrames,
   errors,
 };

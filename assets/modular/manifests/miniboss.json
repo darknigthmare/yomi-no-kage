@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "category": "miniboss",
-  "count": 20,
+  "count": 21,
   "generationTool": "OpenAI ImageGen built-in — un appel distinct",
   "generationPolicy": "Un appel ImageGen distinct par personnage. Les armes et accessoires de combat restent des sprites séparés et chaque weaponId résout une entrée de weapons.json.",
   "animationStandard": {
@@ -1083,6 +1083,47 @@
       },
       "prompt": "Use case: stylized-concept\nAsset type: production animation master sprite sheet for one modular 2D miniboss in Yomi no Kage\nPrimary request: create exactly one original miniboss character, the \"Capitaine Byakko\", a plague-infected shogunate assault captain from Kan’ei-era Japan, 1638. He has a broad athletic build, a compact aged-ivory lacquer kabuto with a restrained red crest, segmented bone-white dō-maru armor painted with sparse ink-black tiger-stripe geometry, deep-indigo underclothes, lacquer-red lacing, one heavier black shoulder plate, a stern menpō lowered beneath the face and restrained sick-green contamination at the eyes and armor seams. His silhouette is balanced, commanding and distinct from the existing daimyō, with no literal tiger anatomy and no graphic gore.\nAnimation layout: ONE SINGLE MASTER SHEET arranged as an exact invisible grid of 6 columns by 5 rows, exactly 30 equal cells, read left to right. Row 1 contains six coherent commanding idle frames. Row 2 contains six coherent movement frames for a powerful disciplined advance. Row 3 contains six coherent EMPTY-HANDED attack frames using a guarded step, crushing forearm strike and tiger-like low pounce performed with normal human hands, with no effect. Row 4 contains six coherent hurt/recoil frames. Row 5 contains six coherent death/collapse frames ending prone. Do not draw grid lines, cell borders, panels, labels, numbers or separators.\nCharacter consistency: every cell depicts the exact same single character, identical face, helmet, armor, colors, proportions and scale. Strict orthographic side view facing LEFT in all 30 cells. Full body and feet visible in every cell, centered inside each invisible cell with generous internal padding, same ground baseline and camera height, no cropping, no overlap into neighboring cells.\nWeapon modularity: BOTH HANDS COMPLETELY EMPTY in every frame. Absolutely no katana, weapon, blade, polearm, bow, firearm, shield, claw weapon, tool, object, scabbard, holster or carried prop anywhere on the body or in the sheet.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering, readable at small gameplay scale.\nColor palette: aged ivory, ink black, deep indigo, lacquer red, dark iron and restrained sick green. Do not use magenta or pink in the character.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background, uniform edge to edge and throughout all spacing between cells.\nConstraints: background must contain no shadow, gradient, texture, floor plane, reflection, glow, claw trails, particles or lighting variation. No cast/contact shadows. No scenery, architecture, ground, extra character, duplicate outside the 30 cells, text, logo, watermark or UI. Historically grounded 1638 Japanese armor, no modern elements, no fantasy anatomy, no resemblance to a named existing franchise character, no graphic gore.",
       "generationTool": "OpenAI ImageGen built-in — un appel distinct"
+    },
+    {
+      "id": "new-cyber-yomi-hacker",
+      "name": "Kannushi du réseau Yomi",
+      "subtitle": "Officiant des mémoires contaminées",
+      "role": "Sous-boss de contrôle d’arène",
+      "lore": [
+        "Ce prêtre-réseau entretenait les mémoires rituelles de Neo-Tokyo avant que le Yomi n’infecte les archives.",
+        "Il récite maintenant les derniers instants des morts sous forme de commandes qui verrouillent l’espace."
+      ],
+      "stats": {
+        "hp": 620,
+        "damage": 43,
+        "speed": 1.14,
+        "posture": 280
+      },
+      "pattern": "Glyphes de verrouillage, téléportation entre relais et frappes de shakujo holographique séparé.",
+      "weaponId": "holo-shakujo",
+      "weapon": {
+        "id": "holo-shakujo",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "era": "neo-tokyo-2188",
+      "zoneAffinity": "cyberpunk-japan",
+      "folder": "assets/modular/characters/miniboss/new-cyber-yomi-hacker",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/miniboss/new-cyber-yomi-hacker/source-master.png",
+        "master": "assets/modular/characters/miniboss/new-cyber-yomi-hacker/master.png",
+        "sprite": "assets/modular/characters/miniboss/new-cyber-yomi-hacker/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/miniboss/new-cyber-yomi-hacker/sheets/idle.png",
+          "move": "assets/modular/characters/miniboss/new-cyber-yomi-hacker/sheets/move.png",
+          "attack": "assets/modular/characters/miniboss/new-cyber-yomi-hacker/sheets/attack.png",
+          "hurt": "assets/modular/characters/miniboss/new-cyber-yomi-hacker/sheets/hurt.png",
+          "death": "assets/modular/characters/miniboss/new-cyber-yomi-hacker/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/miniboss/new-cyber-yomi-hacker/frames"
+      },
+      "prompt": "Planche maître originale du Kannushi du réseau Yomi, prêtre-hacker cyberpunk en grille 5 x 6 strictement latérale gauche. Les cinq lignes sont idle, glisse, attaque rituelle à mains vides, impact et mort. Même visage, halo et robes dans toutes les frames, mains vides, holo-shakujo séparé, fond chroma vert uniforme, aucun texte ni décor.",
+      "generationTool": "OpenAI ImageGen built-in"
     }
   ]
 }

@@ -4,13 +4,23 @@ import path from "node:path";
 const root = process.cwd();
 const modularRoot = path.join(root, "assets", "modular");
 const animationNames = ["idle", "move", "attack", "hurt", "death"];
+const fpsDirections = [
+  "front",
+  "front-left",
+  "left",
+  "back-left",
+  "back",
+  "back-right",
+  "right",
+  "front-right",
+];
 const expectedCategories = {
   player: 1,
   legacy: 6,
   regular: 22,
   special: 24,
-  miniboss: 20,
-  boss: 20,
+  miniboss: 21,
+  boss: 22,
   giant: 10,
 };
 const crossEra2DIds = new Set([
@@ -20,6 +30,9 @@ const crossEra2DIds = new Set([
   "new-cyber-neon-shinobi",
   "new-cyber-drone-corpse",
   "new-cyber-oni-frame",
+  "new-modern-metro-colossus",
+  "new-cyber-yomi-hacker",
+  "new-cyber-shogun-zero",
 ]);
 
 const errors = [];
@@ -42,6 +55,10 @@ const report = {
   weaponRigFrames: 0,
   enemyWeaponRigFrames: 0,
   fpsEnemyWeaponRigFrames: 0,
+  fpsDirectionalCharacters: 0,
+  fpsDirectionalSheets: 0,
+  fpsDirectionalFramePngs: 0,
+  fpsDirectionalWeaponRigFrames: 0,
   fpsPlayerWeaponRigFrames: 0,
   akaUshiNeckRigFrames: 0,
 };
@@ -116,6 +133,62 @@ function validateWeaponRig(rig, label) {
   return count;
 }
 
+function validateFpsDirections(entry, fpsSprite, label) {
+  let sheets = 0;
+  let frames = 0;
+  let rigFrames = 0;
+  for (const direction of fpsDirections) {
+    const bank = fpsSprite?.fpsDirections?.[direction];
+    const registryBank = entry?.fpsDirections?.[direction];
+    const cardinal = ["front", "back", "left", "right"].includes(direction);
+    assert(bank, `${label}: fpsDirections.${direction} absent`);
+    assert(
+      bank?.singleSilhouetteSource === true,
+      `${label}: ${direction} contient plusieurs silhouettes`,
+    );
+    assert(
+      JSON.stringify(registryBank) === JSON.stringify(bank),
+      `${label}: fpsDirections.${direction} désynchronisé`,
+    );
+    if (!cardinal) {
+      const expectedAxial = direction.startsWith("front") ? "front" : "back";
+      const expectedSide = direction.endsWith("left") ? "left" : "right";
+      assert(
+        JSON.stringify(bank?.derivedFrom) === JSON.stringify([expectedAxial])
+          && bank?.orientationToward === expectedSide,
+        `${label}: ${direction} doit deriver d'une silhouette axiale unique`,
+      );
+    }
+    const directionRig = fpsSprite?.weaponRig?.directions?.[direction];
+    rigFrames += validateWeaponRig(
+      directionRig,
+      `${label}/fps/${direction}`,
+    );
+    for (const animation of animationNames) {
+      const sheetPath = path.join(root, bank?.animations?.[animation] || "");
+      assert(
+        fs.existsSync(sheetPath),
+        `${label}/${direction}: planche ${animation} absente`,
+      );
+      if (fs.existsSync(sheetPath)) sheets += 1;
+      const declaredFrames = bank?.frames?.[animation] || [];
+      assert(
+        declaredFrames.length === 6,
+        `${label}/${direction}: ${animation} n'a pas 6 frames`,
+      );
+      for (const frame of declaredFrames) {
+        const framePath = path.join(root, frame);
+        assert(
+          fs.existsSync(framePath),
+          `${label}/${direction}: frame absente ${frame}`,
+        );
+        if (fs.existsSync(framePath)) frames += 1;
+      }
+    }
+  }
+  return { sheets, frames, rigFrames };
+}
+
 function validateAttachmentRig(rig, label) {
   assert(rig?.schema === 1, `${label}: attachmentRig.schema invalide`);
   assert(rig?.coordinateSpace === "frame-normalized", `${label}: espace attachmentRig invalide`);
@@ -182,7 +255,8 @@ for (const [category, expectedCount] of Object.entries(expectedCategories)) {
       assert(sprite.schema === 2, `${category}/${entry.name}: sprite.schema doit valoir 2`);
       assert(
         sprite.animationContract?.view === "2d-lateral-only"
-          && sprite.animationContract?.fpsEightWay === false,
+          && sprite.animationContract?.fpsFourWay === true
+          && sprite.animationContract?.fpsEightWay === true,
         `${category}/${entry.name}: contrat latéral 2D invalide`,
       );
       assert(
@@ -191,8 +265,10 @@ for (const [category, expectedCount] of Object.entries(expectedCategories)) {
         `${category}/${entry.name}: arme intégrée au corps`,
       );
       assert(
-        sprite.viewCoverage?.mode === "2d-lateral-only"
-          && sprite.viewCoverage?.directions?.join(",") === "left",
+        sprite.viewCoverage?.mode === "2d-lateral-plus-fps-eight-way"
+          && sprite.viewCoverage?.directions?.join(",") === "left"
+          && sprite.viewCoverage?.fpsDirections?.join(",")
+            === fpsDirections.join(","),
         `${category}/${entry.name}: couverture de vue invalide`,
       );
     }
@@ -221,10 +297,10 @@ for (const [category, expectedCount] of Object.entries(expectedCategories)) {
     report.characters += 1;
   }
 }
-assert(report.weaponRigFrames === 3090, `weaponRig frames: ${report.weaponRigFrames}, 3090 attendues`);
+assert(report.weaponRigFrames === 3180, `weaponRig frames: ${report.weaponRigFrames}, 3180 attendues`);
 assert(
-  report.enemyWeaponRigFrames === 3060,
-  `weaponRig ennemis: ${report.enemyWeaponRigFrames}, 3060 attendues`,
+  report.enemyWeaponRigFrames === 3150,
+  `weaponRig ennemis: ${report.enemyWeaponRigFrames}, 3150 attendues`,
 );
 
 const weaponFiles = walkFiles(path.join(modularRoot, "weapons"))
@@ -232,7 +308,7 @@ const weaponFiles = walkFiles(path.join(modularRoot, "weapons"))
   .filter((file) => !/(^|[\\/])(source|sources|tmp|atlases|components)([\\/]|$)/i.test(file))
   .filter((file) => !/(?:^|[-_.])(source|raw|alpha|contact|atlas|preview)(?:[-_.]|$)/i.test(path.basename(file)));
 report.weapons = weaponFiles.length;
-assert(report.weapons === 48, `armes séparées: ${report.weapons}, exactement 48 attendues`);
+assert(report.weapons === 51, `armes séparées: ${report.weapons}, exactement 51 attendues`);
 
 const environmentFiles = walkFiles(path.join(modularRoot, "environments"))
   .filter((file) => file.toLowerCase().endsWith(".png"))
@@ -261,10 +337,10 @@ if (fs.existsSync(registryPath)) {
     `registre: ${crossEra2DCharacters.length} ennemis inter-époques, ${crossEra2DIds.size} attendus`,
   );
   for (const entry of crossEra2DCharacters) {
-    assert(entry.viewCoverage === "2d-lateral-only", `${entry.id}: registre sans contrat latéral 2D`);
-    assert(entry.animationContract?.fpsEightWay === false, `${entry.id}: fpsEightWay doit rester false`);
+    assert(entry.viewCoverage === "2d-lateral-plus-fps-eight-way", `${entry.id}: registre sans contrat FPS 8 directions`);
+    assert(entry.animationContract?.fpsEightWay === true, `${entry.id}: fpsEightWay doit valoir true`);
     assert(entry.weaponsBakedIntoBody === false, `${entry.id}: arme intégrée au corps dans le registre`);
-    assert(!entry.fpsSprite, `${entry.id}: sprite FPS 8 directions inventé`);
+    assert(entry.fpsSprite, `${entry.id}: sprite FPS 8 directions absent`);
   }
   const akaUshi = (registry?.characters || [])
     .find((entry) => entry.id === "giant-02-aka-ushi");
@@ -296,6 +372,15 @@ if (fs.existsSync(registryPath)) {
       JSON.stringify(entry.fpsWeaponRig) === JSON.stringify(fpsSprite?.weaponRig),
       `${entry.category}/${entry.id}: weaponRig FPS désynchronisé`,
     );
+    const directional = validateFpsDirections(
+      entry,
+      fpsSprite,
+      `${entry.category}/${entry.id}`,
+    );
+    report.fpsDirectionalCharacters += 1;
+    report.fpsDirectionalSheets += directional.sheets;
+    report.fpsDirectionalFramePngs += directional.frames;
+    report.fpsDirectionalWeaponRigFrames += directional.rigFrames;
     for (const animation of animationNames) {
       const sheetPath = path.join(root, entry.fpsAnimations?.[animation] || "");
       assert(fs.existsSync(sheetPath), `${entry.category}/${entry.id}: planche FPS ${animation} absente`);
@@ -310,9 +395,13 @@ if (fs.existsSync(registryPath)) {
     }
   }
   assert(
-    report.fpsEnemyWeaponRigFrames === 2880,
-    `weaponRig ennemis FPS: ${report.fpsEnemyWeaponRigFrames}, 2880 attendues`,
+    report.fpsEnemyWeaponRigFrames === 3150,
+    `weaponRig ennemis FPS: ${report.fpsEnemyWeaponRigFrames}, 3150 attendues`,
   );
+  assert(report.fpsDirectionalCharacters === 105, `personnages FPS 8 directions: ${report.fpsDirectionalCharacters}, 105 attendus`);
+  assert(report.fpsDirectionalSheets === 4200, `planches FPS directionnelles: ${report.fpsDirectionalSheets}, 4200 attendues`);
+  assert(report.fpsDirectionalFramePngs === 25200, `frames FPS directionnelles: ${report.fpsDirectionalFramePngs}, 25200 attendues`);
+  assert(report.fpsDirectionalWeaponRigFrames === 25200, `sockets FPS directionnels: ${report.fpsDirectionalWeaponRigFrames}, 25200 attendus`);
   const loreKatanas = (registry?.weapons || []).filter((weapon) =>
     /^\d{2}-/.test(String(weapon.id || "")) && String(weapon.file || "").startsWith("assets/generated/weapons/"));
   report.staleFpsWeaponSets = (registry?.weapons || [])
@@ -369,8 +458,8 @@ if (fs.existsSync(registryPath)) {
       );
     }
   }
-  assert(report.fpsCharacterSheets === 480, `planches FPS ennemis: ${report.fpsCharacterSheets}, 480 attendues`);
-  assert(report.fpsCharacterFramePngs === 2880, `frames FPS ennemis: ${report.fpsCharacterFramePngs}, 2880 attendues`);
+  assert(report.fpsCharacterSheets === 525, `planches FPS ennemis: ${report.fpsCharacterSheets}, 525 attendues`);
+  assert(report.fpsCharacterFramePngs === 3150, `frames FPS ennemis: ${report.fpsCharacterFramePngs}, 3150 attendues`);
   assert(report.fpsPlayerViewSheets === 5, `planches FPS joueur: ${report.fpsPlayerViewSheets}, 5 attendues`);
   assert(report.fpsPlayerViewFramePngs === 30, `frames FPS joueur: ${report.fpsPlayerViewFramePngs}, 30 attendues`);
   assert(report.fpsPlayerWeaponSprites === 10, `sprites FPS d'arme: ${report.fpsPlayerWeaponSprites}, 10 attendus`);

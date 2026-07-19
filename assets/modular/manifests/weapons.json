@@ -1,9 +1,9 @@
 {
   "schema": 1,
   "category": "weapons",
-  "count": 48,
+  "count": 51,
   "legacyKatanaCount": 10,
-  "totalAvailable": 58,
+  "totalAvailable": 61,
   "generationTool": "OpenAI ImageGen built-in",
   "generationPolicy": "Un appel ImageGen distinct par atlas de douze armes, puis détourage et découpage 4 × 3.",
   "anchorConvention": {
@@ -636,6 +636,51 @@
         0.5
       ],
       "defaultRotation": 0
+    },
+    {
+      "id": "metro-car-door",
+      "file": "assets/modular/weapons/cross-era/metro-car-door.png",
+      "name": "Porte de rame du Yomi",
+      "lore": "Une porte de métro arrachée à sa rame et renforcée par les racines du foyer contemporain.",
+      "gameplay": "Arme massive du Colosse : balayage large, blocage frontal et onde de choc.",
+      "anchor": [
+        0.86,
+        0.48
+      ],
+      "defaultRotation": 0,
+      "family": "cross-era",
+      "source": "assets/modular/weapons/sources/metro-car-door-imagegen-raw.png",
+      "generationTool": "OpenAI ImageGen built-in"
+    },
+    {
+      "id": "holo-shakujo",
+      "file": "assets/modular/weapons/cross-era/holo-shakujo.png",
+      "name": "Holo-shakujo",
+      "lore": "Un bâton rituel dont les anneaux ont été remplacés par un circuit mémoriel de Neo-Tokyo.",
+      "gameplay": "Canalise les verrouillages d’arène et les attaques du Kannushi du réseau.",
+      "anchor": [
+        0.78,
+        0.5
+      ],
+      "defaultRotation": 0,
+      "family": "cross-era",
+      "source": "assets/modular/weapons/sources/holo-shakujo-imagegen-raw.png",
+      "generationTool": "OpenAI ImageGen built-in"
+    },
+    {
+      "id": "phase-nodachi",
+      "file": "assets/modular/weapons/cross-era/phase-nodachi.png",
+      "name": "Nodachi de phase",
+      "lore": "La lame de commandement de Shōgun Zéro conserve le profil d’un nodachi et une tranche de phase instable.",
+      "gameplay": "Très longue portée, contres de phase et rupture de garde en fin de combo.",
+      "anchor": [
+        0.86,
+        0.5
+      ],
+      "defaultRotation": 0,
+      "family": "cross-era",
+      "source": "assets/modular/weapons/sources/phase-nodachi-imagegen-raw.png",
+      "generationTool": "OpenAI ImageGen built-in"
     }
   ],
   "legacyKatanas": {

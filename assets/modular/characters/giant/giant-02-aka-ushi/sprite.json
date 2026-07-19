@@ -436,6 +436,7 @@
     "schema": 1,
     "coordinateSpace": "frame-normalized",
     "facing": "left",
+    "authorship": "authored-direction-profile+frame-contour-snap",
     "renderOrder": [
       "body",
       "weapon"
@@ -1135,5 +1136,30 @@
         ]
       }
     }
+  },
+  "animationContract": {
+    "fpsFourWay": true,
+    "fpsEightWay": true
+  },
+  "viewCoverage": {
+    "mode": "2d-lateral-plus-fps-eight-way",
+    "directions": [
+      "left"
+    ],
+    "fpsDirections": [
+      "front",
+      "front-left",
+      "left",
+      "back-left",
+      "back",
+      "back-right",
+      "right",
+      "front-right"
+    ],
+    "fpsFourWay": true,
+    "fpsEightWay": true,
+    "frontBackAuthored": false,
+    "runtimeSequence": "single-lateral-frame-locked",
+    "imagegenRawRuntimeUse": false
   }
 }

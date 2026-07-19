@@ -1,430 +1,509 @@
-# Yomi no Kage — audit complet après l’extension du monde
+# Yomi no Kage — audit complet vers le jeu final
 
 **Date :** 19 juillet 2026
-**État audité :** `level-data.js?v=12`, `game.js?v=37`, `cinematic.js?v=10`
-**Build spatial :** `20260719-world-expansion-v3`
-**Périmètre :** cohérence des niveaux, profondeur, gameplay, durée, progression, animations 2D/FPS, armes, boss massifs, UI/UX, mobile, audio, lore, sauvegarde, performance et QA.
+**État inspecté :** `styles.css?v=28`, `save.js?v=5`,
+`level-data.js?v=13`, `game.js?v=41`, `campaign-ui.js?v=2`,
+`cinematic.js?v=13`
 
-> Les validations automatiques prouvent la structure des données et certains parcours runtime. Les captures prouvent quelques états visuels ciblés. Elles ne remplacent pas un playthrough naturel complet, un test sur téléphone réel, une écoute humaine ni un profilage de performance.
+**Build principal déclaré :** `20260719-complete-campaign-v2`
+
+**Build campagne déclaré :** `20260719-seven-act-runtime-v5`
+**Périmètre :** campagne, niveaux, objectifs, FPS, animations, armes, combat,
+IA, progression, sauvegarde, UI/UX, mobile, audio, performances, lore et QA.
+
+> Cet audit décrit le dépôt local inspecté. Il ne valide ni un déploiement de
+> production, ni une durée commerciale, ni un playthrough naturel complet.
+> Les tests automatiques vérifient des contrats précis ; ils ne remplacent pas
+> une inspection visuelle, un test sur appareil réel ou une écoute humaine.
 
 ## Verdict
 
-`Yomi no Kage` a quitté le stade du petit prototype à une rue : il possède maintenant une vraie route de campagne jouable allant du col de Kai à Neo-Edo, onze zones 2D reliées, cinq missions FPS, sept identités environnementales, une sauvegarde persistante et un boss massif équipé d’une pièce détachable.
+`Yomi no Kage` a franchi un cap important : le projet contient maintenant une
+route runtime de **7 actes et 28 zones**, avec une fin, 7 missions FPS
+obligatoires, 28 objectifs persistants, un refuge et une progression
+fonctionnelle. Il est plus juste de parler de **campagne alpha jouable** que de
+prototype.
 
-Le projet reste cependant une **vertical slice étendue**, pas encore un jeu complet de 8 à 10 heures. Les défauts les plus importants ne sont plus des props flottants ou des armes systématiquement derrière les corps. Ce sont désormais :
+Le jeu n’est pourtant pas encore complet. Les cinq écarts principaux sont :
 
-1. les directions ennemies FPS encore synthétisées depuis des profils ;
-2. les sockets d’armes calculés par détection de contour au lieu d’être dessinés anatomiquement ;
-3. les cinq nouveaux biomes qui servent surtout de zones vitrines linéaires ;
-4. l’absence d’un vrai chapitre complet avec embranchements, intérieurs, setpieces, sous-boss, boss, extraction et retour transformé ;
-5. l’absence de Yomi-no-Kanrei et de boss propres au Japon contemporain et cyberpunk.
+1. les 105 ennemis passent le pipeline huit directions sans fusion, mais les
+   vues historiques avant/arrière restent des projections de la latérale et
+   non huit dessins réellement authored ;
+2. les armes et pièces détachables doivent encore être contrôlées
+   anatomiquement frame par frame ;
+3. la route existe, mais sa densité ne prouve pas une durée de 8 à 10 heures ;
+4. les objectifs et systèmes sont fonctionnels, mais manquent encore de mise
+   en scène, de variété et d’équilibrage par playtest ;
+5. aucun run complet naturel, test mobile physique, audit audio humain ou
+   profilage de performance n’a encore fermé la version.
 
-## Livraison réellement présente
+## État mesuré de la campagne
 
-### Monde et cohérence spatiale
-
-- 11 zones 2D runtime.
-- 31 600 px de largeur cumulée.
-- 245 props, 73 plateformes, 66 ennemis, 28 passages et 7 checkpoints.
-- Départ d’une nouvelle chronique : `kai-forest-pass`.
-- Progression :
-  `forêt → bambouseraie → rizières → Kurokawa → château → Japon contemporain → Neo-Edo`.
-- Retours explicites :
-  bambouseraie → forêt, champs → bambouseraie, Kurokawa → champs,
-  contemporain → château et cyberpunk → contemporain.
-- Objectif authored par zone grâce à `objectivePortalId`.
-- Minicarte ajustée aux nouvelles coordonnées négatives et positives.
-- Continuité visuelle contextuelle :
-  forêt, rideau de bambou, horizon rural, façades urbaines et murs historiques.
-- Validation spatiale automatisée :
-  11 zones, 245 placements, 102 sprites uniques et 109 modules de mur, sans erreur.
-
-La tour de guet et le foyer d’incendie du plan jouable sont maintenant des sprites orthographiques de face. Les anciennes variantes 3/4 sont conservées comme sources ou éléments d’arrière-plan, sans collision de gameplay.
-
-### Profondeur et plateformes
-
-Kurokawa possède des murs continus derrière les bâtiments, des portes lisibles et un tri par baseline. Les plateformes correspondent à des objets plausibles : toits, échafaudages, charrettes, auvents, remparts et véhicules.
-
-La profondeur reste surtout simulée. La majorité des zones n’a qu’un long segment de sol et cinq plateformes `oneWay`. Les portes relient des zones, mais il manque encore :
-
-- rues parallèles réellement explorables ;
-- cours, caves, étages et arrière-boutiques ;
-- raccourcis persistants ;
-- boucles rejoignant une même zone par un autre niveau ;
-- fosses, eau, pentes et ponts cassés comme vraies contraintes de navigation.
-
-### Prologue et lore
-
-Le prologue, le briefing, le lore, le spawn et la sauvegarde commencent désormais tous au col forestier de Kai.
-
-Le sixième plan a été régénéré avec OpenAI ImageGen :
-
-- Akio reste fidèle à son identité visuelle ;
-- forêt de cèdres au premier plan ;
-- bambouseraie et rizières en profondeur ;
-- Kurokawa brûle seulement au loin ;
-- l’ancien torii urbain n’indique plus qu’Akio est déjà entré dans la ville.
-
-L’ancien plan est conservé sous
-`assets/generated/cinematics/prologue-06-kurokawa-town-source.png`.
-Le prompt et la provenance sont consignés dans
-`assets/generated/cinematics/manifest.json`.
-
-Le mode d’aperçu `?preview=prologue-6` ignorait auparavant le preview lorsqu’une sauvegarde existait. Cette régression est corrigée. Le dernier bouton annonce maintenant « Ouvrir le briefing ».
-
-### Progression et sauvegarde
-
-La progression runtime et le contrat de campagne sont distincts :
-
-- le runtime livre 11 zones et 28 passages ;
-- `campaign-expansion.js` décrit un plan futur de 7 actes, 28 zones et 24 nouveaux ennemis ;
-- ce contrat de production n’est volontairement pas chargé comme gameplay.
-
-La sauvegarde conserve maintenant :
-
-- zone, chapitre et checkpoint ;
-- zones visitées ;
-- objets déjà ramassés ;
-- checkpoints déjà consommés ;
-- ennemis vaincus ;
-- score et nombre de victimes ;
-- missions FPS secondaires terminées ;
-- équipement et progression des sceaux.
-
-Les checkpoints ne peuvent plus soigner indéfiniment par aller-retour.
-
-L’endgame impose :
-
-1. vaincre le Daimyō dans le FPS du donjon ;
-2. poser le second sceau ;
-3. revenir au donjon 2D ;
-4. confirmer l’entrée dans la faille temporelle ;
-5. nettoyer le Japon contemporain avant Neo-Edo ;
-6. nettoyer Neo-Edo ;
-7. confirmer le scellement du cœur du Yomi.
-
-Les deux actions irréversibles utilisent une double confirmation en moins de 4,5 secondes. Le rang S a été recalibré pour la campagne longue : santé ≥ 70, 40 victimes et moins de 10 800 secondes.
-
-### Armes et montage aux mains
-
-Le pack contient :
-
-- 58 assets d’armes modulaires ;
-- 53 armes dans l’arsenal jouable ;
-- 3 060 rigs ennemis 2D ;
-- 2 880 rigs ennemis FPS historiques ;
-- 30 rigs joueur 2D et 30 rigs joueur FPS ;
-- 6 000 poses d’arme au total.
-
-Politique runtime :
-
-- poses vivantes : `front-body` ;
-- mort : `hidden` ;
-- les armes ne repassent plus derrière le corps par défaut ;
-- une arme ennemie FPS de face/dos est masquée lorsqu’aucun socket directionnel fiable n’existe.
-
-Cette correction supprime le défaut grossier de couche. Elle ne prouve pas une prise anatomique parfaite. Le générateur trouve les mains par heuristique de contour opaque. Il faut encore créer des sockets manuels pour chaque personnage réellement utilisé et chaque direction FPS.
-
-### Aka-Ushi et son joug
-
-Aka-Ushi possède maintenant :
-
-- un joug frontal séparé ;
-- un `neckRig` complet : 5 animations × 6 frames = 30 ancres ;
-- synchronisation entre `sprite.json`, `registry.json` et `catalog.json` ;
-- suivi image par image de l’ancre, de l’échelle et de la couche ;
-- détachement à la transition de phase 2 ;
-- création d’un hazard persistant dans l’arène ;
-- collision, dégâts, rendu et snapshot debug du joug détaché.
-
-Limite restante : l’état du hazard détaché n’est pas encore sauvegardé lors d’une recharge ou d’un changement de zone.
-
-### Personnages et animations
-
-Le catalogue contient :
-
-| Élément | Mesure confirmée |
+| Mesure | Valeur |
 |---|---:|
-| Personnages | 103 |
-| Ennemis | 102 |
-| Planches 2D | 515 |
-| Frames 2D | 3 090 |
-| Ennemis historiques avec FPS | 96 |
-| Planches ennemies FPS | 480 |
-| Frames ennemies FPS | 2 880 |
-| Planches joueur FPS | 5 |
-| Frames joueur FPS | 30 |
-| Sprites environnementaux | 218 |
-| Assets uniques du catalogue | 379 |
+| Actes | 7 |
+| Zones 2D runtime | 28 |
+| Liens canoniques | 27 |
+| Portails runtime de campagne | 62 |
+| Objectifs | 28 |
+| Checkpoints | 28 |
+| Props placés | 552 |
+| Plateformes | 154 |
+| Placements ennemis | 152 |
+| Objectifs de boss | 9 |
+| Objectifs non-boss authored | 19 |
+| Cibles d’interaction | 25 |
+| Largeur cumulée | 86 400 px |
 
-Six ennemis ont été ajoutés pour le contemporain et le cyberpunk :
+Répartition des 28 objectifs :
 
-- `new-modern-commuter`
-- `new-modern-riot-host`
-- `new-modern-response-officer`
-- `new-cyber-neon-shinobi`
-- `new-cyber-drone-corpse`
-- `new-cyber-oni-frame`
+| Méthode de complétion | Nombre |
+|---|---:|
+| Mort d’un ennemi ou boss ciblé | 9 |
+| Cibles manuelles | 14 |
+| Checkpoint atteint | 4 |
+| Zone nettoyée | 1 |
 
-Chacun possède cinq planches 2D de six frames avec corps et arme séparés. Aucun de ces six ennemis ne possède encore de banque FPS.
+Les cibles manuelles couvrent destruction de nœuds, purification, sauvetage,
+refuge, récupération, amélioration et changement d’état du monde. Leur état
+est sauvegardé cible par cible et une cible déjà activée ne doit pas compter
+deux fois.
 
-Les 103 personnages n’ont que cinq états génériques :
-`idle`, `move`, `attack`, `hurt`, `death`.
-Cela ne suffit pas pour un jeu final.
+### Structure par acte
 
-Akio a encore besoin de :
+| Acte | Identité | Zones | Mission FPS | Boss liés aux objectifs |
+|---|---|---:|---:|---|
+| I | Forêt de Kai | 3 | 1 | Take-Mori |
+| II | Bambouseraie de Shigure | 3 | 1 | Kumo |
+| III | Rizières de Tsuru | 4 | 1 | Shiro-Kabuto |
+| IV | Kurokawa | 4 | 1 | Brigadier Engeki |
+| V | Château et faille | 5 | 1 | Daimyō corrompu, Yomi-no-Kanrei |
+| VI | Japon contemporain | 4 | 1 | Colosse de la ligne Yomi |
+| VII | Neo-Edo cyberpunk | 5 | 1 | Kannushi du réseau, Shogun Zero |
 
-- départ, freinage, marche, course et sprint ;
+La route principale commence à `kai-forest-pass` et se termine à
+`cyber-shogun-core`. Les anciens passages qui court-circuitaient la campagne
+sont identifiés comme raccourcis de compatibilité et exclus de la nouvelle
+chronique.
+
+## Durée et densité
+
+Les 28 zones totalisent 86 400 px de largeur. Aux vitesses définies dans le
+moteur :
+
+- marche à 112 px/s : environ **12 min 51 s** de déplacement théorique ;
+- sprint à 178 px/s : environ **8 min 05 s**.
+
+Ce calcul ne comprend pas combats, plateformes, objectifs, FPS, refuge,
+cinématiques ou hésitations. Il prouve toutefois que le nombre de zones ne
+suffit pas à démontrer une campagne longue. Les durées de `275`, `412` et
+`533` minutes présentes dans le contrat de campagne sont des **cibles de
+design**, pas des temps observés.
+
+Pour annoncer honnêtement 8 à 10 heures, il reste à :
+
+- faire au moins cinq playtests aveugles complets ;
+- mesurer chaque acte séparément ;
+- identifier le temps réellement consacré à de nouvelles décisions ;
+- développer les actes trop courts avec branches, intérieurs, setpieces,
+  retours transformés et conséquences ;
+- publier la médiane observée, même si elle est inférieure à la cible.
+
+## Level design, profondeur et props
+
+### Points désormais solides
+
+- toutes les zones possèdent au moins un objectif et un checkpoint ;
+- chaque zone contient au moins quatre ennemis et deux plateformes ;
+- Kurokawa utilise des murs continus derrière les bâtiments ;
+- les deux props critiques, tour et foyer, ont une projection frontale pour le
+  plan jouable ;
+- les variantes trois-quarts sont réservées à l’arrière-plan ;
+- le rendu trie les acteurs et props selon leur baseline et leur profondeur ;
+- les portes `solidDoor` sont prises en compte par le joueur et la navigation
+  ennemie ;
+- les portes FPS optionnelles ne bloquent plus la rue ;
+- les barrières d’arène d’Aka-Ushi disparaissent après le combat ;
+- deux patrouilles qui coupaient des portes ont été bornées.
+
+### Limites restantes
+
+Le total de 552 props mesure une quantité de placements, pas leur qualité
+visuelle. Plusieurs zones de campagne sont composées depuis des patrons
+réutilisés. Elles doivent encore être inspectées à l’écran :
+
+- début, milieu et fin de chaque zone ;
+- continuité des murs et bâtiments ;
+- contact réel avec le sol ;
+- orientation frontale des éléments jouables ;
+- cohérence de parallaxe ;
+- colliders visibles ;
+- sortie claire de chaque plateforme ;
+- absence de prop de premier plan masquant une porte ou un ennemi.
+
+Il manque également davantage de routes de profondeur : cours, rues
+parallèles, caves, étages, arrière-boutiques, toits reliés et raccourcis
+persistants. Une ville 2D crédible ne doit pas dépendre d’empilements verticaux
+arbitraires.
+
+## FPS
+
+### Contenu présent
+
+- 7 missions obligatoires, une par acte ;
+- 5 missions historiques conservées ;
+- 12 missions référencées au total ;
+- entrée manuelle avec `E` ;
+- purification persistante ;
+- portes de retour et verrous de progression ;
+- matériaux sémantiques pour sols, murs, portes et autels ;
+- 24 matériaux FPS sémantiques ;
+- 16 tuiles dédiées au contemporain et au cyberpunk ;
+- 8 cellules de porte dédiées ;
+- projection du sol en coordonnées monde ;
+- atlas OpenAI spécifiques :
+  `fps-modern-texture-atlas.png` et `fps-cyber-texture-atlas.png`.
+
+Les sept missions de campagne s’appuient encore sur cinq géométries de base.
+Le contemporain et Neo-Edo réemploient une géométrie avec deux profils de
+matériaux distincts. Cette méthode est cohérente pour l’alpha, mais une version
+finale demande des plans de salles et des setpieces propres aux lieux majeurs.
+
+### Pipeline huit directions
+
+Les manifests déclarent 105 ennemis :
+
+| Famille | Nombre |
+|---|---:|
+| Ordinaires | 22 |
+| Spéciaux | 24 |
+| Sous-boss | 21 |
+| Boss | 22 |
+| Boss massifs | 10 |
+| Historiques | 6 |
+| **Total** | **105** |
+
+Le contrat visé est :
+
+```text
+105 × 8 directions × 5 animations = 4 200 planches
+4 200 × 6 frames = 25 200 cellules
+```
+
+Les 4 200 planches runtime sont présentes physiquement, dont 525 planches de
+base et 3 675 planches dans les banques directionnelles. Elles représentent
+227,98 MiB. Les 25 200 frames individuelles sont des exports dérivés,
+régénérables et volontairement exclus de Git/Vercel ; les planches complètes
+restent versionnées.
+
+**État de validation : PASS technique sur `105/105`.**
+Le contrôle exhaustif couvre 840 banques, 4 200 planches, 25 200 frames et
+25 200 rigs. L’anti-composite, les axiales, les diagonales et le phase-lock
+passent sans erreur. Une passe visuelle indépendante des neuf personnages
+cross-era et d’un large échantillon historique ne trouve plus de double corps,
+de membre fantôme ou de rupture de contact au sol.
+
+Cette validation ferme la fusion gauche/droite. Elle ne transforme toutefois
+pas les projections historiques en huit vues artistiques réellement dessinées,
+travail qui reste nécessaire pour une version 1.0.
+
+## Personnages et animations
+
+Les 106 personnages déclarés par les manifests, joueur compris, possèdent cinq
+états 2D de six frames :
+
+```text
+idle, move, attack, hurt, death
+```
+
+Cela correspond à 530 planches et 3 180 frames 2D attendues après
+synchronisation du registre.
+
+Akio possède également cinq planches FPS de six frames. La résolution et la
+cohérence de base sont suffisantes pour l’alpha, mais cinq états ne couvrent
+pas un jeu final.
+
+Manquent encore pour Akio :
+
+- marche, course, sprint, départ et freinage distincts ;
 - saut, apex, chute et réception ;
 - garde, parade, contre et posture brisée ;
 - esquive et récupération ;
-- combo léger 1/2/3 ;
-- lourd chargé ;
+- combo léger 1/2/3 et lourd chargé ;
 - interaction, ouverture, escalade et exécution ;
 - dégainer, rengainer et changement d’arme ;
-- animations propres aux grandes familles d’armes.
+- animations par grande famille d’arme ;
+- transitions FPS de garde, parade, impact et équipement.
 
-### FPS
+Pour les ennemis, les cinq états génériques doivent être complétés selon le
+rôle : alarme, garde, tir, rechargement, invocation, poursuite, saut,
+télégraphe et phases de boss.
 
-Le FPS possède cinq missions et des sols texturés cohérents par matériau. Le son distingue maintenant bois, pierre, tatami, eau, métal, asphalte, technologie et terre. Le contemporain et le cyberpunk ont leurs propres états musicaux.
+## Armes et cohérence aux mains
 
-Les problèmes critiques encore ouverts :
+### Présent
 
-- seulement quatre orientations logiques sont affichées ;
-- face et dos restent des transformations de profils latéraux ;
-- les silhouettes ne regardent donc pas toujours réellement le joueur ;
-- les six ennemis modernes/cyber n’ont aucun contenu FPS ;
-- les armes face/dos sont masquées, ce qui évite le flottement mais révèle un manque d’animation ;
-- les missions historiques ne disposent pas encore d’une passe complète de composition architecturale par pièce.
+- 61 sprites d’armes déclarés dans les manifests ;
+- 53 armes intégrées à l’arsenal jouable ;
+- 10 katanas ;
+- trois armes débloquées au départ ;
+- armes séparées des corps ;
+- profils de rendu pour katana, lame courte, arme d’hast, lourde, bâton,
+  flexible, arc, arme à feu, projectile, éventail et capture ;
+- rangs d’amélioration jusqu’à `+5` ;
+- dégâts, posture, coût de Ki, cadence et portée affectés par l’amélioration ;
+- armes nouvelles pour le contemporain et Neo-Edo ;
+- `neckRig` et phase détachable pour Aka-Ushi.
 
-La qualité cible demande huit directions dessinées par état :
-`front`, `front-left`, `left`, `back-left`, `back`, `back-right`, `right`, `front-right`,
-avec deux sockets de mains par frame.
+### À fermer
 
-### IA et combat
+Les rigs automatiques réduisent les erreurs de couche, mais ne prouvent pas une
+prise anatomique. Il reste à contrôler :
 
-L’IA 2D possède une vraie machine à états :
+- poignée réellement au contact de la main ;
+- seconde main pour les armes longues ;
+- rotation cohérente en mouvement et attaque ;
+- pivot et longueur des chaînes ;
+- couche avant/arrière selon la direction ;
+- persistance des pièces détachées ;
+- neuf boss de campagne, frame par frame.
 
-- patrouille ;
-- poursuite ;
-- investigation ;
-- retour au poste ;
-- vision, audition, mémoire et leash ;
-- borne de patrouille par plateforme ;
-- aggro à l’impact ;
+Une matrice de rendu corps + arme doit devenir une preuve de sortie, pas
+seulement un fichier JSON valide.
+
+## Combat et IA
+
+### Présent
+
+- combo léger ;
+- lourd ;
+- garde et parade parfaite ;
+- esquive ;
+- Ki et posture ;
+- feedback chair, armure et esprit ;
+- sang, étincelles, recul et sons d’impact ;
+- les ennemis ne grossissent plus à l’impact ;
+- machine à états 2D : patrouille, poursuite, investigation et retour ;
+- vision, audition, mémoire, leash et aggro à l’impact ;
 - attaque limitée au demi-plan regardé ;
-- navigation sous les plateformes hautes.
+- patrouilles bornées par les plateformes.
 
-Ce socle est correct, mais les ennemis manquent encore de rôles de groupe :
+### À développer
 
+- rôles de groupe réellement distincts ;
 - alarme et renforts ;
-- soutien, encerclement et retrait ;
+- encerclement et retrait ;
 - tireurs cherchant une ligne de vue ;
-- ennemis utilisant portes, échelles et routes de profondeur ;
-- comportement spécifique à l’eau, au feu, au brouillard et aux failles ;
-- setpieces authored au lieu de simples vagues alignées.
+- utilisation des portes, échelles et routes de profondeur ;
+- réactions spécifiques à l’eau, au feu, au brouillard et aux failles ;
+- anti-stunlock et télégraphes homogènes ;
+- phases de boss qui changent les règles, pas seulement les statistiques ;
+- équilibrage des trois niveaux de difficulté.
 
-Le feedback de coup utilise sang, étincelles, impact d’armure, recul et son adapté. Les ennemis ne grossissent plus lorsqu’ils sont touchés.
+Le catalogue contient beaucoup plus d’identités visuelles que de comportements
+uniques. Le prochain gain de qualité vient de l’IA et des rencontres authored,
+pas d’une nouvelle augmentation du roster.
 
-### UI/UX, mobile et accessibilité
+## Refuge, économie et sauvegarde
 
-Présent :
+### Fonctionnel
 
-- objectifs par zone ;
-- minicarte adaptée à l’extension ;
-- briefing, pause, paramètres et dojo ;
-- zone tactile de rotation FPS ;
-- boutons de combat mobile ;
+- sauvegarde schéma `2` ;
+- zones visitées et nettoyées ;
+- objectifs et cibles d’interaction ;
+- boss et état runtime des boss ;
+- checkpoints consommés ;
+- équipement et déblocages ;
+- monnaies, munitions et contamination ;
+- refuge du Pin Noir ;
+- quatre services : forge, infirmerie, dōjō, sanctuaire ;
+- quatre contrats ;
+- maîtrise et rangs d’armes ;
+- récompenses idempotentes ;
+- sept sceaux de campagne séparés des deux sceaux historiques ;
+- fin reconnue dans `cyber-shogun-core`.
+
+Le test de progression confirme notamment :
+
+- amélioration d’arme jusqu’au niveau 4 testée dans le moteur ;
+- multiplicateur de dōjō au niveau 5 ;
+- réduction de contamination par les services ;
+- checkpoint idempotent ;
+- budget garanti de campagne ;
+- conservation d’une zone nettoyée après recharge.
+
+### Non équilibré
+
+- rythme réel des gains et dépenses ;
+- intérêt comparé des 53 armes ;
+- coût des services du refuge ;
+- cadence des déblocages ;
+- valeur des contrats ;
+- contamination sur une partie complète ;
+- économie sans farm ;
+- récompense de complétion.
+
+Le système fonctionne, mais seule une télémétrie de playtest peut dire s’il
+produit des choix intéressants.
+
+## Lore et narration
+
+Le prologue en six plans présente le Kegare, l’ordre du shogun et l’arrivée
+d’Akio au col de Kai. La progression traverse ensuite Kurokawa, le château,
+Tokyo contemporain et Neo-Edo, avec la faille du Yomi comme fil conducteur.
+
+La cohérence macro est lisible, mais le milieu de campagne manque encore de
+mise en scène :
+
+- introductions et bilans d’acte ;
+- dialogues de survivants ;
+- antagonistes annoncés avant leur combat ;
+- conséquences visibles au refuge ;
+- échos entre les trois époques ;
+- journaux et indices ;
+- décisions ayant un effet sur la fin.
+
+Le joueur doit pouvoir comprendre le récit sans lire les fichiers de design.
+
+## UI/UX, mobile et accessibilité
+
+### Présent
+
+- HUD d’objectif ;
+- sept sceaux de campagne affichés ;
+- écran de campagne et refuge ;
+- contrat, services et amélioration d’arme ;
+- dōjō et sélection d’équipement ;
+- pause et paramètres ;
+- commandes tactiles ;
+- zone de glisse FPS ;
 - réduction des mouvements ;
-- contraste renforcé et échelle de texte ;
-- navigation clavier des overlays.
+- réglage de contraste et d’échelle du texte ;
+- navigation clavier partielle des overlays.
 
-Encore à valider ou construire :
+### Restant
 
 - remapping ;
-- manette ;
-- taille et espacement sur plusieurs téléphones réels ;
+- prise en charge manette complète ;
+- glyphes dynamiques ;
+- test sur téléphones physiques ;
+- reprise après veille ;
 - retours haptiques ;
-- mode daltonisme ;
-- sous-titres et visualisation directionnelle des sons ;
-- lisibilité du HUD pendant les boss ;
-- audit lecteur d’écran complet ;
-- reprise après mise en veille mobile.
+- daltonisme ;
+- sous-titres complets ;
+- indicateurs directionnels des sons ;
+- audit lecteur d’écran ;
+- lisibilité du HUD pendant les boss massifs.
 
-### Audio et performance
+## Audio
 
-Les musiques et SFX sont générés par Web Audio. Les matériaux, les coups et les deux époques futures ont des profils distincts.
+Le moteur génère musiques et SFX avec Web Audio. Les pas et impacts distinguent
+plusieurs matériaux et les époques moderne/cyber possèdent des profils
+musicaux.
 
-Il n’existe encore :
+Il manque encore :
 
-- aucune écoute humaine comparative sur casque et téléphone ;
-- aucun mix final ;
-- aucun thème de boss contemporain/cyber authored ;
-- aucune mesure de CPU Canvas ;
-- aucun profil mémoire ;
-- aucun budget batterie mobile ;
-- aucun test de temps de chargement à réseau lent.
+- une écoute comparative sur casque, ordinateur et téléphone ;
+- un mix final ;
+- des thèmes authored par acte et boss ;
+- des transitions musicales de combat ;
+- des curseurs séparés ;
+- une vérification des télégraphes audio ;
+- des sous-titres pour les informations essentielles.
 
-## Mesures du level design
+## Performance et poids
 
-| Zone | Largeur | Props | Plateformes | Ennemis | Passages | Checkpoints |
-|---|---:|---:|---:|---:|---:|---:|
-| Grande rue de Kurokawa | 2 500 | 46 | 15 | 6 | 4 | 0 |
-| Ruelle des puits | 2 500 | 38 | 6 | 6 | 3 | 0 |
-| Marché oriental | 2 500 | 34 | 2 | 4 | 4 | 1 |
-| Cour basse du château | 2 500 | 25 | 12 | 5 | 2 | 0 |
-| Résidence du daimyō | 2 400 | 21 | 6 | 5 | 3 | 0 |
-| Donjon supérieur | 2 500 | 22 | 7 | 5 | 3 | 1 |
-| Forêt noyée de Kai | 3 300 | 12 | 5 | 7 | 1 | 1 |
-| Bambouseraie de Shigure | 3 200 | 11 | 5 | 7 | 2 | 1 |
-| Rizières de Tsuru | 3 400 | 12 | 5 | 7 | 2 | 1 |
-| Tokyo contemporain | 3 300 | 12 | 5 | 7 | 2 | 1 |
-| Neo-Edo cyberpunk | 3 500 | 12 | 5 | 7 | 2 | 1 |
-| **Total** | **31 600** | **245** | **73** | **66** | **28** | **7** |
+Le chargement des images a été rendu différé : créer un objet image ne lance
+plus immédiatement la requête et le moteur expose des métriques de chargement.
+Cette correction est importante avec les banques directionnelles.
 
-Les zones ajoutées restent courtes et très horizontales. La route marchable cumulée mesurée lors de la composition est d’environ 29 240 px. À 112 px/s, cela représente environ 4 min 21 s de marche pure ; à 178 px/s, 2 min 44 s de sprint. Les combats allongent cette durée, mais la géométrie actuelle ne peut pas soutenir seule une campagne de 8 à 10 heures.
+Les 227,98 MiB de planches ennemies FPS restent dans le tag GitHub immuable.
+Vercel ne reçoit que le moteur, l’interface et le key art, soit environ
+3,05 MiB estimés avant publication. Les assets sont chargés à la demande depuis
+GitHub en production.
 
-Une zone vitrine devient un chapitre lorsqu’elle possède :
+Risques encore ouverts :
 
-- 5 à 7 chunks aux fonctions distinctes ;
-- 10 à 14 écrans de gameplay ;
-- une route principale et deux branches ;
-- un intérieur FPS obligatoire et un optionnel ;
-- trois secrets ;
-- un setpiece ;
-- une rencontre de sous-boss ;
-- un boss ;
-- un retour transformé ;
-- une extraction, une récompense et un bilan.
+- dépendance provisoire à GitHub Raw au lieu d’un stockage d’assets dédié ;
+- débit et cache froid des 227,98 MiB de banques disponibles ;
+- plusieurs milliers de fichiers dans le dépôt source ;
+- pic mémoire après plusieurs actes ;
+- cache d’images et éviction non profilés sur une partie longue ;
+- débit mobile et cache froid non mesurés ;
+- coût Canvas d’un boss massif avec plusieurs ennemis ;
+- budget batterie inconnu.
 
-## Priorités
+Il faut mesurer avant de choisir entre PNG, WebP lossless, atlas plus compacts
+ou streaming par acte.
 
-### P0 — qualité visuelle et combat
+## QA exécutée sur cet état
 
-1. Dessiner huit directions FPS pour les ennemis réellement présents dans le premier chapitre.
-2. Poser manuellement les sockets de mains de ces directions.
-3. Produire les banques complètes d’Akio par famille d’arme.
-4. Sauvegarder l’état du joug détaché d’Aka-Ushi.
-5. Jouer Yomi-no-Kanrei comme seconde forme réelle, pas comme simple entrée de catalogue.
-
-### P1 — transformer les biomes en chapitres
-
-1. Développer forêt, bambouseraie et champs en un premier acte de 60 à 90 minutes.
-2. Ajouter routes de profondeur, intérieurs, raccourcis et retours transformés.
-3. Construire une rencontre signature et un boss par biome.
-4. Développer Kurokawa comme chapitre de référence.
-5. Donner au contemporain et au cyberpunk leurs propres intérieurs FPS, boss et objectifs.
-
-### P2 — systèmes de longévité
-
-1. Refuge vivant et artisans.
-2. Choix purifier / brûler / prélever.
-3. Contamination évolutive de la carte.
-4. Fins multiples et NG+.
-5. Contrats, boss rush et mode arcade.
-6. Difficultés, remapping, manette, localisation et accessibilité.
-
-## Updates de design recommandées
-
-1. **Échos temporels**
-   Une décision prise en 1638 modifie le même lieu dans le Japon contemporain et Neo-Edo.
-
-2. **Arsenal de chasse**
-   Les pièces détachées des boss deviennent des composants. Chaque famille d’arme débloque une animation et un contre propres.
-
-3. **Boss multi-vues authored**
-   Une phase 2D détruit des pièces, une transition cinématique change l’espace, puis une phase FPS exploite les conséquences.
-
-4. **Contamination dynamique**
-   Les zones ignorées changent de roster, ferment une route ou contaminent un marchand.
-
-5. **Refuge vivant**
-   Les survivants et artisans réagissent aux choix, aux armes rapportées et aux quartiers sauvés.
-
-6. **Rencontres signature**
-
-   - forêt : traque, pluie et visibilité réduite ;
-   - bambouseraie : sons directionnels et attaques à travers les tiges ;
-   - champs : eau, digues, feu et cavaliers ;
-   - ville : ruelles, toits, maisons et routes parallèles ;
-   - château : étages, portes, défenses et raccourcis ;
-   - contemporain : métro, alarmes et évacuation ;
-   - cyberpunk : drones, réseau et géométrie altérée.
-
-## QA exécutée
-
-Validations confirmées dans cette passe :
-
-- syntaxe JS des fichiers runtime et validateurs modifiés ;
-- `smoke-test.js` ;
-- `expansion-smoke-test.js` ;
-- `coherence-smoke-test.js` ;
-- `campaign-expansion-smoke-test.js` ;
-- `endgame-environments-smoke-test.js` ;
-- `tools/validate-modular-pack.mjs` ;
-- `tools/verify-modular-registry.mjs` ;
-- `tools/validate-fps-player.py` ;
-- `tools/validate-fps-enemies.py` ;
-- `tools/build-weapon-rigs.py --check` ;
-- `tools/build-endgame-environments.py --check` ;
-- `tools/validate-2d-spatial.py` ;
-- `tools/sprite_pipeline.py validate --root assets/modular` ;
-- `tools/verify-http-assets.mjs http://127.0.0.1:8765/`.
-
-Résultats modulaires confirmés :
-
-- 103 personnages ;
-- 515 planches et 3 090 frames 2D ;
-- 480 planches et 2 880 frames ennemies FPS ;
-- 5 planches et 30 frames joueur FPS ;
-- 30 ancres `neckRig` pour Aka-Ushi ;
-- 218 sprites d’environnement ;
-- 379 assets uniques ;
-- 7 646 PNG et 251 JSON dans le pipeline global ;
-- 1 320 URL runtime contrôlées par HTTP ;
-- zéro erreur des validateurs modulaires, spatiaux, sprites et HTTP.
-
-Preuves visuelles principales :
-
-| Capture | Preuve |
+| Contrôle | Résultat |
 |---|---|
-| `05-forest-runtime.png` | forêt runtime |
-| `06-fields-runtime.png` | rizières runtime |
-| `07-contemporary-runtime.png` | Japon contemporain |
-| `08-cyberpunk-runtime.png` | Neo-Edo |
-| `10-boss-yoke-final.png` | joug frontal d’Aka-Ushi |
-| `11-front-tower-fire-runtime.png` | tour et foyer frontaux |
-| `14-mobile-landscape-forest.png` | contrôles mobile |
-| `18-before-after-comparison.png` | Kurokawa avant/après |
-| `19-weapon-front-layer-final.png` | couche d’arme 2D |
-| `20-fps-direction-safe-weapon-final.png` | sécurité des armes FPS |
-| `22-prologue-kai-final.png` | dernier plan cohérent dans le runtime |
-| `23-prologue-before-after-final.png` | comparaison du prologue |
+| `campaign-runtime-smoke-test.js` | PASS — 7 actes, 28 zones |
+| `campaign-fps-smoke-test.js` | PASS — 7 missions campagne, 5 historiques |
+| `campaign-objective-runtime-smoke-test.js` | PASS — persistance et anti-doublon |
+| `campaign-save-smoke-test.js` | PASS — schéma 2 et récupération backup |
+| `progression-integrity-smoke-test.js` | PASS |
+| `fps-era-materials-smoke-test.js` | PASS — 16 tuiles dédiées |
+| `coherence-smoke-test.js` | PASS |
+| `visual-data-smoke-test.js` | PASS — 28 zones, 552 props |
+| `fps-directional-runtime-smoke-test.js` | PASS — 105/105, 840 banques, 4 200 planches |
 
-Contrôles non réalisés :
+Ces résultats ne valident pas :
 
-- playthrough naturel complet sans debug ;
-- chronométrage réel de chaque chapitre ;
-- matrice visuelle exhaustive des 6 000 rigs ;
-- test tactile sur téléphone réel ;
-- écoute humaine ;
-- Lighthouse ;
-- profilage CPU, mémoire et batterie ;
-- persistance du joug détaché après sauvegarde/recharge ;
-- validation de huit directions FPS dessinées, puisqu’elles n’existent pas encore.
+- un playthrough complet sans debug ;
+- la durée ;
+- toutes les diagonales FPS ;
+- chaque socket d’arme ;
+- les 84 captures de contrôle des zones ;
+- un téléphone réel ;
+- une manette ;
+- l’audio humain ;
+- la charge réseau ;
+- le CPU, la mémoire et la batterie ;
+- un déploiement de production.
 
-## Définition de « jeu complet » pour le prochain audit
+## Priorités de fermeture
 
-Le projet pourra quitter le statut de vertical slice lorsque :
+### P0 — bloquant avant content lock
 
-- chaque acte possède début, transformation, boss, décision, extraction et récompense ;
-- aucun passage ne crée d’impasse ;
-- les durées sont prouvées par des playtests ;
-- chaque zone utilise ses props pour du gameplay ;
-- les armes sont vérifiées visuellement sur chaque frame réellement utilisée ;
-- les ennemis FPS utilisés possèdent huit vraies directions et des sockets manuels ;
-- Akio possède une banque adaptée à chaque grande famille d’arme ;
-- le joug suit Aka-Ushi et persiste après recharge ;
-- Yomi-no-Kanrei est réellement joué ;
-- les 28 zones planifiées sont consommées par le runtime ;
-- desktop, mobile, audio, performance et accessibilité sont testés sur leurs supports réels.
+1. remplacer les projections historiques prioritaires par de vraies vues
+   authored, sans réintroduire de double silhouette ;
+2. sockets d’armes contrôlés sur les boss et familles utilisées ;
+3. trois playthroughs techniques complets sans impasse ;
+4. audit visuel des 28 zones ;
+5. profilage du chargement différé et du poids statique ;
+6. cache-busting cohérent entre HTML, données et moteur.
+
+### P1 — contenu nécessaire au jeu complet
+
+1. durée prouvée par cinq playtests aveugles ;
+2. branches, secrets, raccourcis et retours transformés par acte ;
+3. géométries FPS propres aux lieux majeurs ;
+4. animations complètes d’Akio et états spécifiques des ennemis ;
+5. IA de groupe et boss réellement différenciés ;
+6. économie, refuge et progression équilibrés ;
+7. narration et conséquences visibles sur les sept actes.
+
+### P2 — finition et sortie
+
+1. manette, remapping, accessibilité et tests mobile ;
+2. musique, SFX et mix final ;
+3. compatibilité navigateurs et migration de sauvegarde ;
+4. difficulté, localisation et polish UI ;
+5. bêta externe et correction des retours ;
+6. publication depuis un commit validé ;
+7. NG+, boss rush et arcade après la campagne 1.0.
+
+## Conclusion
+
+La structure de campagne demandée est désormais dans le runtime : 7 actes,
+28 zones, 7 missions FPS obligatoires, progression persistante et fin
+cyberpunk. Ce qui reste n’est plus principalement « ajouter des zones », mais
+**valider chaque asset en situation, densifier les actes, compléter les
+animations, différencier les rencontres et prouver la durée par le jeu réel**.
+
+Le projet pourra être présenté comme jeu complet lorsque le P0 sera fermé, que
+la grille P1 sera satisfaite pour les sept actes et qu’une bêta aura démontré
+durée, stabilité et lisibilité sur les supports visés.

@@ -14,6 +14,32 @@ const outputCatalog = path.join(modularRoot, "catalog.json");
 const outputRegistry = path.join(modularRoot, "registry.json");
 
 const animationNames = ["idle", "move", "attack", "hurt", "death"];
+
+function writeUtf8Replacing(file, content) {
+  const bytes = Buffer.from(content, "utf8");
+  try {
+    fs.writeFileSync(file, bytes);
+  } catch (error) {
+    if (!fs.existsSync(file) || !["EINVAL", "UNKNOWN"].includes(error?.code)) throw error;
+    const descriptor = fs.openSync(file, "r+");
+    try {
+      fs.writeSync(descriptor, bytes, 0, bytes.length, 0);
+      fs.ftruncateSync(descriptor, bytes.length);
+    } finally {
+      fs.closeSync(descriptor);
+    }
+  }
+}
+const fpsDirectionNames = [
+  "front",
+  "front-left",
+  "left",
+  "back-left",
+  "back",
+  "back-right",
+  "right",
+  "front-right",
+];
 const loreKatanaIdPattern = /^(?:0[1-9]|10)-/;
 const categoryOrder = ["player", "legacy", "regular", "special", "miniboss", "boss", "giant"];
 const categoryLabels = {
@@ -232,8 +258,8 @@ for (const category of categoryOrder) {
       weaponRoleOriginal: metadata.weaponRoleOriginal || null,
       era: metadata.era || null,
       zoneAffinity: metadata.zoneAffinity || null,
-      viewCoverage: metadata.viewCoverage || sprite.viewCoverage?.mode || sprite.animationContract?.view || null,
-      animationContract: metadata.animationContract || sprite.animationContract || null,
+      viewCoverage: sprite.viewCoverage?.mode || metadata.viewCoverage || sprite.animationContract?.view || null,
+      animationContract: sprite.animationContract || metadata.animationContract || null,
       weaponsBakedIntoBody: sprite.weaponsBakedIntoBody === true,
       sourceGeneration: metadata.sourceGeneration || null,
       file: toWebPath(masterFile),
@@ -265,6 +291,7 @@ for (const category of categoryOrder) {
         fpsFrames: fpsFramePaths(fpsFolder, fpsSprite),
         fpsSprite: toWebPath(fpsSpriteFile),
         fpsGeneration: metadata.fpsPrompt || fpsSprite.generationTool || fpsSprite.sourceView || "FPS billboard sprites",
+        fpsDirections: fpsSprite.fpsDirections || null,
         fpsWeaponRig: fpsSprite.weaponRig || null,
         fpsRenderOrder: fpsSprite.weaponRig?.renderOrder
           || fpsSprite.renderOrder
@@ -412,6 +439,7 @@ const characterAssets = characters.map((character) => ({
   fpsFrames: character.fpsFrames,
   fpsSprite: character.fpsSprite,
   fpsGeneration: character.fpsGeneration,
+  fpsDirections: character.fpsDirections,
   fpsWeaponRig: character.fpsWeaponRig,
   fpsWeaponMounts: character.fpsWeaponMounts,
   fpsRenderOrder: character.fpsRenderOrder,
@@ -439,6 +467,12 @@ const counts = {
 const fpsPlayer = characters.find((entry) => entry.category === "player" && entry.id === "akio");
 const fpsEnemies = characters.filter((entry) => entry.category !== "player" && entry.fpsSprite);
 const fpsCharacters = characters.filter((entry) => entry.fpsSprite);
+const fpsDirectionalCharacters = fpsEnemies.filter((entry) =>
+  entry.fpsDirections
+  && fpsDirectionNames.every((direction) =>
+    entry.fpsDirections?.[direction]?.animations
+  )
+);
 const fpsPlayerSprite = readJsonIfExists(path.join(fpsPlayerBodyRoot, "sprite.json"));
 const firstEnemyFpsSprite = fpsEnemies.length > 0
   ? readJsonIfExists(path.join(root, fpsEnemies[0].fpsSprite))
@@ -454,6 +488,11 @@ const fpsPipeline = {
     firstEnemyFpsSprite?.frameHeight || 128,
   ],
   note: "FPS assets are separate files and are loaded through fpsAnimations/fpsFrames.",
+  directions: fpsDirectionNames,
+  cardinalBitmapSources: ["front", "back", "left", "right"],
+  derivedDiagonalBanks: ["front-left", "back-left", "back-right", "front-right"],
+  directionalCharacterCount: fpsDirectionalCharacters.length,
+  directionalContract: "fpsDirections.<direction>.animations/frames",
 };
 const fps = {
   characters: fpsEnemies.length,
@@ -467,9 +506,12 @@ const fps = {
     fpsPlayerSprite?.frameHeight || 640,
   ],
   enemySource: "Detailed OpenAI 2D masters normalized as grounded Doom billboards",
+  directions: fpsDirectionNames,
+  directionalCharacters: fpsDirectionalCharacters.length,
+  directionBanks: fpsDirectionalCharacters.length * 4,
 };
 
-fs.writeFileSync(outputRegistry, `${JSON.stringify({
+writeUtf8Replacing(outputRegistry, `${JSON.stringify({
   schema: 1,
   generatedAt: new Date().toISOString(),
   animationStandard: { animations: animationNames, framesPerAnimation: 6, weaponsBakedIntoBodies: false },
@@ -486,13 +528,13 @@ fs.writeFileSync(outputRegistry, `${JSON.stringify({
   environments,
   fpsPipeline,
   fps,
-}, null, 2)}\n`, "utf8");
+}, null, 2)}\n`);
 
-fs.writeFileSync(outputCatalog, `${JSON.stringify({
+writeUtf8Replacing(outputCatalog, `${JSON.stringify({
   schema: 2,
   generatedAt: new Date().toISOString(),
   counts,
   assets,
-}, null, 2)}\n`, "utf8");
+}, null, 2)}\n`);
 
 console.log(JSON.stringify(counts, null, 2));

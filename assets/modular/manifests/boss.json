@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "category": "boss",
-  "count": 20,
+  "count": 22,
   "generationTool": "OpenAI ImageGen built-in — un appel distinct",
   "generationPolicy": "Un appel ImageGen distinct par personnage. Les armes et accessoires de combat restent des sprites séparés et chaque weaponId résout une entrée de weapons.json.",
   "animationStandard": {
@@ -1188,6 +1188,88 @@
       },
       "prompt": "Use case: stylized-concept\nAsset type: production animation master sprite sheet for one modular 2D final boss in Yomi no Kage\nPrimary request: create exactly one original final boss character, the \"Vaisseau du Yomi\", the first shogunate inquisitor fully claimed by the zombie plague in Kan’ei-era Japan, 1638. He is exceptionally tall, broad and regal, with a black lacquer kabuto carrying a restrained three-pronged bone-white crest, a cracked aged-bone menpō fused only visually by tight armor straps, monumental ink-black dō-maru armor, deep-indigo under-robes, a long split lacquer-red command mantle, asymmetrical bone-white waist plates, heavy black forearms and restrained sick-green contamination glowing through narrow seams at the eyes, throat, ribs and joints. His silhouette is unique, balanced, clearly final-boss tier and distinct from the existing corrupted daimyō, with normal human anatomy, no tentacles, no exposed organs and no graphic gore.\nAnimation layout: ONE SINGLE MASTER SHEET arranged as an exact invisible grid of 6 columns by 5 rows, exactly 30 equal cells, read left to right. Row 1 contains six coherent sovereign idle frames with slow controlled breathing. Row 2 contains six coherent movement frames for an inexorable armored advance. Row 3 contains six coherent EMPTY-HANDED final-boss attack frames using a guarded rise, devastating full-body double-arm sweep and a kneeling two-palm execution finish, with no weapon, energy or visible effect. Row 4 contains six coherent hurt/recoil frames showing the same armor and identity. Row 5 contains six coherent death/collapse frames ending fully prone with the crest and mask still attached. Do not draw grid lines, cell borders, panels, labels, numbers or separators.\nCharacter consistency: every cell depicts the exact same single character, identical mask, helmet, crest, armor, mantle, colors, proportions and scale. Strict orthographic side view facing LEFT in all 30 cells. Full body and feet visible in every cell, centered inside each invisible cell with generous internal padding, same ground baseline and camera height, no cropping, no overlap into neighboring cells. Final boss appears about 22 percent larger than a standard enemy while remaining inside every cell.\nWeapon modularity: BOTH HANDS COMPLETELY EMPTY in every frame. Absolutely no tachi, katana, weapon, blade, polearm, bow, firearm, shield, tendril, energy, tool, object, scabbard, pouch, holster or carried prop anywhere on the body or in the sheet.\nStyle/medium: highly finished authentic 16-bit pixel art, deliberately chunky square pixels, hard crisp pixel clusters, limited palette, no antialiasing, no smooth vector edges, no painterly rendering, readable at small gameplay scale.\nColor palette: dominant ink black, deep indigo, lacquer red, aged bone-white, dark iron and restrained sick green. Do not use magenta or pink in the character.\nScene/backdrop: perfectly flat solid #ff00ff chroma-key background, uniform edge to edge and throughout all spacing between cells.\nConstraints: background must contain no shadow, gradient, texture, floor plane, reflection, glow, aura, smoke, spores, particles or lighting variation. No cast/contact shadows. No throne, castle, scenery, architecture, ground, extra character, duplicate outside the 30 cells, text, logo, watermark or UI. Historically grounded 1638 Japanese armor proportions, no modern elements, no Western plate armor, no excessive fantasy spikes, no resemblance to a named existing franchise character, no graphic gore.",
       "generationTool": "OpenAI ImageGen built-in — un appel distinct"
+    },
+    {
+      "id": "new-modern-metro-colossus",
+      "name": "Colosse de la ligne Yomi",
+      "subtitle": "Terminus vivant de Tokyo",
+      "role": "Boss massif environnemental",
+      "lore": [
+        "Un agent de maintenance fut soudé à son exosquelette lorsque la faille traversa les tunnels du métro.",
+        "La peste anime désormais les renforts d’acier comme des os supplémentaires et lui fait arracher les portes des rames."
+      ],
+      "stats": {
+        "hp": 1320,
+        "damage": 52,
+        "speed": 0.86,
+        "posture": 430
+      },
+      "pattern": "Charges lourdes, onde de choc et balayage avec une porte de rame montée comme arme séparée.",
+      "weaponId": "metro-car-door",
+      "weapon": {
+        "id": "metro-car-door",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "era": "tokyo-2026",
+      "zoneAffinity": "contemporary-japan",
+      "folder": "assets/modular/characters/boss/new-modern-metro-colossus",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/boss/new-modern-metro-colossus/source-master.png",
+        "master": "assets/modular/characters/boss/new-modern-metro-colossus/master.png",
+        "sprite": "assets/modular/characters/boss/new-modern-metro-colossus/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/boss/new-modern-metro-colossus/sheets/idle.png",
+          "move": "assets/modular/characters/boss/new-modern-metro-colossus/sheets/move.png",
+          "attack": "assets/modular/characters/boss/new-modern-metro-colossus/sheets/attack.png",
+          "hurt": "assets/modular/characters/boss/new-modern-metro-colossus/sheets/hurt.png",
+          "death": "assets/modular/characters/boss/new-modern-metro-colossus/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/boss/new-modern-metro-colossus/frames"
+      },
+      "prompt": "Planche maître originale du Colosse de la ligne Yomi, zombie fusionné à un exosquelette de maintenance du métro de Tokyo, en grille 5 x 6 strictement latérale gauche. Les cinq lignes sont idle, marche lourde, attaque à mains vides, impact et mort. Même identité et même échelle partout, mains vides, arme porte de rame séparée, fond chroma vert uniforme, aucun texte ni décor.",
+      "generationTool": "OpenAI ImageGen built-in"
+    },
+    {
+      "id": "new-cyber-shogun-zero",
+      "name": "Shōgun Zéro",
+      "subtitle": "Souverain de Neo-Tokyo réclamé par le Yomi",
+      "role": "Boss final multiphase",
+      "lore": [
+        "Le programme de commandement de Neo-Tokyo reçut les souvenirs militaires dérobés par la faille.",
+        "Le Yomi en fit un shōgun sans lignée, enfermé dans une armure de phase qui règne sur les morts du réseau."
+      ],
+      "stats": {
+        "hp": 1900,
+        "damage": 64,
+        "speed": 1.08,
+        "posture": 560
+      },
+      "pattern": "Duel de nodachi de phase, contres, téléportations courtes et rupture d’armure dans la dernière phase.",
+      "weaponId": "phase-nodachi",
+      "weapon": {
+        "id": "phase-nodachi",
+        "separate": true,
+        "bakedIntoCharacter": false
+      },
+      "era": "neo-tokyo-2188",
+      "zoneAffinity": "cyberpunk-japan",
+      "folder": "assets/modular/characters/boss/new-cyber-shogun-zero",
+      "paths": {
+        "sourceMaster": "assets/modular/characters/boss/new-cyber-shogun-zero/source-master.png",
+        "master": "assets/modular/characters/boss/new-cyber-shogun-zero/master.png",
+        "sprite": "assets/modular/characters/boss/new-cyber-shogun-zero/sprite.json",
+        "sheets": {
+          "idle": "assets/modular/characters/boss/new-cyber-shogun-zero/sheets/idle.png",
+          "move": "assets/modular/characters/boss/new-cyber-shogun-zero/sheets/move.png",
+          "attack": "assets/modular/characters/boss/new-cyber-shogun-zero/sheets/attack.png",
+          "hurt": "assets/modular/characters/boss/new-cyber-shogun-zero/sheets/hurt.png",
+          "death": "assets/modular/characters/boss/new-cyber-shogun-zero/sheets/death.png"
+        },
+        "frames": "assets/modular/characters/boss/new-cyber-shogun-zero/frames"
+      },
+      "prompt": "Planche maître originale de Shōgun Zéro, shōgun cybernétique possédé du Neo-Tokyo 2188, en grille 5 x 6 strictement latérale gauche. Les cinq lignes sont idle, marche, attaque à mains vides, impact et mort. Même kabuto, masque et armure dans toutes les frames, mains vides, nodachi de phase séparé, fond chroma vert uniforme, aucun texte ni décor.",
+      "generationTool": "OpenAI ImageGen built-in"
     }
   ]
 }

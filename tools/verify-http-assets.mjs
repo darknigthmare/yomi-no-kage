@@ -3,7 +3,10 @@ import http from "node:http";
 import https from "node:https";
 
 const baseUrl = process.argv[2] || "http://127.0.0.1:8765/";
-const expectedLevelBuildId = "20260719-world-expansion-v3";
+const expectedLevelBuildId = "20260719-complete-campaign-v2";
+const assetReleaseRef = "complete-campaign-v2";
+const assetRepositoryRoot = `https://raw.githubusercontent.com/darknigthmare/yomi-no-kage/${assetReleaseRef}/`;
+const productionAssets = /(^|\.)vercel\.app$/i.test(new URL(baseUrl).hostname);
 const indexSource = fs.readFileSync("index.html", "utf8");
 const registry = JSON.parse(fs.readFileSync("assets/modular/registry.json", "utf8"));
 const catalog = JSON.parse(fs.readFileSync("assets/modular/catalog.json", "utf8"));
@@ -11,6 +14,7 @@ const refs = new Set([
   "index.html",
   "assets.html",
   "game.js",
+  "asset-runtime.js",
   "audio.js",
   "cinematic.js",
   "styles.css",
@@ -48,6 +52,9 @@ for (const asset of catalog.assets) {
 for (const character of registry.characters) {
   Object.values(character.animations).forEach((file) => refs.add(file));
   if (character.fpsAnimations) Object.values(character.fpsAnimations).forEach((file) => refs.add(file));
+  for (const bank of Object.values(character.fpsDirections || {})) {
+    Object.values(bank?.animations || {}).forEach((file) => refs.add(file));
+  }
   if (character.fpsWeaponSprites) Object.values(character.fpsWeaponSprites).forEach((file) => refs.add(file));
 }
 for (const weapon of registry.weapons || []) {
@@ -82,6 +89,13 @@ function head(url) {
   });
 }
 
+function deployedUrl(file) {
+  if (productionAssets && String(file).startsWith("assets/")) {
+    return new URL(String(file), assetRepositoryRoot);
+  }
+  return new URL(file, baseUrl);
+}
+
 function getText(url) {
   return new Promise((resolve, reject) => {
     const client = url.protocol === "https:" ? https : http;
@@ -109,7 +123,7 @@ async function worker() {
     let lastError = null;
     for (let attempt = 0; attempt < 3; attempt += 1) {
       try {
-        const response = await head(new URL(file, baseUrl));
+        const response = await head(deployedUrl(file));
         if (response.ok && response.size > 0) {
           lastError = null;
           break;
@@ -165,6 +179,8 @@ try {
 }
 console.log(JSON.stringify({
   baseUrl,
+  assetReleaseRef,
+  productionAssets,
   checked: urls.length,
   errorCount: errors.length,
   errors: errors.slice(0, 50),

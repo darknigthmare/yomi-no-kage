@@ -7,12 +7,23 @@ tools/
 *smoke-test.js
 smoke-test.js
 
+# Les banques visuelles sont versionnées dans le tag GitHub immuable
+# `complete-campaign-v2` et résolues par asset-runtime.js en production.
+# Vercel ne reçoit ainsi que le moteur et l'interface (< limite Hobby).
+assets/generated/
+assets/modular/
+
 # Runtime uses animation sheets. Individual frame exports stay in GitHub.
 assets/modular/characters/**/frames/
 assets/modular/fps/characters/**/frames/
 assets/modular/fps/player/**/frames/
 assets/modular/characters/*/*/frames/**
 assets/modular/fps/characters/*/*/frames/**
+assets/modular/fps/characters/*/*/directions/*/frames/**
+assets/modular/fps/characters/*/*/sources-directional/**
+# Runtime resolves enemy banks and sockets from registry.json; per-character
+# FPS metadata remains in GitHub for authoring and validation only.
+assets/modular/fps/characters/*/*/sprite.json
 assets/modular/characters/*/*/master.png
 assets/modular/characters/**/master-alpha.png
 assets/modular/characters/*/*/source-master.png
@@ -22,6 +33,7 @@ assets/modular/fps/player/**/master-alpha.png
 # Keep production deployment small; source masters remain in GitHub.
 assets/generated/sources/
 assets/generated/**/*-source.png
+assets/generated/**/*-source-*.png
 assets/modular/**/source/
 assets/modular/**/*source*.png
 assets/modular/**/sources-v2/

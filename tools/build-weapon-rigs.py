@@ -37,6 +37,94 @@ ENEMY_TARGETS: dict[str, tuple[tuple[float, float], tuple[float, float]]] = {
     "hurt": ((0.10, 0.52), (0.40, 0.51)),
     "death": ((0.50, 0.52), (0.58, 0.52)),
 }
+
+# Each FPS direction owns a different grip profile.  These are authored target
+# regions, not render-time offsets.  The builder resolves them against each
+# actual frame contour and serializes the resulting sockets frame by frame.
+FPS_DIRECTION_TARGETS: dict[
+    str,
+    dict[str, tuple[tuple[float, float], tuple[float, float]]],
+] = {
+    "left": ENEMY_TARGETS,
+    "right": {
+        animation: (
+            (1.0 - primary[0], primary[1]),
+            (1.0 - secondary[0], secondary[1]),
+        )
+        for animation, (primary, secondary) in ENEMY_TARGETS.items()
+    },
+    "front": {
+        "idle": ((0.72, 0.50), (0.28, 0.50)),
+        "move": ((0.69, 0.49), (0.31, 0.49)),
+        "attack": ((0.78, 0.43), (0.22, 0.47)),
+        "hurt": ((0.70, 0.51), (0.30, 0.51)),
+        "death": ((0.58, 0.54), (0.42, 0.54)),
+    },
+    "back": {
+        "idle": ((0.69, 0.51), (0.31, 0.51)),
+        "move": ((0.67, 0.50), (0.33, 0.50)),
+        "attack": ((0.75, 0.45), (0.25, 0.48)),
+        "hurt": ((0.68, 0.52), (0.32, 0.52)),
+        "death": ((0.57, 0.55), (0.43, 0.55)),
+    },
+}
+FPS_DIRECTIONS = (
+    "front",
+    "front-left",
+    "left",
+    "back-left",
+    "back",
+    "back-right",
+    "right",
+    "front-right",
+)
+for _diagonal, (_axial, _side) in {
+    "front-left": ("front", "left"),
+    "back-left": ("back", "left"),
+    "back-right": ("back", "right"),
+    "front-right": ("front", "right"),
+}.items():
+    FPS_DIRECTION_TARGETS[_diagonal] = {
+        animation: (
+            (
+                round(
+                    (
+                        FPS_DIRECTION_TARGETS[_axial][animation][0][0]
+                        + FPS_DIRECTION_TARGETS[_side][animation][0][0]
+                    )
+                    / 2,
+                    4,
+                ),
+                round(
+                    (
+                        FPS_DIRECTION_TARGETS[_axial][animation][0][1]
+                        + FPS_DIRECTION_TARGETS[_side][animation][0][1]
+                    )
+                    / 2,
+                    4,
+                ),
+            ),
+            (
+                round(
+                    (
+                        FPS_DIRECTION_TARGETS[_axial][animation][1][0]
+                        + FPS_DIRECTION_TARGETS[_side][animation][1][0]
+                    )
+                    / 2,
+                    4,
+                ),
+                round(
+                    (
+                        FPS_DIRECTION_TARGETS[_axial][animation][1][1]
+                        + FPS_DIRECTION_TARGETS[_side][animation][1][1]
+                    )
+                    / 2,
+                    4,
+                ),
+            ),
+        )
+        for animation in ANIMATIONS
+    }
 FRAME_Y_NUDGES: dict[str, tuple[float, ...]] = {
     "idle": (0.01, 0.00, -0.01, 0.00, 0.01, 0.00),
     "move": (0.04, 0.01, -0.02, 0.03, 0.00, 0.04),
@@ -205,9 +293,11 @@ def rig_from_enemy_frame(
     animation: str,
     frame_index: int,
     category: str,
+    direction: str = "left",
 ) -> dict[str, Any]:
     width, height, bounds, contour = opaque_geometry(frame_path)
-    primary_target, secondary_target = ENEMY_TARGETS[animation]
+    target_profile = FPS_DIRECTION_TARGETS.get(direction, ENEMY_TARGETS)
+    primary_target, secondary_target = target_profile[animation]
     y_nudge = FRAME_Y_NUDGES[animation][frame_index]
     primary_pixel = snap_contour(
         contour,
@@ -301,6 +391,7 @@ def player_weapon_rig(sprite: dict[str, Any]) -> dict[str, Any]:
         "schema": 1,
         "coordinateSpace": "frame-normalized",
         "facing": "right",
+        "authorship": "declared-per-frame-mounts",
         "renderOrder": ["body", "weapon"],
         "animations": animations,
     }
@@ -318,7 +409,12 @@ def fps_enemy_rig_source(folder: Path, sprite: dict[str, Any]) -> dict[str, Any]
     return source
 
 
-def enemy_weapon_rig(folder: Path, sprite: dict[str, Any], category: str) -> dict[str, Any]:
+def enemy_weapon_rig(
+    folder: Path,
+    sprite: dict[str, Any],
+    category: str,
+    direction: str = "left",
+) -> dict[str, Any]:
     animations: dict[str, list[dict[str, Any]]] = {}
     for animation in ANIMATIONS:
         declared_frames = sprite.get("animations", {}).get(animation, [])
@@ -334,6 +430,7 @@ def enemy_weapon_rig(folder: Path, sprite: dict[str, Any], category: str) -> dic
                     animation,
                     index,
                     category,
+                    direction,
                 )
             )
         if len(frames) != 6:
@@ -344,10 +441,54 @@ def enemy_weapon_rig(folder: Path, sprite: dict[str, Any], category: str) -> dic
     return {
         "schema": 1,
         "coordinateSpace": "frame-normalized",
-        "facing": "left",
+        "facing": direction,
+        "authorship": "authored-direction-profile+frame-contour-snap",
         "renderOrder": ["body", "weapon"],
         "animations": animations,
     }
+
+
+def fps_directional_weapon_rigs(
+    fps_sprite: dict[str, Any],
+    category: str,
+) -> dict[str, Any]:
+    directions = fps_sprite.get("fpsDirections")
+    if not isinstance(directions, dict):
+        return {}
+    result: dict[str, Any] = {}
+    for direction in FPS_DIRECTIONS:
+        bank = directions.get(direction)
+        if not isinstance(bank, dict):
+            continue
+        animations = bank.get("frames")
+        if not isinstance(animations, dict):
+            continue
+        rig_animations: dict[str, list[dict[str, Any]]] = {}
+        for animation in ANIMATIONS:
+            paths = animations.get(animation)
+            if not isinstance(paths, list) or len(paths) != 6:
+                raise ValueError(
+                    f"fpsDirections.{direction}.{animation}: expected 6 frame paths"
+                )
+            rig_animations[animation] = [
+                rig_from_enemy_frame(
+                    ROOT / str(frame_path),
+                    animation,
+                    index,
+                    category,
+                    direction,
+                )
+                for index, frame_path in enumerate(paths)
+            ]
+        result[direction] = {
+            "schema": 1,
+            "coordinateSpace": "frame-normalized",
+            "facing": direction,
+            "authorship": "authored-direction-profile+frame-contour-snap",
+            "renderOrder": ["body", "weapon"],
+            "animations": rig_animations,
+        }
+    return result
 
 
 def character_sprite_paths() -> list[tuple[str, Path]]:
@@ -392,6 +533,18 @@ def main() -> int:
         action="store_true",
         help="Verify that every committed rig matches a clean deterministic rebuild.",
     )
+    parser.add_argument(
+        "--categories",
+        nargs="*",
+        default=[],
+        help="Optional exact category folders for a parallel-safe partial rebuild.",
+    )
+    parser.add_argument(
+        "--ids",
+        nargs="*",
+        default=[],
+        help="Optional exact character IDs.",
+    )
     args = parser.parse_args()
 
     stale: list[str] = []
@@ -401,6 +554,10 @@ def main() -> int:
     enemy_fps_frames = 0
     player_frames = 0
     for category, sprite_path in character_sprite_paths():
+        if args.categories and category not in set(args.categories):
+            continue
+        if args.ids and sprite_path.parent.name not in set(args.ids):
+            continue
         sprite = read_json(sprite_path)
         if category == "player":
             rig = player_weapon_rig(sprite)
@@ -434,6 +591,12 @@ def main() -> int:
                     fps_enemy_rig_source(fps_sprite_path.parent, fps_sprite),
                     category,
                 )
+                directional_rigs = fps_directional_weapon_rigs(
+                    fps_sprite,
+                    category,
+                )
+                if directional_rigs:
+                    fps_rig["directions"] = directional_rigs
                 enemy_fps_count += 1
                 enemy_fps_frames += sum(
                     len(frames) for frames in fps_rig["animations"].values()
@@ -448,11 +611,16 @@ def main() -> int:
                         str(fps_sprite_path.relative_to(ROOT)).replace("\\", "/")
                     )
 
-    fps_player = read_json(FPS_PLAYER_SPRITE)
-    fps_rig = player_weapon_rig(fps_player)
-    player_frames += sum(len(frames) for frames in fps_rig["animations"].values())
-    if not write_or_check(FPS_PLAYER_SPRITE, fps_player, fps_rig, args.check):
-        stale.append(str(FPS_PLAYER_SPRITE.relative_to(ROOT)).replace("\\", "/"))
+    include_player = (
+        not args.categories
+        and not args.ids
+    ) or "player" in set(args.categories) or "akio" in set(args.ids)
+    if include_player:
+        fps_player = read_json(FPS_PLAYER_SPRITE)
+        fps_rig = player_weapon_rig(fps_player)
+        player_frames += sum(len(frames) for frames in fps_rig["animations"].values())
+        if not write_or_check(FPS_PLAYER_SPRITE, fps_player, fps_rig, args.check):
+            stale.append(str(FPS_PLAYER_SPRITE.relative_to(ROOT)).replace("\\", "/"))
 
     report = {
         "mode": "check" if args.check else "write",

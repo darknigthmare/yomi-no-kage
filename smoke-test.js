@@ -105,7 +105,7 @@ require("./game.js");
   assert.equal(initialWorld.zoneKind, "outdoor");
   assert.equal(initialWorld.propSource, "kage-levels");
   assert.equal(initialWorld.levelSchema, 2);
-  assert.equal(initialWorld.levelBuildId, "20260719-world-expansion-v3");
+  assert.equal(initialWorld.levelBuildId, "20260719-complete-campaign-v2");
   assert.equal(
     initialWorld.props.length,
     global.KageLevels.areas["kai-forest-pass"].props.length,

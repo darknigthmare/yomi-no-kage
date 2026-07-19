@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Construit les six banques 2D des ennemis modernes et cyberpunk.
+"""Construit les neuf banques 2D des ennemis modernes et cyberpunk.
 
 Les ``source-master.png`` sont les sorties ImageGen originales. Le détourage
 part des bords du canevas afin de préserver les accents néon internes, puis
@@ -33,6 +33,19 @@ COLUMNS = 6
 ROWS = 5
 CELL = 229
 MASTER_SIZE = (COLUMNS * CELL, ROWS * CELL)
+MANUAL_SOURCE_SEGMENTS: dict[tuple[str, str], tuple[tuple[int, int], ...]] = {
+    # ImageGen a livré cinq poses de chute très lisibles pour le Kannushi.
+    # La dernière est tenue deux frames, comme une pose finale classique,
+    # plutôt que de découper seulement la traîne dans une sixième cellule.
+    ("new-cyber-yomi-hacker", "death"): (
+        (48, 270),
+        (274, 520),
+        (510, 768),
+        (744, 1030),
+        (1004, 1360),
+        (1004, 1360),
+    ),
+}
 
 
 @dataclass(frozen=True)
@@ -50,9 +63,12 @@ BUILDS = (
     CharacterBuild("regular", "new-modern-commuter", "magenta"),
     CharacterBuild("special", "new-modern-riot-host", "magenta"),
     CharacterBuild("special", "new-modern-response-officer", "magenta"),
+    CharacterBuild("boss", "new-modern-metro-colossus", "green-strict"),
     CharacterBuild("regular", "new-cyber-neon-shinobi", "green"),
     CharacterBuild("special", "new-cyber-drone-corpse", "green"),
     CharacterBuild("special", "new-cyber-oni-frame", "green"),
+    CharacterBuild("miniboss", "new-cyber-yomi-hacker", "green-strict"),
+    CharacterBuild("boss", "new-cyber-shogun-zero", "green-strict"),
 )
 
 
@@ -158,6 +174,30 @@ def remove_green_edge_spill(image: Image.Image) -> Image.Image:
     return result
 
 
+def remove_all_green_chroma(image: Image.Image) -> Image.Image:
+    """Supprime aussi le chroma enfermé dans les silhouettes creuses.
+
+    Les trois boss de fin de jeu ont été explicitement générés sans vert dans
+    leur palette. Le fond reste parfois visible au travers d'un câble ou d'une
+    armure ajourée sans être relié au bord : ce mode strict retire ces îlots
+    afin qu'aucun rectangle vert ne survive dans la banque de jeu.
+    """
+
+    result = image.copy()
+    pixels = result.load()
+    for y in range(result.height):
+        for x in range(result.width):
+            red, green, blue, alpha = pixels[x, y]
+            if (
+                alpha
+                and green >= 80
+                and green - red >= 35
+                and green - blue >= 18
+            ):
+                pixels[x, y] = (0, 0, 0, 0)
+    return result
+
+
 def alpha_bbox(image: Image.Image) -> tuple[int, int, int, int] | None:
     return image.getchannel("A").getbbox()
 
@@ -226,10 +266,16 @@ def build_character(spec: CharacterBuild) -> dict[str, object]:
     source_path = folder / "source-master.png"
     if not source_path.exists():
         raise FileNotFoundError(source_path)
+    sprite_path = folder / "sprite.json"
+    previous_sprite: dict[str, object] = {}
+    if sprite_path.exists():
+        previous_sprite = json.loads(sprite_path.read_text(encoding="utf-8"))
     source = Image.open(source_path).convert("RGBA")
     alpha_master = border_chroma_to_alpha(source, spec.chroma)
-    if spec.chroma == "green":
+    if spec.chroma.startswith("green"):
         alpha_master = remove_green_edge_spill(alpha_master)
+    if spec.chroma == "green-strict":
+        alpha_master = remove_all_green_chroma(alpha_master)
     alpha_master = quantize_rgba(alpha_master)
     save_png(alpha_master, folder / "master-alpha.png")
 
@@ -242,13 +288,21 @@ def build_character(spec: CharacterBuild) -> dict[str, object]:
         source_band = alpha_master.crop(
             (0, source_y[row], alpha_master.width, source_y[row + 1])
         )
-        detected_segments = connected_pose_segments(source_band)
-        detection_mode = "connected-components"
-        if len(detected_segments) < COLUMNS:
-            fallback_x = boundaries(alpha_master.width, COLUMNS)
-            detected_segments = list(zip(fallback_x[:-1], fallback_x[1:]))
-            detection_mode = "declared-grid-fallback"
-        selected_segments = select_evenly(detected_segments, COLUMNS)
+        manual_segments = MANUAL_SOURCE_SEGMENTS.get(
+            (spec.character_id, animation),
+        )
+        if manual_segments:
+            detected_segments = list(manual_segments)
+            selected_segments = list(manual_segments)
+            detection_mode = "authored-hold-frame"
+        else:
+            detected_segments = connected_pose_segments(source_band)
+            detection_mode = "connected-components"
+            if len(detected_segments) < COLUMNS:
+                fallback_x = boundaries(alpha_master.width, COLUMNS)
+                detected_segments = list(zip(fallback_x[:-1], fallback_x[1:]))
+                detection_mode = "declared-grid-fallback"
+            selected_segments = select_evenly(detected_segments, COLUMNS)
         normalization.append(
             {
                 "row": animation,
@@ -329,7 +383,13 @@ def build_character(spec: CharacterBuild) -> dict[str, object]:
             "fpsEightWay": False,
         },
     }
-    (folder / "sprite.json").write_text(
+    # Les pipelines de rigs et de directions enrichissent ce contrat après la
+    # construction 2D. Une reconstruction artistique ne doit jamais effacer
+    # ces métadonnées vérifiées.
+    for preserved_key in ("weaponRig", "fpsDirections", "fpsWeaponRig"):
+        if preserved_key in previous_sprite:
+            sprite[preserved_key] = previous_sprite[preserved_key]
+    sprite_path.write_text(
         json.dumps(sprite, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )

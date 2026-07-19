@@ -205,6 +205,9 @@ async function bootRuntime() {
     });
   }
   await context.KageGame.start();
+  // Ce smoke historique vérifie volontairement les portes du parcours
+  // prototype. Le jeu neuf masque ces raccourcis au profit des 28 zones.
+  context.KageGame.debug.setCampaignCompatibility(true);
   for (let index = 0; index < 8; index += 1) {
     if (context.KageGame.debug.assetStatus().roster.ready) break;
     await new Promise((resolve) => setImmediate(resolve));
@@ -383,7 +386,11 @@ function findAreaProp(propId) {
       const door = KageLevels.areas[mission.areaId].portals.find(
         (portal) => portal.id === mission.portalId,
       );
-      assert.equal(door.collision, "solidDoor");
+      assert.equal(
+        door.collision,
+        "portal",
+        `${mission.portalId} est une entree de facade, pas un mur vertical dans la rue`,
+      );
       assert.equal(door.missionIndex, mission.missionIndex);
 
       runtime.KageGame.debug.setPlayer2d({
@@ -397,8 +404,13 @@ function findAreaProp(propId) {
       runtime.KageGame.debug.step(0.1);
       const player = runtime.KageGame.getState().player2d;
       assert.ok(
-        player.x + player.w <= door.x + 1,
-        `${mission.portalId} doit rester une porte manuelle et solide avant E`,
+        player.x > door.x,
+        `${mission.portalId} bloque encore la rue comme une barriere verticale`,
+      );
+      assert.equal(
+        runtime.KageGame.getState().mode,
+        "side",
+        `${mission.portalId} ne doit jamais declencher le FPS sans action`,
       );
 
       runtime.KageGame.debug.warpToPortal(mission.portalId);
@@ -420,6 +432,20 @@ function findAreaProp(propId) {
       const profile = runtime.KageSave.load();
       assert.equal(profile.secrets[mission.secretId], true);
       assert.equal(runtime.KageSave.isWeaponUnlocked(mission.weaponId), true);
+
+      runtime.KageGame.debug.setPlayer2d({
+        x: door.x - 40,
+        y: 273,
+        vx: 800,
+        vy: 0,
+        grounded: true,
+        facing: 1,
+      });
+      runtime.KageGame.debug.step(0.1);
+      assert.ok(
+        runtime.KageGame.getState().player2d.x > door.x,
+        `${mission.portalId} bloque encore la progression apres purification`,
+      );
     }
   });
 

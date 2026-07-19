@@ -4,9 +4,10 @@
   /*
    * Contrat de contenu pour la campagne longue de Yomi no Kage.
    *
-   * Ce fichier ne remplace pas KageLevels : il décrit la prochaine extension
-   * sous forme de données immuables afin que le moteur, l'éditeur de niveaux
-   * et les outils de production de sprites utilisent les mêmes identifiants.
+   * Ce fichier ne remplace pas KageLevels : il publie le contrat immuable et
+   * le crosswalk de la campagne maintenant instanciée dans level-data.js.
+   * Le moteur, l'éditeur, les quêtes et les outils de production partagent
+   * ainsi exactement les mêmes identifiants.
    */
 
   const animationProfiles = {
@@ -38,7 +39,7 @@
       sideView: {
         directions: ["left", "right"],
         sheets: ["idle", "move", "attack", "hurt", "death"],
-        framesPerSheet: 8,
+        framesPerSheet: 6,
       },
       fpsBillboard: {
         directions: [
@@ -52,18 +53,18 @@
           "front-right",
         ],
         sheets: ["idle", "move", "attack", "hurt", "death"],
-        framesPerSheet: 8,
+        framesPerSheet: 6,
       },
-      supplementalSheets: ["spawn", "stagger", "guard-break", "execution"],
+      supplementalSheetsPlanned: ["spawn", "stagger", "guard-break", "execution"],
       weaponsBakedIntoBody: false,
       weaponAnchorTrackRequired: true,
-      status: "production-required",
+      status: "runtime-five-by-six-complete",
     },
     "new-boss-complete": {
       sideView: {
         directions: ["left", "right"],
         sheets: ["idle", "move", "attack", "hurt", "death"],
-        framesPerSheet: 10,
+        framesPerSheet: 6,
       },
       fpsBillboard: {
         directions: [
@@ -77,9 +78,9 @@
           "front-right",
         ],
         sheets: ["idle", "move", "attack", "hurt", "death"],
-        framesPerSheet: 10,
+        framesPerSheet: 6,
       },
-      supplementalSheets: [
+      supplementalSheetsPlanned: [
         "intro",
         "phase-transition",
         "special-a",
@@ -90,7 +91,7 @@
       weaponsBakedIntoBody: false,
       detachablePartsUseIndependentSprites: true,
       weaponAnchorTrackRequired: true,
-      status: "production-required",
+      status: "runtime-five-by-six-complete",
     },
   };
 
@@ -979,7 +980,8 @@
       actId: "act-03-fields",
       zoneId: "fields-burning-granary",
       type: "boss",
-      targetEnemyId: "giant-02-aka-ushi",
+      targetEnemyId: "giant-07-shiro-kabuto",
+      narrativeTargetEnemyId: "giant-02-aka-ushi",
       sealReward: 1,
     },
     "obj-city-enter-quarantine": {
@@ -1037,14 +1039,16 @@
       actId: "act-05-castle",
       zoneId: "castle-donjon-expansion",
       type: "boss",
-      targetEnemyId: "giant-10-yomi-no-kanrei",
+      targetEnemyId: "06-daimyo-corrupted",
+      narrativeTargetEnemyId: "daimyo-of-kurokawa",
       sealReward: 1,
     },
     "obj-castle-stabilize-warp": {
       id: "obj-castle-stabilize-warp",
       actId: "act-05-castle",
       zoneId: "castle-yomi-rift",
-      type: "warp-calibration",
+      type: "boss",
+      targetEnemyId: "giant-10-yomi-no-kanrei",
       sealReward: 1,
     },
     "obj-modern-read-emergency-records": {
@@ -1236,14 +1240,106 @@
     unlockRuleId,
     interaction: "manual",
     interactionKey: "E",
-    bidirectional: kind !== "warp",
+    bidirectional: true,
     preserveOriginState: true,
     transitionPresentation: kind === "warp" ? "temporal-rift-cinematic" : "area-fade",
   }));
 
+  /*
+   * Correspondance stable entre les identifiants narratifs du contrat et les
+   * aires que level-data.js instancie reellement. Elle permet aux outils de
+   * quete, a la sauvegarde et a la carte d'utiliser les memes 28 zones sans
+   * charger ce fichier dans la page de jeu.
+   */
+  const runtimeAreaByZoneId = {
+    "forest-kaido-trail": "kai-forest-pass",
+    "forest-abandoned-camp": "forest-abandoned-camp",
+    "forest-root-sanctuary": "forest-root-sanctuary",
+    "bamboo-rain-gate": "shigure-bamboo-grove",
+    "bamboo-hollow-path": "bamboo-hollow-path",
+    "bamboo-moon-clearing": "bamboo-moon-clearing",
+    "fields-west-dikes": "tsuru-rice-fields",
+    "fields-drowned-paddies": "fields-drowned-paddies",
+    "fields-mill-road": "fields-mill-road",
+    "fields-burning-granary": "fields-burning-granary",
+    "city-south-gate": "kurokawa-main-street",
+    "city-market-wards": "kurokawa-back-street",
+    "city-canal-roofs": "kurokawa-market-east",
+    "city-castle-approach": "city-castle-approach",
+    "castle-lower-court-expansion": "castle-lower-court",
+    "castle-residence-expansion": "castle-residence",
+    "castle-armory": "castle-armory",
+    "castle-donjon-expansion": "castle-donjon",
+    "castle-yomi-rift": "castle-yomi-rift",
+    "modern-shibuya-side-street": "tokyo-contemporary-rift",
+    "modern-subway-station": "modern-subway-station",
+    "modern-quarantine-hospital": "modern-quarantine-hospital",
+    "modern-metropolitan-lab": "modern-metropolitan-lab",
+    "cyber-shrine-sector": "neo-edo-cyber-rift",
+    "cyber-neon-market": "cyber-neon-market",
+    "cyber-maglev-ruins": "cyber-maglev-ruins",
+    "cyber-yomi-datacenter": "cyber-yomi-datacenter",
+    "cyber-shogun-core": "cyber-shogun-core",
+  };
+
+  for (const act of acts) {
+    act.runtimeAreaIds = [];
+    for (const zone of act.zones) {
+      zone.runtimeAreaId = runtimeAreaByZoneId[zone.id];
+      zone.runtimeStatus = "playable-data";
+      act.runtimeAreaIds.push(zone.runtimeAreaId);
+    }
+    act.runtimeEntryAreaId = runtimeAreaByZoneId[act.entryZoneId];
+    act.runtimeExitAreaId = runtimeAreaByZoneId[act.exitZoneId];
+  }
+
+  for (const objective of Object.values(objectives)) {
+    objective.runtimeAreaId = runtimeAreaByZoneId[objective.zoneId];
+    objective.runtimeTrigger = objective.type === "boss" || objective.type === "miniboss"
+      ? "boss-defeated"
+      : "area-clear";
+  }
+
+  for (const portal of portals) {
+    portal.runtimeFromAreaId = runtimeAreaByZoneId[portal.fromZoneId];
+    portal.runtimeToAreaId = runtimeAreaByZoneId[portal.toZoneId];
+    portal.runtimePortalIds = [
+      `campaign-route-${String(portals.indexOf(portal) + 1).padStart(2, "0")}-forward`,
+      `campaign-route-${String(portals.indexOf(portal) + 1).padStart(2, "0")}-backward`,
+    ];
+  }
+
+  const runtimeIntegration = {
+    schema: 2,
+    status: "playable-data",
+    levelBuildId: "20260719-seven-act-runtime-v5",
+    totalActs: acts.length,
+    totalZones: Object.keys(runtimeAreaByZoneId).length,
+    totalRouteLinks: portals.length,
+    legacyRuntimeAreasPreserved: 11,
+    generatedRuntimeAreas: 17,
+    runtimeAreaByZoneId,
+    runtimeZoneByAreaId: Object.fromEntries(
+      Object.entries(runtimeAreaByZoneId).map(([zoneId, areaId]) => [areaId, zoneId]),
+    ),
+    finalEndingPortalId: "campaign-ending-after-shogun-zero",
+    bossSequence: [
+      "giant-03-take-mori",
+      "boss-14-maitre-shinobi-kumo",
+      "giant-07-shiro-kabuto",
+      "boss-11-brigadier-engeki",
+      "06-daimyo-corrupted",
+      "giant-10-yomi-no-kanrei",
+      "new-modern-metro-colossus",
+      "new-cyber-yomi-hacker",
+      "new-cyber-shogun-zero",
+    ],
+    assetPolicy: "existing-runtime-assets-only",
+  };
+
   const campaign = {
-    schema: 1,
-    buildId: "20260719-seven-act-world-plan-v1",
+    schema: 2,
+    buildId: "20260719-seven-act-runtime-v5",
     id: "yomi-no-kage-full-campaign",
     startActId: "act-01-forest",
     startZoneId: "forest-kaido-trail",
@@ -1277,6 +1373,7 @@
     objectives,
     progressionRules,
     portals,
+    runtimeIntegration,
   };
 
   function deepFreeze(value) {

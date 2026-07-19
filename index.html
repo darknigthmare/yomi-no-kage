@@ -9,7 +9,7 @@
       content="Yomi no Kage, un jeu d'action pixel-art alternant plateforme 2D et FPS rétro dans un Japon féodal ravagé par une épidémie zombie."
     />
     <title>Yomi no Kage — L'Ombre du Shogun</title>
-    <link rel="stylesheet" href="styles.css?v=26" />
+    <link rel="stylesheet" href="styles.css?v=28" />
   </head>
   <body>
     <main class="game-shell" aria-label="Yomi no Kage, jeu d'action pixel-art">
@@ -45,7 +45,7 @@
 
             <div id="hud-weapon" class="hud-weapon" data-weapon="01-kurokage">
               <span class="hud-weapon-visual" aria-hidden="true">
-                <img id="hud-weapon-icon" src="assets/modular/fps/player/akio/weapons/01-kurokage/weapon.png" alt="" />
+                <img id="hud-weapon-icon" alt="" />
               </span>
               <span>
                 <small id="hud-weapon-slot">PRINCIPALE</small>
@@ -82,6 +82,16 @@
         </button>
         <button id="audio-button" class="icon-button audio-button" type="button" aria-label="Couper le son" aria-pressed="false">
           <span aria-hidden="true">♪</span>
+        </button>
+        <button
+          id="campaign-button"
+          class="icon-button campaign-button"
+          data-action="campaign"
+          type="button"
+          aria-label="Ouvrir le refuge et la chronique"
+          aria-controls="campaign-screen"
+        >
+          <span aria-hidden="true">巻</span>
         </button>
 
         <div id="announcement" class="announcement" aria-live="assertive" aria-atomic="true"></div>
@@ -388,12 +398,101 @@
         </div>
       </section>
 
+      <section
+        id="campaign-screen"
+        class="screen-overlay campaign-screen"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="campaign-title"
+        aria-hidden="true"
+        tabindex="-1"
+      >
+        <div class="campaign-panel">
+          <header class="campaign-header">
+            <div>
+              <p class="eyebrow">REFUGE DU PIN NOIR · CHRONIQUE DE CAMPAGNE</p>
+              <h2 id="campaign-title">Préparer la reconquête</h2>
+            </div>
+            <div class="campaign-current">
+              <small id="campaign-act-label">ACTE I</small>
+              <b id="campaign-zone-label">Route de Kai</b>
+            </div>
+            <button
+              id="campaign-close"
+              class="campaign-close"
+              data-action="campaign-close"
+              type="button"
+              aria-label="Fermer la chronique"
+            >×</button>
+          </header>
+
+          <div class="campaign-resources" aria-label="Ressources du refuge">
+            <span>MON <b id="campaign-mon">0</b></span>
+            <span>TAMAHAGANE <b id="campaign-tamahagane">0</b></span>
+            <span>CENDRES <b id="campaign-yomi-ash">0</b></span>
+            <span>PROVISIONS <b id="campaign-supplies">0</b></span>
+            <span>SOUILLURE <b id="campaign-contamination">0 %</b></span>
+          </div>
+
+          <div class="campaign-layout">
+            <aside class="campaign-acts" aria-labelledby="campaign-acts-title">
+              <div class="campaign-section-heading">
+                <p class="eyebrow">7 ACTES · 28 ZONES</p>
+                <h3 id="campaign-acts-title">Route du Shogun</h3>
+              </div>
+              <ol id="campaign-act-list" class="campaign-act-list"></ol>
+              <div class="campaign-save-state">
+                <span id="campaign-save-indicator" aria-hidden="true"></span>
+                <p><b>CHRONIQUE SÉCURISÉE</b><small id="campaign-save-label">Sauvegarde locale principale</small></p>
+              </div>
+            </aside>
+
+            <section class="campaign-quests" aria-labelledby="campaign-quests-title">
+              <div class="campaign-section-heading">
+                <p class="eyebrow">OBJECTIFS ET CONTRATS</p>
+                <h3 id="campaign-quests-title">Journal de terrain</h3>
+              </div>
+              <div id="campaign-objective-list" class="campaign-objective-list"></div>
+              <div id="campaign-quest-list" class="campaign-quest-list"></div>
+            </section>
+
+            <aside class="campaign-hub" aria-labelledby="campaign-hub-title">
+              <div class="campaign-section-heading">
+                <p class="eyebrow">REFUGE VIVANT · NIVEAU <b id="campaign-hub-level">1</b></p>
+                <h3 id="campaign-hub-title">Le Pin Noir</h3>
+              </div>
+              <p id="campaign-residents" class="campaign-residents"></p>
+              <button class="pixel-button primary compact campaign-rest" data-campaign-action="rest" type="button">
+                SE REPOSER · 1 PROVISION
+              </button>
+              <div id="campaign-facility-list" class="campaign-facility-list"></div>
+              <div class="campaign-weapon-upgrade">
+                <span>ARME ACTIVE</span>
+                <b id="campaign-active-weapon">Kurokage</b>
+                <small id="campaign-weapon-rank">RANG +0</small>
+                <button class="pixel-button compact" data-campaign-action="upgrade-weapon" type="button">
+                  AMÉLIORER À LA FORGE
+                </button>
+              </div>
+            </aside>
+          </div>
+
+          <footer class="campaign-footer">
+            <p id="campaign-status" role="status" aria-live="polite">Le refuge évolue avec les actes, les survivants et vos décisions.</p>
+            <button class="pixel-button primary compact" data-action="campaign-close" type="button">
+              RETOURNER AU COMBAT <kbd>C</kbd>
+            </button>
+          </footer>
+        </div>
+      </section>
+
       <section id="pause-screen" class="screen-overlay pause-screen" role="dialog" aria-modal="true" aria-labelledby="pause-title" aria-hidden="true" tabindex="-1">
         <div class="modal-card">
           <p class="japanese-glyph" aria-hidden="true">間</p>
           <p class="eyebrow">LE TEMPS S'IMMOBILISE</p>
           <h2 id="pause-title">PAUSE</h2>
           <button id="resume-button" class="pixel-button primary" data-action="pause" type="button">REPRENDRE</button>
+          <button class="pixel-button" data-action="campaign" type="button">REFUGE ET CHRONIQUE</button>
           <button class="pixel-button" data-loadout-open="pause" type="button">CONSULTER L’ÉQUIPEMENT</button>
           <button id="pause-settings-button" class="pixel-button" type="button" aria-controls="settings-screen">PARAMÈTRES</button>
           <button class="pixel-button" data-action="restart" type="button">REPRENDRE AU DERNIER FOYER</button>
@@ -446,12 +545,14 @@
     </main>
 
     <noscript>Ce jeu nécessite JavaScript pour fonctionner.</noscript>
+    <script src="asset-runtime.js?v=2"></script>
     <script src="audio.js?v=5"></script>
     <script src="arsenal.js?v=2"></script>
-    <script src="save.js?v=3"></script>
+    <script src="save.js?v=5"></script>
     <script src="loadout.js?v=1"></script>
-    <script src="level-data.js?v=12"></script>
-    <script src="game.js?v=37"></script>
-    <script src="cinematic.js?v=10"></script>
+    <script src="level-data.js?v=13"></script>
+    <script src="game.js?v=41"></script>
+    <script src="campaign-ui.js?v=2"></script>
+    <script src="cinematic.js?v=13"></script>
   </body>
 </html>

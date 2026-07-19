@@ -17,7 +17,7 @@ require("./campaign-expansion.js");
 
 const campaign = global.KageCampaignExpansion;
 assert.ok(campaign, "KageCampaignExpansion doit être exposé");
-assert.equal(campaign.schema, 1);
+assert.equal(campaign.schema, 2);
 assert.equal(campaign.acts.length, 7, "La campagne doit contenir exactement sept actes");
 assert.equal(Object.isFrozen(campaign), true, "Le contrat doit être immuable");
 
@@ -35,7 +35,7 @@ assert.deepEqual(campaign.acts.map((act) => act.order), [1, 2, 3, 4, 5, 6, 7]);
 
 function collectExistingEnemyIds() {
   const ids = new Set();
-  for (const manifestName of ["regular", "special", "miniboss", "boss", "giant"]) {
+  for (const manifestName of ["regular", "special", "miniboss", "boss", "giant", "legacy"]) {
     const manifestPath = path.join(
       __dirname,
       "assets",
@@ -320,7 +320,7 @@ assert.deepEqual(
   ["warp-castle-to-contemporary", "warp-contemporary-to-cyberpunk"],
 );
 for (const warp of warpPortals) {
-  assert.equal(warp.bidirectional, false, `${warp.id}: le warp de récit doit être à sens unique`);
+  assert.equal(warp.bidirectional, true, `${warp.id}: le warp doit conserver un chemin de retour`);
   assert.equal(
     warp.transitionPresentation,
     "temporal-rift-cinematic",
@@ -328,11 +328,42 @@ for (const warp of warpPortals) {
   );
 }
 
+const { KageLevels } = require("./level-data.js");
+assert.equal(
+  Object.keys(KageLevels.areas).length,
+  28,
+  "Le runtime doit instancier exactement les 28 zones du contrat",
+);
+assert.equal(KageLevels.campaignRuntime?.totalActs, 7);
+assert.equal(KageLevels.campaignRuntime?.totalZones, 28);
+assert.equal(KageLevels.campaignRuntime?.routeLinks?.length, 27);
+assert.equal(Object.keys(KageLevels.campaignActs || {}).length, 7);
+assert.equal(Object.keys(KageLevels.campaignObjectives || {}).length, 28);
+
+for (const act of campaign.acts) {
+  const runtimeAct = KageLevels.campaignActs[act.id];
+  assert.ok(runtimeAct, `${act.id}: metadonnees runtime absentes`);
+  assert.deepEqual(
+    act.zones.map((zone) => zone.runtimeAreaId),
+    runtimeAct.areaIds,
+    `${act.id}: ordre des zones runtime incoherent`,
+  );
+}
+
+for (const zoneId of zoneIds) {
+  const areaId = campaign.runtimeIntegration.runtimeAreaByZoneId[zoneId];
+  const area = KageLevels.areas[areaId];
+  assert.ok(area, `${zoneId}: aire runtime absente (${areaId})`);
+  assert.equal(area.campaignZoneId, zoneId, `${zoneId}: identite runtime incoherente`);
+  assert.ok(area.objectives?.length >= 1, `${zoneId}: objectif runtime absent`);
+  assert.ok(area.checkpoints?.length >= 1, `${zoneId}: checkpoint runtime absent`);
+}
+
 const scriptText = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
 assert.doesNotMatch(
   scriptText,
   /<script src="campaign-expansion\.js\?v=\d+"><\/script>/,
-  "Le plan 28 zones reste une donnée d'outillage tant que le runtime ne le consomme pas",
+  "Le crosswalk ne doit pas etre charge deux fois : level-data.js embarque le runtime",
 );
 
 console.log("Campaign expansion smoke test passed.");

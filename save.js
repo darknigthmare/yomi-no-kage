@@ -2,10 +2,13 @@
   "use strict";
 
   const SAVE_KEY = "yomi-no-kage-save-v1";
-  const SAVE_SCHEMA = 1;
+  const BACKUP_KEY = `${SAVE_KEY}-backup`;
+  const SAVE_SCHEMA = 2;
   let memoryPayload = "";
+  let memoryBackupPayload = "";
   let lastStorageError = null;
   let lastDataError = null;
+  let recoverySource = "none";
 
   function clone(value) {
     return JSON.parse(JSON.stringify(value));
@@ -28,6 +31,58 @@
         .filter(([key]) => typeof key === "string")
         .map(([key, entry]) => [key, Boolean(entry)]),
     );
+  }
+
+  function objectMap(value, limit = 256) {
+    if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+    return Object.fromEntries(
+      Object.entries(value)
+        .filter(([key, entry]) =>
+          typeof key === "string"
+          && entry
+          && typeof entry === "object"
+          && !Array.isArray(entry))
+        .slice(0, limit)
+        .map(([key, entry]) => [key, clone(entry)]),
+    );
+  }
+
+  function normalizeFacility(value, fallbackLevel = 1) {
+    return {
+      level: number(value?.level, fallbackLevel, 0, 5),
+      xp: number(value?.xp, 0, 0, 999999),
+      lastUsedAt: number(value?.lastUsedAt, 0, 0),
+    };
+  }
+
+  function normalizeDetachedEquipment(value) {
+    if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+    return {
+      weaponId: string(value.weaponId),
+      x: number(value.x, 0, -100000, 100000),
+      bottomY: number(value.bottomY, 0, -10000, 10000),
+      width: number(value.width, 112, 1, 2000),
+      damage: number(value.damage, 14, 0, 999),
+      cooldown: number(value.cooldown, 0, 0, 60),
+      active: value.active !== false,
+    };
+  }
+
+  function normalizeBossRuntimeMap(value) {
+    const normalized = {};
+    for (const [bossId, state] of Object.entries(objectMap(value, 128))) {
+      normalized[bossId] = {
+        areaId: string(state.areaId),
+        hp: number(state.hp, 1, 0, 999999),
+        maxHp: number(state.maxHp, state.hp || 1, 1, 999999),
+        phase: number(state.phase, 1, 1, 12),
+        dead: Boolean(state.dead),
+        detachablePartAttached: state.detachablePartAttached !== false,
+        detachedEquipment: normalizeDetachedEquipment(state.detachedEquipment),
+        updatedAt: number(state.updatedAt, 0, 0),
+      };
+    }
+    return normalized;
   }
 
   function uniqueStrings(value) {
@@ -53,6 +108,7 @@
     ];
     return {
       schema: SAVE_SCHEMA,
+      revision: 0,
       updatedAt: 0,
       progress: {
         chapter: 0,
@@ -101,6 +157,7 @@
         tamade: 10,
       },
       bosses: {},
+      bossRuntime: {},
       secrets: {},
       recipes: [],
       artisans: [],
@@ -109,6 +166,41 @@
       mission: {
         active: false,
         unsecuredLoot: [],
+      },
+      campaign: {
+        compatibilityMode: false,
+        currentActId: "act-01-forest",
+        currentActOrder: 1,
+        currentZoneId: "forest-kaido-trail",
+        unlockedActs: ["act-01-forest"],
+        completedActs: [],
+        visitedZoneIds: [],
+        completedZoneIds: [],
+        completedObjectiveIds: [],
+        objectiveStates: {},
+        quests: {},
+        acceptedQuestIds: [],
+        completedQuestIds: [],
+      },
+      hub: {
+        id: "refuge-pin-noir",
+        level: 1,
+        reputation: 0,
+        supplies: 2,
+        visitCount: 0,
+        lastVisitedAt: 0,
+        residents: ["chiyo-apothicaire"],
+        facilities: {
+          forge: { level: 1, xp: 0, lastUsedAt: 0 },
+          infirmary: { level: 1, xp: 0, lastUsedAt: 0 },
+          dojo: { level: 1, xp: 0, lastUsedAt: 0 },
+          shrine: { level: 1, xp: 0, lastUsedAt: 0 },
+        },
+      },
+      mastery: {
+        totalXp: 0,
+        weapons: {},
+        upgradeLevels: {},
       },
       settings: {
         reducedMotion: false,
@@ -171,6 +263,17 @@
     const schema = number(raw.schema, 0, 0, SAVE_SCHEMA);
     if (schema === SAVE_SCHEMA) return raw;
 
+    if (schema === 1) {
+      return {
+        ...raw,
+        schema: SAVE_SCHEMA,
+        campaign: {
+          ...(raw.campaign || {}),
+          compatibilityMode: raw.campaign?.compatibilityMode !== false,
+        },
+      };
+    }
+
     // Les premières versions de développement ne conservaient parfois que
     // weapon/weaponIndex. Leur valeur ne doit jamais faire perdre le profil.
     if (schema === 0) {
@@ -194,6 +297,7 @@
     const unlockedWeapons = normalizeWeaponUnlocks(source.unlocks?.weapons);
     return {
       schema: SAVE_SCHEMA,
+      revision: number(source.revision, 0, 0, 999999999),
       updatedAt: number(source.updatedAt, 0, 0),
       progress: {
         chapter: number(source.progress?.chapter, defaults.progress.chapter, 0, 99),
@@ -243,6 +347,7 @@
         ]),
       ),
       bosses: stringMap(source.bosses),
+      bossRuntime: normalizeBossRuntimeMap(source.bossRuntime),
       secrets: stringMap(source.secrets),
       recipes: uniqueStrings(source.recipes),
       artisans: uniqueStrings(source.artisans),
@@ -256,6 +361,60 @@
           ? clone(source.mission.unsecuredLoot).slice(0, 250)
           : [],
       },
+      campaign: {
+        compatibilityMode: Boolean(source.campaign?.compatibilityMode),
+        currentActId: string(source.campaign?.currentActId, defaults.campaign.currentActId),
+        currentActOrder: number(
+          source.campaign?.currentActOrder,
+          defaults.campaign.currentActOrder,
+          1,
+          7,
+        ),
+        currentZoneId: string(source.campaign?.currentZoneId, defaults.campaign.currentZoneId),
+        unlockedActs: uniqueStrings(source.campaign?.unlockedActs).slice(0, 7).length
+          ? uniqueStrings(source.campaign?.unlockedActs).slice(0, 7)
+          : [...defaults.campaign.unlockedActs],
+        completedActs: uniqueStrings(source.campaign?.completedActs).slice(0, 7),
+        visitedZoneIds: uniqueStrings(source.campaign?.visitedZoneIds).slice(0, 64),
+        completedZoneIds: uniqueStrings(source.campaign?.completedZoneIds).slice(0, 64),
+        completedObjectiveIds: uniqueStrings(source.campaign?.completedObjectiveIds).slice(0, 256),
+        objectiveStates: objectMap(source.campaign?.objectiveStates, 256),
+        quests: objectMap(source.campaign?.quests, 128),
+        acceptedQuestIds: uniqueStrings(source.campaign?.acceptedQuestIds).slice(0, 128),
+        completedQuestIds: uniqueStrings(source.campaign?.completedQuestIds).slice(0, 128),
+      },
+      hub: {
+        id: string(source.hub?.id, defaults.hub.id),
+        level: number(source.hub?.level, defaults.hub.level, 1, 5),
+        reputation: number(source.hub?.reputation, 0, 0, 999999),
+        supplies: number(source.hub?.supplies, defaults.hub.supplies, 0, 9999),
+        visitCount: number(source.hub?.visitCount, 0, 0, 999999),
+        lastVisitedAt: number(source.hub?.lastVisitedAt, 0, 0),
+        residents: uniqueStrings(source.hub?.residents).slice(0, 64).length
+          ? uniqueStrings(source.hub?.residents).slice(0, 64)
+          : [...defaults.hub.residents],
+        facilities: Object.fromEntries(
+          Object.entries(defaults.hub.facilities).map(([facilityId, fallback]) => [
+            facilityId,
+            normalizeFacility(source.hub?.facilities?.[facilityId], fallback.level),
+          ]),
+        ),
+      },
+      mastery: {
+        totalXp: number(source.mastery?.totalXp, 0, 0, 999999999),
+        weapons: Object.fromEntries(
+          Object.entries(source.mastery?.weapons || {})
+            .filter(([weaponId]) => typeof weaponId === "string")
+            .slice(0, 256)
+            .map(([weaponId, xp]) => [weaponId, number(xp, 0, 0, 9999999)]),
+        ),
+        upgradeLevels: Object.fromEntries(
+          Object.entries(source.mastery?.upgradeLevels || {})
+            .filter(([weaponId]) => typeof weaponId === "string")
+            .slice(0, 256)
+            .map(([weaponId, level]) => [weaponId, number(level, 0, 0, 5)]),
+        ),
+      },
       settings: {
         reducedMotion: Boolean(source.settings?.reducedMotion),
         screenShake: source.settings?.screenShake !== false,
@@ -263,18 +422,28 @@
     };
   }
 
-  function readPayload() {
+  function readStorageKey(key, memoryFallback = "") {
     try {
-      const payload = global.localStorage?.getItem(SAVE_KEY);
+      const payload = global.localStorage?.getItem(key);
       lastStorageError = null;
-      return payload || memoryPayload;
+      return payload || memoryFallback;
     } catch (error) {
       lastStorageError = error;
-      return memoryPayload;
+      return memoryFallback;
     }
   }
 
   function writePayload(payload) {
+    const previousPayload = readStorageKey(SAVE_KEY, memoryPayload);
+    if (previousPayload) {
+      try {
+        JSON.parse(previousPayload);
+        memoryBackupPayload = previousPayload;
+        global.localStorage?.setItem(BACKUP_KEY, previousPayload);
+      } catch (_) {
+        // Une sauvegarde principale corrompue ne remplace jamais la copie saine.
+      }
+    }
     memoryPayload = payload;
     try {
       global.localStorage?.setItem(SAVE_KEY, payload);
@@ -298,23 +467,39 @@
   }
 
   function load() {
-    const payload = readPayload();
+    const payload = readStorageKey(SAVE_KEY, memoryPayload);
     if (!payload) {
       lastDataError = null;
+      recoverySource = "none";
       return defaultProfile();
     }
     try {
       const profile = normalizeProfile(JSON.parse(payload));
       lastDataError = null;
+      recoverySource = "primary";
       return profile;
     } catch (error) {
       lastDataError = error;
+      const backupPayload = readStorageKey(BACKUP_KEY, memoryBackupPayload);
+      if (backupPayload) {
+        try {
+          const recovered = normalizeProfile(JSON.parse(backupPayload));
+          recoverySource = "backup";
+          memoryPayload = JSON.stringify(recovered);
+          try { global.localStorage?.setItem(SAVE_KEY, memoryPayload); } catch (_) { /* mémoire seulement */ }
+          return recovered;
+        } catch (_) {
+          // Les deux copies sont inutilisables : retour sûr au profil par défaut.
+        }
+      }
+      recoverySource = "defaults";
       return defaultProfile();
     }
   }
 
   function save(profile = load()) {
     const normalized = normalizeProfile(profile);
+    normalized.revision = number(normalized.revision, 0, 0, 999999999) + 1;
     normalized.updatedAt = Date.now();
     const persisted = writePayload(JSON.stringify(normalized));
     dispatchUpdated(normalized, persisted);
@@ -372,8 +557,225 @@
     if (!id) return false;
     const profile = load();
     profile.bosses[id] = Boolean(defeated);
+    if (profile.bossRuntime[id]) {
+      profile.bossRuntime[id].dead = Boolean(defeated);
+      if (defeated) profile.bossRuntime[id].hp = 0;
+      profile.bossRuntime[id].updatedAt = Date.now();
+    }
     save(profile);
     return true;
+  }
+
+  function setBossRuntime(bossId, state = {}) {
+    const id = string(bossId);
+    if (!id || !state || typeof state !== "object" || Array.isArray(state)) return null;
+    const profile = load();
+    profile.bossRuntime[id] = {
+      ...(profile.bossRuntime[id] || {}),
+      ...clone(state),
+      updatedAt: Date.now(),
+    };
+    const saved = save(profile);
+    return clone(saved.bossRuntime[id]);
+  }
+
+  function getBossRuntime(...bossIds) {
+    const states = load().bossRuntime;
+    for (const bossId of bossIds.flat()) {
+      const id = string(bossId);
+      if (id && states[id]) return clone(states[id]);
+    }
+    return null;
+  }
+
+  function visitCampaignZone(zoneId, actId = "", actOrder = 1) {
+    const zone = string(zoneId);
+    if (!zone) return clone(load().campaign);
+    const profile = load();
+    const act = string(actId, profile.campaign.currentActId);
+    profile.campaign.currentZoneId = zone;
+    profile.campaign.currentActId = act;
+    profile.campaign.currentActOrder = number(actOrder, profile.campaign.currentActOrder, 1, 7);
+    if (!profile.campaign.visitedZoneIds.includes(zone)) {
+      profile.campaign.visitedZoneIds.push(zone);
+    }
+    if (act && !profile.campaign.unlockedActs.includes(act)) {
+      profile.campaign.unlockedActs.push(act);
+    }
+    return clone(save(profile).campaign);
+  }
+
+  function getCampaignObjectiveState(objectiveId) {
+    const id = string(objectiveId);
+    if (!id) return null;
+    const state = load().campaign.objectiveStates[id];
+    return state ? clone(state) : null;
+  }
+
+  function setCampaignObjectiveState(objectiveId, patch = {}) {
+    const id = string(objectiveId);
+    if (!id) return null;
+    const profile = load();
+    const previous = profile.campaign.objectiveStates[id] || {};
+    const next = {
+      ...previous,
+      ...(patch && typeof patch === "object" && !Array.isArray(patch)
+        ? clone(patch)
+        : {}),
+      updatedAt: Date.now(),
+    };
+    next.progress = number(next.progress, 0, 0, 99);
+    next.target = number(next.target, Math.max(1, next.progress), 1, 99);
+    next.interactedTargetIds = uniqueStrings(next.interactedTargetIds).slice(0, 16);
+    if (previous.completed) next.completed = true;
+    profile.campaign.objectiveStates[id] = next;
+    return clone(save(profile).campaign.objectiveStates[id]);
+  }
+
+  function completeCampaignObjective(objectiveId, patch = {}) {
+    const id = string(objectiveId);
+    if (!id) return clone(load().campaign);
+    const profile = load();
+    const newlyCompleted = !profile.campaign.completedObjectiveIds.includes(id);
+    if (newlyCompleted) {
+      profile.campaign.completedObjectiveIds.push(id);
+    }
+    profile.campaign.objectiveStates[id] = {
+      ...(profile.campaign.objectiveStates[id] || {}),
+      ...clone(patch),
+      completed: true,
+      completedAt: Date.now(),
+    };
+    const zoneId = string(patch.zoneId);
+    if (zoneId && patch.completeZone && !profile.campaign.completedZoneIds.includes(zoneId)) {
+      profile.campaign.completedZoneIds.push(zoneId);
+    }
+    const actId = string(patch.actId);
+    const newlyCompletedAct = Boolean(
+      actId
+      && patch.completeAct
+      && !profile.campaign.completedActs.includes(actId),
+    );
+    if (newlyCompletedAct) {
+      profile.campaign.completedActs.push(actId);
+    }
+    const nextActId = string(patch.nextActId);
+    if (nextActId && !profile.campaign.unlockedActs.includes(nextActId)) {
+      profile.campaign.unlockedActs.push(nextActId);
+    }
+    if (newlyCompleted && patch.reward && typeof patch.reward === "object") {
+      for (const currencyId of ["mon", "tamahagane", "yomiAsh"]) {
+        profile.currencies[currencyId] = number(
+          profile.currencies[currencyId],
+          0,
+          0,
+          9999999,
+        ) + number(patch.reward[currencyId], 0, 0, 999999);
+      }
+      profile.hub.supplies = number(
+        profile.hub.supplies,
+        0,
+        0,
+        9999,
+      ) + number(patch.reward.supplies, 0, 0, 9999);
+      profile.hub.reputation = number(
+        profile.hub.reputation,
+        0,
+        0,
+        999999,
+      ) + number(patch.reward.reputation, 0, 0, 999999);
+    }
+    if (
+      newlyCompletedAct
+      && !newlyCompleted
+      && patch.actCompletionReward
+      && typeof patch.actCompletionReward === "object"
+    ) {
+      for (const currencyId of ["mon", "tamahagane", "yomiAsh"]) {
+        profile.currencies[currencyId] = number(
+          profile.currencies[currencyId],
+          0,
+          0,
+          9999999,
+        ) + number(patch.actCompletionReward[currencyId], 0, 0, 999999);
+      }
+      profile.hub.supplies = number(
+        profile.hub.supplies,
+        0,
+        0,
+        9999,
+      ) + number(patch.actCompletionReward.supplies, 0, 0, 9999);
+      profile.hub.reputation = number(
+        profile.hub.reputation,
+        0,
+        0,
+        999999,
+      ) + number(patch.actCompletionReward.reputation, 0, 0, 999999);
+    }
+    return clone(save(profile).campaign);
+  }
+
+  function setQuestState(questId, patch = {}) {
+    const id = string(questId);
+    if (!id) return null;
+    const profile = load();
+    const previous = profile.campaign.quests[id] || {
+      status: "available",
+      progress: 0,
+      target: 1,
+    };
+    const next = {
+      ...previous,
+      ...clone(patch),
+      progress: number(patch.progress, previous.progress, 0, 999999),
+      target: number(patch.target, previous.target, 1, 999999),
+      updatedAt: Date.now(),
+    };
+    profile.campaign.quests[id] = next;
+    if (next.status === "active" && !profile.campaign.acceptedQuestIds.includes(id)) {
+      profile.campaign.acceptedQuestIds.push(id);
+    }
+    if (next.status === "completed" && !profile.campaign.completedQuestIds.includes(id)) {
+      profile.campaign.completedQuestIds.push(id);
+    }
+    return clone(save(profile).campaign.quests[id]);
+  }
+
+  function recordWeaponMastery(weaponId, xp = 0) {
+    const id = string(weaponId);
+    const amount = number(xp, 0, 0, 999999);
+    if (!id || amount <= 0) return clone(load().mastery);
+    const profile = load();
+    profile.mastery.weapons[id] = number(profile.mastery.weapons[id], 0, 0, 9999999) + amount;
+    profile.mastery.totalXp += amount;
+    return clone(save(profile).mastery);
+  }
+
+  function upgradeFacility(facilityId, payment = {}) {
+    const id = string(facilityId);
+    const profile = load();
+    const facility = profile.hub.facilities[id];
+    if (!facility || facility.level >= 5) return { ok: false, reason: "max", profile: clone(profile) };
+    const currencyId = string(payment.currencyId, "mon");
+    const cost = number(payment.cost, 0, 0, 999999);
+    if (!(currencyId in profile.currencies)) {
+      return { ok: false, reason: "currency", profile: clone(profile) };
+    }
+    if (profile.currencies[currencyId] < cost) {
+      return { ok: false, reason: "funds", profile: clone(profile) };
+    }
+    profile.currencies[currencyId] -= cost;
+    facility.level += 1;
+    facility.lastUsedAt = Date.now();
+    profile.hub.level = Math.max(
+      1,
+      Math.min(5, Math.floor(
+        Object.values(profile.hub.facilities)
+          .reduce((sum, entry) => sum + entry.level, 0) / 4,
+      )),
+    );
+    profile.hub.reputation += 25 * facility.level;
+    return { ok: true, reason: "", profile: save(profile) };
   }
 
   function setSetting(settingId, value) {
@@ -407,8 +809,10 @@
 
   function clear() {
     memoryPayload = "";
+    memoryBackupPayload = "";
     try {
       global.localStorage?.removeItem(SAVE_KEY);
+      global.localStorage?.removeItem(BACKUP_KEY);
       lastStorageError = null;
       return true;
     } catch (error) {
@@ -420,11 +824,13 @@
   function storageStatus() {
     return {
       key: SAVE_KEY,
+      backupKey: BACKUP_KEY,
       schema: SAVE_SCHEMA,
       persistent: !lastStorageError,
       fallback: Boolean(lastStorageError),
       error: lastStorageError ? String(lastStorageError.message || lastStorageError) : "",
       dataRecovered: Boolean(lastDataError),
+      recoverySource,
       dataError: lastDataError ? String(lastDataError.message || lastDataError) : "",
     };
   }
@@ -445,6 +851,15 @@
     unlockWeapon,
     isWeaponUnlocked,
     markBossDefeated,
+    getBossRuntime,
+    setBossRuntime,
+    visitCampaignZone,
+    getCampaignObjectiveState,
+    setCampaignObjectiveState,
+    completeCampaignObjective,
+    setQuestState,
+    recordWeaponMastery,
+    upgradeFacility,
     setSetting,
     reset,
     clear,

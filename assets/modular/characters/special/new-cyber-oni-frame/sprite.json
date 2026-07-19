@@ -25,8 +25,9 @@
     "frameOrder": "left-to-right",
     "facing": "left",
     "view": "2d-lateral-only",
-    "fpsEightWay": false,
-    "weaponsBakedIntoBody": false
+    "fpsEightWay": true,
+    "weaponsBakedIntoBody": false,
+    "fpsFourWay": true
   },
   "groundAnchor": {
     "normalized": [
@@ -465,16 +466,31 @@
   },
   "weaponsBakedIntoBody": false,
   "viewCoverage": {
-    "mode": "2d-lateral-only",
+    "mode": "2d-lateral-plus-fps-eight-way",
     "directions": [
       "left"
     ],
-    "fpsEightWay": false
+    "fpsEightWay": true,
+    "fpsDirections": [
+      "front",
+      "front-left",
+      "left",
+      "back-left",
+      "back",
+      "back-right",
+      "right",
+      "front-right"
+    ],
+    "fpsFourWay": true,
+    "frontBackAuthored": false,
+    "runtimeSequence": "single-lateral-frame-locked",
+    "imagegenRawRuntimeUse": false
   },
   "weaponRig": {
     "schema": 1,
     "coordinateSpace": "frame-normalized",
     "facing": "left",
+    "authorship": "authored-direction-profile+frame-contour-snap",
     "renderOrder": [
       "body",
       "weapon"

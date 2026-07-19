@@ -10,6 +10,7 @@
   let catalog = [];
   let catalogCounts = {};
   let activeType = "all";
+  const assetUrl = (path) => window.KageAssets?.resolve?.(path) || path;
 
   const labels = {
     all: "TOUT",
@@ -55,6 +56,8 @@
 
   function showSheetFrame(imageElement, sheetPath, frameIndex, alt) {
     const sheet = new Image();
+    const source = assetUrl(sheetPath);
+    if (/^https?:\/\//i.test(source)) sheet.crossOrigin = "anonymous";
     sheet.onload = () => {
       const sourceX = Math.round(frameIndex * sheet.naturalWidth / 6);
       const sourceRight = Math.round((frameIndex + 1) * sheet.naturalWidth / 6);
@@ -78,10 +81,10 @@
       imageElement.alt = alt;
     };
     sheet.onerror = () => {
-      imageElement.src = sheetPath;
+      imageElement.src = source;
       imageElement.alt = alt;
     };
-    sheet.src = sheetPath;
+    sheet.src = source;
   }
 
   function renderFilters() {
@@ -125,7 +128,7 @@
         tabindex="0" role="button" aria-label="Voir ${escapeHtml(asset.name)}">
         <div class="asset-visual">
           <span class="asset-index">${String(index + 1).padStart(2, "0")}</span>
-          <img src="${escapeHtml(previewFile(asset))}" alt="${escapeHtml(asset.name)}" loading="lazy" />
+          <img src="${escapeHtml(assetUrl(previewFile(asset)))}" alt="${escapeHtml(asset.name)}" loading="lazy" crossorigin="anonymous" />
         </div>
         <div class="asset-copy">
           <p class="eyebrow">${escapeHtml(typeLabel(asset.type))}</p>
@@ -153,7 +156,8 @@
     const dialogImage = document.getElementById("dialog-image");
     const animationPicker = document.getElementById("dialog-animations");
     const framePicker = document.getElementById("dialog-frames");
-    dialogImage.src = previewFile(asset);
+    dialogImage.crossOrigin = "anonymous";
+    dialogImage.src = assetUrl(previewFile(asset));
     dialogImage.alt = asset.name;
     document.getElementById("dialog-type").textContent = typeLabel(asset.type);
     document.getElementById("dialog-title").textContent = asset.name;
@@ -186,7 +190,7 @@
       framePicker.innerHTML = sheetPath ? Array.from({ length: 6 }, (_, index) => `
         <button type="button" data-frame-index="${index}" aria-label="Frame ${index + 1}">
           <i class="frame-slice" aria-hidden="true"
-            style="background-image:url('${escapeHtml(sheetPath)}');background-position:${index * 20}% center"></i>
+            style="background-image:url('${escapeHtml(assetUrl(sheetPath))}');background-position:${index * 20}% center"></i>
           <span>${String(index + 1).padStart(2, "0")}</span>
         </button>
       `).join("") : "";
@@ -206,7 +210,7 @@
     `).join("");
     animationPicker.querySelectorAll("[data-animation]").forEach((button) => {
       button.addEventListener("click", () => {
-        dialogImage.src = asset.animations[button.dataset.animation];
+        dialogImage.src = assetUrl(asset.animations[button.dataset.animation]);
         dialogImage.alt = `${asset.name} — ${animationLabels[button.dataset.animation] || button.dataset.animation}`;
         animationPicker.querySelectorAll("button").forEach((entry) =>
           entry.setAttribute("aria-pressed", String(entry === button)));
@@ -227,7 +231,7 @@
     if (event.target === dialog) dialog.close();
   });
 
-  fetch("assets/modular/catalog.json?v=20260719-4")
+  fetch(assetUrl("assets/modular/catalog.json?v=20260719-complete-campaign-v2"))
     .then((response) => {
       if (!response.ok) throw new Error(`Catalogue indisponible (${response.status})`);
       return response.json();

@@ -391,6 +391,7 @@
     "schema": 1,
     "coordinateSpace": "frame-normalized",
     "facing": "right",
+    "authorship": "declared-per-frame-mounts",
     "renderOrder": [
       "body",
       "weapon"

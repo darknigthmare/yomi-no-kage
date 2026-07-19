@@ -191,20 +191,81 @@
       friction: 0.76,
       footstep: "organic",
     },
+    asphalt: {
+      material: "wetAsphalt",
+      tileFamily: "tokyo-wet-asphalt",
+      friction: 0.88,
+      footstep: "asphalt",
+    },
+    metal: {
+      material: "weatheredMetal",
+      tileFamily: "industrial-metal",
+      friction: 0.84,
+      footstep: "metal",
+    },
+    techMetal: {
+      material: "neoEdoAlloy",
+      tileFamily: "cyber-titanium-conduit",
+      friction: 0.87,
+      footstep: "tech",
+    },
+    techStreet: {
+      material: "neonComposite",
+      tileFamily: "cyber-hex-floor",
+      friction: 0.9,
+      footstep: "tech",
+    },
   };
 
   const FPS_MATERIAL_LIBRARY = {
     atlas: "assets/generated/props/fps-wall-texture-atlas.png",
     grid: { columns: 4, rows: 2 },
+    atlases: {
+      feudal: {
+        src: "assets/generated/props/fps-wall-texture-atlas.png",
+        era: "kanei-1638",
+        grid: { columns: 4, rows: 2 },
+      },
+      contemporary: {
+        src: "assets/generated/props/fps-modern-texture-atlas.png",
+        source: "assets/generated/props/fps-modern-texture-atlas-source-openai.png",
+        era: "tokyo-contemporary",
+        grid: { columns: 4, rows: 2, tileSize: 384 },
+      },
+      cyber: {
+        src: "assets/generated/props/fps-cyber-texture-atlas.png",
+        source: "assets/generated/props/fps-cyber-texture-atlas-source-openai.png",
+        era: "neo-edo-cyberpunk",
+        grid: { columns: 4, rows: 2, tileSize: 384 },
+      },
+    },
     tiles: [
-      { id: "charred-cedar", index: 0, use: ["wall", "partition"] },
-      { id: "torn-shoji", index: 1, use: ["wall", "partition"] },
-      { id: "damp-stone", index: 2, use: ["wall", "foundation", "floor"] },
-      { id: "soiled-tatami", index: 3, use: ["floor"] },
-      { id: "cracked-plaster", index: 4, use: ["wall", "partition"] },
-      { id: "quarantine-palisade", index: 5, use: ["exteriorWall"] },
-      { id: "castle-wall", index: 6, use: ["wall", "loadBearingWall"] },
-      { id: "contaminated-shrine", index: 7, use: ["altar", "sealedDoor"] },
+      { id: "charred-cedar", atlas: "feudal", index: 0, use: ["wall", "partition"] },
+      { id: "torn-shoji", atlas: "feudal", index: 1, use: ["wall", "partition"] },
+      { id: "damp-stone", atlas: "feudal", index: 2, use: ["wall", "foundation", "floor"] },
+      { id: "soiled-tatami", atlas: "feudal", index: 3, use: ["floor"] },
+      { id: "cracked-plaster", atlas: "feudal", index: 4, use: ["wall", "partition"] },
+      { id: "quarantine-palisade", atlas: "feudal", index: 5, use: ["exteriorWall"] },
+      { id: "castle-wall", atlas: "feudal", index: 6, use: ["wall", "loadBearingWall"] },
+      { id: "contaminated-shrine", atlas: "feudal", index: 7, use: ["altar", "sealedDoor"] },
+
+      { id: "modern-wet-asphalt", atlas: "contemporary", index: 0, use: ["floor", "exteriorFloor"] },
+      { id: "modern-poured-concrete", atlas: "contemporary", index: 1, use: ["wall", "boundary"] },
+      { id: "modern-service-steel", atlas: "contemporary", index: 2, use: ["wall", "circulation"] },
+      { id: "modern-subway-ceramic", atlas: "contemporary", index: 3, use: ["wall", "chamber"] },
+      { id: "modern-lab-floor", atlas: "contemporary", index: 4, use: ["floor", "walkable"] },
+      { id: "modern-stained-concrete", atlas: "contemporary", index: 5, use: ["wall", "boundary"] },
+      { id: "modern-quarantine-door", atlas: "contemporary", index: 6, use: ["door", "sealedDoor"] },
+      { id: "modern-containment-chamber", atlas: "contemporary", index: 7, use: ["wall", "altar", "objective"] },
+
+      { id: "cyber-hex-floor", atlas: "cyber", index: 0, use: ["floor", "walkable"] },
+      { id: "cyber-titanium-conduit", atlas: "cyber", index: 1, use: ["wall", "circulation"] },
+      { id: "cyber-machine-bay", atlas: "cyber", index: 2, use: ["wall", "chamber"] },
+      { id: "cyber-data-panel", atlas: "cyber", index: 3, use: ["wall", "dataSurface"] },
+      { id: "cyber-guide-floor", atlas: "cyber", index: 4, use: ["floor", "walkable"] },
+      { id: "cyber-armored-bulkhead", atlas: "cyber", index: 5, use: ["wall", "boundary"] },
+      { id: "cyber-neon-shrine-door", atlas: "cyber", index: 6, use: ["door", "sealedDoor"] },
+      { id: "cyber-yomi-core", atlas: "cyber", index: 7, use: ["wall", "altar", "objective"] },
     ],
     profiles: {
       "contaminated-sanctuary": {
@@ -258,12 +319,73 @@
           { id: "yomi-throne-seal", radiusFromObjective: 2.25, material: "contaminated-shrine" },
         ],
       },
+      "modern-metropolitan-lab": {
+        atlas: "contemporary",
+        era: "tokyo-contemporary",
+        floorProjection: "world-uv-floor-cast",
+        floorScale: 0.72,
+        walkableCellValues: ["0", "3"],
+        floor: "modern-lab-floor",
+        boundary: "modern-stained-concrete",
+        circulation: "modern-service-steel",
+        chamber: "modern-subway-ceramic",
+        door: "modern-quarantine-door",
+        altar: "modern-containment-chamber",
+        forbiddenInteriorMaterials: [
+          "charred-cedar",
+          "torn-shoji",
+          "soiled-tatami",
+          "cracked-plaster",
+          "quarantine-palisade",
+          "castle-wall",
+          "contaminated-shrine",
+        ],
+        semanticRegions: [
+          { id: "metro-lab-floor", material: "modern-lab-floor", use: "walkable" },
+          { id: "perimeter-concrete", material: "modern-stained-concrete", use: "boundary" },
+          { id: "service-corridor", material: "modern-service-steel", use: "circulation" },
+          { id: "subway-laboratory", material: "modern-subway-ceramic", use: "chamber" },
+          { id: "quarantine-threshold", material: "modern-quarantine-door", use: "door" },
+          { id: "containment-seal", radiusFromObjective: 2.25, material: "modern-containment-chamber", use: "altar" },
+        ],
+      },
+      "cyber-yomi-mainframe": {
+        atlas: "cyber",
+        era: "neo-edo-cyberpunk",
+        floorProjection: "world-uv-floor-cast",
+        floorScale: 0.82,
+        walkableCellValues: ["0", "3"],
+        floor: "cyber-hex-floor",
+        boundary: "cyber-armored-bulkhead",
+        circulation: "cyber-titanium-conduit",
+        chamber: "cyber-machine-bay",
+        door: "cyber-neon-shrine-door",
+        altar: "cyber-yomi-core",
+        forbiddenInteriorMaterials: [
+          "charred-cedar",
+          "torn-shoji",
+          "damp-stone",
+          "soiled-tatami",
+          "cracked-plaster",
+          "quarantine-palisade",
+          "castle-wall",
+          "contaminated-shrine",
+        ],
+        semanticRegions: [
+          { id: "mainframe-floor", material: "cyber-hex-floor", use: "walkable" },
+          { id: "armored-perimeter", material: "cyber-armored-bulkhead", use: "boundary" },
+          { id: "conduit-circulation", material: "cyber-titanium-conduit", use: "circulation" },
+          { id: "machine-bay", material: "cyber-machine-bay", use: "chamber" },
+          { id: "neon-shrine-threshold", material: "cyber-neon-shrine-door", use: "door" },
+          { id: "corrupted-yomi-core", radiusFromObjective: 2.25, material: "cyber-yomi-core", use: "altar" },
+        ],
+      },
     },
   };
 
   const KageLevels = {
     schema: 2,
-    buildId: "20260719-world-expansion-v3",
+    buildId: "20260719-complete-campaign-v2",
     campaignId: "yomi-no-kage",
     startAreaId: "kurokawa-main-street",
     startSpawnId: "prologue",
@@ -856,7 +978,14 @@
           { id: "main-special-01", roster: "special", x: 735, y: 276, facing: -1 },
           { id: "main-regular-03", roster: "regular", x: 1260, y: 276, facing: -1 },
           { id: "main-regular-04", roster: "regular", x: 1680, y: 276, facing: -1 },
-          { id: "main-special-02", roster: "special", x: 2430, y: 276, facing: -1 },
+          {
+            id: "main-special-02",
+            roster: "special",
+            x: 2430,
+            y: 276,
+            facing: -1,
+            ai: { patrol: { minX: 2430, maxX: 2470 } },
+          },
         ],
         pickups: [
           { id: "main-ofuda-west", x: 600, y: 266, kind: "ammo", amount: 4 },
@@ -1058,9 +1187,7 @@
             linkId: "sick-house-fps",
             x: 1160,
             interactionRange: 44,
-            collision: "solidDoor",
-            blockX: 1124,
-            blockWidth: 72,
+            collision: "portal",
             type: "fps",
             mission: "kurokawa-sick-house",
             missionIndex: 2,
@@ -1099,7 +1226,14 @@
           { id: "back-special-01", roster: "special", x: 1040, y: 276, facing: -1 },
           { id: "back-regular-03", roster: "regular", x: 1450, y: 276, facing: -1 },
           { id: "back-special-02", roster: "special", x: 1910, y: 276, facing: -1 },
-          { id: "back-regular-04", roster: "regular", x: 2170, y: 276, facing: -1 },
+          {
+            id: "back-regular-04",
+            roster: "regular",
+            x: 2080,
+            y: 276,
+            facing: -1,
+            ai: { patrol: { minX: 2068, maxX: 2128 } },
+          },
         ],
         pickups: [
           { id: "back-yomogi", x: 650, y: 266, kind: "health", amount: 28 },
@@ -1257,9 +1391,7 @@
             linkId: "market-shrine-fps",
             x: 835,
             interactionRange: 44,
-            collision: "solidDoor",
-            blockX: 799,
-            blockWidth: 72,
+            collision: "portal",
             type: "fps",
             mission: "market-road-shrine",
             missionIndex: 3,
@@ -1605,9 +1737,23 @@
         enemies: [
           { id: "court-guard-01", roster: "special", x: 1350, y: 276, facing: -1 },
           { id: "court-guard-02", roster: "miniboss", x: 1490, y: 276, facing: -1 },
-          { id: "court-guard-03", roster: "special", x: 1650, y: 276, facing: -1 },
+          {
+            id: "court-guard-03",
+            roster: "special",
+            x: 1650,
+            y: 276,
+            facing: -1,
+            ai: { patrol: { minX: 1582, maxX: 1698 } },
+          },
           { id: "court-guard-04", roster: "special", x: 1870, y: 276, facing: -1 },
-          { id: "court-guard-05", roster: "miniboss", x: 2400, y: 276, facing: -1 },
+          {
+            id: "court-guard-05",
+            roster: "miniboss",
+            x: 2250,
+            y: 276,
+            facing: -1,
+            ai: { patrol: { minX: 2190, maxX: 2310 } },
+          },
         ],
         pickups: [
           { id: "court-ofuda", x: 1240, y: 266, kind: "ammo", amount: 4 },
@@ -1788,9 +1934,7 @@
             linkId: "archive-fps",
             x: 1540,
             interactionRange: 48,
-            collision: "solidDoor",
-            blockX: 1500,
-            blockWidth: 80,
+            collision: "portal",
             type: "fps",
             mission: "daimyo-archive",
             missionIndex: 4,
@@ -2047,7 +2191,14 @@
           { id: "donjon-guard-02", roster: "miniboss", x: 720, y: 212, facing: -1, platformId: "donjon-floor-west" },
           { id: "donjon-guard-03", roster: "special", x: 1180, y: 212, facing: -1, platformId: "donjon-floor-east" },
           { id: "donjon-guard-04", roster: "miniboss", x: 1660, y: 160, facing: -1, platformId: "donjon-upper-gallery" },
-          { id: "donjon-guard-05", roster: "special", x: 2020, y: 276, facing: -1 },
+          {
+            id: "donjon-guard-05",
+            roster: "special",
+            x: 2020,
+            y: 276,
+            facing: -1,
+            ai: { patrol: { minX: 1952, maxX: 2035 } },
+          },
         ],
         pickups: [
           { id: "donjon-ofuda", x: 820, y: 204, kind: "ammo", amount: 4 },
@@ -2698,6 +2849,606 @@
     }),
   });
 
+  /*
+   * Les onze zones historiques restent les ancres de compatibilite des
+   * sauvegardes. Les dix-sept zones ci-dessous completent la campagne sans
+   * dupliquer une aire : le contrat 7 actes / 28 zones pointe vers vingt-huit
+   * identifiants runtime uniques.
+   *
+   * Les compositions reutilisent uniquement les sprites livres dans les sept
+   * banques d'environnement. Les arches, torii et portes decoratives restent
+   * visualOnly ; seules les entrees de `area.portals` peuvent changer de zone.
+   */
+  const RUNTIME_PROP_WIDTHS = {
+    "ancient-cedar-trunk": 124,
+    "hollow-fallen-log": 214,
+    "charcoal-burner-shelter": 238,
+    "moss-stone-lantern": 42,
+    "woodcutter-cart": 124,
+    "stacked-logs": 118,
+    "rope-ward-gate": 102,
+    "forest-spring-basin": 86,
+    "collapsed-quarantine-tent": 132,
+    "infected-root-cluster": 170,
+    "campfire-ring": 62,
+    "yomi-cave-arch": 170,
+    "grand-torii": 190,
+    "petit-torii": 102,
+    "sanctuaire-rural": 250,
+    "lanterne-pierre": 40,
+    "bassin-purification": 70,
+    "bambous-hauts": 116,
+    "bambous-coupes": 150,
+    "pont-bois": 196,
+    "barriere-rituelle": 126,
+    "racines-contaminees": 196,
+    "cloche-sanctuaire": 84,
+    "autel-purification": 84,
+    "field-hut": 250,
+    "irrigation-water-wheel": 150,
+    "farm-cart": 176,
+    "bound-rice-sheaf": 90,
+    "irrigation-sluice": 112,
+    "field-footbridge": 224,
+    scarecrow: 84,
+    "wooden-granary": 238,
+    "straw-bales": 182,
+    "field-marker": 54,
+    "burning-crop-pile": 100,
+    "yomi-warp-torii": 140,
+    "tour-guet-kurokawa": 82,
+    "porte-chateau": 190,
+    "tour-chateau": 210,
+    "mur-shoji": 176,
+    "pilier-cedre": 54,
+    "brasero-fer": 54,
+    "porte-laquee": 132,
+    "armure-vide": 68,
+    "ratelier-vide": 130,
+    "paravent-dechire": 126,
+    "escalier-bois": 180,
+    "alcove-tatami": 210,
+    "racines-donjon": 190,
+    "metro-entrance": 190,
+    koban: 250,
+    "vending-machine": 52,
+    "utility-pole": 54,
+    "quarantine-barrier": 180,
+    "city-bicycle": 90,
+    "emergency-car": 190,
+    "neighborhood-shrine": 180,
+    "construction-scaffold": 280,
+    "emergency-generator": 108,
+    "rainwater-pump": 90,
+    "yomi-warp-arch": 150,
+    "temporal-torii": 160,
+    "shrine-tech-altar": 260,
+    "ventilation-tower": 120,
+    "energy-barrier-post": 66,
+    "maglev-maintenance-car": 250,
+    "drone-charging-dock": 132,
+    "sealed-cargo-crate": 140,
+    "vending-terminal": 74,
+    "coolant-pipe": 230,
+    "cyber-shrine-lantern": 62,
+    "transit-access-gate": 260,
+    "damaged-power-relay": 120,
+  };
+
+  const RUNTIME_PLATFORM_TOPS = {
+    "hollow-fallen-log": 256,
+    "charcoal-burner-shelter": 218,
+    "woodcutter-cart": 258,
+    "stacked-logs": 252,
+    "infected-root-cluster": 244,
+    "sanctuaire-rural": 214,
+    "bambous-coupes": 252,
+    "pont-bois": 256,
+    "racines-contaminees": 244,
+    "grand-torii": 230,
+    "field-hut": 216,
+    "farm-cart": 258,
+    "field-footbridge": 252,
+    "wooden-granary": 214,
+    "straw-bales": 250,
+    "tour-guet-kurokawa": 238,
+    "tour-chateau": 222,
+    "porte-chateau": 236,
+    "mur-shoji": 238,
+    "ratelier-vide": 254,
+    "escalier-bois": 252,
+    "alcove-tatami": 224,
+    "racines-donjon": 242,
+    koban: 216,
+    "emergency-car": 258,
+    "construction-scaffold": 236,
+    "metro-entrance": 224,
+    "quarantine-barrier": 260,
+    "neighborhood-shrine": 220,
+    "shrine-tech-altar": 214,
+    "maglev-maintenance-car": 222,
+    "sealed-cargo-crate": 258,
+    "coolant-pipe": 228,
+    "transit-access-gate": 216,
+    "damaged-power-relay": 252,
+  };
+
+  const RUNTIME_AREA_KITS = {
+    forest: {
+      chapterId: "forest",
+      environmentIndex: 5,
+      rosterPoolId: "kai-forest-route",
+      continuityProfile: "natural-canopy",
+      surface: "earth",
+      props: [
+        "ancient-cedar-trunk",
+        "woodcutter-cart",
+        "stacked-logs",
+        "hollow-fallen-log",
+        "moss-stone-lantern",
+        "charcoal-burner-shelter",
+        "campfire-ring",
+        "infected-root-cluster",
+        "forest-spring-basin",
+        "collapsed-quarantine-tent",
+        "yomi-cave-arch",
+        "rope-ward-gate",
+      ],
+    },
+    bamboo: {
+      chapterId: "bamboo",
+      environmentIndex: 1,
+      rosterPoolId: "kai-bamboo-route",
+      continuityProfile: "bamboo-curtain",
+      surface: "earth",
+      props: [
+        "bambous-hauts",
+        "lanterne-pierre",
+        "pont-bois",
+        "bambous-coupes",
+        "petit-torii",
+        "sanctuaire-rural",
+        "bassin-purification",
+        "racines-contaminees",
+        "cloche-sanctuaire",
+        "grand-torii",
+        "barriere-rituelle",
+        "autel-purification",
+      ],
+    },
+    fields: {
+      chapterId: "fields",
+      environmentIndex: 6,
+      rosterPoolId: "tsuru-fields-route",
+      continuityProfile: "rural-horizon",
+      surface: "earth",
+      props: [
+        "irrigation-water-wheel",
+        "farm-cart",
+        "bound-rice-sheaf",
+        "field-footbridge",
+        "irrigation-sluice",
+        "field-hut",
+        "scarecrow",
+        "straw-bales",
+        "burning-crop-pile",
+        "wooden-granary",
+        "field-marker",
+        "yomi-warp-torii",
+      ],
+    },
+    city: {
+      chapterId: "village",
+      environmentIndex: 0,
+      rosterPoolId: "kai-kurokawa-village",
+      continuityProfile: "urban-facades",
+      surface: "earth",
+      districtId: "tsuru-kurokawa",
+      props: [
+        "tour-guet-kurokawa",
+        "barriere-village",
+        "minka-tuiles-intacte",
+        "tonneau-provisions",
+        "charrette-cassee",
+        "kura-entrepot-riz",
+        "foyer-incendie",
+        "tas-paille",
+        "puits-pierre",
+        "minka-chaume-brulee",
+        "autel-route",
+        "porte-chateau",
+      ],
+      wallFiles: [
+        "mur-platre-intact",
+        "mur-platre-fume",
+        "mur-platre-lattis",
+        "mur-cedre-brule",
+        "mur-planches-pluie",
+        "mur-kura-bas",
+      ],
+    },
+    castle: {
+      chapterId: "castle",
+      environmentIndex: 2,
+      rosterPoolId: "kai-kurokawa-castle",
+      continuityProfile: null,
+      surface: "castleStone",
+      districtId: "tsuru-kurokawa",
+      zoneKind: "castle",
+      props: [
+        "tour-chateau",
+        "porte-chateau",
+        "mur-shoji",
+        "pilier-cedre",
+        "brasero-fer",
+        "porte-laquee",
+        "armure-vide",
+        "ratelier-vide",
+        "paravent-dechire",
+        "escalier-bois",
+        "alcove-tatami",
+        "racines-donjon",
+      ],
+      wallFiles: [
+        "mur-pierre-jokamachi",
+        "mur-kura-bas",
+        "mur-cedre-brule",
+        "mur-planches-pluie",
+      ],
+    },
+    modern: {
+      chapterId: "contemporary",
+      environmentIndex: 3,
+      rosterPoolId: "tokyo-contemporary-rift",
+      continuityProfile: "urban-facades",
+      surface: "asphalt",
+      regionId: "tokyo",
+      settlementId: "tokyo",
+      districtId: "rift-quarantine",
+      props: [
+        "metro-entrance",
+        "vending-machine",
+        "emergency-car",
+        "koban",
+        "utility-pole",
+        "construction-scaffold",
+        "emergency-generator",
+        "neighborhood-shrine",
+        "city-bicycle",
+        "quarantine-barrier",
+        "rainwater-pump",
+        "yomi-warp-arch",
+      ],
+    },
+    cyber: {
+      chapterId: "cyberpunk",
+      environmentIndex: 4,
+      rosterPoolId: "neo-edo-cyber-rift",
+      continuityProfile: "urban-facades",
+      surface: "techStreet",
+      regionId: "neo-edo",
+      settlementId: "neo-tokyo",
+      districtId: "shogun-zero-sector",
+      props: [
+        "temporal-torii",
+        "vending-terminal",
+        "sealed-cargo-crate",
+        "transit-access-gate",
+        "ventilation-tower",
+        "coolant-pipe",
+        "drone-charging-dock",
+        "shrine-tech-altar",
+        "cyber-shrine-lantern",
+        "maglev-maintenance-car",
+        "damaged-power-relay",
+        "energy-barrier-post",
+      ],
+    },
+  };
+
+  function runtimePropsForArea(definition, kit) {
+    const files = definition.propOrder || kit.props;
+    const availableWidth = definition.width - 360;
+    const step = files.length > 1 ? availableWidth / (files.length - 1) : 0;
+    const props = files.map((file, index) => {
+      const secondPlane = index % 3 === 0
+        || /minka|kura|tour|sanctuaire|shrine|koban|metro|transit|yomi-cave|granary|field-hut/.test(file);
+      return {
+        id: `${definition.id}-prop-${String(index + 1).padStart(2, "0")}`,
+        file,
+        x: Math.round(150 + index * step),
+        width: RUNTIME_PROP_WIDTHS[file] || 112,
+        layer: secondPlane ? "back" : "world",
+        compositionRole: secondPlane ? "second-plane-anchor" : "gameplay-prop",
+      };
+    });
+    if (kit.wallFiles) {
+      props.unshift(...architectureRun(
+        `${definition.id}-continuous-wall`,
+        0,
+        definition.width,
+        kit.wallFiles,
+        132,
+        { depthBias: -46 },
+      ));
+    }
+    return props;
+  }
+
+  function runtimePlatformsForArea(definition, props) {
+    const candidates = props.filter((prop) => Number.isFinite(RUNTIME_PLATFORM_TOPS[prop.file]));
+    return candidates.slice(0, 5).map((prop, index) => ({
+      id: `${definition.id}-surface-${String(index + 1).padStart(2, "0")}`,
+      x: Math.round(prop.x + Math.max(6, prop.width * 0.08)),
+      y: RUNTIME_PLATFORM_TOPS[prop.file],
+      w: Math.max(54, Math.round(prop.width * 0.82)),
+      h: 8,
+      visual: false,
+      owner: prop.id,
+      surface: definition.kit === "castle"
+        ? "wood"
+        : (["modern", "cyber"].includes(definition.kit) ? "metal" : "wood"),
+      collision: "oneWay",
+      routeRole: "optionalUpper",
+    }));
+  }
+
+  function runtimeEnemiesForArea(definition) {
+    const count = definition.enemyIds.length;
+    const left = 420;
+    const right = definition.boss ? definition.width - 1050 : definition.width - 430;
+    const step = count > 1 ? (right - left) / (count - 1) : 0;
+    const enemies = definition.enemyIds.map((rosterId, index) => ({
+      id: `${definition.id}-enemy-${String(index + 1).padStart(2, "0")}`,
+      rosterId,
+      roster: /^mb-/.test(rosterId)
+        ? "miniboss"
+        : (/^(s|new-.*(?:host|officer|corpse|frame))/.test(rosterId) ? "special" : "regular"),
+      x: Math.round(left + index * step),
+      y: 276,
+      facing: index % 2 ? 1 : -1,
+    }));
+    if (definition.boss) {
+      const massive = definition.boss.rosterId.startsWith("giant-")
+        || definition.boss.massive === true;
+      const width = definition.boss.width || (massive ? 148 : 72);
+      const height = definition.boss.height || (massive ? 96 : 54);
+      enemies.push({
+        id: definition.boss.sourceId,
+        rosterId: definition.boss.rosterId,
+        narrativeId: definition.boss.narrativeId || definition.boss.rosterId,
+        profileId: definition.boss.profileId
+          || (definition.boss.rosterId.startsWith("giant-")
+            ? definition.boss.rosterId
+            : null),
+        presentationClass: massive ? "massive" : null,
+        encounterId: `${definition.id}-boss-gate`,
+        x: definition.width - 690,
+        y: HORIZONTAL_GROUND_Y - height,
+        w: width,
+        h: height,
+        hp: definition.boss.hp || (massive ? 54 : 34),
+        facing: -1,
+        boss: true,
+      });
+    }
+    return enemies;
+  }
+
+  const RUNTIME_NEW_AREA_DEFINITIONS = [
+    {
+      id: "forest-abandoned-camp",
+      kit: "forest",
+      label: "Camp abandonne des bucherons",
+      width: 3000,
+      enemyIds: ["r06-yama-woodcutter", "s19-wana-trapper", "r09-haka-digger", "s05-raimei-yamabushi", "mb-09-pisteur-kegare"],
+      propOrder: ["collapsed-quarantine-tent", "woodcutter-cart", "stacked-logs", "campfire-ring", "charcoal-burner-shelter", "ancient-cedar-trunk", "moss-stone-lantern", "hollow-fallen-log", "forest-spring-basin", "infected-root-cluster", "yomi-cave-arch", "rope-ward-gate"],
+    },
+    {
+      id: "forest-root-sanctuary",
+      kit: "forest",
+      label: "Sanctuaire des racines",
+      width: 3200,
+      enemyIds: ["r20-komuso-wanderer", "s05-raimei-yamabushi", "s19-wana-trapper", "r09-haka-digger"],
+      propOrder: ["ancient-cedar-trunk", "infected-root-cluster", "moss-stone-lantern", "forest-spring-basin", "hollow-fallen-log", "yomi-cave-arch", "charcoal-burner-shelter", "campfire-ring", "collapsed-quarantine-tent", "infected-root-cluster", "ancient-cedar-trunk", "rope-ward-gate"],
+      boss: { sourceId: "take-mori-root-guardian", rosterId: "giant-03-take-mori", hp: 52 },
+    },
+    {
+      id: "bamboo-hollow-path",
+      kit: "bamboo",
+      label: "Chemin des tiges creuses",
+      width: 3100,
+      enemyIds: ["r14-kaido-bandit", "s01-kusa-shinobi", "s02-doku-kunoichi", "r20-komuso-wanderer", "mb-06-shinobi-brumes"],
+      propOrder: ["bambous-hauts", "pont-bois", "bambous-coupes", "lanterne-pierre", "petit-torii", "racines-contaminees", "bassin-purification", "bambous-hauts", "cloche-sanctuaire", "sanctuaire-rural", "barriere-rituelle", "grand-torii"],
+    },
+    {
+      id: "bamboo-moon-clearing",
+      kit: "bamboo",
+      label: "Clairiere de la lune fendue",
+      width: 3200,
+      enemyIds: ["s01-kusa-shinobi", "s02-doku-kunoichi", "s16-kage-mai-dancer", "mb-06-shinobi-brumes"],
+      propOrder: ["grand-torii", "lanterne-pierre", "bambous-coupes", "pont-bois", "sanctuaire-rural", "autel-purification", "racines-contaminees", "cloche-sanctuaire", "bambous-hauts", "bassin-purification", "barriere-rituelle", "petit-torii"],
+      boss: { sourceId: "kumo-moon-duel", rosterId: "boss-14-maitre-shinobi-kumo", hp: 38 },
+    },
+    {
+      id: "fields-drowned-paddies",
+      kit: "fields",
+      label: "Rizieres noyees",
+      width: 3100,
+      enemyIds: ["r05-kome-porter", "r17-umaya-groom", "r19-kago-bearer", "s13-kegare-sumotori", "mb-17-sumotori-namazu"],
+      propOrder: ["irrigation-water-wheel", "field-footbridge", "irrigation-sluice", "bound-rice-sheaf", "farm-cart", "field-hut", "scarecrow", "straw-bales", "burning-crop-pile", "field-marker", "wooden-granary", "yomi-warp-torii"],
+    },
+    {
+      id: "fields-mill-road",
+      kit: "fields",
+      label: "Route du moulin",
+      width: 3000,
+      enemyIds: ["r05-kome-porter", "s19-wana-trapper", "r17-umaya-groom", "s13-kegare-sumotori", "mb-17-sumotori-namazu"],
+      propOrder: ["farm-cart", "bound-rice-sheaf", "field-footbridge", "field-hut", "irrigation-water-wheel", "irrigation-sluice", "straw-bales", "scarecrow", "wooden-granary", "burning-crop-pile", "field-marker", "yomi-warp-torii"],
+    },
+    {
+      id: "fields-burning-granary",
+      kit: "fields",
+      label: "Grenier de la moisson noire",
+      width: 3300,
+      enemyIds: ["r19-kago-bearer", "s13-kegare-sumotori", "mb-17-sumotori-namazu", "r05-kome-porter"],
+      propOrder: ["field-hut", "straw-bales", "burning-crop-pile", "farm-cart", "wooden-granary", "burning-crop-pile", "bound-rice-sheaf", "irrigation-sluice", "scarecrow", "field-footbridge", "field-marker", "yomi-warp-torii"],
+      boss: { sourceId: "shiro-kabuto-harvest", rosterId: "giant-07-shiro-kabuto", hp: 56 },
+    },
+    {
+      id: "city-castle-approach",
+      kit: "city",
+      label: "Avenue fortifiee du chateau",
+      width: 3300,
+      enemyIds: ["r10-hikeshi-watchman", "s03-bakusai-runner", "s17-kurohata-bearer", "mb-20-capitaine-byakko"],
+      boss: { sourceId: "engeki-castle-approach", rosterId: "boss-11-brigadier-engeki", hp: 42 },
+    },
+    {
+      id: "castle-armory",
+      kit: "castle",
+      label: "Armurerie du clan Kurokawa",
+      width: 3000,
+      enemyIds: ["r15-oku-servant", "s08-gomon-jailer", "s15-teppo-corpsman", "mb-10-forgeron-hibana", "mb-12-gardien-masque-fer"],
+      propOrder: ["porte-chateau", "ratelier-vide", "armure-vide", "brasero-fer", "mur-shoji", "pilier-cedre", "escalier-bois", "porte-laquee", "paravent-dechire", "alcove-tatami", "racines-donjon", "tour-chateau"],
+    },
+    {
+      id: "castle-yomi-rift",
+      kit: "castle",
+      label: "Faille du Yomi",
+      width: 3400,
+      enemyIds: ["s18-yomi-herald", "s20-mekura-oracle", "mb-18-onmyoji-renard", "s10-hatamoto-fallen"],
+      propOrder: ["porte-laquee", "racines-donjon", "brasero-fer", "mur-shoji", "pilier-cedre", "alcove-tatami", "paravent-dechire", "racines-donjon", "armure-vide", "tour-chateau", "porte-chateau", "racines-donjon"],
+      boss: { sourceId: "yomi-no-kanrei-final-phase", rosterId: "giant-10-yomi-no-kanrei", hp: 72 },
+    },
+    {
+      id: "modern-subway-station",
+      kit: "modern",
+      label: "Station de metro condamnee",
+      width: 3100,
+      enemyIds: ["new-modern-commuter", "new-modern-riot-host", "new-modern-response-officer", "new-modern-commuter", "new-modern-riot-host"],
+      propOrder: ["metro-entrance", "vending-machine", "quarantine-barrier", "emergency-car", "utility-pole", "construction-scaffold", "emergency-generator", "rainwater-pump", "city-bicycle", "koban", "neighborhood-shrine", "yomi-warp-arch"],
+    },
+    {
+      id: "modern-quarantine-hospital",
+      kit: "modern",
+      label: "Hopital de quarantaine",
+      width: 3200,
+      enemyIds: ["new-modern-commuter", "new-modern-response-officer", "new-modern-riot-host", "new-modern-response-officer", "new-modern-commuter"],
+      propOrder: ["quarantine-barrier", "emergency-car", "emergency-generator", "construction-scaffold", "koban", "vending-machine", "rainwater-pump", "utility-pole", "metro-entrance", "city-bicycle", "neighborhood-shrine", "yomi-warp-arch"],
+    },
+    {
+      id: "modern-metropolitan-lab",
+      kit: "modern",
+      label: "Laboratoire metropolitain",
+      width: 3400,
+      enemyIds: ["new-modern-response-officer", "new-modern-riot-host", "new-modern-commuter", "new-modern-response-officer"],
+      propOrder: ["koban", "quarantine-barrier", "construction-scaffold", "emergency-generator", "vending-machine", "rainwater-pump", "utility-pole", "emergency-car", "metro-entrance", "neighborhood-shrine", "city-bicycle", "yomi-warp-arch"],
+      boss: {
+        sourceId: "metro-colossus",
+        rosterId: "new-modern-metro-colossus",
+        massive: true,
+        width: 168,
+        height: 108,
+        hp: 96,
+      },
+    },
+    {
+      id: "cyber-neon-market",
+      kit: "cyber",
+      label: "Marche aux neons",
+      width: 3200,
+      enemyIds: ["new-cyber-neon-shinobi", "new-cyber-drone-corpse", "new-cyber-oni-frame", "new-cyber-neon-shinobi", "new-cyber-drone-corpse"],
+      propOrder: ["vending-terminal", "sealed-cargo-crate", "transit-access-gate", "cyber-shrine-lantern", "coolant-pipe", "drone-charging-dock", "shrine-tech-altar", "ventilation-tower", "maglev-maintenance-car", "damaged-power-relay", "energy-barrier-post", "temporal-torii"],
+    },
+    {
+      id: "cyber-maglev-ruins",
+      kit: "cyber",
+      label: "Ruines du maglev",
+      width: 3300,
+      enemyIds: ["new-cyber-neon-shinobi", "new-cyber-oni-frame", "new-cyber-drone-corpse", "new-cyber-neon-shinobi", "new-cyber-oni-frame"],
+      propOrder: ["maglev-maintenance-car", "sealed-cargo-crate", "coolant-pipe", "ventilation-tower", "transit-access-gate", "damaged-power-relay", "drone-charging-dock", "energy-barrier-post", "vending-terminal", "cyber-shrine-lantern", "shrine-tech-altar", "temporal-torii"],
+    },
+    {
+      id: "cyber-yomi-datacenter",
+      kit: "cyber",
+      label: "Centre de donnees Yomi",
+      width: 3400,
+      enemyIds: ["new-cyber-drone-corpse", "new-cyber-neon-shinobi", "new-cyber-oni-frame", "new-cyber-drone-corpse"],
+      propOrder: ["transit-access-gate", "ventilation-tower", "coolant-pipe", "drone-charging-dock", "damaged-power-relay", "sealed-cargo-crate", "shrine-tech-altar", "energy-barrier-post", "vending-terminal", "maglev-maintenance-car", "cyber-shrine-lantern", "temporal-torii"],
+      boss: {
+        sourceId: "yomi-network-kannushi",
+        rosterId: "new-cyber-yomi-hacker",
+        hp: 44,
+      },
+    },
+    {
+      id: "cyber-shogun-core",
+      kit: "cyber",
+      label: "Coeur du Shogun Zero",
+      width: 3600,
+      enemyIds: ["new-cyber-neon-shinobi", "new-cyber-drone-corpse", "new-cyber-oni-frame", "new-cyber-neon-shinobi"],
+      propOrder: ["temporal-torii", "energy-barrier-post", "shrine-tech-altar", "coolant-pipe", "drone-charging-dock", "damaged-power-relay", "transit-access-gate", "sealed-cargo-crate", "ventilation-tower", "maglev-maintenance-car", "cyber-shrine-lantern", "energy-barrier-post"],
+      boss: {
+        sourceId: "shogun-zero",
+        rosterId: "new-cyber-shogun-zero",
+        hp: 64,
+      },
+    },
+  ];
+
+  for (const definition of RUNTIME_NEW_AREA_DEFINITIONS) {
+    const kit = RUNTIME_AREA_KITS[definition.kit];
+    const props = runtimePropsForArea(definition, kit);
+    const platforms = runtimePlatformsForArea(definition, props);
+    const enemies = runtimeEnemiesForArea(definition);
+    const area = campaignArea({
+      id: definition.id,
+      chapterId: kit.chapterId,
+      label: definition.label,
+      objective: "",
+      objectivePortalId: null,
+      environmentIndex: kit.environmentIndex,
+      rosterPoolId: kit.rosterPoolId,
+      width: definition.width,
+      continuityProfile: kit.continuityProfile,
+      regionId: kit.regionId || "kai",
+      settlementId: kit.settlementId || "tsuru",
+      districtId: kit.districtId || definition.id,
+      surface: kit.surface,
+      chapterTags: [definition.kit, "campaign-runtime", "seven-act"],
+      spawns: {
+        campaignWest: { x: 140, y: PLAYER_GROUND_Y, facing: 1 },
+        campaignEast: { x: definition.width - 180, y: PLAYER_GROUND_Y, facing: -1 },
+        checkpoint: { x: Math.round(definition.width * 0.5), y: PLAYER_GROUND_Y, facing: 1 },
+      },
+      props,
+      platforms,
+      portals: [],
+      enemies,
+    });
+    area.zoneKind = kit.zoneKind || "outdoor";
+    if (definition.boss) {
+      area.encounters = [{
+        id: `${definition.id}-boss-gate`,
+        kind: (
+          definition.boss.rosterId.startsWith("giant-")
+          || definition.boss.massive === true
+        ) ? "massiveBoss" : "boss",
+        profileId: definition.boss.rosterId,
+        bounds: {
+          x: definition.width - 1120,
+          y: 0,
+          w: 1010,
+          h: 360,
+        },
+        activationX: definition.width - 1040,
+        cameraLock: true,
+        completionUnlocks: [],
+      }];
+    }
+    KageLevels.areas[definition.id] = area;
+  }
+
   KageLevels.startAreaId = "kai-forest-pass";
   KageLevels.startSpawnId = "prologue";
   KageLevels.chapters.village.entryAreaId = "kai-forest-pass";
@@ -2809,6 +3560,1391 @@
   cyberCore.requiresAreaClear = true;
   cyberCore.requiresConfirmation = true;
   cyberCore.visual = "faille-cyber";
+
+  const RUNTIME_CAMPAIGN_ZONES = [
+    {
+      zoneId: "forest-kaido-trail",
+      areaId: "kai-forest-pass",
+      actId: "act-01-forest",
+      objective: {
+        id: "obj-forest-follow-traces",
+        type: "investigate",
+        label: "Suivre les traces de la patrouille du shogun",
+        sealReward: 0,
+      },
+    },
+    {
+      zoneId: "forest-abandoned-camp",
+      areaId: "forest-abandoned-camp",
+      actId: "act-01-forest",
+      objective: {
+        id: "obj-forest-purify-camp",
+        type: "purify",
+        label: "Purifier le camp abandonne",
+        sealReward: 1,
+      },
+    },
+    {
+      zoneId: "forest-root-sanctuary",
+      areaId: "forest-root-sanctuary",
+      actId: "act-01-forest",
+      objective: {
+        id: "obj-forest-defeat-take-mori",
+        type: "boss",
+        label: "Abattre Take-Mori, gardien des racines",
+        targetEnemyId: "giant-03-take-mori",
+        sealReward: 1,
+      },
+    },
+    {
+      zoneId: "bamboo-rain-gate",
+      areaId: "shigure-bamboo-grove",
+      actId: "act-02-bamboo",
+      objective: {
+        id: "obj-bamboo-cut-wards",
+        type: "destroy-nodes",
+        label: "Rompre les sceaux poses sur les bambous",
+        sealReward: 1,
+      },
+    },
+    {
+      zoneId: "bamboo-hollow-path",
+      areaId: "bamboo-hollow-path",
+      actId: "act-02-bamboo",
+      objective: {
+        id: "obj-bamboo-rescue-scout",
+        type: "rescue",
+        label: "Retrouver l'eclaireur de la patrouille",
+        sealReward: 0,
+      },
+    },
+    {
+      zoneId: "bamboo-moon-clearing",
+      areaId: "bamboo-moon-clearing",
+      actId: "act-02-bamboo",
+      objective: {
+        id: "obj-bamboo-defeat-kumo",
+        type: "boss",
+        label: "Vaincre Kumo dans la clairiere",
+        targetEnemyId: "boss-14-maitre-shinobi-kumo",
+        sealReward: 1,
+      },
+    },
+    {
+      zoneId: "fields-west-dikes",
+      areaId: "tsuru-rice-fields",
+      actId: "act-03-fields",
+      objective: {
+        id: "obj-fields-open-irrigation",
+        type: "world-state",
+        label: "Rouvrir les vannes d'irrigation",
+        sealReward: 0,
+      },
+    },
+    {
+      zoneId: "fields-drowned-paddies",
+      areaId: "fields-drowned-paddies",
+      actId: "act-03-fields",
+      objective: {
+        id: "obj-fields-defend-farmers",
+        type: "defense",
+        label: "Defendre les survivants des rizieres",
+        sealReward: 1,
+      },
+    },
+    {
+      zoneId: "fields-mill-road",
+      areaId: "fields-mill-road",
+      actId: "act-03-fields",
+      objective: {
+        id: "obj-fields-break-spore-mill",
+        type: "purify",
+        label: "Detruire le moulin a spores",
+        sealReward: 1,
+      },
+    },
+    {
+      zoneId: "fields-burning-granary",
+      areaId: "fields-burning-granary",
+      actId: "act-03-fields",
+      objective: {
+        id: "obj-fields-defeat-aka-ushi",
+        runtimeObjectiveAlias: "obj-fields-defeat-shiro-kabuto",
+        type: "boss",
+        label: "Briser la carapace de Shiro-Kabuto",
+        targetEnemyId: "giant-07-shiro-kabuto",
+        sealReward: 1,
+      },
+    },
+    {
+      zoneId: "city-south-gate",
+      areaId: "kurokawa-main-street",
+      actId: "act-04-city",
+      objective: {
+        id: "obj-city-enter-quarantine",
+        type: "breach",
+        label: "Franchir le cordon de quarantaine",
+        sealReward: 0,
+      },
+    },
+    {
+      zoneId: "city-market-wards",
+      areaId: "kurokawa-back-street",
+      actId: "act-04-city",
+      objective: {
+        id: "obj-city-open-refuge",
+        type: "refuge",
+        label: "Ouvrir un refuge dans le quartier marchand",
+        sealReward: 1,
+      },
+    },
+    {
+      zoneId: "city-canal-roofs",
+      areaId: "kurokawa-market-east",
+      actId: "act-04-city",
+      objective: {
+        id: "obj-city-ring-fire-bell",
+        type: "world-state",
+        label: "Sonner la cloche d'incendie de Kurokawa",
+        sealReward: 1,
+      },
+    },
+    {
+      zoneId: "city-castle-approach",
+      areaId: "city-castle-approach",
+      actId: "act-04-city",
+      objective: {
+        id: "obj-city-defeat-engeki",
+        type: "boss",
+        label: "Vaincre le brigadier Engeki",
+        targetEnemyId: "boss-11-brigadier-engeki",
+        sealReward: 1,
+      },
+    },
+    {
+      zoneId: "castle-lower-court-expansion",
+      areaId: "castle-lower-court",
+      actId: "act-05-castle",
+      objective: {
+        id: "obj-castle-break-barracks-seal",
+        type: "destroy-nodes",
+        label: "Briser le sceau de la garnison",
+        sealReward: 1,
+      },
+    },
+    {
+      zoneId: "castle-residence-expansion",
+      areaId: "castle-residence",
+      actId: "act-05-castle",
+      objective: {
+        id: "obj-castle-find-daimyo-records",
+        type: "investigate",
+        label: "Retrouver les registres du daimyo",
+        sealReward: 0,
+      },
+    },
+    {
+      zoneId: "castle-armory",
+      areaId: "castle-armory",
+      actId: "act-05-castle",
+      objective: {
+        id: "obj-castle-purify-armory",
+        type: "purify",
+        label: "Purifier l'armurerie du clan",
+        sealReward: 1,
+      },
+    },
+    {
+      zoneId: "castle-donjon-expansion",
+      areaId: "castle-donjon",
+      actId: "act-05-castle",
+      objective: {
+        id: "obj-castle-defeat-kanrei",
+        runtimeObjectiveAlias: "obj-castle-defeat-daimyo",
+        type: "boss",
+        label: "Abattre le daimyo corrompu",
+        targetEnemyId: "06-daimyo-corrupted",
+        sealReward: 1,
+      },
+    },
+    {
+      zoneId: "castle-yomi-rift",
+      areaId: "castle-yomi-rift",
+      actId: "act-05-castle",
+      objective: {
+        id: "obj-castle-stabilize-warp",
+        runtimeObjectiveAlias: "obj-castle-defeat-kanrei-phase-2",
+        type: "boss",
+        label: "Detruire Yomi-no-Kanrei et stabiliser la faille",
+        targetEnemyId: "giant-10-yomi-no-kanrei",
+        sealReward: 1,
+      },
+    },
+    {
+      zoneId: "modern-shibuya-side-street",
+      areaId: "tokyo-contemporary-rift",
+      actId: "act-06-contemporary",
+      objective: {
+        id: "obj-modern-read-emergency-records",
+        type: "investigate",
+        label: "Lire les archives d'urgence de Tokyo",
+        sealReward: 0,
+      },
+    },
+    {
+      zoneId: "modern-subway-station",
+      areaId: "modern-subway-station",
+      actId: "act-06-contemporary",
+      objective: {
+        id: "obj-modern-restore-power",
+        type: "world-state",
+        label: "Retablir le courant de la station",
+        sealReward: 1,
+      },
+    },
+    {
+      zoneId: "modern-quarantine-hospital",
+      areaId: "modern-quarantine-hospital",
+      actId: "act-06-contemporary",
+      objective: {
+        id: "obj-modern-secure-sample",
+        type: "retrieval",
+        label: "Securiser l'echantillon originel",
+        sealReward: 1,
+      },
+    },
+    {
+      zoneId: "modern-metropolitan-lab",
+      areaId: "modern-metropolitan-lab",
+      actId: "act-06-contemporary",
+      objective: {
+        id: "obj-modern-defeat-metro-colossus",
+        type: "boss",
+        label: "Abattre le colosse de la ligne Yomi",
+        targetEnemyId: "new-modern-metro-colossus",
+        sealReward: 1,
+      },
+    },
+    {
+      zoneId: "cyber-shrine-sector",
+      areaId: "neo-edo-cyber-rift",
+      actId: "act-07-cyberpunk",
+      objective: {
+        id: "obj-cyber-calibrate-katana",
+        type: "upgrade",
+        label: "Calibrer la lame sur la frequence Yomi",
+        sealReward: 1,
+      },
+    },
+    {
+      zoneId: "cyber-neon-market",
+      areaId: "cyber-neon-market",
+      actId: "act-07-cyberpunk",
+      objective: {
+        id: "obj-cyber-free-memory-monks",
+        type: "rescue",
+        label: "Liberer les moines-memoires",
+        sealReward: 1,
+      },
+    },
+    {
+      zoneId: "cyber-maglev-ruins",
+      areaId: "cyber-maglev-ruins",
+      actId: "act-07-cyberpunk",
+      objective: {
+        id: "obj-cyber-destroy-drone-nests",
+        type: "destroy-nodes",
+        label: "Detruire les nids de drones",
+        sealReward: 1,
+      },
+    },
+    {
+      zoneId: "cyber-yomi-datacenter",
+      areaId: "cyber-yomi-datacenter",
+      actId: "act-07-cyberpunk",
+      objective: {
+        id: "obj-cyber-defeat-hacker",
+        type: "boss",
+        label: "Neutraliser le kannushi du reseau",
+        targetEnemyId: "new-cyber-yomi-hacker",
+        sealReward: 1,
+      },
+    },
+    {
+      zoneId: "cyber-shogun-core",
+      areaId: "cyber-shogun-core",
+      actId: "act-07-cyberpunk",
+      objective: {
+        id: "obj-cyber-defeat-shogun-zero",
+        type: "boss",
+        label: "Vaincre le Shogun Zero",
+        targetEnemyId: "new-cyber-shogun-zero",
+        sealReward: 1,
+      },
+    },
+  ];
+
+  const RUNTIME_CAMPAIGN_ACT_DEFINITIONS = [
+    {
+      id: "act-01-forest",
+      order: 1,
+      label: "Acte I - La foret qui murmure",
+      biomeId: "forest",
+      totalSeals: 2,
+      bossEnemyId: "giant-03-take-mori",
+    },
+    {
+      id: "act-02-bamboo",
+      order: 2,
+      label: "Acte II - Les lames de Shigure",
+      biomeId: "bamboo-grove",
+      totalSeals: 2,
+      bossEnemyId: "boss-14-maitre-shinobi-kumo",
+    },
+    {
+      id: "act-03-fields",
+      order: 3,
+      label: "Acte III - La moisson noire",
+      biomeId: "rice-fields",
+      totalSeals: 3,
+      bossEnemyId: "giant-07-shiro-kabuto",
+    },
+    {
+      id: "act-04-city",
+      order: 4,
+      label: "Acte IV - Kurokawa, ville des cendres",
+      biomeId: "fortified-city",
+      totalSeals: 3,
+      bossEnemyId: "boss-11-brigadier-engeki",
+    },
+    {
+      id: "act-05-castle",
+      order: 5,
+      label: "Acte V - Le trone du Yomi",
+      biomeId: "castle",
+      totalSeals: 4,
+      bossEnemyId: "giant-10-yomi-no-kanrei",
+      phaseBossEnemyIds: ["06-daimyo-corrupted", "giant-10-yomi-no-kanrei"],
+    },
+    {
+      id: "act-06-contemporary",
+      order: 6,
+      label: "Acte VI - Tokyo, annee zero",
+      biomeId: "contemporary-japan",
+      totalSeals: 3,
+      bossEnemyId: "new-modern-metro-colossus",
+    },
+    {
+      id: "act-07-cyberpunk",
+      order: 7,
+      label: "Acte VII - Les ombres de Neo-Tokyo",
+      biomeId: "cyberpunk-japan",
+      totalSeals: 5,
+      bossEnemyId: "new-cyber-shogun-zero",
+    },
+  ];
+
+  /*
+   * Cibles de terrain des objectifs non combattants.
+   *
+   * Chaque cible est un vrai sprite du biome, placé sur le plan jouable et
+   * associé à un point d'interaction manuel. Les identifiants de cibles sont
+   * stables afin que la sauvegarde puisse reprendre un objectif à mi-parcours
+   * sans recréer une progression différente.
+   */
+  const CAMPAIGN_OBJECTIVE_TARGET_BLUEPRINTS = {
+    "obj-forest-purify-camp": {
+      targets: [
+        {
+          propFile: "campfire-ring",
+          width: 74,
+          label: "Foyer du camp",
+          prompt: "E - POSER UN OFUDA DE PURIFICATION",
+          actionLabel: "FOYER PURIFIE",
+          requiresAreaClear: true,
+        },
+      ],
+    },
+    "obj-bamboo-cut-wards": {
+      targets: [1, 2, 3].map((index) => ({
+        propFile: "barriere-rituelle",
+        width: 76,
+        label: `Sceau impur ${index}/3`,
+        prompt: "E - TRANCHER LE SCEAU",
+        actionLabel: "SCEAU ROMPU",
+      })),
+    },
+    "obj-bamboo-rescue-scout": {
+      targets: [
+        {
+          propFile: "petit-torii",
+          width: 70,
+          label: "Éclaireur retenu",
+          prompt: "E - COUPER LES LIENS",
+          actionLabel: "ECLAIREUR LIBERE",
+        },
+        {
+          propFile: "bassin-purification",
+          width: 68,
+          label: "Éclaireur contaminé",
+          prompt: "E - ADMINISTRER LE REMEDE",
+          actionLabel: "ECLAIREUR STABILISE",
+        },
+      ],
+    },
+    "obj-fields-open-irrigation": {
+      targets: [
+        {
+          propFile: "irrigation-sluice",
+          width: 104,
+          label: "Vanne occidentale",
+          prompt: "E - LEVER LA VANNE",
+          actionLabel: "VANNE OUVERTE",
+        },
+        {
+          propFile: "irrigation-sluice",
+          width: 104,
+          label: "Vanne orientale",
+          prompt: "E - LEVER LA VANNE",
+          actionLabel: "VANNE OUVERTE",
+        },
+      ],
+    },
+    "obj-fields-break-spore-mill": {
+      targets: [
+        {
+          propFile: "irrigation-water-wheel",
+          width: 138,
+          label: "Mécanisme à spores",
+          prompt: "E - INCENDIER LE COEUR DU MOULIN",
+          actionLabel: "MOULIN PURIFIE",
+          requiresAreaClear: true,
+        },
+      ],
+    },
+    "obj-city-open-refuge": {
+      targets: [
+        {
+          propFile: "autel-route",
+          width: 78,
+          label: "Autel du refuge",
+          prompt: "E - CONSACRER LE REFUGE",
+          actionLabel: "REFUGE OUVERT",
+          requiresAreaClear: true,
+        },
+      ],
+    },
+    "obj-city-ring-fire-bell": {
+      targets: [
+        {
+          propFile: "tour-guet-kurokawa",
+          width: 142,
+          label: "Cloche d'incendie",
+          prompt: "E - SONNER L'ALARME",
+          actionLabel: "CLOCHE SONNEE",
+        },
+      ],
+    },
+    "obj-castle-break-barracks-seal": {
+      targets: [1, 2, 3].map((index) => ({
+        propFile: "racines-donjon",
+        width: 72,
+        label: `Ancrage du sceau ${index}/3`,
+        prompt: "E - DETRUIRE L'ANCRAGE",
+        actionLabel: "ANCRAGE DETRUIT",
+      })),
+    },
+    "obj-castle-purify-armory": {
+      targets: [
+        {
+          propFile: "ratelier-vide",
+          width: 86,
+          label: "Râtelier contaminé",
+          prompt: "E - BRULER LES ARMES SOUILLEES",
+          actionLabel: "RATELIER PURIFIE",
+          requiresAreaClear: true,
+        },
+        {
+          propFile: "armure-vide",
+          width: 62,
+          label: "Armure possédée",
+          prompt: "E - APPOSER LE SCEAU",
+          actionLabel: "ARMURE PURIFIEE",
+          requiresAreaClear: true,
+        },
+      ],
+    },
+    "obj-modern-restore-power": {
+      targets: [
+        {
+          propFile: "emergency-generator",
+          width: 116,
+          label: "Générateur de secours",
+          prompt: "E - REARMER LE GENERATEUR",
+          actionLabel: "GENERATEUR REARME",
+        },
+        {
+          propFile: "rainwater-pump",
+          width: 94,
+          label: "Pompe de la station",
+          prompt: "E - RELANCER LA POMPE",
+          actionLabel: "POMPE RELANCEE",
+        },
+      ],
+    },
+    "obj-modern-secure-sample": {
+      targets: [
+        {
+          propFile: "emergency-car",
+          width: 154,
+          label: "Ambulance du patient zéro",
+          prompt: "E - RECUPERER L'ECHANTILLON",
+          actionLabel: "ECHANTILLON SECURISE",
+        },
+      ],
+    },
+    "obj-cyber-calibrate-katana": {
+      targets: [
+        {
+          propFile: "shrine-tech-altar",
+          width: 106,
+          label: "Autel de calibration",
+          prompt: "E - SYNCHRONISER LA LAME",
+          actionLabel: "LAME CALIBREE",
+        },
+      ],
+    },
+    "obj-cyber-free-memory-monks": {
+      targets: [
+        {
+          propFile: "sealed-cargo-crate",
+          width: 90,
+          label: "Reliquaire-mémoire 1/2",
+          prompt: "E - LIBERER LA MEMOIRE",
+          actionLabel: "MEMOIRE LIBEREE",
+        },
+        {
+          propFile: "sealed-cargo-crate",
+          width: 90,
+          label: "Reliquaire-mémoire 2/2",
+          prompt: "E - LIBERER LA MEMOIRE",
+          actionLabel: "MEMOIRE LIBEREE",
+        },
+      ],
+    },
+    "obj-cyber-destroy-drone-nests": {
+      targets: [1, 2, 3].map((index) => ({
+        propFile: "drone-charging-dock",
+        width: 96,
+        label: `Nid de drones ${index}/3`,
+        prompt: "E - SURCHARGER LE NID",
+        actionLabel: "NID DE DRONES DETRUIT",
+      })),
+    },
+  };
+
+  const CAMPAIGN_MANUAL_OBJECTIVE_TYPES = new Set([
+    "destroy-nodes",
+    "purify",
+    "refuge",
+    "rescue",
+    "retrieval",
+    "upgrade",
+    "world-state",
+  ]);
+
+  function campaignObjectiveCompletionMethod(type) {
+    if (type === "boss") return "enemy-death";
+    if (["investigate", "breach"].includes(type)) return "checkpoint-reach";
+    if (type === "defense") return "area-clear";
+    if (CAMPAIGN_MANUAL_OBJECTIVE_TYPES.has(type)) return "manual-targets";
+    return "explicit-runtime";
+  }
+
+  function campaignObjectiveTargetCenters(area, count) {
+    const minimum = Math.max(area.minX + 260, 320);
+    const maximum = Math.min(area.maxX - 260, area.width - 320);
+    const span = Math.max(240, maximum - minimum);
+    const authoredPortalXs = (area.portals || [])
+      .map((portal) => Number(portal.x))
+      .filter(Number.isFinite);
+    const centers = [];
+    for (let index = 0; index < count; index += 1) {
+      const preferred = count <= 1
+        ? Math.round((minimum + maximum) * 0.5)
+        : Math.round(minimum + span * ((index + 1) / (count + 1)));
+      let selected = preferred;
+      for (let attempt = 0; attempt < 14; attempt += 1) {
+        const step = Math.ceil(attempt / 2) * 112;
+        const direction = attempt === 0 ? 0 : (attempt % 2 === 1 ? -1 : 1);
+        const candidate = Math.max(minimum, Math.min(maximum, preferred + step * direction));
+        const clearsPortals = authoredPortalXs.every((x) => Math.abs(x - candidate) >= 142);
+        const clearsTargets = centers.every((x) => Math.abs(x - candidate) >= 174);
+        if (clearsPortals && clearsTargets) {
+          selected = candidate;
+          break;
+        }
+      }
+      centers.push(selected);
+    }
+    return centers;
+  }
+
+  /*
+   * Le daimyo existe deja dans la mission FPS historique. Cette incarnation
+   * 2D rend toutefois l'objectif du donjon resolvable par le meme contrat que
+   * les six autres actes. La sauvegarde partage son rosterId entre les vues.
+   */
+  const castleDonjonArea = KageLevels.areas["castle-donjon"];
+  if (!castleDonjonArea.enemies.some((enemy) => enemy.rosterId === "06-daimyo-corrupted")) {
+    castleDonjonArea.enemies.push({
+      id: "daimyo-corrupted-side",
+      rosterId: "06-daimyo-corrupted",
+      narrativeId: "daimyo-of-kurokawa",
+      encounterId: "castle-donjon-daimyo-gate",
+      x: 1880,
+      y: 246,
+      w: 72,
+      h: 54,
+      hp: 48,
+      facing: -1,
+      boss: true,
+    });
+    castleDonjonArea.encounters.push({
+      id: "castle-donjon-daimyo-gate",
+      kind: "boss",
+      profileId: "06-daimyo-corrupted",
+      bounds: { x: 1540, y: 0, w: 820, h: 360 },
+      activationX: 1610,
+      cameraLock: true,
+      completionUnlocks: [],
+    });
+  }
+
+  const campaignObjectives = Object.fromEntries(
+    RUNTIME_CAMPAIGN_ZONES.map((entry) => [
+      entry.objective.id,
+      {
+        ...entry.objective,
+        actId: entry.actId,
+        zoneId: entry.zoneId,
+        areaId: entry.areaId,
+        completionMethod: campaignObjectiveCompletionMethod(entry.objective.type),
+        runtimeTrigger: campaignObjectiveCompletionMethod(entry.objective.type),
+        targetCount: CAMPAIGN_OBJECTIVE_TARGET_BLUEPRINTS[entry.objective.id]?.targets?.length || 1,
+        targetIds: [],
+      },
+    ]),
+  );
+
+  for (const [index, entry] of RUNTIME_CAMPAIGN_ZONES.entries()) {
+    const area = KageLevels.areas[entry.areaId];
+    const objective = campaignObjectives[entry.objective.id];
+    const act = RUNTIME_CAMPAIGN_ACT_DEFINITIONS.find((candidate) => candidate.id === entry.actId);
+    area.actId = entry.actId;
+    area.actOrder = act.order;
+    area.campaignZoneId = entry.zoneId;
+    area.objective = objective.label;
+    area.objectiveIds = [objective.id];
+    area.objectives = [objective];
+    area.checkpointPolicy = {
+      mode: "persistent-area",
+      resumeAreaId: area.id,
+      preserveEnemies: true,
+      preservePickups: true,
+      preserveObjectives: true,
+    };
+    area.completionGate = {
+      type: objective.type === "boss" ? "boss" : "area-clear",
+      objectiveId: objective.id,
+      targetEnemyId: objective.targetEnemyId || null,
+      encounterId: objective.type === "boss"
+        ? `${area.id}-boss-gate`
+        : null,
+    };
+    if (entry.areaId === "castle-donjon") {
+      area.completionGate.encounterId = "castle-donjon-daimyo-gate";
+    }
+
+    area.spawns = area.spawns || {};
+    area.spawns.campaignWest = area.spawns.campaignWest || {
+      x: Math.max(area.minX + 70, 140),
+      y: PLAYER_GROUND_Y,
+      facing: 1,
+    };
+    area.spawns.campaignEast = area.spawns.campaignEast || {
+      x: Math.min(area.maxX - 70, area.width - 180),
+      y: PLAYER_GROUND_Y,
+      facing: -1,
+    };
+    area.spawns.checkpoint = area.spawns.checkpoint || {
+      x: Math.round((area.minX + area.maxX) * 0.5),
+      y: PLAYER_GROUND_Y,
+      facing: 1,
+    };
+    area.checkpoints = area.checkpoints || [];
+    if (!area.checkpoints.length) {
+      area.checkpoints.push({
+        id: `${area.id}-campaign-checkpoint`,
+        x: area.spawns.checkpoint.x,
+        spawnId: "checkpoint",
+        persistent: true,
+      });
+    }
+    if (objective.completionMethod === "checkpoint-reach") {
+      objective.targetIds = [area.checkpoints[0].id];
+      objective.targetCount = 1;
+    } else if (objective.completionMethod === "enemy-death") {
+      objective.targetIds = [objective.targetEnemyId];
+      objective.targetCount = 1;
+    } else if (objective.completionMethod === "area-clear") {
+      objective.targetIds = [`${area.id}:all-enemies`];
+      objective.targetCount = 1;
+    } else if (objective.completionMethod === "manual-targets") {
+      const blueprint = CAMPAIGN_OBJECTIVE_TARGET_BLUEPRINTS[objective.id];
+      const centers = campaignObjectiveTargetCenters(area, blueprint.targets.length);
+      area.objectiveTargets = blueprint.targets.map((target, targetIndex) => {
+        const targetId = `${objective.id}:target-${targetIndex + 1}`;
+        const centerX = centers[targetIndex];
+        const width = Math.max(40, Number(target.width) || 80);
+        const propId = `objective-prop-${objective.id}-${targetIndex + 1}`;
+        const portalId = `objective-interaction-${objective.id}-${targetIndex + 1}`;
+        area.props.push({
+          id: propId,
+          file: target.propFile,
+          x: Math.round(centerX - width / 2),
+          width,
+          layer: "world",
+          compositionRole: "campaign-objective",
+          depthBand: "world-near",
+          bottomY: HORIZONTAL_GROUND_Y,
+          baselineY: HORIZONTAL_GROUND_Y + 2,
+          baseline: `ground-${HORIZONTAL_GROUND_Y}`,
+          perspectiveScale: 1,
+          depthBias: 12,
+          groundAnchor: [0.5, 1],
+          contactMode: "opaque-bottom",
+          objectiveId: objective.id,
+          objectiveTargetId: targetId,
+          colliderProfile: { type: "visualOnly", blocksMovement: false },
+        });
+        area.portals.push({
+          id: portalId,
+          type: "objective",
+          state: "open",
+          x: centerX,
+          interactionRange: 62,
+          collision: "none",
+          interaction: "manual",
+          interactionKey: "E",
+          label: target.label,
+          prompt: target.prompt,
+          actionLabel: target.actionLabel,
+          objectiveId: objective.id,
+          objectiveType: objective.type,
+          objectiveTarget: true,
+          objectiveTargetId: targetId,
+          objectiveTargetIndex: targetIndex,
+          objectiveTargetCount: blueprint.targets.length,
+          propId,
+          hideWorldPortal: true,
+          requiresAreaClear: Boolean(target.requiresAreaClear),
+        });
+        return {
+          id: targetId,
+          portalId,
+          propId,
+          propFile: target.propFile,
+          x: centerX,
+          label: target.label,
+          prompt: target.prompt,
+          requiresAreaClear: Boolean(target.requiresAreaClear),
+        };
+      });
+      objective.targetIds = area.objectiveTargets.map((target) => target.id);
+      objective.targetCount = area.objectiveTargets.length;
+    }
+    area.campaignRouteIndex = index;
+  }
+
+  function availableCampaignPortalX(area, preferredX, searchDirection) {
+    let x = preferredX;
+    const minimum = area.minX + 54;
+    const maximum = area.maxX - 54;
+    for (let attempt = 0; attempt < 12; attempt += 1) {
+      const overlapsAuthoredPortal = (area.portals || []).some((portal) =>
+        Math.abs(Number(portal.x) - x) < (portal.objectiveTarget ? 142 : 92));
+      if (!overlapsAuthoredPortal) return Math.max(minimum, Math.min(maximum, x));
+      x += searchDirection * 112;
+      x = Math.max(minimum, Math.min(maximum, x));
+    }
+    return Math.max(minimum, Math.min(maximum, x));
+  }
+
+  const campaignRouteLinks = [];
+  for (let index = 0; index < RUNTIME_CAMPAIGN_ZONES.length - 1; index += 1) {
+    const fromEntry = RUNTIME_CAMPAIGN_ZONES[index];
+    const toEntry = RUNTIME_CAMPAIGN_ZONES[index + 1];
+    const fromArea = KageLevels.areas[fromEntry.areaId];
+    const toArea = KageLevels.areas[toEntry.areaId];
+    const linkId = `campaign-route-${String(index + 1).padStart(2, "0")}`;
+    const crossesAct = fromEntry.actId !== toEntry.actId;
+    const warp = (
+      fromEntry.areaId === "castle-yomi-rift"
+      || fromEntry.areaId === "modern-metropolitan-lab"
+    );
+    const unlockRuleId = crossesAct
+      ? `rule-complete-act-${String(
+        RUNTIME_CAMPAIGN_ACT_DEFINITIONS.find((act) => act.id === fromEntry.actId).order,
+      ).padStart(2, "0")}`
+      : "rule-open";
+    const forwardPortalId = `${linkId}-forward`;
+    const backwardPortalId = `${linkId}-backward`;
+    const forwardX = availableCampaignPortalX(fromArea, fromArea.maxX - 70, -1);
+    const backwardX = availableCampaignPortalX(toArea, toArea.minX + 70, 1);
+    const forward = {
+      ...campaignPortal(
+        forwardPortalId,
+        forwardX,
+        { areaId: toArea.id, spawnId: "campaignWest" },
+        toArea.label,
+        warp ? "E - TRAVERSER LA FAILLE TEMPORELLE" : "E - CONTINUER LA CAMPAGNE",
+        warp ? "faille-moderne" : "route-torii",
+      ),
+      linkId,
+      type: warp ? "warp" : "side",
+      collision: "solidDoor",
+      blockX: forwardX - 18,
+      blockWidth: 36,
+      interaction: "manual",
+      interactionKey: "E",
+      bidirectional: true,
+      objectiveId: fromEntry.objective.id,
+      requiresObjectiveId: fromEntry.objective.id,
+      unlockRuleId,
+      requiresAreaClear: true,
+      requiresConfirmation: warp,
+      unlockEncounterId: fromArea.completionGate.type === "boss"
+        ? fromArea.completionGate.encounterId
+        : undefined,
+      actBoundary: crossesAct,
+      preserveOriginState: true,
+      transitionPresentation: warp ? "temporal-rift-cinematic" : "area-fade",
+    };
+    const backward = {
+      ...campaignPortal(
+        backwardPortalId,
+        backwardX,
+        { areaId: fromArea.id, spawnId: "campaignEast" },
+        fromArea.label,
+        warp ? "E - REVENIR PAR LA FAILLE" : "E - REVENIR DANS LA ZONE PRECEDENTE",
+        warp ? "faille-cyber" : "route-torii",
+      ),
+      linkId,
+      type: warp ? "warp" : "return",
+      interaction: "manual",
+      interactionKey: "E",
+      bidirectional: true,
+      actBoundary: crossesAct,
+      unlockRuleId: "rule-open",
+      preserveOriginState: true,
+      transitionPresentation: warp ? "temporal-rift-cinematic" : "area-fade",
+    };
+    if (!fromArea.portals.some((portal) => portal.id === forwardPortalId)) {
+      fromArea.portals.push(forward);
+    }
+    if (!toArea.portals.some((portal) => portal.id === backwardPortalId)) {
+      toArea.portals.push(backward);
+    }
+    fromArea.objectivePortalId = forwardPortalId;
+    const encounter = fromArea.encounters?.find(
+      (candidate) => candidate.id === fromArea.completionGate.encounterId,
+    );
+    if (encounter && !encounter.completionUnlocks.includes(forwardPortalId)) {
+      encounter.completionUnlocks.push(forwardPortalId);
+    }
+    campaignRouteLinks.push({
+      id: linkId,
+      fromAreaId: fromArea.id,
+      toAreaId: toArea.id,
+      fromZoneId: fromEntry.zoneId,
+      toZoneId: toEntry.zoneId,
+      kind: warp ? "warp" : "side",
+      bidirectional: true,
+      interaction: "manual",
+      interactionKey: "E",
+      unlockRuleId,
+      forwardPortalId,
+      backwardPortalId,
+      actBoundary: crossesAct,
+    });
+  }
+
+  const finalCampaignEntry = RUNTIME_CAMPAIGN_ZONES.at(-1);
+  const finalCampaignArea = KageLevels.areas[finalCampaignEntry.areaId];
+  const finalEndingPortal = {
+    id: "campaign-ending-after-shogun-zero",
+    linkId: "campaign-ending-after-shogun-zero",
+    x: finalCampaignArea.maxX - 70,
+    interactionRange: 64,
+    collision: "solidDoor",
+    blockX: finalCampaignArea.maxX - 88,
+    blockWidth: 36,
+    type: "ending",
+    state: "open",
+    visual: "faille-cyber",
+    label: "Faille purifiee",
+    prompt: "E - SCELLER LE YOMI A TRAVERS LES SIECLES",
+    interaction: "manual",
+    interactionKey: "E",
+    objectiveId: finalCampaignEntry.objective.id,
+    requiresObjectiveId: finalCampaignEntry.objective.id,
+    requiresAreaClear: true,
+    requiresConfirmation: true,
+    unlockEncounterId: finalCampaignArea.completionGate.encounterId,
+  };
+  finalCampaignArea.portals.push(finalEndingPortal);
+  finalCampaignArea.objectivePortalId = finalEndingPortal.id;
+  const finalEncounter = finalCampaignArea.encounters.find(
+    (candidate) => candidate.id === finalCampaignArea.completionGate.encounterId,
+  );
+  if (finalEncounter) finalEncounter.completionUnlocks.push(finalEndingPortal.id);
+
+  /*
+   * Alternance de perspective de la campagne longue.
+   *
+   * Les cinq missions FPS historiques restent aux indices 0..4. Ces missions
+   * obligatoires occupent les fins d'acte aux indices 5..11 et reutilisent les
+   * cinq cartes interieures composees a la main par `game.js` via `mapIndex`.
+   * Aucun plan n'est genere aleatoirement : chaque profil de materiaux nomme
+   * des usages semantiques de l'atlas (sol, enceinte, circulation, chambre,
+   * autel).
+   */
+  const CAMPAIGN_FPS_MISSIONS = [
+    {
+      id: "forest-root-heart",
+      actId: "act-01-forest",
+      sourceAreaId: "forest-root-sanctuary",
+      mapIndex: 0,
+      materialProfile: "contaminated-sanctuary",
+      label: "COEUR RACINAIRE DE KAI",
+      announcement: "COEUR RACINAIRE - PURIFIEZ LA SOURCE SOUTERRAINE",
+      objective: "Detruire les infectes du reseau de racines",
+      altarObjective: "Poser un sceau dans le coeur racinaire",
+      completionAnnouncement: "COEUR RACINAIRE PURIFIE - LA FORET OUVRE LE PASSAGE",
+      altarAssetIndex: 0,
+      musicState: "yomi",
+      musicIntensity: 0.62,
+      start: [1.5, 1.5, 0],
+      altar: [12.5, 11.5],
+      rosterIds: [
+        "r06-yama-woodcutter",
+        "r09-haka-digger",
+        "s05-raimei-yamabushi",
+        "s19-wana-trapper",
+        "mb-09-pisteur-kegare",
+      ],
+      enemies: [
+        [4.5, 1.5], [8.5, 1.5], [3.5, 5.5], [8.5, 5.5],
+        [12.2, 7.5], [6.5, 9.5], [11.5, 13.2],
+      ],
+    },
+    {
+      id: "bamboo-moon-sanctum",
+      actId: "act-02-bamboo",
+      sourceAreaId: "bamboo-moon-clearing",
+      mapIndex: 3,
+      materialProfile: "market-road-shrine",
+      label: "SANCTUAIRE DE LA LUNE FENDUE",
+      announcement: "LUNE FENDUE - ROMPEZ LA PROCESSION DU YOMI",
+      objective: "Purifier les galeries du sanctuaire de bambou",
+      altarObjective: "Rendre son souffle a la cloche de Shigure",
+      completionAnnouncement: "SANCTUAIRE PURIFIE - LES BAMBOUS REPRENNENT LEUR CHANT",
+      altarAssetIndex: 0,
+      musicState: "yomi",
+      musicIntensity: 0.66,
+      start: [1.5, 1.5, 0],
+      altar: [15.5, 15.5],
+      rosterIds: [
+        "s01-kusa-shinobi",
+        "s02-doku-kunoichi",
+        "s16-kage-mai-dancer",
+        "mb-06-shinobi-brumes",
+      ],
+      enemies: [
+        [6.5, 1.5], [14.5, 2.5], [2.5, 6.5], [8.5, 5.5],
+        [14.5, 7.5], [5.5, 10.5], [10.5, 10.5], [14.5, 14.5],
+      ],
+    },
+    {
+      id: "fields-granary-cellar",
+      actId: "act-03-fields",
+      sourceAreaId: "fields-burning-granary",
+      mapIndex: 2,
+      materialProfile: "kurokawa-sick-house",
+      label: "CELLER DU GRENIER NOIR",
+      announcement: "GRENIER NOIR - ETEIGNEZ LE FOYER SOUS LES RECOLTES",
+      objective: "Liberer les reserves contaminees",
+      altarObjective: "Bruler la semence noire dans le bassin rituel",
+      completionAnnouncement: "GRENIER PURIFIE - LA ROUTE DE KUROKAWA EST DEGAGEE",
+      altarAssetIndex: 0,
+      musicState: "yomi",
+      musicIntensity: 0.7,
+      start: [1.5, 15.5, -Math.PI / 2],
+      altar: [15.5, 1.5],
+      rosterIds: [
+        "r05-kome-porter",
+        "r17-umaya-groom",
+        "s13-kegare-sumotori",
+        "s19-wana-trapper",
+        "mb-17-sumotori-namazu",
+      ],
+      enemies: [
+        [3.5, 15.5], [8.5, 14.5], [13.5, 14.5], [2.5, 10.5],
+        [8.5, 9.5], [14.5, 10.5], [3.5, 7.5], [13.5, 3.5],
+      ],
+    },
+    {
+      id: "city-firewatch-vault",
+      actId: "act-04-city",
+      sourceAreaId: "city-castle-approach",
+      mapIndex: 3,
+      materialProfile: "market-road-shrine",
+      label: "SOUTERRAIN DE LA TOUR DE GUET",
+      announcement: "TOUR DE GUET - ETOUFFEZ LE FEU DU KEGARE",
+      objective: "Nettoyer les caves de la garde de Kurokawa",
+      altarObjective: "Rallumer le brasero de veille avec une flamme pure",
+      completionAnnouncement: "TOUR PURIFIEE - LES PORTES DU CHATEAU REPONDENT",
+      altarAssetIndex: 0,
+      musicState: "combat",
+      musicIntensity: 0.72,
+      start: [1.5, 1.5, 0],
+      altar: [15.5, 15.5],
+      rosterIds: [
+        "r10-hikeshi-watchman",
+        "s06-oni-men-executioner",
+        "s15-teppo-corpsman",
+        "s17-kurohata-bearer",
+        "mb-01-gunso-croc-fer",
+      ],
+      enemies: [
+        [6.5, 1.5], [14.5, 2.5], [2.5, 6.5], [8.5, 5.5],
+        [14.5, 7.5], [5.5, 10.5], [10.5, 10.5], [14.5, 14.5],
+      ],
+    },
+    {
+      id: "castle-yomi-threshold",
+      actId: "act-05-castle",
+      sourceAreaId: "castle-yomi-rift",
+      mapIndex: 1,
+      materialProfile: "kurokawa-donjon",
+      label: "SEUIL INTERIEUR DU YOMI",
+      announcement: "SEUIL DU YOMI - FERMEZ LA BLESSURE DU DAIMYO",
+      objective: "Rompre la garde spectrale du seuil",
+      altarObjective: "Sceller le trone interieur du Yomi",
+      completionAnnouncement: "SEUIL SCELLE - LA FAILLE TEMPORELLE SE STABILISE",
+      altarAssetIndex: 1,
+      musicState: "boss",
+      musicIntensity: 0.9,
+      start: [1.5, 13.2, -Math.PI / 2],
+      altar: [12.5, 11.5],
+      rosterIds: [
+        "s10-hatamoto-fallen",
+        "s12-shikigami-scribe",
+        "s18-yomi-herald",
+        "mb-18-onmyoji-renard",
+        "mb-20-capitaine-byakko",
+      ],
+      enemies: [
+        [3.5, 11.5], [5.5, 7.5], [11.5, 7.5], [6.5, 3.5],
+        [12.3, 1.6], [9.5, 11.5], [3.5, 3.5],
+      ],
+    },
+    {
+      id: "modern-lab-containment",
+      actId: "act-06-contemporary",
+      sourceAreaId: "modern-metropolitan-lab",
+      mapIndex: 4,
+      materialProfile: "modern-metropolitan-lab",
+      label: "CONFINEMENT DU LABORATOIRE METROPOLITAIN",
+      announcement: "LABORATOIRE - ISOLEZ LA SOUCHE ORIGINELLE",
+      objective: "Neutraliser les contamines du laboratoire",
+      altarObjective: "Sceller l'echantillon dans la chambre de confinement",
+      completionAnnouncement: "SOUCHE CONFINEE - LA BRECHE VERS NEO-EDO EST STABLE",
+      altarAssetIndex: 1,
+      musicState: "combat",
+      musicIntensity: 0.82,
+      start: [1.5, 17.5, -Math.PI / 2],
+      altar: [17.5, 1.5],
+      doorCells: [[6, 1], [12, 2], [8, 6], [15, 12]],
+      rosterIds: [
+        "new-modern-commuter",
+        "new-modern-riot-host",
+        "new-modern-response-officer",
+        "new-cyber-drone-corpse",
+      ],
+      enemies: [
+        [4.5, 17.5], [9.5, 16.5], [15.5, 17.5], [2.5, 13.5],
+        [16.5, 13.5], [3.5, 10.5], [15.5, 10.5], [9.5, 7.5],
+        [15.5, 2.5],
+      ],
+    },
+    {
+      id: "cyber-yomi-mainframe",
+      actId: "act-07-cyberpunk",
+      sourceAreaId: "cyber-shogun-core",
+      mapIndex: 4,
+      materialProfile: "cyber-yomi-mainframe",
+      label: "MATRICE DU YOMI",
+      announcement: "MATRICE DU YOMI - COUPEZ LA MEMOIRE DU SHOGUN ZERO",
+      objective: "Detruire les gardiens de la matrice",
+      altarObjective: "Graver le sceau du shogun dans le noyau",
+      completionAnnouncement: "MATRICE PURIFIEE - LE YOMI PEUT ETRE REFERME",
+      altarAssetIndex: 1,
+      musicState: "boss",
+      musicIntensity: 0.96,
+      start: [1.5, 17.5, -Math.PI / 2],
+      altar: [17.5, 1.5],
+      doorCells: [[12, 1], [6, 5], [10, 6], [3, 12]],
+      rosterIds: [
+        "new-cyber-neon-shinobi",
+        "new-cyber-drone-corpse",
+        "new-cyber-oni-frame",
+        "new-cyber-yomi-hacker",
+      ],
+      enemies: [
+        [4.5, 17.5], [9.5, 16.5], [15.5, 17.5], [2.5, 13.5],
+        [16.5, 13.5], [3.5, 10.5], [15.5, 10.5], [2.5, 7.5],
+        [9.5, 7.5], [15.5, 2.5],
+      ],
+    },
+  ].map((mission, campaignIndex) => ({
+    ...mission,
+    missionIndex: 5 + campaignIndex,
+    campaignMission: true,
+    required: true,
+    optional: false,
+    sealReward: 1,
+    secretId: `campaign-fps-${mission.id}`,
+    reward: {
+      score: 2200 + campaignIndex * 450,
+      health: 18,
+      ammo: 3,
+      currencies: {
+        mon: 75 + campaignIndex * 25,
+        tamahagane: 1,
+        yomiAsh: 1,
+      },
+    },
+  }));
+
+  for (const mission of CAMPAIGN_FPS_MISSIONS) {
+    const area = KageLevels.areas[mission.sourceAreaId];
+    if (!area) {
+      throw new Error(`Mission FPS campaign sans sortie de zone: ${mission.id}`);
+    }
+    const forwardPortal = area.portals.find(
+      (portal) => portal.id === area.objectivePortalId,
+    );
+    if (!forwardPortal) {
+      throw new Error(`Mission FPS campaign sans sortie de zone: ${mission.id}`);
+    }
+    const portalX = availableCampaignPortalX(area, area.maxX - 286, -1);
+    const returnSpawnId = "campaignFpsReturn";
+    area.spawns[returnSpawnId] = {
+      x: Math.max(area.minX + 36, portalX - 58),
+      y: PLAYER_GROUND_Y,
+      facing: 1,
+    };
+    const portalId = `campaign-fps-${mission.id}`;
+    area.portals.push({
+      id: portalId,
+      linkId: portalId,
+      x: portalX,
+      interactionRange: 58,
+      collision: "portal",
+      type: "fps",
+      state: "open",
+      visual: mission.actId === "act-05-castle"
+        ? "porte-laquee"
+        : (mission.actId === "act-06-contemporary"
+          ? "faille-moderne"
+          : (mission.actId === "act-07-cyberpunk" ? "faille-cyber" : "porte-sanctuaire")),
+      label: mission.label,
+      prompt: `E - ENTRER DANS ${mission.label}`,
+      interaction: "manual",
+      interactionKey: "E",
+      mission: mission.id,
+      missionIndex: mission.missionIndex,
+      destination: { missionId: mission.id },
+      returnAreaId: area.id,
+      returnSpawnId,
+      campaignMission: true,
+      requiredForForward: true,
+      preserveOriginState: true,
+    });
+    forwardPortal.requiresFpsMissionId = mission.id;
+    forwardPortal.requiresFpsPurification = true;
+    forwardPortal.fpsGatePortalId = portalId;
+    area.requiredFpsMissionId = mission.id;
+    area.campaignFpsMissionIds = [mission.id];
+    area.fpsMaterialProfileIds = [
+      ...new Set([...(area.fpsMaterialProfileIds || []), mission.materialProfile]),
+    ];
+  }
+
+  KageLevels.campaignFpsMissions = CAMPAIGN_FPS_MISSIONS.map((mission) => ({
+    ...mission,
+    start: [...mission.start],
+    altar: [...mission.altar],
+    rosterIds: [...mission.rosterIds],
+    enemies: mission.enemies.map((position) => [...position]),
+    reward: { ...mission.reward },
+  }));
+
+  /*
+   * Ces sorties appartiennent au parcours 11 zones anterieur. Elles restent
+   * presentes pour relire les sauvegardes et les tests historiques, mais sont
+   * explicitement exclues du graphe 28 zones afin que la couche de progression
+   * puisse les masquer pendant une nouvelle campagne.
+   */
+  const canonicalCampaignPortalIds = new Set(
+    campaignRouteLinks.flatMap((link) => [
+      link.forwardPortalId,
+      link.backwardPortalId,
+    ]),
+  );
+  /*
+   * Tout ancien passage aire -> aire qui n'appartient pas au graphe canonique
+   * est un raccourci de compatibilite. Cette detection exhaustive evite qu'un
+   * portail historique oublie dans une liste permette de sauter un objectif,
+   * une mission FPS obligatoire ou une fin d'acte.
+   */
+  const legacyShortcutPortalIds = [...new Set([
+    "forest-to-bamboo",
+    "bamboo-to-fields",
+    "fields-to-kurokawa",
+    "road-to-castle",
+    "corridor-to-donjon",
+    "castle-to-contemporary-warp",
+    "modern-to-cyber",
+    "cyber-yomi-core",
+    ...Object.values(KageLevels.areas).flatMap((area) =>
+      (area.portals || [])
+        .filter((portal) =>
+          portal.destination?.areaId
+          && !canonicalCampaignPortalIds.has(portal.id))
+        .map((portal) => portal.id)),
+  ])];
+  for (const area of Object.values(KageLevels.areas)) {
+    for (const portal of area.portals || []) {
+      if (!legacyShortcutPortalIds.includes(portal.id)) continue;
+      portal.campaignCompatibility = "legacy-shortcut";
+      portal.excludedFromCampaignRoute = true;
+    }
+  }
+
+  const campaignActs = Object.fromEntries(
+    RUNTIME_CAMPAIGN_ACT_DEFINITIONS.map((definition) => {
+      const zoneEntries = RUNTIME_CAMPAIGN_ZONES.filter(
+        (entry) => entry.actId === definition.id,
+      );
+      return [
+        definition.id,
+        {
+          ...definition,
+          areaIds: zoneEntries.map((entry) => entry.areaId),
+          zoneIds: zoneEntries.map((entry) => entry.zoneId),
+          objectiveIds: zoneEntries.map((entry) => entry.objective.id),
+          fpsMissionIds: CAMPAIGN_FPS_MISSIONS
+            .filter((mission) => mission.actId === definition.id)
+            .map((mission) => mission.id),
+          entryAreaId: zoneEntries[0].areaId,
+          exitAreaId: zoneEntries.at(-1).areaId,
+          bossAreaId: zoneEntries.find(
+            (entry) => entry.objective.targetEnemyId === definition.bossEnemyId,
+          )?.areaId || zoneEntries.at(-1).areaId,
+          completionRuleId: `rule-complete-act-${String(definition.order).padStart(2, "0")}`,
+        },
+      ];
+    }),
+  );
+
+  KageLevels.campaignActs = campaignActs;
+  KageLevels.campaignObjectives = campaignObjectives;
+  KageLevels.campaignRuntime = {
+    schema: 2,
+    buildId: "20260719-seven-act-runtime-v5",
+    status: "playable-data",
+    totalActs: RUNTIME_CAMPAIGN_ACT_DEFINITIONS.length,
+    totalZones: RUNTIME_CAMPAIGN_ZONES.length,
+    startAreaId: RUNTIME_CAMPAIGN_ZONES[0].areaId,
+    finalAreaId: finalCampaignArea.id,
+    startZoneId: RUNTIME_CAMPAIGN_ZONES[0].zoneId,
+    finalZoneId: finalCampaignEntry.zoneId,
+    zoneToAreaId: Object.fromEntries(
+      RUNTIME_CAMPAIGN_ZONES.map((entry) => [entry.zoneId, entry.areaId]),
+    ),
+    areaToZoneId: Object.fromEntries(
+      RUNTIME_CAMPAIGN_ZONES.map((entry) => [entry.areaId, entry.zoneId]),
+    ),
+    linearRoute: RUNTIME_CAMPAIGN_ZONES.map((entry) => entry.areaId),
+    routeLinks: campaignRouteLinks,
+    fpsMissionIds: CAMPAIGN_FPS_MISSIONS.map((mission) => mission.id),
+    requiredFpsMissions: CAMPAIGN_FPS_MISSIONS.length,
+    finalEndingPortalId: finalEndingPortal.id,
+    legacyShortcutPortalIds,
+    legacyAreasPreserved: 11,
+    generatedRuntimeAreas: RUNTIME_NEW_AREA_DEFINITIONS.length,
+  };
+
+  KageLevels.startAreaId = KageLevels.campaignRuntime.startAreaId;
+  KageLevels.startSpawnId = "prologue";
+  KageLevels.worldActs = Object.values(campaignActs).map((act) => ({
+    id: act.id,
+    order: act.order,
+    label: act.label,
+    biomeId: act.biomeId,
+    areaIds: act.areaIds,
+    entryAreaId: act.entryAreaId,
+    exitAreaId: act.exitAreaId,
+    bossAreaId: act.bossAreaId,
+    bossEnemyId: act.bossEnemyId,
+    environmentIndex: KageLevels.areas[act.entryAreaId].environmentIndex,
+  }));
+
+  for (const act of Object.values(campaignActs)) {
+    const chapterKey = act.id
+      .replace(/^act-\d+-/, "");
+    KageLevels.chapters[chapterKey] = {
+      ...(KageLevels.chapters[chapterKey] || {}),
+      id: chapterKey,
+      label: act.label,
+      areaIds: act.areaIds,
+      entryAreaId: act.entryAreaId,
+      objectiveAreaId: act.exitAreaId,
+      actId: act.id,
+    };
+  }
+
+  KageLevels.mapGraph = {
+    nodes: RUNTIME_CAMPAIGN_ZONES.map((entry, index) => ({
+      id: entry.areaId,
+      zoneId: entry.zoneId,
+      actId: entry.actId,
+      mapX: index,
+      mapY: index % 2 === 0 ? 0 : 1,
+      kind: KageLevels.areas[entry.areaId].zoneKind,
+    })),
+    edges: campaignRouteLinks.map((link) => ({
+      id: link.id,
+      from: link.fromAreaId,
+      to: link.toAreaId,
+      kind: link.kind,
+      bidirectional: true,
+      interaction: "manual",
+    })),
+  };
 
   Object.values(KageLevels.areas).forEach(normalizeAreaVisualData);
 
@@ -3162,6 +5298,46 @@
           weaponId: "nodachi-geant-yomi",
           separateSprite: true,
           attachPhase: "black-nodachi",
+        },
+      ],
+    }),
+
+    "new-modern-metro-colossus": massiveProfile({
+      id: "new-modern-metro-colossus",
+      name: "Colosse de la ligne Yomi",
+      silhouette: "metroExoskeleton",
+      render: {
+        targetWidthRatio: 0.52,
+        targetHeightRatio: 0.58,
+        maxWidthRatio: 0.56,
+        maxHeightRatio: 0.62,
+      },
+      collider: { widthRatio: 0.62, heightRatio: 0.84, anchor: [0.5, 1] },
+      arena: {
+        kind: "metropolitanLab",
+        zoneId: "modern-metropolitan-lab",
+        minimumWidth: 1120,
+        horizontal: true,
+        cameraLock: true,
+        requiredCeilingClearance: 238,
+      },
+      phases: [
+        {
+          id: "maintenance-shell",
+          healthRange: [1, 0.52],
+          pattern: "door-sweeps-and-heavy-charge",
+        },
+        {
+          id: "terminus-overload",
+          healthRange: [0.52, 0],
+          pattern: "shockwave-combos-and-rail-rush",
+        },
+      ],
+      detachableParts: [
+        {
+          id: "metro-car-door",
+          weaponId: "metro-car-door",
+          separateSprite: true,
         },
       ],
     }),

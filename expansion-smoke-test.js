@@ -357,6 +357,32 @@ async function measureSideAttack(weaponId, targetDistance) {
   await global.KageGame.start();
   await settleRoster();
   assert.equal(global.KageGame.debug.assetStatus().roster.ready, true);
+  const gameplayPortalIds = global.KageGame.debug.gameplayPortalIds();
+  assert.equal(
+    gameplayPortalIds.includes("forest-to-bamboo"),
+    false,
+    "Une nouvelle campagne ne doit pas exposer le raccourci de l'ancien prototype",
+  );
+  assert.ok(
+    gameplayPortalIds.includes("campaign-route-01-forward"),
+    "La première sortie doit suivre le graphe 28 zones",
+  );
+  const objectiveResolvers = global.KageGame.campaignObjectiveResolvers();
+  const resolvedTypes = new Set([
+    ...objectiveResolvers.boss,
+    ...objectiveResolvers.clear,
+    ...objectiveResolvers.interaction,
+    ...objectiveResolvers.purify,
+    ...objectiveResolvers.checkpoint,
+  ]);
+  const campaignObjectives = Object.values(global.KageLevels.campaignObjectives);
+  assert.equal(campaignObjectives.length, 28);
+  for (const objective of campaignObjectives) {
+    assert.ok(
+      resolvedTypes.has(objective.type),
+      `${objective.id} (${objective.type}) doit posséder un déclencheur gameplay`,
+    );
+  }
 
   const initialArea = global.KageLevels.areas[global.KageLevels.startAreaId];
   const initialRoster = global.KageLevels.rosterPools[initialArea.rosterPoolId];
@@ -517,7 +543,7 @@ async function measureSideAttack(weaponId, targetDistance) {
   assert.ok(global.KageGame.getState().visitedAreas.includes("kurokawa-back-street"));
 
   const areas = Object.values(global.KageLevels.areas);
-  assert.equal(areas.length, 11, "La campagne doit exposer onze zones 2D");
+  assert.equal(areas.length, 28, "La campagne complete doit exposer vingt-huit zones 2D");
   for (const level of areas) {
     assert.ok(
       String(level.routeMetrics?.mainRoute || "").startsWith("horizontal"),
@@ -748,6 +774,40 @@ async function measureSideAttack(weaponId, targetDistance) {
       `${areaId} doit rester inscrit dans le parcours persistant`,
     );
   }
+
+  // Une fermeture en plein combat doit restaurer Aka-Ushi avec sa vraie phase
+  // et son joug déjà séparé, pas régénérer le boss à son état initial.
+  global.KageSave.reset();
+  global.KageSave.setCheckpoint("market-before-aka-ushi", {
+    chapter: 1,
+    areaId: "kurokawa-market-east",
+    spawnId: "bossCheckpoint",
+    health: 74,
+    seals: 1,
+  });
+  global.KageSave.setBossRuntime("aka-ushi", {
+    areaId: "kurokawa-market-east",
+    hp: 18,
+    maxHp: 42,
+    phase: 2,
+    dead: false,
+    detachablePartAttached: false,
+    detachedEquipment: {
+      weaponId: "joug-tranchant-aka-ushi",
+      x: 1920,
+      bottomY: 300,
+      width: 118,
+      damage: 14,
+      cooldown: 0.25,
+      active: true,
+    },
+  });
+  await global.KageGame.continue();
+  const restoredBoss = global.KageGame.debug.massiveBossSnapshot();
+  assert.equal(restoredBoss?.hp, 18, "La vie d'Aka-Ushi doit survivre au rechargement");
+  assert.equal(restoredBoss?.phase, 2, "La phase 2 d'Aka-Ushi doit survivre au rechargement");
+  assert.equal(restoredBoss?.detachablePartAttached, false, "Le joug ne doit pas se rattacher au rechargement");
+  assert.equal(restoredBoss?.detachedHazard?.active, true, "Le joug au sol doit rester un hazard actif");
 
   console.log(
     "Expansion smoke test OK — arsenal ancré, Aka-Ushi 2D, château profond persistant et FPS final au donjon",

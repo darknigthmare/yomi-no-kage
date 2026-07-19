@@ -18,9 +18,9 @@
   ctx.setTransform(RENDER_SCALE_X, 0, 0, RENDER_SCALE_Y, 0, 0);
   const TAU = Math.PI * 2;
   const FOV = Math.PI / 3;
-  const ASSET_VERSION = "20260719-world-expansion-v3";
+  const ASSET_VERSION = "20260719-complete-campaign-v2";
   const REQUIRED_LEVEL_SCHEMA = 2;
-  const REQUIRED_LEVEL_BUILD_ID = "20260719-world-expansion-v3";
+  const REQUIRED_LEVEL_BUILD_ID = "20260719-complete-campaign-v2";
   const ALLOW_LEGACY_LAYOUT = typeof location !== "undefined"
     && new URLSearchParams(location.search).get("legacy-layout") === "1";
   const ENVIRONMENT_PREVIEW_INDICES = Object.freeze({
@@ -72,9 +72,20 @@
   const PLAYER_DODGE_DURATION = 0.32;
   const PLAYER_DODGE_COOLDOWN = 0.72;
   const PLAYER_GUARD_POSTURE_MAX = 100;
+  const CAMPAIGN_RANK_S_MAX_SECONDS = 3 * 60 * 60;
   const SIDE_ANIMATION_CACHE_LIMIT = 24;
   const FPS_ANIMATION_CACHE_LIMIT = 18;
   const FPS_WEAPON_ANIMATION_CACHE_LIMIT = 10;
+  const FPS_ENEMY_DIRECTIONS = Object.freeze([
+    "front",
+    "front-left",
+    "left",
+    "back-left",
+    "back",
+    "back-right",
+    "right",
+    "front-right",
+  ]);
   const ENEMY_HURT_RENDER_SCALE = 0.92;
   const SIDE_ENEMY_BASELINE_OFFSET = 4;
   const SIDE_GROUND_Y = 300;
@@ -334,6 +345,15 @@
     }
   }
 
+  function persistedCampaignCompatibilityMode() {
+    try {
+      if (typeof window.KageSave?.load !== "function") return true;
+      return window.KageSave?.load?.()?.campaign?.compatibilityMode === true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   function persistedAmmoMap() {
     try {
       const ammo = window.KageSave?.load?.()?.ammo;
@@ -370,6 +390,189 @@
     } catch (_) {
       // Une session privée conserve la réserve uniquement en mémoire de jeu.
     }
+  }
+
+  const QUEST_DEFINITIONS = Object.freeze([
+    Object.freeze({
+      id: "contract-road-cleansing",
+      title: "Nettoyer la route des cendres",
+      description: "Abattez 8 infectés sur les routes de Kai.",
+      event: "kill",
+      target: 8,
+      reward: Object.freeze({ mon: 180, tamahagane: 2, reputation: 25 }),
+    }),
+    Object.freeze({
+      id: "contract-cartographer",
+      title: "Cartographier les passages",
+      description: "Découvrez 4 zones distinctes et revenez au refuge.",
+      event: "visit",
+      target: 4,
+      reward: Object.freeze({
+        mon: 180,
+        yomiAsh: 1,
+        supplies: 3,
+        unlockWeapon: "hira-shuriken",
+      }),
+    }),
+    Object.freeze({
+      id: "contract-broken-yoke",
+      title: "Le joug du bœuf rouge",
+      description: "Brisez l’équipement d’Aka-Ushi puis terrassez-le.",
+      event: "boss",
+      target: 1,
+      targetId: "giant-02-aka-ushi",
+      reward: Object.freeze({
+        tamahagane: 4,
+        yomiAsh: 3,
+        unlockWeapon: "naginata-lourde",
+      }),
+    }),
+    Object.freeze({
+      id: "contract-across-time",
+      title: "Échos à travers les siècles",
+      description: "Atteignez une zone du Japon contemporain ou de Neo-Edo.",
+      event: "era",
+      target: 1,
+      reward: Object.freeze({
+        mon: 420,
+        tamahagane: 2,
+        yomiAsh: 5,
+        supplies: 2,
+        reputation: 75,
+      }),
+    }),
+  ]);
+
+  const HUB_FACILITIES = Object.freeze({
+    forge: Object.freeze({
+      label: "Forge de Masanori",
+      description: "Augmente le rang maximal d’amélioration des armes.",
+      currencyId: "tamahagane",
+      baseCost: 2,
+    }),
+    infirmary: Object.freeze({
+      label: "Infirmerie de Chiyo",
+      description: "Renforce les soins et réduit la contamination au repos.",
+      currencyId: "mon",
+      baseCost: 70,
+    }),
+    dojo: Object.freeze({
+      label: "Dōjō des éclaireurs",
+      description: "Accélère la maîtrise gagnée avec les armes équipées.",
+      currencyId: "mon",
+      baseCost: 95,
+    }),
+    shrine: Object.freeze({
+      label: "Sanctuaire des sceaux",
+      description: "Améliore la purification de la souillure du Yomi.",
+      currencyId: "yomiAsh",
+      baseCost: 2,
+    }),
+  });
+  const CAMPAIGN_INTERACTION_OBJECTIVE_TYPES = Object.freeze([
+    "breach",
+    "defense",
+    "destroy-nodes",
+    "investigate",
+    "purify",
+    "refuge",
+    "rescue",
+    "retrieval",
+    "upgrade",
+    "world-state",
+    "interact",
+    "activate",
+    "open",
+  ]);
+
+  function persistedWeaponUpgradeLevel(weaponId) {
+    try {
+      return clamp(
+        Number(window.KageSave?.load?.()?.mastery?.upgradeLevels?.[weaponId]) || 0,
+        0,
+        5,
+      );
+    } catch (_) {
+      return 0;
+    }
+  }
+
+  function persistedContamination() {
+    try {
+      return clamp(Number(window.KageSave?.load?.()?.contamination) || 0, 0, 100);
+    } catch (_) {
+      return 0;
+    }
+  }
+
+  function hubFacilityLevel(facilityId, profile = null) {
+    const source = profile || (() => {
+      try { return window.KageSave?.load?.() || {}; } catch (_) { return {}; }
+    })();
+    return clamp(
+      Math.round(Number(source.hub?.facilities?.[facilityId]?.level) || 1),
+      1,
+      5,
+    );
+  }
+
+  function progressionServiceEffects(profile = null) {
+    const source = profile || (() => {
+      try { return window.KageSave?.load?.() || {}; } catch (_) { return {}; }
+    })();
+    const infirmaryLevel = hubFacilityLevel("infirmary", source);
+    const dojoLevel = hubFacilityLevel("dojo", source);
+    const shrineLevel = hubFacilityLevel("shrine", source);
+    return {
+      infirmaryLevel,
+      dojoLevel,
+      shrineLevel,
+      checkpointHealing: 12 + infirmaryLevel * 8,
+      checkpointPurification: 1 + shrineLevel * 2,
+      restPurification: 4 + infirmaryLevel * 4 + shrineLevel * 3,
+      contaminationGainMultiplier: clamp(1 - shrineLevel * 0.075, 0.55, 0.925),
+      masteryGainMultiplier: 1 + (dojoLevel - 1) * 0.25,
+    };
+  }
+
+  function masteryGainForKill(baseXp, profile = null) {
+    const effects = progressionServiceEffects(profile);
+    return Math.max(
+      1,
+      Math.round(Math.max(0, Number(baseXp) || 0) * effects.masteryGainMultiplier),
+    );
+  }
+
+  function applyContaminationFromHit(damage, source = {}) {
+    const isContaminatingHit = Boolean(
+      source.attacker
+      || source.source === "detached-equipment"
+      || source.material === "spirit"
+      || source.contaminating === true,
+    );
+    if (!isContaminatingHit || source.contaminating === false) return 0;
+    try {
+      const profile = window.KageSave?.load?.();
+      if (!profile) return 0;
+      const effects = progressionServiceEffects(profile);
+      const actOrder = clamp(Number(currentSideArea()?.actOrder) || 1, 1, 7);
+      const eraMultiplier = 1 + (actOrder - 1) * 0.035;
+      const materialBonus = source.material === "spirit" ? 0.55 : 0;
+      const gain = (0.6 + Math.max(0, Number(damage) || 0) * 0.055 + materialBonus)
+        * effects.contaminationGainMultiplier
+        * eraMultiplier;
+      const previous = clamp(Number(profile.contamination) || 0, 0, 100);
+      profile.contamination = clamp(previous + gain, 0, 100);
+      game.contamination = profile.contamination;
+      window.KageSave.save(profile);
+      return profile.contamination - previous;
+    } catch (_) {
+      return 0;
+    }
+  }
+
+  function contaminationStaminaRegenMultiplier() {
+    return clamp(1 - clamp(Number(game?.contamination) || 0, 0, 100) * 0.004, 0.6, 1);
   }
   const SIDE_ENTRANCES = [
     {
@@ -488,9 +691,21 @@
     [786, 560, 344, 344],
     [1166, 560, 344, 344],
   ];
+  const FPS_ERA_TILES = Array.from({ length: 8 }, (_, index) => [
+    (index % 4) * 384,
+    Math.floor(index / 4) * 384,
+    384,
+    384,
+  ]);
+  const FPS_ATLAS_TILES = {
+    feudal: FPS_WALL_TILES,
+    contemporary: FPS_ERA_TILES,
+    cyber: FPS_ERA_TILES,
+  };
   const FPS_MATERIAL_SCHEMES = [
     {
       id: "sanctuaire-pierre-et-bois",
+      atlasId: "feudal",
       floorTile: 2,
       floorScale: 1,
       boundaryWall: 2,
@@ -501,6 +716,7 @@
     },
     {
       id: "donjon-tatami-et-cedre",
+      atlasId: "feudal",
       floorTile: 3,
       floorScale: 1,
       boundaryWall: 4,
@@ -575,17 +791,47 @@
   };
   ctx.imageSmoothingEnabled = false;
 
-  // Les bitmaps OpenAI sont optionnels au chargement : le rendu procédural
-  // reste disponible comme solution de secours si un asset n'est pas prêt.
+  // Les bitmaps OpenAI sont optionnels et réellement différés. Construire un
+  // objet `Image` avec `src` déclenchait auparavant plus de 250 requêtes dès
+  // l'écran-titre, y compris pour les six biomes encore invisibles. Le chemin
+  // est maintenant conservé sur l'objet et n'est demandé qu'au premier rendu
+  // (ou lors d'un diagnostic explicite des assets).
+  const bitmapLoadMetrics = {
+    declared: 0,
+    requested: 0,
+  };
+
+  function resolveAssetPath(path) {
+    return window.KageAssets?.resolve?.(path) || path;
+  }
+
   function loadBitmap(path) {
     if (typeof Image !== "function") return null;
     const image = new Image();
     image.decoding = "async";
-    image.src = path.includes("?") ? `${path}&v=${ASSET_VERSION}` : `${path}?v=${ASSET_VERSION}`;
+    const resolvedPath = resolveAssetPath(path);
+    if (/^https?:\/\//i.test(resolvedPath)) image.crossOrigin = "anonymous";
+    image.__kageDeferredSrc = resolvedPath.includes("?")
+      ? `${resolvedPath}&v=${ASSET_VERSION}`
+      : `${resolvedPath}?v=${ASSET_VERSION}`;
+    bitmapLoadMetrics.declared += 1;
+    return image;
+  }
+
+  function requestBitmap(image) {
+    if (!image?.__kageDeferredSrc) return image;
+    const source = image.__kageDeferredSrc;
+    image.__kageDeferredSrc = "";
+    image.src = source;
+    bitmapLoadMetrics.requested += 1;
+    if (typeof document !== "undefined" && document.body?.dataset) {
+      document.body.dataset.bitmapRequests = String(bitmapLoadMetrics.requested);
+    }
     return image;
   }
 
   function bitmapReady(image) {
+    requestBitmap(image);
     return Boolean(image && image.complete && image.naturalWidth > 0);
   }
 
@@ -710,6 +956,7 @@
 
   function playerAttackSpec(weapon = currentPlayerWeapon(), options = {}) {
     const stats = normalizedWeaponStats(weapon);
+    const upgradeLevel = persistedWeaponUpgradeLevel(weapon?.id);
     const family = weaponFamilyKey(weapon);
     const attackKind = options.kind === "heavy" ? "heavy" : "light";
     const comboStep = clamp(Math.round(options.comboStep || 1), 1, 3);
@@ -753,10 +1000,18 @@
     if (passiveEffect === "lightAttackKiCost" && attackKind === "light") staminaCost *= 0.78;
     if (passiveEffect === "postureDamage" || passiveTrigger === "onHeavyHit") postureDamage *= 1.25;
     if (passiveEffect === "highHealthDamage" && game?.health >= 80) damage += 1;
+    if (upgradeLevel > 0) {
+      damage += Math.ceil(upgradeLevel / 2);
+      postureDamage *= 1 + upgradeLevel * 0.1;
+      staminaCost *= 1 - upgradeLevel * 0.025;
+      sideReach *= 1 + upgradeLevel * 0.012;
+      fpsReach *= 1 + upgradeLevel * 0.012;
+    }
 
     return {
       weapon,
       stats,
+      upgradeLevel,
       family,
       attackKind,
       comboStep,
@@ -770,6 +1025,31 @@
       postureDamage,
       armorBonus: stats.armorPenetration >= 62 ? 1 : 0,
       armorIgnore: passiveEffect === "armorIgnore",
+    };
+  }
+
+  function rangedAttackSpec(weapon = currentRangedWeapon()) {
+    const stats = normalizedWeaponStats(weapon || {
+      stats: { power: 72, speed: 55, reach: 80, control: 72, posture: 52 },
+    });
+    const upgradeLevel = persistedWeaponUpgradeLevel(weapon?.id);
+    return {
+      weapon,
+      stats,
+      upgradeLevel,
+      damage: clamp(
+        Math.round(1 + stats.power / 32) + Math.ceil(upgradeLevel / 2),
+        2,
+        8,
+      ),
+      cooldown: clamp(
+        (0.72 - stats.speed * 0.0045) * (1 - upgradeLevel * 0.02),
+        0.24,
+        0.68,
+      ),
+      maxDistance: 6 + stats.reach * 0.1 + upgradeLevel * 0.25,
+      maxAngle: 0.09 + stats.control * 0.0011 + upgradeLevel * 0.006,
+      postureDamage: (9 + stats.posture * 0.18) * (1 + upgradeLevel * 0.1),
     };
   }
 
@@ -935,6 +1215,10 @@
       ]),
     ),
     fpsWallAtlas: loadBitmap("assets/generated/props/fps-wall-texture-atlas.png"),
+    fpsWallAtlases: {
+      contemporary: loadBitmap("assets/generated/props/fps-modern-texture-atlas.png"),
+      cyber: loadBitmap("assets/generated/props/fps-cyber-texture-atlas.png"),
+    },
     fpsAltars: [
       loadBitmap("assets/modular/environments/bamboo-shrine/props/autel-purification.png"),
       loadBitmap("assets/modular/environments/daimyo-castle/props/racines-donjon.png"),
@@ -1140,9 +1424,23 @@
     );
   }
 
-  function fpsAnimationSetForRosterEntry(entry) {
+  function fpsAnimationSetForRosterEntry(entry, direction = null) {
     if (!entry) return null;
-    return animationSetFromPaths(entry.fpsAnimations, modularRoster.fpsAnimationSets, entry.id);
+    const directionalAnimations = direction
+      ? entry.fpsDirections?.[direction]?.animations
+      : null;
+    if (directionalAnimations) {
+      return animationSetFromPaths(
+        directionalAnimations,
+        modularRoster.fpsAnimationSets,
+        `${entry.id}:${direction}`,
+      );
+    }
+    return animationSetFromPaths(
+      entry.fpsAnimations,
+      modularRoster.fpsAnimationSets,
+      `${entry.id}:legacy`,
+    );
   }
 
   function fpsWeaponSetForWeapon(weapon) {
@@ -1264,8 +1562,10 @@
       enemy.massiveProfile = massiveProfile;
       if (!Number.isFinite(enemy.massivePhase)) enemy.massivePhase = 1;
       const initialPhaseId = massiveProfile.phases?.[0]?.id;
-      enemy.detachablePartAttached = !detachablePart?.attachPhase
-        || detachablePart.attachPhase === initialPhaseId;
+      if (typeof enemy.detachablePartAttached !== "boolean") {
+        enemy.detachablePartAttached = !detachablePart?.attachPhase
+          || detachablePart.attachPhase === initialPhaseId;
+      }
     }
     const modularWeapons = modularRoster.weapons.filter((weapon) =>
       String(weapon.file || "").startsWith("assets/modular/weapons/"),
@@ -1314,6 +1614,9 @@
     const miniboss = getRosterCategory("miniboss");
     const bosses = getRosterCategory("boss");
     const giants = getRosterCategory("giant");
+    const isCrossEraEntry = (entry) => /^(new-modern|new-cyber)-/.test(entry?.id || "");
+    const feudalSpecial = special.filter((entry) => !isCrossEraEntry(entry));
+    const feudalMiniboss = miniboss.filter((entry) => !isCrossEraEntry(entry));
     const activeArea = sideAreaById(state.side?.areaId);
     const rosterPoolId = activeArea?.rosterPoolId || null;
     const declaredPool = window.KageLevels?.rosterPools?.[rosterPoolId] || null;
@@ -1352,7 +1655,11 @@
         .filter(Boolean);
       const combatPool = explicitCombatPool.length
         ? explicitCombatPool
-        : (missionIndex === 0 ? special : [...special.slice(10), ...miniboss]);
+        : (
+          missionIndex === 0
+            ? feudalSpecial
+            : [...feudalSpecial.slice(10), ...feudalMiniboss]
+        );
       let combatIndex = 0;
       mission.enemies.forEach((enemy) => {
         if (enemy.boss) {
@@ -1382,7 +1689,7 @@
     if (typeof fetch !== "function") return;
     try {
       const response = await fetch(
-        `assets/modular/registry.json?v=${ASSET_VERSION}`,
+        resolveAssetPath(`assets/modular/registry.json?v=${ASSET_VERSION}`),
         { cache: "default" },
       );
       if (!response.ok) throw new Error(`registre HTTP ${response.status}`);
@@ -1404,6 +1711,7 @@
     title: document.getElementById("title-screen"),
     briefing: document.getElementById("briefing-screen"),
     dojo: document.getElementById("dojo-screen"),
+    campaign: document.getElementById("campaign-screen"),
     pause: document.getElementById("pause-screen"),
     end: document.getElementById("end-screen"),
     startButton: document.getElementById("start-button"),
@@ -1700,6 +2008,17 @@
       bossRosterId: "mb-18-onmyoji-renard",
     },
   ];
+  const CAMPAIGN_FPS_DEFS = Array.isArray(window.KageLevels?.campaignFpsMissions)
+    ? window.KageLevels.campaignFpsMissions
+    : [];
+  FPS_DEFS.push(...CAMPAIGN_FPS_DEFS.map((definition) => ({
+    ...definition,
+    start: [...definition.start],
+    altar: [...definition.altar],
+    enemies: definition.enemies.map((position) => [...position]),
+    rosterIds: [...(definition.rosterIds || [])],
+    reward: definition.reward ? { ...definition.reward } : null,
+  })));
   const FPS_ENGAGEMENT_ANGLES = [
     0,
     Math.PI,
@@ -1772,6 +2091,7 @@
       ammo: clamp(Number(ammoByType[ammoType] ?? ammoCapacity), 0, ammoCapacity),
       ammoByType,
       seals: 0,
+      contamination: persistedContamination(),
       kills: 0,
       score: 0,
       startedAt: 0,
@@ -1818,6 +2138,9 @@
       activeWeaponId: loadout.primary,
       weaponIndex: Math.max(0, KATANA_IDS.indexOf(loadout.primary)),
       loadoutReturnStatus: "briefing",
+      campaignReturnStatus: "playing",
+      campaignEventCache: new Set(),
+      campaignCompatibilityMode: persistedCampaignCompatibilityMode(),
       side: makeSideState(),
       fps: {
         current: 0,
@@ -1835,6 +2158,553 @@
     } catch (_) {
       return null;
     }
+  }
+
+  function campaignActs() {
+    return Object.values(window.KageLevels?.campaignActs || {})
+      .filter((act) => act && typeof act === "object")
+      .sort((a, b) => Number(a.order || 0) - Number(b.order || 0));
+  }
+
+  function campaignMetaForArea(area = currentSideArea()) {
+    const saved = (() => {
+      try { return window.KageSave?.load?.()?.campaign || {}; } catch (_) { return {}; }
+    })();
+    const zoneId = area?.campaignZoneId
+      || window.KageLevels?.campaignRuntime?.areaToZoneId?.[area?.id]
+      || area?.id
+      || game?.side?.areaId
+      || saved.currentZoneId
+      || "forest-kaido-trail";
+    const actOrder = clamp(Number(area?.actOrder || saved.currentActOrder || 1), 1, 7);
+    const actId = area?.actId
+      || campaignActs().find((act) => Number(act.order) === actOrder)?.id
+      || saved.currentActId
+      || "act-01-forest";
+    return { zoneId, actId, actOrder };
+  }
+
+  function syncCampaignVisit(area = currentSideArea()) {
+    const meta = campaignMetaForArea(area);
+    try {
+      window.KageSave?.visitCampaignZone?.(meta.zoneId, meta.actId, meta.actOrder);
+    } catch (_) {
+      // La campagne reste jouable en mémoire si le stockage est indisponible.
+    }
+    const zoneVisitKey = `visit:${meta.zoneId}`;
+    if (!game?.campaignEventCache?.has(zoneVisitKey)) {
+      game?.campaignEventCache?.add(zoneVisitKey);
+      advanceQuestProgress("visit", { id: meta.zoneId, unique: true });
+    }
+    const environmentIndex = Number(area?.environmentIndex);
+    if (environmentIndex === 3 || environmentIndex === 4) {
+      advanceQuestProgress("era", { id: meta.zoneId, unique: true });
+    }
+    return meta;
+  }
+
+  function questDefinition(questId) {
+    return QUEST_DEFINITIONS.find((entry) => entry.id === questId) || null;
+  }
+
+  function ensureQuestStates() {
+    try {
+      const profile = window.KageSave?.load?.();
+      if (!profile?.campaign?.quests) return [];
+      let changed = false;
+      for (const definition of QUEST_DEFINITIONS) {
+        if (profile.campaign.quests[definition.id]) continue;
+        profile.campaign.quests[definition.id] = {
+          status: definition.id === QUEST_DEFINITIONS[0].id ? "active" : "available",
+          progress: 0,
+          target: definition.target,
+          updatedAt: Date.now(),
+        };
+        if (
+          definition.id === QUEST_DEFINITIONS[0].id
+          && !profile.campaign.acceptedQuestIds.includes(definition.id)
+        ) {
+          profile.campaign.acceptedQuestIds.push(definition.id);
+        }
+        changed = true;
+      }
+      if (changed) window.KageSave.save(profile);
+      return QUEST_DEFINITIONS;
+    } catch (_) {
+      return QUEST_DEFINITIONS;
+    }
+  }
+
+  function advanceQuestProgress(eventName, context = {}) {
+    try {
+      const profile = window.KageSave?.load?.();
+      if (!profile?.campaign?.quests) return [];
+      const changed = [];
+      for (const definition of QUEST_DEFINITIONS) {
+        if (definition.event !== eventName) continue;
+        if (
+          definition.targetId
+          && ![
+            context.id,
+            ...(Array.isArray(context.aliases) ? context.aliases : []),
+          ].includes(definition.targetId)
+        ) continue;
+        const state = profile.campaign.quests[definition.id];
+        if (!state || state.status !== "active") continue;
+        const eventKey = context.unique
+          ? `quest:${definition.id}:${eventName}:${String(context.id || "")}`
+          : "";
+        if (eventKey && game?.campaignEventCache?.has(eventKey)) continue;
+        if (eventKey) game?.campaignEventCache?.add(eventKey);
+        const previousProgress = Math.max(0, Number(state.progress) || 0);
+        const derivedProgress = eventName === "visit"
+          ? profile.campaign.visitedZoneIds.length
+          : previousProgress + Math.max(1, Number(context.amount) || 1);
+        state.progress = Math.min(definition.target, Math.max(previousProgress, derivedProgress));
+        state.status = state.progress >= definition.target ? "ready" : "active";
+        state.updatedAt = Date.now();
+        changed.push({ id: definition.id, status: state.status, progress: state.progress });
+      }
+      if (changed.length) window.KageSave.save(profile);
+      return changed;
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function acceptQuest(questId) {
+    const definition = questDefinition(questId);
+    if (!definition) return { ok: false, reason: "unknown" };
+    try {
+      const profile = window.KageSave.load();
+      const state = profile.campaign.quests[definition.id];
+      if (!state || state.status !== "available") return { ok: false, reason: "state" };
+      state.status = "active";
+      state.acceptedAt = Date.now();
+      /*
+       * Un contrat reste solvable lorsqu'il est accepté après l'événement.
+       * C'est indispensable pour les boss persistants : Aka-Ushi ne réapparaît
+       * pas seulement pour permettre de réclamer une mission oubliée.
+       */
+      if (definition.event === "boss" && definition.targetId) {
+        const bossAlreadyDefeated = profile.bosses?.[definition.targetId] === true;
+        if (bossAlreadyDefeated) state.progress = definition.target;
+      } else if (definition.event === "visit") {
+        state.progress = Math.min(
+          definition.target,
+          Math.max(Number(state.progress) || 0, profile.campaign.visitedZoneIds.length),
+        );
+      } else if (definition.event === "kill") {
+        state.progress = Math.min(
+          definition.target,
+          Math.max(
+            Number(state.progress) || 0,
+            Number(profile.progress?.kills) || 0,
+            Number(game?.kills) || 0,
+          ),
+        );
+      } else if (definition.event === "era") {
+        const visitedFutureEra = profile.campaign.visitedZoneIds.some((zoneId) => {
+          const areaId = window.KageLevels?.campaignRuntime?.zoneToAreaId?.[zoneId];
+          return Number(window.KageLevels?.areas?.[areaId]?.actOrder) >= 6;
+        });
+        if (visitedFutureEra) state.progress = definition.target;
+      }
+      if ((Number(state.progress) || 0) >= definition.target) {
+        state.progress = definition.target;
+        state.status = "ready";
+      }
+      if (!profile.campaign.acceptedQuestIds.includes(definition.id)) {
+        profile.campaign.acceptedQuestIds.push(definition.id);
+      }
+      window.KageSave.save(profile);
+      return { ok: true, quest: { ...state } };
+    } catch (_) {
+      return { ok: false, reason: "storage" };
+    }
+  }
+
+  function claimQuest(questId) {
+    const definition = questDefinition(questId);
+    if (!definition) return { ok: false, reason: "unknown" };
+    try {
+      const profile = window.KageSave.load();
+      const state = profile.campaign.quests[definition.id];
+      if (!state || state.status !== "ready") return { ok: false, reason: "state" };
+      const reward = definition.reward || {};
+      for (const currencyId of ["mon", "tamahagane", "yomiAsh"]) {
+        profile.currencies[currencyId] = Math.max(
+          0,
+          Number(profile.currencies[currencyId] || 0) + Math.max(0, Number(reward[currencyId]) || 0),
+        );
+      }
+      profile.hub.supplies += Math.max(0, Number(reward.supplies) || 0);
+      profile.hub.reputation += Math.max(0, Number(reward.reputation) || 0);
+      if (
+        reward.unlockWeapon
+        && arsenalWeaponById(reward.unlockWeapon)
+        && !profile.unlocks.weapons.includes(reward.unlockWeapon)
+      ) {
+        profile.unlocks.weapons.push(reward.unlockWeapon);
+      }
+      state.status = "completed";
+      state.claimedAt = Date.now();
+      if (!profile.campaign.completedQuestIds.includes(definition.id)) {
+        profile.campaign.completedQuestIds.push(definition.id);
+      }
+      const saved = window.KageSave.save(profile);
+      announce(`CONTRAT ACCOMPLI — ${definition.title.toUpperCase()}`);
+      return { ok: true, quest: { ...saved.campaign.quests[definition.id] }, reward: { ...reward } };
+    } catch (_) {
+      return { ok: false, reason: "storage" };
+    }
+  }
+
+  function campaignObjectiveReward(objective, meta, completeAct) {
+    const actOrder = clamp(Math.round(Number(meta?.actOrder) || 1), 1, 7);
+    const bossObjective = Boolean(objective?.targetEnemyId)
+      || ["boss", "defeat-boss"].includes(String(objective?.type || "").toLowerCase());
+    const authored = objective?.reward && typeof objective.reward === "object"
+      ? objective.reward
+      : {};
+    return {
+      mon: 55 + actOrder * 15
+        + (bossObjective ? 55 : 0)
+        + (completeAct ? 90 : 0)
+        + Math.max(0, Number(authored.mon) || 0),
+      tamahagane: 1
+        + (bossObjective ? 1 : 0)
+        + (completeAct ? 1 : 0)
+        + Math.max(0, Number(authored.tamahagane) || 0),
+      yomiAsh: (bossObjective ? 1 : 0)
+        + (completeAct ? 1 : 0)
+        + Math.max(0, Number(authored.yomiAsh) || 0),
+      supplies: (completeAct ? 1 : 0)
+        + Math.max(0, Number(authored.supplies) || 0),
+      reputation: 8 + actOrder * 2
+        + (completeAct ? 20 : 0)
+        + Math.max(0, Number(authored.reputation) || 0),
+    };
+  }
+
+  function campaignObjectiveState(objectiveOrId) {
+    const objectiveId = typeof objectiveOrId === "string"
+      ? objectiveOrId
+      : objectiveOrId?.id;
+    if (!objectiveId) return null;
+    try {
+      return window.KageSave?.getCampaignObjectiveState?.(objectiveId)
+        || window.KageSave?.load?.()?.campaign?.objectiveStates?.[objectiveId]
+        || null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function campaignObjectiveCompleted(objectiveOrId) {
+    const objectiveId = typeof objectiveOrId === "string"
+      ? objectiveOrId
+      : objectiveOrId?.id;
+    if (!objectiveId) return false;
+    try {
+      const campaign = window.KageSave?.load?.()?.campaign;
+      return Boolean(
+        campaign?.completedObjectiveIds?.includes(objectiveId)
+        || campaign?.objectiveStates?.[objectiveId]?.completed,
+      );
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function campaignObjectiveProgress(objective) {
+    const state = campaignObjectiveState(objective) || {};
+    const target = Math.max(
+      1,
+      Number(objective?.targetCount)
+        || Number(state.target)
+        || (Array.isArray(objective?.targetIds) ? objective.targetIds.length : 1),
+    );
+    const interactedTargetIds = Array.isArray(state.interactedTargetIds)
+      ? [...new Set(state.interactedTargetIds.filter(Boolean))]
+      : [];
+    const progress = campaignObjectiveCompleted(objective)
+      ? target
+      : clamp(
+          Math.max(Number(state.progress) || 0, interactedTargetIds.length),
+          0,
+          target,
+        );
+    return {
+      completed: progress >= target && campaignObjectiveCompleted(objective),
+      progress,
+      target,
+      interactedTargetIds,
+      lastTargetId: state.lastTargetId || null,
+    };
+  }
+
+  function campaignActCompletionReward() {
+    return {
+      mon: 90,
+      tamahagane: 1,
+      yomiAsh: 1,
+      supplies: 1,
+      reputation: 20,
+    };
+  }
+
+  function finalizeCurrentCampaignZoneIfReady(reason = "area-secured") {
+    const area = currentSideArea();
+    const objectives = Array.isArray(area?.objectives) ? area.objectives : [];
+    if (
+      !area?.campaignZoneId
+      || !objectives.length
+      || game.side.enemies.some(isEnemyAlive)
+      || objectives.some((objective) => !campaignObjectiveCompleted(objective))
+    ) return false;
+    try {
+      const before = window.KageSave.load();
+      const meta = campaignMetaForArea(area);
+      const acts = campaignActs();
+      const act = window.KageLevels?.campaignActs?.[meta.actId]
+        || acts.find((entry) => entry.id === meta.actId);
+      const actAreaIds = Array.isArray(act?.areaIds) ? act.areaIds : [];
+      const allActZonesComplete = actAreaIds.length > 0
+        && actAreaIds.every((areaId) => {
+          if (areaId === area.id) return true;
+          const candidate = sideAreaById(areaId);
+          const zoneId = candidate?.campaignZoneId
+            || window.KageLevels?.campaignRuntime?.areaToZoneId?.[areaId]
+            || areaId;
+          return before.campaign.completedZoneIds.includes(zoneId);
+        });
+      const zoneAlreadyCompleted = before.campaign.completedZoneIds.includes(meta.zoneId);
+      const actAlreadyCompleted = before.campaign.completedActs.includes(meta.actId);
+      if (zoneAlreadyCompleted && (!allActZonesComplete || actAlreadyCompleted)) return false;
+      const nextAct = acts.find((entry) => Number(entry.order) === meta.actOrder + 1);
+      window.KageSave.completeCampaignObjective(objectives.at(-1).id, {
+        reason,
+        actId: meta.actId,
+        zoneId: meta.zoneId,
+        completeZone: true,
+        completeAct: allActZonesComplete,
+        nextActId: allActZonesComplete ? nextAct?.id : "",
+        actCompletionReward: campaignActCompletionReward(),
+      });
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function progressionBudgetPreview() {
+    const empty = () => ({
+      mon: 0,
+      tamahagane: 0,
+      yomiAsh: 0,
+      supplies: 0,
+      reputation: 0,
+    });
+    const add = (target, reward = {}) => {
+      for (const key of Object.keys(target)) {
+        target[key] += Math.max(0, Number(reward[key]) || 0);
+      }
+      return target;
+    };
+    const objectives = empty();
+    for (const act of campaignActs()) {
+      const areaIds = Array.isArray(act.areaIds) ? act.areaIds : [];
+      areaIds.forEach((areaId, index) => {
+        const area = sideAreaById(areaId);
+        for (const objective of area?.objectives || []) {
+          add(
+            objectives,
+            campaignObjectiveReward(
+              objective,
+              { actOrder: Number(act.order) || 1 },
+              index === areaIds.length - 1,
+            ),
+          );
+        }
+      });
+    }
+    const requiredFps = empty();
+    for (const mission of window.KageLevels?.campaignFpsMissions || []) {
+      add(requiredFps, mission.reward?.currencies);
+    }
+    const contracts = empty();
+    for (const definition of QUEST_DEFINITIONS) add(contracts, definition.reward);
+    const facilityCosts = {
+      mon: ["infirmary", "dojo"].reduce((sum, facilityId) => {
+        const definition = HUB_FACILITIES[facilityId];
+        return sum + [1, 2, 3, 4].reduce(
+          (facilitySum, level) => facilitySum + definition.baseCost * level,
+          0,
+        );
+      }, 0),
+      tamahagane: [1, 2, 3, 4].reduce(
+        (sum, level) => sum + HUB_FACILITIES.forge.baseCost * level,
+        0,
+      ),
+      yomiAsh: [1, 2, 3, 4].reduce(
+        (sum, level) => sum + HUB_FACILITIES.shrine.baseCost * level,
+        0,
+      ),
+      weaponRankFiveTamahagane: [0, 1, 2, 3, 4].reduce(
+        (sum, level) => sum + 1 + level * 2,
+        0,
+      ),
+    };
+    const guaranteed = empty();
+    add(guaranteed, objectives);
+    add(guaranteed, requiredFps);
+    return {
+      objectives,
+      requiredFps,
+      contracts,
+      guaranteed,
+      facilityCosts,
+    };
+  }
+
+  function markCampaignObjectiveCompleted(objective, reason = "runtime") {
+    if (!objective?.id) return false;
+    const area = currentSideArea();
+    const meta = campaignMetaForArea(area);
+    try {
+      const before = window.KageSave.load();
+      if (before.campaign.completedObjectiveIds.includes(objective.id)) return false;
+      const areaObjectives = Array.isArray(area?.objectives) ? area.objectives : [];
+      const completedAfter = new Set([
+        ...before.campaign.completedObjectiveIds,
+        objective.id,
+      ]);
+      const completeZone = areaObjectives.length > 0
+        && areaObjectives.every((entry) => completedAfter.has(entry.id))
+        && game.side.enemies.every((enemy) => !isEnemyAlive(enemy));
+      const acts = campaignActs();
+      const act = window.KageLevels?.campaignActs?.[meta.actId]
+        || acts.find((entry) => entry.id === meta.actId);
+      const actAreaIds = Array.isArray(act?.areaIds) ? act.areaIds : [];
+      const allActZonesComplete = completeZone
+        && actAreaIds.length > 0
+        && actAreaIds.every((areaId) => {
+          if (areaId === game.side.areaId) return true;
+          const actArea = sideAreaById(areaId);
+          const zoneId = actArea?.campaignZoneId
+            || window.KageLevels?.campaignRuntime?.areaToZoneId?.[areaId]
+            || areaId;
+          return before.campaign.completedZoneIds.includes(zoneId);
+        });
+      const nextAct = acts.find((entry) => Number(entry.order) === meta.actOrder + 1);
+      window.KageSave.completeCampaignObjective(objective.id, {
+        reason,
+        actId: meta.actId,
+        zoneId: meta.zoneId,
+        completeZone,
+        completeAct: allActZonesComplete,
+        nextActId: allActZonesComplete ? nextAct?.id : "",
+        progress: Math.max(1, Number(objective.targetCount) || 1),
+        target: Math.max(1, Number(objective.targetCount) || 1),
+        reward: campaignObjectiveReward(objective, meta, allActZonesComplete),
+        actCompletionReward: campaignActCompletionReward(),
+      });
+      announce(`OBJECTIF ACCOMPLI — ${String(objective.label || objective.id).toUpperCase()}`);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function evaluateCampaignObjectives(reason, context = {}) {
+    const area = currentSideArea();
+    const objectives = Array.isArray(area?.objectives) ? area.objectives : [];
+    const aliases = new Set([
+      context.id,
+      ...(Array.isArray(context.aliases) ? context.aliases : []),
+    ].filter(Boolean));
+    let completed = 0;
+    for (const objective of objectives) {
+      const type = String(objective.type || "").toLowerCase();
+      const method = String(objective.completionMethod || "").toLowerCase();
+      let matches = false;
+      if (reason === "boss") {
+        matches = (method === "enemy-death" || ["boss", "defeat-boss"].includes(type))
+          && (!objective.targetEnemyId || aliases.has(objective.targetEnemyId));
+      } else if (reason === "clear") {
+        matches = (method === "area-clear" || type === "defense")
+          && game.side.enemies.every((enemy) => !isEnemyAlive(enemy));
+      } else if (reason === "checkpoint") {
+        const targetIds = Array.isArray(objective.targetIds)
+          ? objective.targetIds.filter(Boolean)
+          : [];
+        matches = method === "checkpoint-reach"
+          && (!targetIds.length || aliases.has(targetIds[0]));
+      }
+      if (matches && markCampaignObjectiveCompleted(objective, reason)) completed += 1;
+    }
+    if (game.side.enemies.every((enemy) => !isEnemyAlive(enemy))) {
+      finalizeCurrentCampaignZoneIfReady(reason);
+    }
+    return completed;
+  }
+
+  function interactCampaignObjectiveTarget(portal) {
+    const area = currentSideArea();
+    const objective = (area?.objectives || []).find(
+      (entry) => entry.id === portal?.objectiveId,
+    );
+    if (!objective || portal?.type !== "objective" || !portal.objectiveTargetId) {
+      announce("CETTE CIBLE N'EST LIEE A AUCUN OBJECTIF");
+      return false;
+    }
+    const current = campaignObjectiveProgress(objective);
+    if (current.completed) {
+      announce("OBJECTIF DEJA ACCOMPLI");
+      return true;
+    }
+    if (
+      portal.requiresAreaClear
+      && game.side.enemies.some(isEnemyAlive)
+    ) {
+      const remaining = game.side.enemies.filter(isEnemyAlive).length;
+      announce(`SECURISEZ D'ABORD LA ZONE - ${remaining} INFECTE${remaining > 1 ? "S" : ""}`);
+      return false;
+    }
+    if (current.interactedTargetIds.includes(portal.objectiveTargetId)) {
+      announce(`${String(portal.actionLabel || "CIBLE TRAITEE").toUpperCase()} - DEJA FAIT`);
+      return true;
+    }
+    const interactedTargetIds = [
+      ...current.interactedTargetIds,
+      portal.objectiveTargetId,
+    ];
+    const progress = Math.min(current.target, interactedTargetIds.length);
+    window.KageSave?.setCampaignObjectiveState?.(objective.id, {
+      areaId: area.id,
+      zoneId: area.campaignZoneId || area.id,
+      completionMethod: objective.completionMethod,
+      progress,
+      target: current.target,
+      interactedTargetIds,
+      lastTargetId: portal.objectiveTargetId,
+      lastReason: "manual-target",
+    });
+    playAudio("playPickup");
+    game.shake = Math.max(game.shake, 2.4);
+    if (progress >= current.target) {
+      markCampaignObjectiveCompleted(objective, "manual-targets");
+    } else {
+      announce(
+        `${String(portal.actionLabel || "CIBLE TRAITEE").toUpperCase()} - ${progress}/${current.target}`,
+      );
+    }
+    persistRunProgress({
+      areaId: area.id,
+      health: game.health,
+    });
+    return true;
   }
 
   function persistRunProgress(patch = {}) {
@@ -1933,6 +2803,74 @@
     }
   }
 
+  function persistedBossRuntime(...ids) {
+    try {
+      return window.KageSave?.getBossRuntime?.(...ids.filter(Boolean)) || null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function persistedCampaignAreaCleared(areaId, area = sideAreaById(areaId)) {
+    if (!area?.checkpointPolicy?.preserveEnemies) return false;
+    const zoneId = area.campaignZoneId
+      || window.KageLevels?.campaignRuntime?.areaToZoneId?.[areaId]
+      || areaId;
+    try {
+      const completedZoneIds = window.KageSave?.load?.()?.campaign?.completedZoneIds;
+      return Array.isArray(completedZoneIds) && completedZoneIds.includes(zoneId);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function bossRuntimeSnapshot(enemy) {
+    if (!enemy?.boss) return null;
+    return {
+      areaId: game?.side?.areaId || "",
+      hp: Math.max(0, Number(enemy.hp) || 0),
+      maxHp: Math.max(1, Number(enemy.maxHp) || 1),
+      phase: Math.max(1, Number(enemy.massivePhase) || 1),
+      dead: Boolean(enemy.dead || enemy.dying || enemy.hp <= 0),
+      detachablePartAttached: enemy.detachablePartAttached !== false,
+      detachedEquipment: enemy.detachedEquipment
+        ? {
+            weaponId: String(enemy.detachedEquipment.weaponId || ""),
+            x: Number(enemy.detachedEquipment.x) || 0,
+            bottomY: Number(enemy.detachedEquipment.bottomY) || SIDE_GROUND_Y,
+            width: Math.max(1, Number(enemy.detachedEquipment.width) || 112),
+            damage: Math.max(0, Number(enemy.detachedEquipment.damage) || 14),
+            cooldown: Math.max(0, Number(enemy.detachedEquipment.cooldown) || 0),
+            active: enemy.detachedEquipment.active !== false,
+          }
+        : null,
+    };
+  }
+
+  function persistBossRuntime(enemy, aliases = []) {
+    const snapshot = bossRuntimeSnapshot(enemy);
+    if (!snapshot) return false;
+    const ids = [...new Set([
+      enemy.sourceId,
+      enemy.rosterId,
+      enemy.profileId,
+      enemy.encounterId,
+      enemy.modularEntry?.id,
+      ...aliases,
+    ].filter(Boolean))];
+    try {
+      const canonicalId = ids[0];
+      if (!canonicalId) return false;
+      window.KageSave?.setBossRuntime?.(canonicalId, {
+        ...snapshot,
+        aliases: ids.slice(1),
+      });
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   function createSideEnemyAi(definition, area, width, height, index, massive) {
     const profileName = sideEnemyAiProfileName(definition, massive);
     const defaults = SIDE_AI_PROFILES[profileName] || SIDE_AI_PROFILES.walker;
@@ -1994,6 +2932,7 @@
 
   function makeSideEnemiesForArea(areaId, chapter = 0) {
     const area = sideAreaById(areaId);
+    const areaAlreadyCleared = persistedCampaignAreaCleared(areaId, area);
     const definitions = area?.enemies;
     const rules = SIDE_CHAPTER_RULES[chapter] || SIDE_CHAPTER_RULES[0];
     const entries = Array.isArray(definitions) && definitions.length
@@ -2047,7 +2986,11 @@
         seed: chapter * 101 + i * 13.7,
         platformId: definition.platformId || null,
       };
-      if (
+      if (areaAlreadyCleared) {
+        enemy.hp = 0;
+        enemy.dead = true;
+        enemy.dying = false;
+      } else if (
         enemy.boss
         && persistedBossDefeated(
           enemy.sourceId,
@@ -2059,6 +3002,33 @@
         enemy.hp = 0;
         enemy.dead = true;
         enemy.dying = false;
+      }
+      if (enemy.boss && !enemy.dead) {
+        const runtime = persistedBossRuntime(
+          enemy.sourceId,
+          enemy.rosterId,
+          enemy.profileId,
+          enemy.encounterId,
+        );
+        if (runtime) {
+          enemy.maxHp = Math.max(enemy.maxHp, Number(runtime.maxHp) || enemy.maxHp);
+          enemy.hp = clamp(Number(runtime.hp), 0, enemy.maxHp);
+          enemy.massivePhase = massive
+            ? clamp(Number(runtime.phase) || 1, 1, 12)
+            : enemy.massivePhase;
+          enemy.detachablePartAttached = runtime.detachablePartAttached !== false;
+          enemy.detachedEquipment = runtime.detachedEquipment
+            ? {
+                ...runtime.detachedEquipment,
+                cooldown: Math.max(0, Number(runtime.detachedEquipment.cooldown) || 0),
+              }
+            : null;
+          if (runtime.dead || enemy.hp <= 0) {
+            enemy.hp = 0;
+            enemy.dead = true;
+            enemy.dying = false;
+          }
+        }
       }
       enemy.ai = createSideEnemyAi(definition, area, width, height, i, massive);
       return enemy;
@@ -2186,7 +3156,7 @@
     };
   }
 
-  function persistedOptionalFpsMission(secretId) {
+  function persistedFpsMission(secretId) {
     if (!secretId) return false;
     try {
       return window.KageSave?.load?.()?.secrets?.[secretId] === true;
@@ -2197,8 +3167,11 @@
 
   function makeFpsMission(index) {
     const def = FPS_DEFS[index];
-    const persistedPurification = Boolean(
-      def.optional && persistedOptionalFpsMission(def.secretId),
+    const persistedPurification = persistedFpsMission(def.secretId);
+    const mapIndex = clamp(
+      Math.floor(Number(def.mapIndex ?? index) || 0),
+      0,
+      MAPS.length - 1,
     );
     const formationCount = def.enemies.length + (def.boss ? 1 : 0);
     const formationPhase = index * Math.PI / 7;
@@ -2241,9 +3214,17 @@
       completionAnnouncement: def.completionAnnouncement || "",
       alreadyPurifiedAnnouncement: def.alreadyPurifiedAnnouncement || "",
       optional: Boolean(def.optional),
+      campaignMission: Boolean(def.campaignMission),
+      required: Boolean(def.required),
+      actId: def.actId || null,
+      sourceAreaId: def.sourceAreaId || null,
+      returnAreaId: def.sourceAreaId || null,
+      returnSpawnId: def.returnSpawnId || "campaignFpsReturn",
+      mapIndex,
       secretId: def.secretId || null,
       reward: def.reward ? { ...def.reward } : null,
-      map: MAPS[index],
+      sealReward: Math.max(0, Number(def.sealReward) || 0),
+      map: MAPS[mapIndex],
       player: { x: def.start[0], y: def.start[1], angle: def.start[2] },
       altar: { x: def.altar[0], y: def.altar[1] },
       enemies,
@@ -2317,23 +3298,101 @@
     return Number.isFinite(index) ? index : null;
   }
 
+  function fpsMissionById(missionId) {
+    if (!missionId) return null;
+    return game?.fps?.missions?.find((mission) => mission.id === missionId)
+      || null;
+  }
+
+  function fpsMissionPurified(missionId) {
+    const mission = fpsMissionById(missionId);
+    if (mission?.purified) return true;
+    const definition = FPS_DEFS.find((candidate) => candidate.id === missionId);
+    return persistedFpsMission(definition?.secretId);
+  }
+
+  function campaignSealState() {
+    const requiredIds = Array.isArray(window.KageLevels?.campaignRuntime?.fpsMissionIds)
+      ? window.KageLevels.campaignRuntime.fpsMissionIds
+      : [];
+    const campaignMissions = (game?.fps?.missions || []).filter((mission) =>
+      mission.campaignMission
+      && (!requiredIds.length || requiredIds.includes(mission.id)));
+    const total = Math.max(
+      0,
+      Number(window.KageLevels?.campaignRuntime?.requiredFpsMissions)
+        || requiredIds.length
+        || campaignMissions.length,
+    );
+    const completed = campaignMissions.reduce(
+      (sum, mission) => sum + (mission.purified ? 1 : 0),
+      0,
+    );
+    return {
+      completed: Math.min(total || completed, completed),
+      total,
+      complete: total > 0 && completed >= total,
+    };
+  }
+
+  function isCampaignEndingPortal(portal) {
+    const runtime = window.KageLevels?.campaignRuntime;
+    return Boolean(
+      portal?.type === "ending"
+      && (
+        portal.id === runtime?.finalEndingPortalId
+        || game?.side?.areaId === runtime?.finalAreaId
+        || game?.side?.areaId === "cyber-shogun-core"
+      )
+    );
+  }
+
+  function isLegacyCampaignShortcut(portal) {
+    const legacyIds = window.KageLevels?.campaignRuntime?.legacyShortcutPortalIds || [];
+    return Boolean(
+      portal?.excludedFromCampaignRoute
+      || portal?.campaignCompatibility === "legacy-shortcut"
+      || legacyIds.includes(portal?.id),
+    );
+  }
+
+  function authoredSidePortals(area = currentSideArea(), options = {}) {
+    const includeLegacy = options.includeLegacy === true
+      || game?.campaignCompatibilityMode === true;
+    return (area?.portals || [])
+      .filter((portal) => !["disabled", "legacyOnly"].includes(portal.state))
+      .filter((portal) => includeLegacy || !isLegacyCampaignShortcut(portal));
+  }
+
   function currentSideEntrance() {
     const area = currentSideArea();
-    if (area?.portals?.length) {
-      return area.portals.find((portal) =>
+    const portals = authoredSidePortals(area);
+    if (portals.length) {
+      return portals.find((portal) =>
         portal.type === "fps"
         && fpsMissionIndexForPortal(portal) === game.chapter)
-        || area.portals.find((portal) => portal.type === "side")
-        || area.portals.find((portal) =>
+        || portals.find((portal) => portal.type === "side")
+        || portals.find((portal) =>
           portal.type === "fps" && fpsMissionIndexForPortal(portal) !== null)
-        || area.portals[0];
+        || portals[0];
     }
     return SIDE_ENTRANCES[game.chapter] || SIDE_ENTRANCES[0];
   }
 
   function currentSideObjectivePortal() {
     const area = currentSideArea();
-    const portals = area?.portals || [];
+    const portals = authoredSidePortals(area);
+    const activeObjective = (area?.objectives || []).find(
+      (objective) => !campaignObjectiveCompleted(objective),
+    );
+    if (activeObjective?.completionMethod === "manual-targets") {
+      const progress = campaignObjectiveProgress(activeObjective);
+      const nextTarget = portals.find((portal) =>
+        portal.type === "objective"
+        && portal.objectiveId === activeObjective.id
+        && !progress.interactedTargetIds.includes(portal.objectiveTargetId));
+      if (nextTarget) return nextTarget;
+    }
     if (game.side.areaId === "castle-donjon" && game.seals >= 2) {
       const temporalWarp = portals.find(
         (portal) => portal.id === "castle-to-contemporary-warp",
@@ -2344,6 +3403,11 @@
       portal.type === "fps"
       && fpsMissionIndexForPortal(portal) === game.chapter);
     if (activeMissionPortal) return activeMissionPortal;
+    const requiredCampaignMission = portals.find((portal) =>
+      portal.type === "fps"
+      && portal.campaignMission
+      && !fpsMissionPurified(portal.mission));
+    if (requiredCampaignMission) return requiredCampaignMission;
     const authoredObjective = portals.find(
       (portal) => portal.id === area?.objectivePortalId,
     );
@@ -2351,9 +3415,9 @@
     return currentSideEntrance();
   }
 
-  function currentSidePortals() {
-    return (currentSideArea()?.portals || [currentSideEntrance()])
-      .filter((portal) => !["disabled", "legacyOnly"].includes(portal.state));
+  function currentSidePortals(options = {}) {
+    const authored = authoredSidePortals(currentSideArea(), options);
+    return authored.length ? authored : [currentSideEntrance()];
   }
 
   function sideEncounterComplete(encounterId) {
@@ -2377,8 +3441,35 @@
     ) {
       return "LA FAILLE RESTE FERMÉE — ABATTEZ LE DAIMYŌ ET POSEZ LE SECOND SCEAU";
     }
-    if (portal.type === "ending" && game.seals < 2) {
-      return "LE CŒUR DE LA FAILLE REFUSE UN SCEAU INCOMPLET";
+    if (portal.type === "ending") {
+      if (isCampaignEndingPortal(portal)) {
+        const campaignSeals = campaignSealState();
+        if (!campaignSeals.complete) {
+          return `LE CŒUR DE LA FAILLE EXIGE LES ${campaignSeals.total} SCEAUX DE CAMPAGNE (${campaignSeals.completed}/${campaignSeals.total})`;
+        }
+      } else if (game.seals < 2) {
+        return "LE CŒUR DE LA FAILLE REFUSE LES DEUX SCEAUX HISTORIQUES INCOMPLETS";
+      }
+    }
+    if (
+      portal.requiresFpsMissionId
+      && !fpsMissionPurified(portal.requiresFpsMissionId)
+    ) {
+      const mission = fpsMissionById(portal.requiresFpsMissionId);
+      return `${mission?.label || "LE FOYER INTERIEUR"} RESTE A PURIFIER`;
+    }
+    if (
+      portal.requiresObjectiveId
+      && !campaignObjectiveCompleted(portal.requiresObjectiveId)
+    ) {
+      const objective = (currentSideArea()?.objectives || []).find(
+        (entry) => entry.id === portal.requiresObjectiveId,
+      );
+      const state = campaignObjectiveProgress(objective || {
+        id: portal.requiresObjectiveId,
+        targetCount: 1,
+      });
+      return `OBJECTIF INACHEVE - ${String(objective?.label || portal.requiresObjectiveId).toUpperCase()} (${state.progress}/${state.target})`;
     }
     if (
       portal.requiresAreaClear
@@ -2389,6 +3480,7 @@
     }
     if (
       portal.destination?.areaId === "castle-lower-court"
+      && !portal.requiresObjectiveId
       && game.seals < 1
     ) {
       return "LA ROUTE DU CHÂTEAU EST SCELLÉE PAR LE PREMIER FOYER";
@@ -2627,6 +3719,8 @@
     }
     if (targetArea.chapterId === "castle") game.chapter = Math.max(game.chapter, 1);
     applyRosterToGame(game);
+    syncCampaignVisit(targetArea);
+    finalizeCurrentCampaignZoneIfReady("area-load");
     if (game.status === "playing" && !game.restoringProgress) {
       persistRunProgress({ areaId, spawnId: spawnId || Object.keys(targetArea.spawns || {})[0] });
       const music = sideMusicState(targetArea);
@@ -2659,10 +3753,36 @@
     if (!checkpoints.length || game.mode !== "side" || game.status !== "playing") return false;
     const playerCenter = game.side.player.x + game.side.player.w / 2;
     const checkpoint = checkpoints.find((entry) => Math.abs(playerCenter - entry.x) <= 34);
-    if (!checkpoint || game.consumedCheckpointIds.has(checkpoint.id)) return false;
+    if (!checkpoint) return false;
+    if (game.consumedCheckpointIds.has(checkpoint.id)) {
+      /*
+       * Une sauvegarde antérieure peut déjà connaître ce foyer sans connaître
+       * l'objectif de campagne ajouté ensuite. Réévaluer est idempotent et
+       * évite de condamner définitivement une enquête ou une brèche.
+       */
+      return evaluateCampaignObjectives("checkpoint", { id: checkpoint.id }) > 0;
+    }
     game.activeCheckpointId = checkpoint.id;
     game.consumedCheckpointIds.add(checkpoint.id);
-    game.health = Math.min(100, game.health + 20);
+    let checkpointHealing = 20;
+    try {
+      const profile = window.KageSave?.load?.();
+      if (profile) {
+        const effects = progressionServiceEffects(profile);
+        checkpointHealing = effects.checkpointHealing;
+        profile.contamination = Math.max(
+          0,
+          Number(profile.contamination || 0) - effects.checkpointPurification,
+        );
+        profile.hub.facilities.infirmary.lastUsedAt = Date.now();
+        profile.hub.facilities.shrine.lastUsedAt = Date.now();
+        game.contamination = profile.contamination;
+        window.KageSave.save(profile);
+      }
+    } catch (_) {
+      // Le checkpoint soigne toujours la session, même sans stockage local.
+    }
+    game.health = Math.min(100, game.health + checkpointHealing);
     game.playerPosture = 0;
     persistRunProgress({
       checkpoint: checkpoint.id,
@@ -2670,6 +3790,7 @@
       spawnId: checkpoint.spawnId,
       health: game.health,
     });
+    evaluateCampaignObjectives("checkpoint", { id: checkpoint.id });
     announce("FOYER SECURISE - PROGRESSION SAUVEGARDEE");
     playAudio("playPickup");
     return true;
@@ -2742,7 +3863,7 @@
   }
 
   function showOnly(screen) {
-    [dom.title, dom.briefing, dom.dojo, dom.pause, dom.end]
+    [dom.title, dom.briefing, dom.dojo, dom.campaign, dom.pause, dom.end]
       .filter(Boolean)
       .forEach((el) => {
         const active = el === screen;
@@ -2785,6 +3906,11 @@
     applyRosterToGame(game);
     if (continueRequested) restoreRunProgress();
     game.status = "playing";
+    ensureQuestStates();
+    syncCampaignVisit(currentSideArea());
+    if (continueRequested && game.activeCheckpointId) {
+      evaluateCampaignObjectives("checkpoint", { id: game.activeCheckpointId });
+    }
     // Laisse au joueur le temps de reprendre la main après la fermeture du
     // briefing ou le chargement d'un foyer. La première commande écourte
     // cette grâce sans permettre un coup instantané hors champ.
@@ -2846,6 +3972,213 @@
     document.body.dataset.state = "title";
     showOnly(dom.title);
     setMusicState("title", 0.22);
+  }
+
+  function campaignSnapshot() {
+    ensureQuestStates();
+    const profile = (() => {
+      try { return window.KageSave?.load?.() || {}; } catch (_) { return {}; }
+    })();
+    const area = currentSideArea();
+    const meta = campaignMetaForArea(area);
+    const acts = campaignActs();
+    return {
+      area: {
+        id: game.side.areaId,
+        label: area?.label || game.side.areaId,
+        ...meta,
+      },
+      acts: acts.map((act) => ({
+        id: act.id,
+        order: Number(act.order) || 1,
+        label: act.label || act.id,
+        areaIds: [...(act.areaIds || [])],
+        unlocked: profile.campaign?.unlockedActs?.includes(act.id) || false,
+        completed: profile.campaign?.completedActs?.includes(act.id) || false,
+      })),
+      objectives: (area?.objectives || []).map((objective) => ({
+        ...objective,
+        ...(profile.campaign?.objectiveStates?.[objective.id] || {}),
+        completed: profile.campaign?.completedObjectiveIds?.includes(objective.id) || false,
+      })),
+      quests: QUEST_DEFINITIONS.map((definition) => ({
+        ...definition,
+        state: {
+          status: "available",
+          progress: 0,
+          target: definition.target,
+          ...(profile.campaign?.quests?.[definition.id] || {}),
+        },
+      })),
+      campaign: profile.campaign || {},
+      hub: profile.hub || {},
+      mastery: profile.mastery || {},
+      currencies: profile.currencies || {},
+      contamination: Number(profile.contamination) || 0,
+      contaminationEffects: progressionServiceEffects(profile),
+      seals: {
+        campaign: campaignSealState().completed,
+        campaignRequired: campaignSealState().total,
+        legacy: game.seals,
+      },
+      activeWeapon: {
+        id: game.activeWeaponId,
+        name: currentPlayerWeapon()?.name || game.activeWeaponId,
+        upgradeLevel: Number(profile.mastery?.upgradeLevels?.[game.activeWeaponId]) || 0,
+      },
+      save: window.KageSave?.storageStatus?.() || {},
+      refugeServicesAvailable: refugeServicesAvailable(),
+    };
+  }
+
+  function refugeServicesAvailable() {
+    if (game.mode !== "side" || !game.activeCheckpointId) return false;
+    if (game.side.activeEncounterId) return false;
+    return !game.side.enemies.some((enemy) =>
+      isEnemyAlive(enemy)
+      && ["pursue", "attack", "hurt"].includes(enemy.ai?.state));
+  }
+
+  function dispatchCampaignUpdated(action = "refresh", result = null) {
+    if (typeof CustomEvent !== "function" || typeof window.dispatchEvent !== "function") return;
+    window.dispatchEvent(new CustomEvent("yomi:campaign-updated", {
+      detail: {
+        action,
+        result,
+        snapshot: campaignSnapshot(),
+      },
+    }));
+  }
+
+  function registerHubVisit() {
+    try {
+      const profile = window.KageSave.load();
+      profile.hub.visitCount += 1;
+      profile.hub.lastVisitedAt = Date.now();
+      const actOrder = Number(profile.campaign.currentActOrder) || 1;
+      if (actOrder >= 2 && !profile.hub.residents.includes("masanori-forgeron")) {
+        profile.hub.residents.push("masanori-forgeron");
+      }
+      if (actOrder >= 4 && !profile.hub.residents.includes("suzu-eclaireuse")) {
+        profile.hub.residents.push("suzu-eclaireuse");
+      }
+      if (actOrder >= 6 && !profile.hub.residents.includes("rei-archiviste")) {
+        profile.hub.residents.push("rei-archiviste");
+      }
+      window.KageSave.save(profile);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function openCampaignScreen() {
+    if (!dom.campaign || !["playing", "paused"].includes(game.status)) return false;
+    game.campaignReturnStatus = game.status;
+    game.status = "campaign";
+    document.body.dataset.state = "campaign";
+    document.exitPointerLock?.();
+    input.keys.clear();
+    registerHubVisit();
+    showOnly(dom.campaign);
+    dom.campaign.querySelector?.("button:not([disabled])")?.focus?.({ preventScroll: true });
+    dispatchCampaignUpdated("open");
+    return true;
+  }
+
+  function closeCampaignScreen() {
+    if (game.status !== "campaign") return false;
+    const returnStatus = game.campaignReturnStatus === "paused" ? "paused" : "playing";
+    game.status = returnStatus;
+    document.body.dataset.state = returnStatus;
+    if (returnStatus === "paused") {
+      showOnly(dom.pause);
+      dom.pause.querySelector?.("button:not([disabled])")?.focus?.({ preventScroll: true });
+    } else {
+      showOnly(null);
+      canvas.focus?.({ preventScroll: true });
+    }
+    return true;
+  }
+
+  function restAtRefuge() {
+    if (!refugeServicesAvailable()) return { ok: false, reason: "combat" };
+    try {
+      const profile = window.KageSave.load();
+      if (profile.hub.supplies < 1) return { ok: false, reason: "supplies" };
+      profile.hub.supplies -= 1;
+      const effects = progressionServiceEffects(profile);
+      profile.contamination = Math.max(
+        0,
+        Number(profile.contamination || 0) - effects.restPurification,
+      );
+      profile.hub.facilities.infirmary.lastUsedAt = Date.now();
+      profile.hub.facilities.shrine.lastUsedAt = Date.now();
+      window.KageSave.save(profile);
+      game.contamination = profile.contamination;
+      game.health = 100;
+      game.stamina = 100;
+      game.playerPosture = 0;
+      persistRunProgress({ health: game.health });
+      announce("REPOS AU REFUGE — VIE ET KI RESTAURÉS");
+      return { ok: true, reason: "" };
+    } catch (_) {
+      return { ok: false, reason: "storage" };
+    }
+  }
+
+  function upgradeHubFacility(facilityId) {
+    if (!refugeServicesAvailable()) return { ok: false, reason: "combat" };
+    const definition = HUB_FACILITIES[facilityId];
+    if (!definition) return { ok: false, reason: "unknown" };
+    const snapshot = campaignSnapshot();
+    const level = Number(snapshot.hub?.facilities?.[facilityId]?.level) || 1;
+    const result = window.KageSave?.upgradeFacility?.(facilityId, {
+      currencyId: definition.currencyId,
+      cost: definition.baseCost * level,
+    }) || { ok: false, reason: "storage" };
+    if (result.ok) announce(`${definition.label.toUpperCase()} — NIVEAU ${level + 1}`);
+    return result;
+  }
+
+  function upgradeActiveWeapon() {
+    if (!refugeServicesAvailable()) return { ok: false, reason: "combat" };
+    try {
+      const profile = window.KageSave.load();
+      const weaponId = game.activeWeaponId;
+      const forgeLevel = Number(profile.hub.facilities?.forge?.level) || 1;
+      const currentLevel = Number(profile.mastery.upgradeLevels[weaponId]) || 0;
+      if (currentLevel >= 5 || currentLevel >= forgeLevel) {
+        return { ok: false, reason: currentLevel >= 5 ? "max" : "forge" };
+      }
+      const cost = 1 + currentLevel * 2;
+      if (profile.currencies.tamahagane < cost) {
+        return { ok: false, reason: "funds", cost };
+      }
+      profile.currencies.tamahagane -= cost;
+      profile.mastery.upgradeLevels[weaponId] = currentLevel + 1;
+      profile.hub.facilities.forge.lastUsedAt = Date.now();
+      window.KageSave.save(profile);
+      announce(`${String(currentPlayerWeapon()?.name || weaponId).toUpperCase()} — RANG +${currentLevel + 1}`);
+      return { ok: true, reason: "", weaponId, level: currentLevel + 1 };
+    } catch (_) {
+      return { ok: false, reason: "storage" };
+    }
+  }
+
+  function handleCampaignAction(action, id = "") {
+    let result;
+    if (action === "close") {
+      return { ok: closeCampaignScreen(), reason: "" };
+    }
+    if (action === "rest") result = restAtRefuge();
+    else if (action === "upgrade-facility") result = upgradeHubFacility(id);
+    else if (action === "upgrade-weapon") result = upgradeActiveWeapon();
+    else if (action === "accept-quest") result = acceptQuest(id);
+    else if (action === "claim-quest") result = claimQuest(id);
+    else result = { ok: false, reason: "unknown" };
+    dispatchCampaignUpdated(action, result);
+    return result;
   }
 
   function togglePause() {
@@ -2974,7 +4307,13 @@
     const dir = controlsLocked ? 0 : (right ? 1 : 0) - (left ? 1 : 0);
 
     if (sprint) game.stamina = Math.max(0, game.stamina - 28 * dt);
-    else game.stamina = Math.min(100, game.stamina + (guarding ? 6 : 19) * dt);
+    else {
+      game.stamina = Math.min(
+        100,
+        game.stamina
+          + (guarding ? 6 : 19) * contaminationStaminaRegenMultiplier() * dt,
+      );
+    }
 
     if (!dodging) {
       p.vx = approach(
@@ -3145,6 +4484,7 @@
         kind: "spark",
       });
     }
+    if (mode === "side") persistBossRuntime(enemy);
     return true;
   }
 
@@ -3787,7 +5127,13 @@
 
     p.angle = normalizeAngle(p.angle + turning * 1.9 * dt);
     if (sprint) game.stamina = Math.max(0, game.stamina - 30 * dt);
-    else game.stamina = Math.min(100, game.stamina + (guarding ? 5 : 17) * dt);
+    else {
+      game.stamina = Math.min(
+        100,
+        game.stamina
+          + (guarding ? 5 : 17) * contaminationStaminaRegenMultiplier() * dt,
+      );
+    }
 
     const mx = Math.cos(p.angle) * forward * speed + Math.cos(p.angle + Math.PI / 2) * strafe * speed;
     const my = Math.sin(p.angle) * forward * speed + Math.sin(p.angle + Math.PI / 2) * strafe * speed;
@@ -4666,14 +6012,13 @@
       return;
     }
     const rangedWeapon = currentRangedWeapon();
-    const rangedStats = normalizedWeaponStats(rangedWeapon || {
-      stats: { power: 72, speed: 55, reach: 80, control: 72 },
-    });
-    const rangedDamage = clamp(Math.round(1 + rangedStats.power / 32), 2, 5);
+    const rangedSpec = rangedAttackSpec(rangedWeapon);
+    const rangedStats = rangedSpec.stats;
+    const rangedDamage = rangedSpec.damage;
     game.ammo -= 1;
     game.ammoByType[rangedAmmoType(rangedWeapon)] = game.ammo;
     persistAmmoMap();
-    game.attackCooldown = clamp(0.72 - rangedStats.speed * 0.0045, 0.28, 0.68);
+    game.attackCooldown = rangedSpec.cooldown;
     game.rangedViewTimer = 0.2;
     game.lastRangedWeaponId = rangedWeapon?.id || "ofuda-purification";
     playAudio("playWeapon", weaponFamilyKey(rangedWeapon || {}), "ranged", {
@@ -4693,13 +6038,13 @@
       });
     } else {
       const mission = currentMission();
-      const maxDistance = 6 + rangedStats.reach * 0.1;
-      const maxAngle = 0.09 + rangedStats.control * 0.0011;
+      const maxDistance = rangedSpec.maxDistance;
+      const maxAngle = rangedSpec.maxAngle;
       const target = nearestFpsTarget(mission, maxDistance, maxAngle);
       if (target) hitEnemy(target, rangedDamage, {
         mode: "fps",
         ranged: true,
-        postureDamage: 9 + rangedStats.posture * 0.18,
+        postureDamage: rangedSpec.postureDamage,
       });
       mission.particles.push({
         x: W / 2,
@@ -4844,6 +6189,17 @@
       enemy.attack = 0;
       game.kills += 1;
       game.score += enemy.boss ? 1500 : 180;
+      advanceQuestProgress("kill", {
+        id: enemy.sourceId,
+        aliases: [enemy.rosterId, enemy.profileId, enemy.modularEntry?.id].filter(Boolean),
+      });
+      const masteryWeaponId = normalized.ranged
+        ? (game.loadout?.ranged || game.activeWeaponId)
+        : game.activeWeaponId;
+      window.KageSave?.recordWeaponMastery?.(
+        masteryWeaponId,
+        masteryGainForKill(enemy.boss ? 45 : 6),
+      );
       if (enemy.boss) {
         const defeatedIds = [
           enemy.sourceId,
@@ -4852,7 +6208,17 @@
           enemy.encounterId,
           enemy.modularEntry?.id,
         ].filter(Boolean);
+        persistBossRuntime(enemy, defeatedIds);
         defeatedIds.forEach((id) => window.KageSave?.markBossDefeated?.(id, true));
+        advanceQuestProgress("boss", {
+          id: enemy.modularEntry?.id || enemy.profileId || enemy.sourceId,
+          aliases: defeatedIds,
+          unique: true,
+        });
+        evaluateCampaignObjectives("boss", {
+          id: enemy.modularEntry?.id || enemy.profileId || enemy.sourceId,
+          aliases: defeatedIds,
+        });
         const rewardWeaponId = defeatedIds.includes("giant-02-aka-ushi")
           ? "naginata-lourde"
           : (defeatedIds.includes("06-daimyo-corrupted") ? "06-kegare-kiri" : null);
@@ -4869,6 +6235,11 @@
           : `${bossName} TOMBE — PURIFIEZ L'AUTEL`;
         announce(rewardName ? `${victoryMessage} · ${rewardName} DÉBLOQUÉE` : victoryMessage);
       }
+      if (mode === "side" && game.side.enemies.every((entry) => !isEnemyAlive(entry))) {
+        evaluateCampaignObjectives("clear", { id: game.side.areaId });
+      }
+    } else if (enemy.boss && mode === "side") {
+      persistBossRuntime(enemy);
     }
     return true;
   }
@@ -4966,6 +6337,10 @@
     }
 
     game.health = Math.max(0, game.health - incomingDamage);
+    applyContaminationFromHit(incomingDamage, {
+      ...source,
+      material,
+    });
     game.invulnerable = PLAYER_HURT_DURATION;
     game.hurtTimer = PLAYER_HURT_DURATION;
     game.playerStagger = 0.24;
@@ -5053,7 +6428,9 @@
       }
       const portalType = portal.type
         || (fpsMissionIndexForPortal(portal) !== null ? "fps" : "side");
-      if (["side", "return"].includes(portalType)) {
+      if (portalType === "objective") {
+        interactCampaignObjectiveTarget(portal);
+      } else if (["side", "return", "warp"].includes(portalType)) {
         const lockMessage = sidePortalLockMessage(portal);
         if (lockMessage) {
           announce(lockMessage);
@@ -5062,7 +6439,9 @@
         if (!confirmSidePortal(portal)) return;
         queueSideTravel(
           portal.destination,
-          portalType === "return" ? "RETOUR AU PLAN PRÉCÉDENT" : "PASSAGE EN PROFONDEUR",
+          portalType === "return"
+            ? "RETOUR AU PLAN PRÉCÉDENT"
+            : (portalType === "warp" ? "TRAVERSÉE DE LA FAILLE TEMPORELLE" : "PASSAGE EN PROFONDEUR"),
         );
       } else if (portalType === "ending") {
         const lockMessage = sidePortalLockMessage(portal);
@@ -5093,6 +6472,11 @@
       return;
     }
     if (mission.purified) {
+      if (mission.campaignMission) {
+        returnFromCampaignFps(false);
+        announce(mission.alreadyPurifiedAnnouncement || "FOYER DE CAMPAGNE DEJA PURIFIE");
+        return;
+      }
       if (mission.optional) {
         returnToSide(false);
         announce(mission.alreadyPurifiedAnnouncement || "FOYER DÉJÀ PURIFIÉ");
@@ -5101,6 +6485,21 @@
     }
     if (!mission.purified) {
       mission.purified = true;
+      evaluateCampaignObjectives("purify", { id: mission.id });
+      if (mission.campaignMission) {
+        applyOptionalFpsReward(mission);
+        playAudio("playPickup");
+        setMusicState("purified", 0.5);
+        persistRunProgress({
+          areaId: mission.returnAreaId || mission.sourceAreaId || game.side.areaId,
+          spawnId: mission.returnSpawnId || "campaignFpsReturn",
+          health: game.health,
+          seals: game.seals,
+        });
+        returnFromCampaignFps(true);
+        announce(mission.completionAnnouncement || "FOYER DE CAMPAGNE PURIFIE");
+        return;
+      }
       if (mission.optional) {
         applyOptionalFpsReward(mission);
         playAudio("playPickup");
@@ -5162,6 +6561,10 @@
       announce("SCELLEZ LE FOYER AVANT DE REPARTIR");
       return;
     }
+    if (currentMission().campaignMission) {
+      returnFromCampaignFps(false);
+      return;
+    }
     returnToSide(false);
   }
 
@@ -5179,6 +6582,10 @@
     );
     const def = FPS_DEFS[game.fps.current] || FPS_DEFS[0];
     const mission = currentMission();
+    if (mission.campaignMission) {
+      mission.returnAreaId = game.side.areaId || mission.sourceAreaId;
+      mission.returnSpawnId = def.returnSpawnId || mission.returnSpawnId || "campaignFpsReturn";
+    }
     game.mode = "fps";
     game.invulnerable = Math.max(game.invulnerable, 2.2);
     game.transition = 0.85;
@@ -5212,6 +6619,16 @@
     setMusicState(music.state, music.intensity);
   }
 
+  function returnFromCampaignFps(automatic) {
+    const mission = currentMission();
+    const areaId = mission.returnAreaId || mission.sourceAreaId || game.side.areaId;
+    const spawnId = mission.returnSpawnId || "campaignFpsReturn";
+    if (areaId && sideAreaById(areaId)) {
+      setCurrentSideArea(areaId, spawnId, true);
+    }
+    returnToSide(automatic);
+  }
+
   function finishGame(victory) {
     game.status = "ended";
     document.body.dataset.state = "ended";
@@ -5222,14 +6639,22 @@
     const seconds = Math.floor(game.elapsed % 60).toString().padStart(2, "0");
     const rank = victory
       ? (
-          game.health >= 70 && game.kills >= 40 && game.elapsed < 10800
+          game.health >= 70
+            && game.kills >= 40
+            && game.elapsed < CAMPAIGN_RANK_S_MAX_SECONDS
             ? "S"
             : (game.health >= 35 && game.kills >= 24 ? "A" : "B")
         )
       : "—";
     dom.endGlyph.textContent = victory ? "勝" : "滅";
     dom.endKicker.textContent = victory ? "MISSION ACCOMPLIE" : "LE SANG RETOURNE À LA TERRE";
-    const temporalEnding = victory && game.side.areaId === "neo-edo-cyber-rift";
+    const finalCampaignAreaId = window.KageLevels?.campaignRuntime?.finalAreaId
+      || "cyber-shogun-core";
+    const temporalEnding = victory && [
+      finalCampaignAreaId,
+      "cyber-shogun-core",
+      "neo-edo-cyber-rift",
+    ].includes(game.side.areaId);
     dom.endTitle.textContent = victory
       ? (temporalEnding ? "LA FAILLE SE REFERME SUR NEO-EDO" : "L'AUBE REVIENT SUR KUROKAWA")
       : "L'OMBRE VOUS A DÉVORÉ";
@@ -5311,6 +6736,7 @@
     for (const item of side.pickups) if (!item.taken) drawPickup(item);
     for (const projectile of side.projectiles) drawPlayerProjectile(projectile);
     drawSideDepthScene(side);
+    drawSideObjectiveTargetMarkers();
     drawWorldParticles(side.particles);
     ctx.restore();
 
@@ -5432,6 +6858,7 @@
   function drawSideEntranceWorld() {
     const objective = currentSideObjectivePortal();
     for (const portal of currentSidePortals()) {
+      if (portal.hideWorldPortal) continue;
       const objectiveFpsPortal = portal === objective
         && portal.type === "fps"
         && fpsMissionIndexForPortal(portal) !== null;
@@ -5496,6 +6923,38 @@
         ctx.fillStyle = "#26171b";
         ctx.fillRect(Math.round(portal.x - 1), Math.round(barY + 2), 2, 4);
       }
+      ctx.restore();
+    }
+  }
+
+  function drawSideObjectiveTargetMarkers() {
+    const objective = currentSideArea()?.objectives?.[0];
+    if (!objective || objective.completionMethod !== "manual-targets") return;
+    const progress = campaignObjectiveProgress(objective);
+    const completedIds = new Set(progress.interactedTargetIds);
+    const activePortal = currentSideObjectivePortal();
+    for (const portal of currentSidePortals().filter(
+      (entry) => entry.type === "objective" && entry.objectiveId === objective.id,
+    )) {
+      const completed = completedIds.has(portal.objectiveTargetId);
+      const active = portal === activePortal && !completed;
+      const y = SIDE_GROUND_Y - 84 - (active
+        ? Math.round(Math.sin(performance.now() / 180) * 3)
+        : 0);
+      ctx.save();
+      ctx.globalAlpha = completed ? 0.48 : 1;
+      ctx.translate(Math.round(portal.x), y);
+      ctx.rotate(Math.PI / 4);
+      ctx.fillStyle = completed ? "#6f8e79" : (active ? "#f0d27c" : "#c58a45");
+      ctx.fillRect(-6, -6, 12, 12);
+      ctx.strokeStyle = completed ? "#b7d7be" : "#fff0b5";
+      ctx.strokeRect(-6.5, -6.5, 13, 13);
+      ctx.restore();
+      ctx.save();
+      ctx.fillStyle = completed ? "#d3e2d2" : "#fff4c5";
+      ctx.font = "bold 8px monospace";
+      ctx.textAlign = "center";
+      ctx.fillText(completed ? "OK" : "E", Math.round(portal.x), y + 3);
       ctx.restore();
     }
   }
@@ -7668,6 +9127,16 @@
   const fpsFloorSourceCache = new Map();
   let fpsFloorRenderSurface = null;
 
+  function fpsAtlasBitmap(atlasId = "feudal") {
+    if (atlasId === "feudal") return bitmapAssets.fpsWallAtlas;
+    return bitmapAssets.fpsWallAtlases?.[atlasId] || bitmapAssets.fpsWallAtlas;
+  }
+
+  function fpsAtlasTileRect(atlasId = "feudal", tileIndex = 0) {
+    const rects = FPS_ATLAS_TILES[atlasId] || FPS_WALL_TILES;
+    return rects[tileIndex] || rects[0];
+  }
+
   function currentFpsMaterialScheme() {
     const def = FPS_DEFS[game.fps.current] || FPS_DEFS[0];
     const fallback = FPS_MATERIAL_SCHEMES[def.altarAssetIndex] || FPS_MATERIAL_SCHEMES[0];
@@ -7675,27 +9144,35 @@
     const profileId = def.materialProfile || def.id || "contaminated-sanctuary";
     const profile = materialLibrary?.profiles?.[profileId];
     if (!profile || !Array.isArray(materialLibrary.tiles)) return fallback;
+    const atlasId = profile.atlas || "feudal";
     const tileIndex = (materialId, fallbackIndex) => {
       const tile = materialLibrary.tiles.find((entry) => entry.id === materialId);
-      return Number.isFinite(Number(tile?.index)) ? Number(tile.index) : fallbackIndex;
+      const tileAtlas = tile?.atlas || "feudal";
+      return tileAtlas === atlasId && Number.isFinite(Number(tile?.index))
+        ? Number(tile.index)
+        : fallbackIndex;
     };
     return {
       ...fallback,
       id: profileId,
+      atlasId,
+      floorScale: clamp(Number(profile.floorScale) || fallback.floorScale, 0.25, 4),
       floorTile: tileIndex(profile.floor, fallback.floorTile),
       boundaryWall: tileIndex(profile.boundary, fallback.boundaryWall),
       coreWall: tileIndex(profile.circulation, fallback.coreWall),
       chamberWall: tileIndex(profile.chamber, fallback.chamberWall),
+      doorWall: tileIndex(profile.door, fallback.altarWall),
       altarWall: tileIndex(profile.altar, fallback.altarWall),
       fog: Array.isArray(def.fog) ? def.fog : fallback.fog,
       semanticProfile: profile,
     };
   }
 
-  function fpsFloorSource(tileIndex) {
-    const atlas = bitmapAssets.fpsWallAtlas;
+  function fpsFloorSource(atlasId, tileIndex) {
+    const cacheKey = `${atlasId}:${tileIndex}`;
+    const atlas = fpsAtlasBitmap(atlasId);
     if (!bitmapReady(atlas) || typeof document.createElement !== "function") return null;
-    if (fpsFloorSourceCache.has(tileIndex)) return fpsFloorSourceCache.get(tileIndex);
+    if (fpsFloorSourceCache.has(cacheKey)) return fpsFloorSourceCache.get(cacheKey);
     try {
       const size = 64;
       const tileCanvas = document.createElement("canvas");
@@ -7703,7 +9180,7 @@
       tileCanvas.height = size;
       const tileContext = tileCanvas.getContext("2d", { willReadFrequently: true });
       tileContext.imageSmoothingEnabled = false;
-      const [tileX, tileY, tileWidth, tileHeight] = FPS_WALL_TILES[tileIndex];
+      const [tileX, tileY, tileWidth, tileHeight] = fpsAtlasTileRect(atlasId, tileIndex);
       tileContext.drawImage(
         atlas,
         tileX,
@@ -7719,12 +9196,12 @@
         size,
         pixels: tileContext.getImageData(0, 0, size, size).data,
       };
-      fpsFloorSourceCache.set(tileIndex, source);
+      fpsFloorSourceCache.set(cacheKey, source);
       return source;
     } catch (_) {
       // Sous file://, certains navigateurs refusent getImageData sur l'atlas.
       // Mémoriser l'échec évite de déclencher une exception à chaque frame.
-      fpsFloorSourceCache.set(tileIndex, null);
+      fpsFloorSourceCache.set(cacheKey, null);
       return null;
     }
   }
@@ -7745,17 +9222,24 @@
     return fpsFloorRenderSurface;
   }
 
-  function drawFpsFloorFallback(player) {
+  function drawFpsFloorFallback(player, scheme = currentFpsMaterialScheme()) {
+    const contemporary = scheme.atlasId === "contemporary";
+    const cyber = scheme.atlasId === "cyber";
     const floor = ctx.createLinearGradient(0, H / 2, 0, H);
-    floor.addColorStop(0, game.fps.current === 0 ? "#493b35" : "#4b4031");
-    floor.addColorStop(1, "#100e12");
+    floor.addColorStop(
+      0,
+      contemporary ? "#34383d" : (cyber ? "#111b2a" : (game.fps.current === 0 ? "#493b35" : "#4b4031")),
+    );
+    floor.addColorStop(1, cyber ? "#070a13" : (contemporary ? "#111418" : "#100e12"));
     ctx.fillStyle = floor;
     ctx.fillRect(0, H / 2, W, H / 2);
 
     // Grille de secours déterministe si l'atlas n'est pas encore chargé.
     ctx.save();
     ctx.globalAlpha = 0.2;
-    ctx.strokeStyle = game.fps.current === 0 ? "#a99a8b" : "#bda976";
+    ctx.strokeStyle = contemporary
+      ? "#86909a"
+      : (cyber ? "#2eb8ce" : (game.fps.current === 0 ? "#a99a8b" : "#bda976"));
     for (let row = 1; row <= 8; row += 1) {
       const ratio = row / 8;
       const y = H / 2 + Math.pow(ratio, 1.72) * H / 2;
@@ -7774,7 +9258,7 @@
     ctx.restore();
   }
 
-  function proceduralFpsFloorSample(worldX, worldY) {
+  function proceduralFpsFloorSample(worldX, worldY, scheme = currentFpsMaterialScheme()) {
     const cellX = Math.floor(worldX);
     const cellY = Math.floor(worldY);
     const u = ((worldX % 1) + 1) % 1;
@@ -7786,7 +9270,19 @@
     let green;
     let blue;
 
-    if (game.fps.current === 0) {
+    if (scheme.atlasId === "contemporary") {
+      const seam = u < 0.035 || v < 0.035;
+      const studs = (Math.floor(u * 8) + Math.floor(v * 8)) % 6 === 0;
+      red = seam ? 38 : 82 + hash + (studs ? 10 : 0);
+      green = seam ? 42 : 87 + hash + (studs ? 10 : 0);
+      blue = seam ? 46 : 92 + hash + (studs ? 11 : 0);
+    } else if (scheme.atlasId === "cyber") {
+      const seam = u < 0.028 || v < 0.028;
+      const pulse = (cellX * 3 + cellY * 5) % 7 === 0;
+      red = seam ? 28 + (pulse ? 22 : 0) : 18 + hash;
+      green = seam ? 126 : 27 + hash;
+      blue = seam ? 150 : 42 + hash * 2;
+    } else if (game.fps.current === 0) {
       const joint = u < 0.045 || v < 0.045;
       const moss = !joint && (u < 0.09 || v < 0.09) && hash < 3;
       const alternate = Math.abs(cellX + cellY) % 2;
@@ -7808,10 +9304,10 @@
 
   function drawFpsFloor(player) {
     const scheme = currentFpsMaterialScheme();
-    const source = fpsFloorSource(scheme.floorTile);
+    const source = fpsFloorSource(scheme.atlasId, scheme.floorTile);
     const render = ensureFpsFloorRenderSurface();
     if (!render) {
-      drawFpsFloorFallback(player);
+      drawFpsFloorFallback(player, scheme);
       return;
     }
 
@@ -7847,7 +9343,7 @@
         const sourceY = Math.min(textureSize - 1, Math.floor(wrappedY * textureSize));
         const sourceOffset = (sourceY * textureSize + sourceX) * 4;
         const targetOffset = (row * renderWidth + column) * 4;
-        const procedural = source ? 0 : proceduralFpsFloorSample(floorX, floorY);
+        const procedural = source ? 0 : proceduralFpsFloorSample(floorX, floorY, scheme);
         const sourceRed = source ? source.pixels[sourceOffset] : procedural & 255;
         const sourceGreen = source ? source.pixels[sourceOffset + 1] : procedural >> 8 & 255;
         const sourceBlue = source ? source.pixels[sourceOffset + 2] : procedural >> 16 & 255;
@@ -7872,6 +9368,7 @@
   function fpsWallTileIndex(hit) {
     const scheme = currentFpsMaterialScheme();
     const mission = currentMission();
+    const def = FPS_DEFS[game.fps.current] || FPS_DEFS[0];
     const mapWidth = mission.map[0]?.length || 0;
     const mapHeight = mission.map.length;
     const boundary = hit.mapX <= 0
@@ -7883,6 +9380,12 @@
       hit.mapY + 0.5 - mission.altar.y,
     );
     if (altarDistance <= 2.25) return scheme.altarWall;
+    if (
+      Array.isArray(def.doorCells)
+      && def.doorCells.some(([mapX, mapY]) => mapX === hit.mapX && mapY === hit.mapY)
+    ) {
+      return scheme.doorWall;
+    }
     if (boundary) return scheme.boundaryWall;
     if (
       game.fps.current === 0
@@ -7895,9 +9398,13 @@
   }
 
   function drawFpsWallColumn(hit, columnX, top, wallHeight, corrected) {
-    const atlas = bitmapAssets.fpsWallAtlas;
+    const scheme = currentFpsMaterialScheme();
+    const atlas = fpsAtlasBitmap(scheme.atlasId);
     if (bitmapReady(atlas)) {
-      const [tileX, tileY, tileWidth, tileHeight] = FPS_WALL_TILES[fpsWallTileIndex(hit)];
+      const [tileX, tileY, tileWidth, tileHeight] = fpsAtlasTileRect(
+        scheme.atlasId,
+        fpsWallTileIndex(hit),
+      );
       const texture = ((hit.texture % 1) + 1) % 1;
       const sourceX = tileX + clamp(Math.floor(texture * tileWidth), 0, tileWidth - 1);
       ctx.drawImage(
@@ -7917,7 +9424,7 @@
       }
       const fogAlpha = clamp((corrected - 2.2) / 15, 0, 0.78);
       if (fogAlpha > 0) {
-        const fog = currentFpsMaterialScheme().fog;
+        const fog = scheme.fog;
         ctx.fillStyle = `rgba(${fog[0]}, ${fog[1]}, ${fog[2]}, ${fogAlpha})`;
         ctx.fillRect(columnX, top, 2, Math.ceil(wallHeight));
       }
@@ -7926,7 +9433,11 @@
 
     const fog = clamp(1 - corrected / 15, 0.18, 1);
     const stripe = Math.floor(hit.texture * 8) % 2;
-    const base = game.fps.current === 0 ? [84, 60, 54] : [66, 49, 58];
+    const base = scheme.atlasId === "contemporary"
+      ? [72, 78, 84]
+      : (scheme.atlasId === "cyber"
+        ? [28, 42, 66]
+        : (game.fps.current === 0 ? [84, 60, 54] : [66, 49, 58]));
     ctx.fillStyle = `rgb(${Math.floor(base[0] * fog + stripe * 9)},${Math.floor(base[1] * fog)},${Math.floor(base[2] * fog)})`;
     ctx.fillRect(columnX, top, 2, Math.ceil(wallHeight));
   }
@@ -7972,13 +9483,16 @@
     const heading = ensureFpsEnemyAi(enemy).heading;
     const towardViewer = Math.atan2(player.y - enemy.y, player.x - enemy.x);
     const relative = normalizeAngle(heading - towardViewer);
-    let direction = "front";
-    if (Math.abs(relative) >= Math.PI * 0.75) direction = "back";
-    else if (relative > Math.PI * 0.25) direction = "left";
-    else if (relative < -Math.PI * 0.25) direction = "right";
+    const octant = (
+      Math.round(relative / (Math.PI / 4)) % FPS_ENEMY_DIRECTIONS.length
+      + FPS_ENEMY_DIRECTIONS.length
+    ) % FPS_ENEMY_DIRECTIONS.length;
+    const direction = FPS_ENEMY_DIRECTIONS[octant];
     return {
       direction,
-      mirror: direction === "right"
+      // Ce miroir ne sert qu'au secours historique. Les banques 8 directions
+      // sont toujours dessinees telles qu'elles ont ete exportees.
+      mirror: direction.includes("right")
         || (direction === "back" && Math.sin(heading) > 0),
       relative,
     };
@@ -8145,12 +9659,19 @@
     const projection = projectFpsEntity(distance, angle, worldHeight, aspect);
 
     const spriteIndex = enemy.spriteIndex ?? (enemy.boss ? 5 : 0);
-    const fpsEnemy = fpsAnimationSetForRosterEntry(enemy.modularEntry);
+    const viewFacing = fpsEnemyViewDirection(enemy);
+    enemy.viewDirection = viewFacing.direction;
+    const hasDedicatedDirectionalBank = Boolean(
+      enemy.modularEntry?.fpsDirections?.[viewFacing.direction]?.animations,
+    );
+    const fpsEnemy = fpsAnimationSetForRosterEntry(
+      enemy.modularEntry,
+      viewFacing.direction,
+    );
     const modularEnemy = fpsEnemy || animationSetForEnemy(enemy, spriteIndex);
     const animation = fpsEnemyAnimation(enemy, projection.corrected);
     const frame = fpsEnemyAnimationFrame(enemy, animation, spriteIndex);
-    const viewFacing = fpsEnemyViewDirection(enemy);
-    enemy.viewDirection = viewFacing.direction;
+    const renderMirror = hasDedicatedDirectionalBank ? false : viewFacing.mirror;
     const reactionScale = animation === "hurt" ? ENEMY_HURT_RENDER_SCALE : 1;
     const maxMassiveHeight = H * clamp(profile.maxHeightRatio || 0.62, 0.4, 0.62);
     const maxMassiveWidth = W * clamp(profile.maxWidthRatio || 0.56, 0.36, 0.6);
@@ -8191,7 +9712,7 @@
       const drawProjectedWeapon = () => {
         ctx.save();
         ctx.translate(projection.screenX, projection.groundY);
-        ctx.scale(viewFacing.mirror ? -1 : 1, 1);
+        ctx.scale(renderMirror ? -1 : 1, 1);
         drawEnemyWeapon(
           enemy,
           animation,
@@ -8208,26 +9729,50 @@
       const equipmentBehindBody = massiveEquipmentLayer
         ? massiveEquipmentLayer === "behind-body"
         : weaponLayerForFrame(enemy.modularEntry, frameRig, "fps") === "behind-body";
+      const legacyRearView = !hasDedicatedDirectionalBank
+        && ["back-left", "back", "back-right"].includes(viewFacing.direction);
       if (
         animation !== "death"
-        && (viewFacing.direction === "back" || equipmentBehindBody)
+        && (legacyRearView || equipmentBehindBody)
       ) {
         drawProjectedWeapon();
       }
       if (massiveBoss) {
-        ctx.save();
-        ctx.translate(projection.screenX, 0);
-        ctx.scale(viewFacing.mirror ? -1 : 1, 1);
-        drawEnemyAnimation(
+        if (hasDedicatedDirectionalBank) {
+          drawEnemyAnimation(
+            modularEnemy,
+            animation,
+            frame,
+            Math.round(renderLeft),
+            Math.round(renderTop),
+            Math.round(renderWidth),
+            Math.round(renderHeight),
+          );
+        } else {
+          ctx.save();
+          ctx.translate(projection.screenX, 0);
+          ctx.scale(renderMirror ? -1 : 1, 1);
+          drawEnemyAnimation(
+            modularEnemy,
+            animation,
+            frame,
+            Math.round(-renderWidth / 2),
+            Math.round(renderTop),
+            Math.round(renderWidth),
+            Math.round(renderHeight),
+          );
+          ctx.restore();
+        }
+      } else if (hasDedicatedDirectionalBank) {
+        drawAnimationSprite(
           modularEnemy,
           animation,
           frame,
-          Math.round(-renderWidth / 2),
+          Math.round(renderLeft),
           Math.round(renderTop),
           Math.round(renderWidth),
           Math.round(renderHeight),
         );
-        ctx.restore();
       } else {
         drawDirectionalAnimationSprite(
           modularEnemy,
@@ -8242,7 +9787,7 @@
       }
       if (
         animation !== "death"
-        && viewFacing.direction !== "back"
+        && !legacyRearView
         && !equipmentBehindBody
       ) {
         drawProjectedWeapon();
@@ -8304,7 +9849,12 @@
     const x = Math.round(screenX - size / 2);
     const y = Math.round(H / 2 - size * 0.42);
     const spriteIndex = enemy.spriteIndex ?? (enemy.boss ? 5 : 0);
-    const fpsEnemy = fpsAnimationSetForRosterEntry(enemy.modularEntry);
+    const viewFacing = fpsEnemyViewDirection(enemy);
+    enemy.viewDirection = viewFacing.direction;
+    const fpsEnemy = fpsAnimationSetForRosterEntry(
+      enemy.modularEntry,
+      viewFacing.direction,
+    );
     const modularEnemy = fpsEnemy || animationSetForEnemy(enemy, spriteIndex);
     const modularAnimation = enemy.flash > 0
       ? "hurt"
@@ -8397,10 +9947,16 @@
 
     const missionDef = FPS_DEFS[game.fps.current] || FPS_DEFS[0];
     const altarAssetIndex = clamp(Number(missionDef.altarAssetIndex) || 0, 0, bitmapAssets.fpsAltars.length - 1);
-    const image = bitmapAssets.fpsAltars[altarAssetIndex];
-    const bounds = opaqueBoundsForImage(image);
+    const scheme = currentFpsMaterialScheme();
+    const eraObjective = scheme.atlasId === "contemporary" || scheme.atlasId === "cyber";
+    const image = eraObjective
+      ? fpsAtlasBitmap(scheme.atlasId)
+      : bitmapAssets.fpsAltars[altarAssetIndex];
+    const bounds = eraObjective
+      ? (bitmapReady(image) ? { w: 0.82, h: 1 } : null)
+      : opaqueBoundsForImage(image);
     const aspect = bounds ? bounds.w / bounds.h : 0.9;
-    const worldHeight = altarAssetIndex === 0 ? 0.72 : 1.02;
+    const worldHeight = eraObjective ? 1.08 : (altarAssetIndex === 0 ? 0.72 : 1.02);
     const projection = projectFpsEntity(distance, angle, worldHeight, aspect);
     const left = projection.screenX - projection.width / 2;
 
@@ -8419,19 +9975,55 @@
 
     if (!mission.purified) {
       const pulse = 0.22 + Math.sin(performance.now() / 170) * 0.06;
-      ctx.shadowColor = altarAssetIndex === 0
-        ? "rgba(116, 232, 152, .9)"
-        : "rgba(178, 70, 95, .85)";
+      ctx.shadowColor = scheme.atlasId === "contemporary"
+        ? "rgba(214, 72, 66, .78)"
+        : (scheme.atlasId === "cyber"
+          ? "rgba(52, 217, 239, .9)"
+          : (altarAssetIndex === 0
+            ? "rgba(116, 232, 152, .9)"
+            : "rgba(178, 70, 95, .85)"));
       ctx.shadowBlur = Math.max(5, projection.height * pulse);
     }
     if (bounds) {
-      drawOpaqueBitmap(
-        image,
-        left,
-        projection.top,
-        projection.width,
-        projection.height,
-      );
+      if (eraObjective) {
+        const [tileX, tileY, tileWidth, tileHeight] = fpsAtlasTileRect(
+          scheme.atlasId,
+          scheme.altarWall,
+        );
+        ctx.fillStyle = scheme.atlasId === "cyber" ? "#090d18" : "#191d21";
+        ctx.fillRect(
+          left - projection.width * 0.07,
+          projection.top - projection.height * 0.025,
+          projection.width * 1.14,
+          projection.height * 1.05,
+        );
+        ctx.drawImage(
+          image,
+          tileX,
+          tileY,
+          tileWidth,
+          tileHeight,
+          left,
+          projection.top,
+          projection.width,
+          projection.height,
+        );
+        ctx.fillStyle = scheme.atlasId === "cyber" ? "#23a9c4" : "#a33432";
+        ctx.fillRect(
+          left - projection.width * 0.12,
+          projection.groundY - projection.height * 0.06,
+          projection.width * 1.24,
+          projection.height * 0.06,
+        );
+      } else {
+        drawOpaqueBitmap(
+          image,
+          left,
+          projection.top,
+          projection.width,
+          projection.height,
+        );
+      }
     } else {
       ctx.fillStyle = "#1b1518";
       ctx.fillRect(left, projection.top + projection.height * 0.42, projection.width, projection.height * 0.58);
@@ -8569,7 +10161,13 @@
     dom.stamina.style.width = `${game.stamina}%`;
     dom.staminaText.textContent = Math.ceil(game.stamina);
     dom.ammo.textContent = game.ammo;
-    dom.seals.textContent = `${game.seals}/2`;
+    const campaignSeals = campaignSealState();
+    dom.seals.textContent = campaignSeals.total > 0
+      ? `${campaignSeals.completed}/${campaignSeals.total}`
+      : `${game.seals}/2`;
+    dom.seals.title = campaignSeals.total > 0
+      ? "Sceaux des sept missions FPS obligatoires"
+      : "Sceaux historiques";
     dom.score.textContent = game.kills;
     dom.mode.textContent = game.mode === "side" ? "VUE LATÉRALE" : "VUE SUBJECTIVE";
     const nearbyPortal = game.mode === "side" ? nearestSidePortal() : null;
@@ -8589,8 +10187,10 @@
     if (dom.hudWeapon) dom.hudWeapon.dataset.weapon = activeWeapon?.id || KATANA_IDS[0];
     if (dom.hudWeaponIcon) {
       const preview = activeWeapon?.sprites?.preview || weaponSpritePath(activeWeapon, "side");
-      if (preview && dom.hudWeaponIcon.getAttribute?.("src") !== preview) {
-        dom.hudWeaponIcon.src = preview;
+      const previewUrl = resolveAssetPath(preview);
+      if (previewUrl && dom.hudWeaponIcon.getAttribute?.("src") !== previewUrl) {
+        dom.hudWeaponIcon.crossOrigin = /^https?:\/\//i.test(previewUrl) ? "anonymous" : "";
+        dom.hudWeaponIcon.src = previewUrl;
       }
     }
 
@@ -8612,6 +10212,22 @@
         isMassiveEnemy(enemy) && isEnemyAlive(enemy));
       if (activeMassiveBoss) return "Abattre Aka-Ushi pour libérer la route du château";
       const activeArea = currentSideArea();
+      const activeObjective = activeArea?.objectives?.[0];
+      if (activeObjective) {
+        const state = campaignObjectiveProgress(activeObjective);
+        if (state.completed) return `${activeObjective.label} - accompli`;
+        if (activeObjective.completionMethod === "manual-targets") {
+          return `${activeObjective.label} (${state.progress}/${state.target}) - E sur les cibles`;
+        }
+        if (activeObjective.completionMethod === "checkpoint-reach") {
+          return `${activeObjective.label} - atteindre le foyer marque`;
+        }
+        if (activeObjective.completionMethod === "area-clear") {
+          const remaining = game.side.enemies.filter(isEnemyAlive).length;
+          return `${activeObjective.label} (${remaining} menace${remaining > 1 ? "s" : ""})`;
+        }
+        return activeObjective.label;
+      }
       if (activeArea?.objective) return activeArea.objective;
       const areaLabel = activeArea?.label;
       if (areaLabel && game.side.areaId !== sideAreaIdForChapter(game.chapter)) {
@@ -8624,7 +10240,9 @@
     const mission = currentMission();
     const remaining = mission.enemies.filter((e) => !e.dead).length;
     if (remaining) return `${mission.objective} (${remaining})`;
-    if (mission.purified && mission.optional) return "Foyer purifié — V pour revenir dans la zone";
+    if (mission.purified && (mission.optional || mission.campaignMission)) {
+      return "Foyer purifié — V pour revenir dans la zone";
+    }
     return `${mission.altarObjective} — E`;
   }
 
@@ -8712,6 +10330,18 @@
 
   function onKeyDown(event) {
     const k = event.key;
+    if (game.status === "campaign") {
+      if (k === "Escape" || k.toLowerCase() === "c") {
+        event.preventDefault();
+        closeCampaignScreen();
+      }
+      return;
+    }
+    if (k.toLowerCase() === "c" && ["playing", "paused"].includes(game.status)) {
+      event.preventDefault();
+      openCampaignScreen();
+      return;
+    }
     if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", " "].includes(k) && ["playing", "paused"].includes(game.status)) event.preventDefault();
     input.keys.add(k);
     input.keys.add(k.toLowerCase());
@@ -8764,6 +10394,8 @@
     else if (action === "weapon-next" || action === "weapon-swap") swapActiveWeapon();
     else if (action === "loadout") openLoadout();
     else if (action === "loadout-close") closeLoadout();
+    else if (action === "campaign") openCampaignScreen();
+    else if (action === "campaign-close") closeCampaignScreen();
     else if (action === "continue") continueGame();
     else if (action === "new-game") newGame();
     else if (action === "settings") window.KageCinematic?.openSettings?.();
@@ -8953,10 +10585,37 @@
     applyLoadout: (loadout) => applyPlayerLoadout(loadout, true),
     openLoadout,
     closeLoadout,
+    openCampaign: openCampaignScreen,
+    closeCampaign: closeCampaignScreen,
+    campaignAction: handleCampaignAction,
+    campaignSnapshot,
+    questDefinitions: () => QUEST_DEFINITIONS.map((entry) => ({
+      ...entry,
+      reward: { ...entry.reward },
+    })),
+    hubFacilities: () => Object.fromEntries(
+      Object.entries(HUB_FACILITIES).map(([id, entry]) => [id, { ...entry }]),
+    ),
+    campaignObjectiveResolvers: () => ({
+      boss: ["boss", "defeat-boss"],
+      clear: ["defense"],
+      manualTargets: CAMPAIGN_INTERACTION_OBJECTIVE_TYPES.filter(
+        (type) => !["breach", "defense", "investigate"].includes(type),
+      ),
+      interaction: CAMPAIGN_INTERACTION_OBJECTIVE_TYPES.filter(
+        (type) => !["breach", "defense", "investigate"].includes(type),
+      ),
+      purify: ["purify"],
+      checkpoint: ["investigate", "breach"],
+    }),
     interact,
     getState: () => ({
       status: game.status, mode: game.mode, chapter: game.chapter, health: game.health,
       stamina: game.stamina, ammo: game.ammo, seals: game.seals, kills: game.kills,
+      legacySeals: game.seals,
+      campaignSeals: campaignSealState().completed,
+      campaignSealTotal: campaignSealState().total,
+      contamination: game.contamination,
       ammoType: rangedAmmoType(currentRangedWeapon()),
       ammoByType: { ...game.ammoByType },
       weapon: game.activeWeaponId,
@@ -8964,6 +10623,7 @@
       activeWeaponSlot: game.activeWeaponSlot,
       loadout: { ...game.loadout, omamori: [...(game.loadout.omamori || [])] },
       sideAreaId: game.side.areaId,
+      campaignCompatibilityMode: game.campaignCompatibilityMode,
       visitedAreas: [...(game.side.visitedAreas || [])],
       nearbyPortal: nearestSidePortal()?.id || null,
       pendingTravel: game.pendingTravel ? { ...game.pendingTravel } : null,
@@ -8974,6 +10634,9 @@
       playerFps: { ...currentMission().player },
       fpsMissionId: currentMission().id,
       fpsOptional: currentMission().optional,
+      fpsCampaignMission: currentMission().campaignMission,
+      fpsMapIndex: currentMission().mapIndex,
+      fpsReturnAreaId: currentMission().returnAreaId,
       fpsPurified: currentMission().purified,
       fpsRemaining: currentMission().enemies.filter((e) => !e.dead).length,
       nearEntrance: isNearSideEntrance(),
@@ -8994,8 +10657,83 @@
       hitConfirm: game.hitConfirm,
     }),
     debug: {
+      campaignSnapshot,
+      campaignAction: handleCampaignAction,
+      progressionSnapshot: () => {
+        const profile = (() => {
+          try { return window.KageSave?.load?.() || {}; } catch (_) { return {}; }
+        })();
+        const light = playerAttackSpec(currentPlayerWeapon(), {
+          kind: "light",
+          comboStep: 1,
+        });
+        const heavy = playerAttackSpec(currentPlayerWeapon(), {
+          kind: "heavy",
+          comboStep: 1,
+        });
+        const ranged = rangedAttackSpec(currentRangedWeapon());
+        return {
+          services: progressionServiceEffects(profile),
+          contamination: Number(profile.contamination) || 0,
+          staminaRegenMultiplier: contaminationStaminaRegenMultiplier(),
+          mastery: {
+            ordinaryKill: masteryGainForKill(6, profile),
+            bossKill: masteryGainForKill(45, profile),
+          },
+          melee: {
+            weaponId: game.activeWeaponId,
+            upgradeLevel: light.upgradeLevel,
+            lightDamage: light.damage,
+            heavyDamage: heavy.damage,
+            postureDamage: light.postureDamage,
+            staminaCost: light.staminaCost,
+            sideReach: light.sideReach,
+            fpsReach: light.fpsReach,
+          },
+          ranged: {
+            weaponId: game.loadout?.ranged,
+            upgradeLevel: ranged.upgradeLevel,
+            damage: ranged.damage,
+            postureDamage: ranged.postureDamage,
+            cooldown: ranged.cooldown,
+            maxDistance: ranged.maxDistance,
+            maxAngle: ranged.maxAngle,
+          },
+          seals: campaignSealState(),
+          budget: progressionBudgetPreview(),
+          rankSMaxSeconds: CAMPAIGN_RANK_S_MAX_SECONDS,
+        };
+      },
+      campaignVisit: () => syncCampaignVisit(currentSideArea()),
+      campaignEvaluate: (reason, context = {}) =>
+        evaluateCampaignObjectives(String(reason || ""), context),
+      campaignQuestEvent: (eventName, context = {}) =>
+        advanceQuestProgress(String(eventName || ""), context),
+      assetLoadMetrics: () => ({
+        ...bitmapLoadMetrics,
+        sideAnimationSets: modularRoster.animationSets.size,
+        fpsAnimationSets: modularRoster.fpsAnimationSets.size,
+        weaponBitmaps: modularRoster.weaponBitmaps.size,
+        fpsWeaponAnimationSets: modularRoster.fpsWeaponAnimationSets.size,
+      }),
+      setCampaignCompatibility: (enabled) => {
+        game.campaignCompatibilityMode = Boolean(enabled);
+        return game.campaignCompatibilityMode;
+      },
+      gameplayPortalIds: () => currentSidePortals().map((portal) => portal.id),
+      persistActiveBosses: () => game.side.enemies
+        .filter((enemy) => enemy.boss)
+        .map((enemy) => ({
+          id: enemy.sourceId,
+          persisted: persistBossRuntime(enemy),
+          state: bossRuntimeSnapshot(enemy),
+        })),
       setMode: (mode) => mode === "fps" ? enterFps(game.chapter, false) : returnToSide(false),
       setHealth: (health) => { game.health = clamp(Number(health), 0, 100); },
+      setActiveCheckpoint: (checkpointId = "debug-checkpoint") => {
+        game.activeCheckpointId = String(checkpointId || "debug-checkpoint");
+        return game.activeCheckpointId;
+      },
       setPlayerCombat: (patch = {}) => {
         const allowed = [
           "stamina", "attackTimer", "attackCooldown", "guardTimer", "parryTimer",
@@ -9025,6 +10763,45 @@
         Object.assign(currentMission().player, patch);
         return { ...currentMission().player };
       },
+      fpsMissionSnapshot: () => {
+        const mission = currentMission();
+        const scheme = currentFpsMaterialScheme();
+        const definition = FPS_DEFS[game.fps.current] || FPS_DEFS[0];
+        const doorCells = Array.isArray(definition.doorCells)
+          ? definition.doorCells.map(([x, y]) => [x, y])
+          : [];
+        return {
+          id: mission.id,
+          mapIndex: mission.mapIndex,
+          materialProfile: scheme.id,
+          atlasId: scheme.atlasId,
+          floorTile: scheme.floorTile,
+          floorProjection: "world-uv-floor-cast",
+          doorCells,
+          invalidDoorCells: doorCells.filter(([x, y]) => mission.map[y]?.[x] !== "1"),
+          rows: mission.map.length,
+          columns: mission.map[0]?.length || 0,
+          startWalkable: isWalkable(
+            mission.map,
+            mission.player.x,
+            mission.player.y,
+            0.19,
+          ),
+          altarWalkable: isWalkable(
+            mission.map,
+            mission.altar.x,
+            mission.altar.y,
+            0.05,
+          ),
+          invalidEnemyPositions: mission.enemies
+            .map((enemy, index) => (
+              isWalkable(mission.map, enemy.x, enemy.y, fpsEnemyRadius(enemy))
+                ? null
+                : index
+            ))
+            .filter((index) => index !== null),
+        };
+      },
       lookFps: (deltaX, viewportWidth = W) => applyFpsLookDelta(deltaX, viewportWidth),
       renderTuning: () => ({
         enemyHurtScale: ENEMY_HURT_RENDER_SCALE,
@@ -9050,8 +10827,10 @@
         return window.KageGame.getState();
       },
       warpToPortal: (portalId) => {
-        const portal = currentSidePortals().find((entry) => entry.id === portalId);
+        const portal = currentSidePortals({ includeLegacy: true })
+          .find((entry) => entry.id === portalId);
         if (!portal) return null;
+        if (isLegacyCampaignShortcut(portal)) game.campaignCompatibilityMode = true;
         game.side.player.x = portal.approachX ?? portal.x - 24;
         game.side.player.y = SIDE_GROUND_Y - game.side.player.h;
         game.side.player.vx = 0;
@@ -9067,7 +10846,13 @@
         width: game.side.width,
         visitedAreas: [...(game.side.visitedAreas || [])],
         objectivePortalId: currentSideObjectivePortal()?.id || null,
-        portals: currentSidePortals().map((portal) => ({
+        objective: currentSideArea()?.objectives?.[0]
+          ? {
+              ...currentSideArea().objectives[0],
+              ...campaignObjectiveProgress(currentSideArea().objectives[0]),
+            }
+          : null,
+        portals: currentSidePortals({ includeLegacy: true }).map((portal) => ({
           id: portal.id,
           type: portal.type || "fps",
           mission: fpsMissionIndexForPortal(portal),
@@ -9075,7 +10860,12 @@
           destination: portal.destination ? { ...portal.destination } : null,
           requiresAction: true,
           locked: Boolean(sidePortalLockMessage(portal)),
+          lockMessage: sidePortalLockMessage(portal),
           blocksMovement: sidePortalBlocksMovement(portal),
+          legacyShortcut: isLegacyCampaignShortcut(portal),
+          objectiveId: portal.objectiveId || null,
+          objectiveTargetId: portal.objectiveTargetId || null,
+          objectiveTarget: Boolean(portal.objectiveTarget),
         })),
         platforms: currentSidePlatforms().map((platform) => ({ ...platform })),
         aliveEnemyIds: game.side.enemies
@@ -9246,7 +11036,11 @@
           entrancePassThrough: currentSideEntrance().collision === "passThrough",
           fps: {
             scheme: scheme.id,
+            atlasId: scheme.atlasId,
+            atlasSrc: window.KageLevels?.visualStandards?.fpsMaterials
+              ?.atlases?.[scheme.atlasId]?.src || null,
             floorTile: scheme.floorTile,
+            floorMaterial: scheme.semanticProfile?.floor || null,
             floorProjection: "world-uv-floor-cast",
             touchLook: Boolean(touchLookZone),
             wallTiles: {

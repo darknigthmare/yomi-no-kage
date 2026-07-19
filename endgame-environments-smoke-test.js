@@ -243,7 +243,7 @@ for (const marker of [
 }
 
 const indexSource = fs.readFileSync(absolute("index.html"), "utf8");
-assert.match(indexSource, /game\.js\?v=37/);
+assert.match(indexSource, /game\.js\?v=41/);
 
 console.log("Expansion environment smoke test passed.");
 console.log("  4 packs / 16 layers / 48 props / 48 platforms");

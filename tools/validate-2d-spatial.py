@@ -840,6 +840,114 @@ def validate_backdrop(zone: str, area: dict[str, Any]) -> list[Issue]:
     return []
 
 
+def validate_enemy_door_clearance(zone: str, area: dict[str, Any]) -> list[Issue]:
+    """Keep authored spawns and full patrol bands outside solid door planes."""
+
+    doors: list[tuple[str, float, float]] = []
+    for portal in area.get("portals", []):
+        if portal.get("collision") != "solidDoor":
+            continue
+        width = max(8.0, float(portal.get("blockWidth") or 18.0))
+        portal_x = portal.get("x")
+        block_x = portal.get("blockX")
+        if finite_number(block_x):
+            left = float(block_x)
+        elif finite_number(portal_x):
+            left = float(portal_x) - width / 2.0
+        else:
+            continue
+        doors.append((str(portal.get("id") or "<solidDoor>"), left, left + width))
+
+    if not doors:
+        return []
+
+    minimum = float(area.get("minX") or 0)
+    maximum = float(area.get("maxX") or area.get("width") or minimum)
+    platforms = {
+        str(platform.get("id")): platform
+        for platform in area.get("platforms", [])
+        if platform.get("id")
+    }
+    issues: list[Issue] = []
+    for enemy in area.get("enemies", []):
+        enemy_x = enemy.get("x")
+        if not finite_number(enemy_x):
+            continue
+        massive = (
+            enemy.get("presentationClass") == "massive"
+            or bool(enemy.get("profileId"))
+        )
+        width = float(enemy.get("w") or (128 if massive else 16))
+        spawn_left = float(enemy_x)
+        spawn_right = spawn_left + width
+
+        patrol = enemy.get("ai", {}).get("patrol", {})
+        if massive or enemy.get("boss"):
+            default_radius = 0.0
+        elif enemy.get("platformId"):
+            default_radius = 24.0
+        elif enemy.get("roster") == "special":
+            default_radius = 68.0
+        else:
+            default_radius = 54.0
+        radius = float(patrol.get("radius")) if finite_number(patrol.get("radius")) else default_radius
+
+        platform = platforms.get(str(enemy.get("platformId")))
+        navigation_minimum = minimum
+        navigation_maximum = maximum - width
+        if platform:
+            navigation_minimum = max(navigation_minimum, float(platform.get("x") or 0) + 2)
+            navigation_maximum = min(
+                navigation_maximum,
+                float(platform.get("x") or 0)
+                + float(platform.get("w") or 0)
+                - width
+                - 2,
+            )
+        patrol_left = (
+            float(patrol["minX"])
+            if finite_number(patrol.get("minX"))
+            else spawn_left - radius
+        )
+        patrol_right_x = (
+            float(patrol["maxX"])
+            if finite_number(patrol.get("maxX"))
+            else spawn_left + radius
+        )
+        patrol_left = max(navigation_minimum, patrol_left)
+        patrol_right = min(navigation_maximum, patrol_right_x) + width
+        subject = str(enemy.get("id") or "<enemy>")
+
+        for door_id, door_left, door_right in doors:
+            spawn_overlaps = spawn_left < door_right and spawn_right > door_left
+            patrol_overlaps = patrol_left < door_right and patrol_right > door_left
+            if spawn_overlaps:
+                issues.append(
+                    Issue(
+                        zone,
+                        "enemy.door.spawn",
+                        subject,
+                        (
+                            f"spawn {spawn_left:.1f}..{spawn_right:.1f} overlaps "
+                            f"{door_id} at {door_left:.1f}..{door_right:.1f}"
+                        ),
+                    )
+                )
+            if patrol_overlaps:
+                issues.append(
+                    Issue(
+                        zone,
+                        "enemy.door.patrol",
+                        subject,
+                        (
+                            f"patrol {patrol_left:.1f}..{patrol_right:.1f} crosses "
+                            f"{door_id} at {door_left:.1f}..{door_right:.1f}"
+                        ),
+                    )
+                )
+    return issues
+
+
 def validate(
     root: Path,
     levels: dict[str, Any],
@@ -871,6 +979,8 @@ def validate(
         "sprites": 0,
         "walls": 0,
         "fallbacks": 0,
+        "enemies": 0,
+        "solid_doors": 0,
     }
     fallback_issues, stats["fallbacks"] = validate_runtime_wall_fallbacks(root)
     issues.extend(fallback_issues)
@@ -878,6 +988,12 @@ def validate(
     for zone, area in areas.items():
         issues.extend(validate_backdrop(zone, area))
         issues.extend(validate_wall_coverage(zone, area))
+        issues.extend(validate_enemy_door_clearance(zone, area))
+        stats["enemies"] += len(area.get("enemies", []))
+        stats["solid_doors"] += sum(
+            portal.get("collision") == "solidDoor"
+            for portal in area.get("portals", [])
+        )
         for prop in area.get("props", []):
             stats["props"] += 1
             if is_wall_prop(prop):
@@ -915,7 +1031,8 @@ def print_report(issues: list[Issue], stats: dict[str, int]) -> None:
     print(
         f"Analyse: {stats['zones']} zones, {stats['props']} placements, "
         f"{stats['sprites']} sprites uniques, {stats['walls']} modules de mur, "
-        f"{stats['fallbacks']} recadrages file://."
+        f"{stats['fallbacks']} recadrages file://, {stats['enemies']} ennemis, "
+        f"{stats['solid_doors']} portes solides."
     )
 
     by_zone: dict[str, list[Issue]] = defaultdict(list)

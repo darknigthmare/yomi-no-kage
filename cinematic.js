@@ -1,6 +1,8 @@
 (() => {
   "use strict";
 
+  const resolveAssetPath = (path) => window.KageAssets?.resolve?.(path) || path;
+
   const shots = [
     {
       image: "assets/generated/cinematics/prologue-01-peste.png",
@@ -469,7 +471,9 @@
     if (preloadedShots.has(index)) return preloadedShots.get(index);
     const loader = new Image();
     loader.decoding = "async";
-    loader.src = shots[index].image;
+    const source = resolveAssetPath(shots[index].image);
+    if (/^https?:\/\//i.test(source)) loader.crossOrigin = "anonymous";
+    loader.src = source;
     const ready = typeof loader.decode === "function"
       ? loader.decode().catch(() => undefined)
       : new Promise((resolve) => {
@@ -489,12 +493,14 @@
     await preload?.ready;
     if (!active || token !== renderToken) return;
 
-    image.src = shot.image;
+    const source = resolveAssetPath(shot.image);
+    if (/^https?:\/\//i.test(source)) image.crossOrigin = "anonymous";
+    image.src = source;
     try { await image.decode(); } catch (_) { /* Le texte reste lisible si une image échoue. */ }
     if (!active || token !== renderToken) return;
 
     screen.dataset.motion = shot.motion;
-    screen.style.setProperty("--shot-image", `url("${shot.image}")`);
+    screen.style.setProperty("--shot-image", `url("${source}")`);
     screen.style.setProperty("--shot-duration", `${shot.duration + 900}ms`);
     image.alt = shot.alt;
     counter.textContent = `PLAN ${index + 1} / ${shots.length}`;
@@ -715,6 +721,7 @@
     titleScreen,
     document.getElementById("briefing-screen"),
     document.getElementById("dojo-screen"),
+    document.getElementById("campaign-screen"),
     document.getElementById("pause-screen"),
     document.getElementById("end-screen"),
   ].filter(Boolean);

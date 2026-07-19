@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "characterId": "new-modern-riot-host",
+  "generationTool": "OpenAI ImageGen built-in",
+  "role": "identity-preserving front/back FPS animation atlases",
+  "files": {
+    "front": {
+      "file": "front-imagegen-raw.png",
+      "callId": "call_BJexjiCnnlcGJaUg6fJ9wWxw",
+      "used": false,
+      "runtimeUse": "source-reference-only"
+    },
+    "back": {
+      "file": "back-imagegen-raw.png",
+      "callId": "call_QWAFSfZEPoS3J8gbSdlGmqQw",
+      "used": false,
+      "runtimeUse": "source-reference-only"
+    }
+  },
+  "promptContract": {
+    "layout": "6 columns x 5 action rows",
+    "actions": [
+      "idle",
+      "move",
+      "attack",
+      "hurt",
+      "death"
+    ],
+    "identity": "preserve referenced 2D enemy identity",
+    "view": "strict front or strict rear",
+    "modularity": "both hands empty; no baked weapon or prop",
+    "background": "flat removable chroma key"
+  },
+  "runtimeDecision": "rejected-for-cross-direction-frame-phase-incoherence",
+  "runtimeSource": "single-lateral-frame-locked"
+}

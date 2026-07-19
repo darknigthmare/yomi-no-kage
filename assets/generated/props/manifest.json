@@ -388,6 +388,76 @@
         "Materials/textures: cedar grain, paper fibers, wet granite, woven rush, lime plaster, bamboo lath, lacquer, infected roots",
         "Constraints: Japan Kan'ei era, year 1638; exactly 8 isolated equal square tiles; background and all gutters must remain perfectly uniform #ff00ff; each texture should be repeat-friendly with no central object or directional light hotspot; no objects projecting beyond tile edges; no text, writing, kanji, symbols, UI, numbers, grid lines, frame, logo or watermark"
       ]
+    },
+    {
+      "id": "fps-modern-texture-atlas",
+      "nom": "Textures du laboratoire metropolitain de Tokyo",
+      "type": "atlas_textures_opaque",
+      "usage": "Banque semantique exclusive de la mission FPS contemporaine : sol, enceinte, circulation, chambre, porte et confinement.",
+      "outil": "OpenAI imagegen integre, puis normalisation locale deterministe",
+      "grille": {
+        "colonnes": 4,
+        "lignes": 2,
+        "largeur_atlas": 1536,
+        "hauteur_atlas": 768,
+        "largeur_tuile": 384,
+        "hauteur_tuile": 384
+      },
+      "paths": {
+        "source_openai": "assets/generated/props/fps-modern-texture-atlas-source-openai.png",
+        "runtime": "assets/generated/props/fps-modern-texture-atlas.png"
+      },
+      "tiles": [
+        "modern-wet-asphalt",
+        "modern-poured-concrete",
+        "modern-service-steel",
+        "modern-subway-ceramic",
+        "modern-lab-floor",
+        "modern-stained-concrete",
+        "modern-quarantine-door",
+        "modern-containment-chamber"
+      ],
+      "contraintes": [
+        "projection orthographique frontale",
+        "roles materiels fixes",
+        "aucun materiau feodal",
+        "aucun choix aleatoire au rendu"
+      ]
+    },
+    {
+      "id": "fps-cyber-texture-atlas",
+      "nom": "Textures de la matrice du Yomi de Neo-Edo",
+      "type": "atlas_textures_opaque",
+      "usage": "Banque semantique exclusive de la mission FPS cyber : sol techno, blindage, machines, porte neon et noyau du Yomi.",
+      "outil": "OpenAI imagegen integre, puis normalisation locale deterministe",
+      "grille": {
+        "colonnes": 4,
+        "lignes": 2,
+        "largeur_atlas": 1536,
+        "hauteur_atlas": 768,
+        "largeur_tuile": 384,
+        "hauteur_tuile": 384
+      },
+      "paths": {
+        "source_openai": "assets/generated/props/fps-cyber-texture-atlas-source-openai.png",
+        "runtime": "assets/generated/props/fps-cyber-texture-atlas.png"
+      },
+      "tiles": [
+        "cyber-hex-floor",
+        "cyber-titanium-conduit",
+        "cyber-machine-bay",
+        "cyber-data-panel",
+        "cyber-guide-floor",
+        "cyber-armored-bulkhead",
+        "cyber-neon-shrine-door",
+        "cyber-yomi-core"
+      ],
+      "contraintes": [
+        "projection orthographique frontale",
+        "roles materiels fixes",
+        "aucun materiau feodal",
+        "aucun choix aleatoire au rendu"
+      ]
     }
   ]
 }
