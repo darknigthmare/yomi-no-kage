@@ -14,8 +14,17 @@
   const PLAYER_GROUND_Y = 273;
 
   const DEPTH_BANDS = {
+    "distant-architecture": {
+      layer: "back",
+      groundY: 290,
+      baselineY: 290,
+      perspectiveScale: 0.9,
+      depthBias: -60,
+      collision: "none",
+    },
     "gameplay-ground": {
       layer: "ground",
+      groundY: HORIZONTAL_GROUND_Y,
       baselineY: HORIZONTAL_GROUND_Y,
       perspectiveScale: 1,
       depthBias: -50,
@@ -23,6 +32,7 @@
     },
     "gameplay-surface": {
       layer: "world",
+      groundY: HORIZONTAL_GROUND_Y,
       baselineStrategy: "authoredY",
       perspectiveScale: 1,
       depthBias: -5,
@@ -30,6 +40,7 @@
     },
     "back-architecture": {
       layer: "back",
+      groundY: HORIZONTAL_GROUND_Y,
       baselineY: HORIZONTAL_GROUND_Y,
       perspectiveScale: 1,
       depthBias: -30,
@@ -37,6 +48,7 @@
     },
     "gameplay-architecture": {
       layer: "back",
+      groundY: HORIZONTAL_GROUND_Y,
       baselineY: HORIZONTAL_GROUND_Y,
       perspectiveScale: 1,
       depthBias: -20,
@@ -44,6 +56,7 @@
     },
     "gameplay-prop": {
       layer: "world",
+      groundY: HORIZONTAL_GROUND_Y,
       baselineY: HORIZONTAL_GROUND_Y,
       perspectiveScale: 1,
       depthBias: -4,
@@ -51,6 +64,7 @@
     },
     "world-mid": {
       layer: "world",
+      groundY: HORIZONTAL_GROUND_Y,
       baselineY: HORIZONTAL_GROUND_Y,
       perspectiveScale: 1,
       depthBias: 0,
@@ -58,6 +72,7 @@
     },
     "world-near": {
       layer: "world",
+      groundY: HORIZONTAL_GROUND_Y,
       baselineY: 302,
       perspectiveScale: 1.02,
       depthBias: 10,
@@ -65,6 +80,7 @@
     },
     foreground: {
       layer: "front",
+      groundY: HORIZONTAL_GROUND_Y,
       baselineY: 304,
       perspectiveScale: 1.05,
       depthBias: 20,
@@ -108,6 +124,22 @@
       index += 1;
     }
     return props;
+  }
+
+  function districtRoofline(idPrefix, placements, options = {}) {
+    return placements.map(([file, x, width], index) => ({
+      id: `${idPrefix}-${String(index + 1).padStart(2, "0")}`,
+      file,
+      x,
+      width,
+      layer: "back",
+      bottomY: options.bottomY ?? 290,
+      depthBand: "distant-architecture",
+      depthBias: options.depthBias ?? -60,
+      perspectiveScale: options.perspectiveScale ?? 0.9,
+      compositionRole: "second-plane-building",
+      groundAnchor: [0.5, 1],
+    }));
   }
 
   const SURFACE_PROFILES = {
@@ -231,6 +263,7 @@
 
   const KageLevels = {
     schema: 2,
+    buildId: "20260719-street-composition-v2",
     campaignId: "yomi-no-kage",
     startAreaId: "kurokawa-main-street",
     startSpawnId: "prologue",
@@ -701,6 +734,18 @@
           },
         ],
         props: [
+          ...districtRoofline("main-roofline", [
+            ["minka-tuiles-intacte", 18, 158],
+            ["kura-entrepot-riz", 286, 138],
+            ["minka-chaume-brulee", 505, 156],
+            ["minka-tuiles-intacte", 780, 152],
+            ["kura-entrepot-riz", 1050, 142],
+            ["minka-chaume-brulee", 1325, 154],
+            ["minka-tuiles-intacte", 1605, 156],
+            ["kura-entrepot-riz", 1890, 142],
+            ["minka-chaume-brulee", 2160, 154],
+            ["tour-guet-kurokawa", 2380, 72],
+          ]),
           ...architectureRun(
             "main-west-plaster",
             0,
@@ -940,6 +985,17 @@
           },
         ],
         props: [
+          ...districtRoofline("back-roofline", [
+            ["kura-entrepot-riz", 20, 142],
+            ["minka-chaume-brulee", 300, 154],
+            ["minka-tuiles-intacte", 585, 156],
+            ["kura-entrepot-riz", 875, 142],
+            ["minka-tuiles-intacte", 1150, 154],
+            ["tour-guet-kurokawa", 1450, 70],
+            ["kura-entrepot-riz", 1725, 145],
+            ["minka-chaume-brulee", 2010, 156],
+            ["minka-tuiles-intacte", 2290, 152],
+          ]),
           ...architectureRun(
             "back-kura-quarter",
             0,
@@ -1121,6 +1177,14 @@
           },
         ],
         props: [
+          ...districtRoofline("market-roofline", [
+            ["minka-tuiles-intacte", 20, 158],
+            ["kura-entrepot-riz", 300, 142],
+            ["minka-chaume-brulee", 575, 156],
+            ["minka-tuiles-intacte", 850, 158],
+            ["tour-guet-kurokawa", 2180, 72],
+            ["kura-entrepot-riz", 2380, 118],
+          ]),
           ...architectureRun(
             "market-quarantine-line",
             0,
@@ -1413,11 +1477,11 @@
           {
             id: "court-gate-roof",
             x: 1695,
-            y: 242,
+            y: 183,
             w: 170,
             h: 8,
-            visualHeight: 30,
-            tile: "roof",
+            visualHeight: 24,
+            visual: false,
             owner: "lower-court-gate",
             surface: "roofTile",
             collision: "oneWay",
@@ -1475,6 +1539,16 @@
           },
         ],
         props: [
+          ...districtRoofline(
+            "lower-court-skyline",
+            [
+              ["tour-chateau", 120, 145],
+              ["tour-chateau", 690, 150],
+              ["tour-chateau", 1370, 150],
+              ["tour-chateau", 2190, 145],
+            ],
+            { bottomY: 290, perspectiveScale: 0.84, depthBias: -65 },
+          ),
           ...architectureRun(
             "lower-court-rampart",
             0,
@@ -1484,10 +1558,10 @@
             { overlap: 10, depthBias: -35 },
           ),
           { id: "lower-court-tower", file: "tour-chateau", x: 990, width: 180, layer: "back" },
-          { id: "lower-court-brazier", file: "brasero-fer", x: 1320, width: 32, layer: "front", bottomY: 304 },
+          { id: "lower-court-brazier", file: "brasero-fer", x: 1608, width: 32, layer: "front" },
           { id: "lower-court-gate", file: "porte-chateau", x: 1680, width: 190, layer: "back" },
           { id: "lower-court-pillar", file: "pilier-cedre", x: 1910, width: 48, layer: "back" },
-          { id: "lower-court-brazier-east", file: "brasero-fer", x: 1968, width: 32, layer: "front", bottomY: 304 },
+          { id: "lower-court-brazier-east", file: "brasero-fer", x: 1968, width: 32, layer: "front" },
           { id: "lower-court-roots", file: "racines-donjon", x: 2045, width: 80, layer: "world" },
         ],
         portals: [
@@ -1684,8 +1758,8 @@
           { id: "residence-alcove", file: "alcove-tatami", x: 470, width: 190, layer: "back", bottomY: 300, depthBias: -15 },
           { id: "residence-stairs", file: "escalier-bois", x: 620, width: 140, layer: "world" },
           { id: "residence-armor", file: "armure-vide", x: 920, width: 42, layer: "world" },
-          { id: "residence-screen", file: "paravent-dechire", x: 1180, width: 96, layer: "front", bottomY: 304 },
-          { id: "residence-brazier", file: "brasero-fer", x: 1810, width: 34, layer: "front", bottomY: 304 },
+          { id: "residence-screen", file: "paravent-dechire", x: 1870, width: 96, layer: "front" },
+          { id: "residence-brazier", file: "brasero-fer", x: 1810, width: 34, layer: "front" },
           { id: "residence-rack", file: "ratelier-vide", x: 2000, width: 88, layer: "world" },
         ],
         portals: [
@@ -1919,9 +1993,9 @@
           { id: "donjon-tower", file: "tour-chateau", x: 260, width: 220, layer: "back" },
           { id: "donjon-stairs", file: "escalier-bois", x: 420, width: 150, layer: "world" },
           { id: "donjon-armor", file: "armure-vide", x: 1040, width: 42, layer: "world" },
-          { id: "donjon-screen", file: "paravent-dechire", x: 1250, width: 98, layer: "front", bottomY: 304 },
+          { id: "donjon-screen", file: "paravent-dechire", x: 2320, width: 98, layer: "front" },
           { id: "donjon-roots-west", file: "racines-donjon", x: 1520, width: 96, layer: "world" },
-          { id: "donjon-brazier", file: "brasero-fer", x: 1780, width: 36, layer: "front", bottomY: 304 },
+          { id: "donjon-brazier", file: "brasero-fer", x: 320, width: 36, layer: "front" },
         ],
         portals: [
           {
@@ -2111,8 +2185,8 @@
       );
       const band = DEPTH_BANDS[depthBand] || DEPTH_BANDS["world-mid"];
       prop.depthBand = depthBand;
-      prop.bottomY = prop.bottomY ?? band.baselineY;
-      prop.baselineY = prop.baselineY ?? prop.bottomY;
+      prop.bottomY = prop.visualGroundY ?? band.groundY ?? prop.bottomY ?? band.baselineY;
+      prop.baselineY = prop.baselineY ?? band.baselineY ?? prop.bottomY;
       prop.baseline = prop.baseline || `ground-${prop.bottomY}`;
       prop.perspectiveScale = prop.perspectiveScale ?? band.perspectiveScale;
       prop.depthBias = Number.isFinite(prop.depthBias)

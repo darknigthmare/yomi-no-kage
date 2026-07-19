@@ -515,34 +515,83 @@ function findAreaProp(propId) {
     );
   });
 
+  await check("niveau authored obligatoire sans fallback legacy silencieux", () => {
+    assert.match(gameSource, /REQUIRED_LEVEL_BUILD_ID/);
+    assert.match(gameSource, /levelContractValid/);
+    assert.match(gameSource, /level-data-error/);
+    assert.match(gameSource, /previewParams\.has\("x"\)/);
+    assert.match(gameSource, /preview-area-error/);
+    assert.match(gameSource, /previewArea\.chapterId === "castle"/);
+    const currentProps = functionSource("currentWorldProps");
+    assert.match(currentProps, /ALLOW_LEGACY_LAYOUT/);
+    assert.match(currentProps, /coherentFallbackWorldProps/);
+    assert.match(
+      functionSource("drawSideEntranceWorld"),
+      /drawPortalDepthVoid/,
+      "Chaque passage doit masquer le mur derrière son ouverture",
+    );
+  });
+
+  await check("quartiers composés avec bâtiments continus au second plan", () => {
+    const expectedMinimums = {
+      "kurokawa-main-street": 8,
+      "kurokawa-back-street": 8,
+      "kurokawa-market-east": 6,
+      "castle-lower-court": 4,
+    };
+    for (const [areaId, minimum] of Object.entries(expectedMinimums)) {
+      const area = KageLevels.areas[areaId];
+      const buildings = area.props.filter((prop) =>
+        prop.compositionRole === "second-plane-building");
+      assert.ok(
+        buildings.length >= minimum,
+        `${areaId} n'a que ${buildings.length} bâtiments au second plan`,
+      );
+      assert.ok(
+        Math.min(...buildings.map((prop) => prop.x)) <= area.width * 0.08,
+        `${areaId} laisse son début sans second plan`,
+      );
+      assert.ok(
+        Math.max(...buildings.map((prop) => prop.x + prop.width)) >= area.width * 0.88,
+        `${areaId} laisse sa fin sans second plan`,
+      );
+      for (const building of buildings) {
+        assert.equal(building.depthBand, "distant-architecture");
+        assert.ok(building.depthBias <= -60);
+        assert.equal(building.layer, "back");
+        assert.equal(building.bottomY, 290);
+      }
+    }
+  });
+
   await check("layers et bottomY des props de profondeur cohérents", () => {
     const expected = {
       "main-well": {
-        layer: "world", bottomY: 302, depthBand: "world-near", depthBias: 10,
+        layer: "world", bottomY: 300, baselineY: 302, depthBand: "world-near", depthBias: 10,
       },
       "back-well": {
-        layer: "world", bottomY: 302, depthBand: "world-near", depthBias: 10,
+        layer: "world", bottomY: 300, baselineY: 302, depthBand: "world-near", depthBias: 10,
       },
       "market-well": {
-        layer: "world", bottomY: 302, depthBand: "world-near", depthBias: 10,
+        layer: "world", bottomY: 300, baselineY: 302, depthBand: "world-near", depthBias: 10,
       },
       "road-altar": {
-        layer: "world", bottomY: 302, depthBand: "world-near", depthBias: 10,
+        layer: "world", bottomY: 300, baselineY: 302, depthBand: "world-near", depthBias: 10,
       },
       "lower-court-brazier": {
-        layer: "front", bottomY: 304, depthBand: "foreground", depthBias: 20,
+        layer: "front", bottomY: 300, baselineY: 304, depthBand: "foreground", depthBias: 20,
       },
       "residence-brazier": {
-        layer: "front", bottomY: 304, depthBand: "foreground", depthBias: 20,
+        layer: "front", bottomY: 300, baselineY: 304, depthBand: "foreground", depthBias: 20,
       },
       "donjon-brazier": {
-        layer: "front", bottomY: 304, depthBand: "foreground", depthBias: 20,
+        layer: "front", bottomY: 300, baselineY: 304, depthBand: "foreground", depthBias: 20,
       },
       "residence-screen": {
-        layer: "front", bottomY: 304, depthBand: "foreground", depthBias: 20,
+        layer: "front", bottomY: 300, baselineY: 304, depthBand: "foreground", depthBias: 20,
       },
       "donjon-screen": {
-        layer: "front", bottomY: 304, depthBand: "foreground", depthBias: 20,
+        layer: "front", bottomY: 300, baselineY: 304, depthBand: "foreground", depthBias: 20,
       },
     };
     for (const [id, contract] of Object.entries(expected)) {
@@ -552,6 +601,7 @@ function findAreaProp(propId) {
         {
           layer: found.prop.layer,
           bottomY: found.prop.bottomY,
+          baselineY: found.prop.baselineY,
           depthBand: found.prop.depthBand,
           depthBias: found.prop.depthBias,
         },
@@ -581,9 +631,11 @@ function findAreaProp(propId) {
         );
         if (prop.bottomY !== undefined) {
           assert.ok(Number.isFinite(prop.bottomY), `${area.id}/${prop.id} a un bottomY invalide`);
-          assert.ok(
-            prop.bottomY >= 300 && prop.bottomY <= 304,
-            `${area.id}/${prop.id} est hors de la profondeur de sol`,
+          const expectedGround = prop.depthBand === "distant-architecture" ? 290 : 300;
+          assert.equal(
+            prop.bottomY,
+            expectedGround,
+            `${area.id}/${prop.id} ne touche pas son plan de sol visuel`,
           );
         }
       }

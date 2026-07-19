@@ -3,6 +3,8 @@ import http from "node:http";
 import https from "node:https";
 
 const baseUrl = process.argv[2] || "http://127.0.0.1:8765/";
+const expectedLevelBuildId = "20260719-street-composition-v2";
+const indexSource = fs.readFileSync("index.html", "utf8");
 const registry = JSON.parse(fs.readFileSync("assets/modular/registry.json", "utf8"));
 const catalog = JSON.parse(fs.readFileSync("assets/modular/catalog.json", "utf8"));
 const refs = new Set([
@@ -23,6 +25,10 @@ const refs = new Set([
   "assets/generated/cinematics/prologue-05-serment.png",
   "assets/generated/cinematics/prologue-06-kurokawa.png",
 ]);
+for (const match of indexSource.matchAll(/\b(?:src|href)=["']([^"'#]+)["']/gi)) {
+  const ref = match[1];
+  if (!/^(?:[a-z]+:|\/\/|data:)/i.test(ref)) refs.add(ref);
+}
 
 for (const asset of catalog.assets) refs.add(asset.file);
 for (const character of registry.characters) {
@@ -66,6 +72,26 @@ function head(url) {
   });
 }
 
+function getText(url) {
+  return new Promise((resolve, reject) => {
+    const client = url.protocol === "https:" ? https : http;
+    const request = client.get(url, {
+      agent: false,
+      headers: { Connection: "close" },
+    }, (response) => {
+      const chunks = [];
+      response.on("data", (chunk) => chunks.push(chunk));
+      response.once("end", () => resolve({
+        ok: response.statusCode >= 200 && response.statusCode < 300,
+        status: response.statusCode,
+        text: Buffer.concat(chunks).toString("utf8"),
+      }));
+    });
+    request.setTimeout(10_000, () => request.destroy(new Error("timeout")));
+    request.once("error", reject);
+  });
+}
+
 async function worker() {
   while (cursor < urls.length) {
     const file = urls[cursor];
@@ -88,6 +114,45 @@ async function worker() {
 }
 
 await Promise.all(Array.from({ length: 4 }, worker));
+try {
+  const liveIndex = await getText(new URL("index.html", baseUrl));
+  if (!liveIndex.ok) {
+    errors.push({ file: "index.html", contract: "GET", status: liveIndex.status });
+  } else {
+    const levelScript = liveIndex.text.match(
+      /<script[^>]+src=["']([^"']*level-data\.js[^"']*)["']/i,
+    )?.[1];
+    const gameScript = liveIndex.text.match(
+      /<script[^>]+src=["']([^"']*game\.js[^"']*)["']/i,
+    )?.[1];
+    if (!levelScript) {
+      errors.push({ file: "index.html", contract: "level-data script absent" });
+    } else {
+      const liveLevels = await getText(new URL(levelScript, baseUrl));
+      if (!liveLevels.ok || !liveLevels.text.includes(expectedLevelBuildId)) {
+        errors.push({
+          file: levelScript,
+          contract: `buildId ${expectedLevelBuildId}`,
+          status: liveLevels.status,
+        });
+      }
+    }
+    if (!gameScript) {
+      errors.push({ file: "index.html", contract: "game script absent" });
+    } else {
+      const liveGame = await getText(new URL(gameScript, baseUrl));
+      if (!liveGame.ok || !liveGame.text.includes(expectedLevelBuildId)) {
+        errors.push({
+          file: gameScript,
+          contract: `moteur compatible ${expectedLevelBuildId}`,
+          status: liveGame.status,
+        });
+      }
+    }
+  }
+} catch (error) {
+  errors.push({ file: "runtime-contract", error: error.message });
+}
 console.log(JSON.stringify({
   baseUrl,
   checked: urls.length,

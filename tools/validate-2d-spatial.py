@@ -597,7 +597,7 @@ def validate_spatial_fields(
         )
 
     bottom_y = prop.get("bottomY")
-    expected_bottom = band.get("baselineY")
+    expected_bottom = band.get("groundY", band.get("baselineY"))
     if not finite_number(bottom_y):
         issues.append(
             Issue(
@@ -615,12 +615,13 @@ def validate_spatial_fields(
                 subject,
                 (
                     f"bottomY={float(bottom_y):g} conflicts with {band_id!r} "
-                    f"baselineY={float(expected_bottom):g}"
+                    f"groundY={float(expected_bottom):g}"
                 ),
             )
         )
 
     baseline_y = prop.get("baselineY")
+    expected_baseline = band.get("baselineY", expected_bottom)
     if not finite_number(baseline_y):
         issues.append(
             Issue(
@@ -630,13 +631,19 @@ def validate_spatial_fields(
                 f"baselineY must be finite, got {baseline_y!r}",
             )
         )
-    elif finite_number(bottom_y) and abs(float(baseline_y) - float(bottom_y)) > BASELINE_TOLERANCE_PX:
+    elif (
+        finite_number(expected_baseline)
+        and abs(float(baseline_y) - float(expected_baseline)) > BASELINE_TOLERANCE_PX
+    ):
         issues.append(
             Issue(
                 zone,
-                "baseline_y.bottom_mismatch",
+                "baseline_y.band_mismatch",
                 subject,
-                f"baselineY={baseline_y:g} and bottomY={bottom_y:g} disagree",
+                (
+                    f"baselineY={baseline_y:g} conflicts with {band_id!r} "
+                    f"baselineY={float(expected_baseline):g}"
+                ),
             )
         )
     return issues

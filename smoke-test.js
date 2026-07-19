@@ -88,6 +88,7 @@ global.fetch = async (url) => {
   return { ok: false, status: 404, json: async () => ({}) };
 };
 
+require("./level-data.js");
 require("./game.js");
 
 (async () => {
@@ -99,6 +100,22 @@ require("./game.js");
   assert.equal(state.mode, "side");
   assert.equal(state.chapter, 0);
   assert.equal(state.seals, 0);
+  const initialWorld = global.KageGame.debug.worldSnapshot();
+  assert.equal(initialWorld.areaId, "kurokawa-main-street");
+  assert.equal(initialWorld.zoneKind, "outdoor");
+  assert.equal(initialWorld.propSource, "kage-levels");
+  assert.equal(initialWorld.levelSchema, 2);
+  assert.equal(initialWorld.levelBuildId, "20260719-street-composition-v2");
+  assert.equal(
+    initialWorld.props.length,
+    global.KageLevels.areas["kurokawa-main-street"].props.length,
+    "Le smoke test doit valider le niveau authored, jamais le fallback legacy",
+  );
+  assert.ok(
+    initialWorld.props.filter((prop) =>
+      prop.compositionRole === "second-plane-building").length >= 8,
+    "La grande rue doit posséder une vraie ligne de bâtiments au second plan",
+  );
   assert.equal(global.KageGame.debug.assetStatus().roster.ready, true);
   assert.equal(
     global.KageGame.debug.assetStatus().roster.characters,
@@ -175,9 +192,14 @@ require("./game.js");
   }
   const well = villageWorld.props.find((prop) => prop.file === "puits-pierre");
   assert.deepEqual(
-    { layer: well.layer, bottomY: well.bottomY, w: well.w },
-    { layer: "back", bottomY: 294, w: 48 },
-    "Le puits doit rester dans le plan arrière, à l'échelle du sol",
+    {
+      layer: well.layer,
+      bottomY: well.bottomY,
+      baselineY: well.baselineY,
+      w: well.w,
+    },
+    { layer: "world", bottomY: 300, baselineY: 302, w: 48 },
+    "Le puits touche le sol tout en restant trié dans le plan proche",
   );
   const overlaps = (a, b) => a.x < b.x + b.w && a.x + a.w > b.x;
   const overlapsBody = (a, b) =>
@@ -260,9 +282,7 @@ require("./game.js");
   // Avec le graphe complet, la campagne traverse désormais ruelles, marché,
   // cour et résidence. Ce test unitaire se place au dernier checkpoint pour
   // vérifier isolément que la porte FPS finale reste une action manuelle.
-  if (global.KageLevels) {
-    global.KageGame.debug.setSideArea("castle-donjon", "finalCheckpoint");
-  }
+  global.KageGame.debug.setSideArea("castle-donjon", "finalCheckpoint");
 
   // La seconde porte suit le même flux manuel après la transition.
   for (let i = 0; i < 4; i += 1) global.KageGame.debug.step(0.25);
@@ -304,7 +324,7 @@ require("./game.js");
     villageWorld.fps.scheme,
     "Le sanctuaire et le donjon doivent conserver leur propre palette de sol",
   );
-  assert.equal(castleWorld.bounds.minX, global.KageLevels ? 6 : 960);
+  assert.equal(castleWorld.bounds.minX, 6);
   assert.ok(
     castleWorld.platforms.every((platform) =>
       castleWorld.frontPropFootprints.every((prop) => !overlaps(platform, prop))),

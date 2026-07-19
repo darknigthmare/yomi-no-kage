@@ -19,6 +19,41 @@
   const TAU = Math.PI * 2;
   const FOV = Math.PI / 3;
   const ASSET_VERSION = "20260718-coherence-v1";
+  const REQUIRED_LEVEL_SCHEMA = 2;
+  const REQUIRED_LEVEL_BUILD_ID = "20260719-street-composition-v2";
+  const ALLOW_LEGACY_LAYOUT = typeof location !== "undefined"
+    && new URLSearchParams(location.search).get("legacy-layout") === "1";
+  const levelContract = typeof window !== "undefined" ? window.KageLevels : null;
+  const levelContractValid = Boolean(
+    levelContract
+    && levelContract.schema === REQUIRED_LEVEL_SCHEMA
+    && levelContract.buildId === REQUIRED_LEVEL_BUILD_ID
+    && levelContract.areas?.[levelContract.startAreaId],
+  );
+  if (!levelContractValid && !ALLOW_LEGACY_LAYOUT) {
+    document.body.dataset.levelDataError = "incompatible";
+    const panel = document.createElement("div");
+    panel.id = "level-data-error";
+    panel.textContent = "DONNÉES DE NIVEAU INCOMPATIBLES — rechargez Yomi no Kage";
+    Object.assign(panel.style, {
+      position: "fixed",
+      inset: "0",
+      zIndex: "99999",
+      display: "grid",
+      placeItems: "center",
+      padding: "24px",
+      color: "#f2d6a2",
+      background: "#090a0f",
+      font: "700 16px monospace",
+      textAlign: "center",
+    });
+    document.body.appendChild(panel);
+    throw new Error(
+      `KageLevels ${REQUIRED_LEVEL_BUILD_ID} requis; `
+      + `reçu ${levelContract?.buildId || "absent"}`,
+    );
+  }
+  document.body.dataset.levelBuildId = levelContract?.buildId || "legacy-explicit";
   const PLAYER_ATTACK_DURATION = 0.34;
   const PLAYER_ATTACK_ACTIVE_AT = 0.38;
   const PLAYER_HURT_DURATION = 0.72;
@@ -37,6 +72,7 @@
   const SIDE_ENEMY_BASELINE_OFFSET = 4;
   const SIDE_GROUND_Y = 300;
   const SIDE_GROUND_DEPTH = 60;
+  const SIDE_GROUND_VISUAL_OVERLAP = 1;
   const SIDE_WALK_DISTANCE_PER_FRAME = 64 / 6;
   const FPS_TOUCH_LOOK_SENSITIVITY = 0.0045;
   // Les lames sources vont de la tsuka vers la pointe, de gauche à droite.
@@ -805,7 +841,7 @@
       "trappe-cave": loadBitmap("assets/modular/environments/depth-portals/sprites/trappe-cave.png"),
       "porte-laquee": loadBitmap("assets/modular/environments/daimyo-castle/props/porte-laquee.png"),
       "porte-chateau": loadBitmap("assets/modular/environments/daimyo-castle/props/porte-chateau.png"),
-      "porte-sanctuaire": loadBitmap("assets/modular/environments/depth-portals/sprites/entree-machiya-noren.png"),
+      "porte-sanctuaire": loadBitmap("assets/modular/environments/depth-portals/sprites/porte-cour-interieure.png"),
     },
     alleyWalls: Object.fromEntries(
       ALLEY_WALL_IDS.map((id) => [
@@ -4589,6 +4625,55 @@
     ctx.restore();
   }
 
+  function drawPortalDepthVoid(portal, width, objectiveFpsPortal) {
+    const voidWidth = Math.max(
+      34,
+      Math.round(width * (objectiveFpsPortal ? 0.5 : 0.58)),
+    );
+    const voidHeight = Math.max(
+      48,
+      Math.round(width * (objectiveFpsPortal ? 0.62 : 0.72)),
+    );
+    const left = Math.round(portal.x - voidWidth / 2);
+    const top = Math.round(SIDE_GROUND_Y - voidHeight);
+    const centerX = Math.round(portal.x);
+    const horizonY = Math.round(top + voidHeight * 0.58);
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(left, top, voidWidth, voidHeight);
+    ctx.clip();
+    ctx.fillStyle = objectiveFpsPortal ? "#090b0f" : "#0b090c";
+    ctx.fillRect(left, top, voidWidth, voidHeight);
+    ctx.fillStyle = objectiveFpsPortal ? "#171522" : "#171116";
+    ctx.fillRect(left + 3, top + 4, Math.max(1, voidWidth - 6), 7);
+    ctx.fillStyle = objectiveFpsPortal ? "#11131b" : "#120e12";
+    ctx.fillRect(
+      centerX - Math.max(5, Math.round(voidWidth * 0.11)),
+      horizonY - 15,
+      Math.max(10, Math.round(voidWidth * 0.22)),
+      15,
+    );
+    ctx.fillStyle = objectiveFpsPortal ? "#1c1b24" : "#21171a";
+    ctx.beginPath();
+    ctx.moveTo(left + 2, SIDE_GROUND_Y);
+    ctx.lineTo(centerX - 5, horizonY);
+    ctx.lineTo(centerX + 5, horizonY);
+    ctx.lineTo(left + voidWidth - 2, SIDE_GROUND_Y);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = "rgba(3, 4, 7, .72)";
+    const depthSteps = [0.2, 0.38, 0.57, 0.77, 0.94];
+    for (const depth of depthSteps) {
+      const y = Math.round(horizonY + (SIDE_GROUND_Y - horizonY) * depth);
+      const halfWidth = Math.max(
+        6,
+        Math.round((voidWidth * 0.08) + (voidWidth * 0.4 * depth)),
+      );
+      ctx.fillRect(centerX - halfWidth, y, halfWidth * 2, 2);
+    }
+    ctx.restore();
+  }
+
   function drawSideEntranceWorld() {
     const objective = currentSideEntrance();
     for (const portal of currentSidePortals()) {
@@ -4611,6 +4696,7 @@
             "porte-sanctuaire": 92,
           }[portal.visual] || 88);
       const near = nearestSidePortal(1.18) === portal;
+      drawPortalDepthVoid(portal, width, objectiveFpsPortal);
       ctx.save();
       if (near) {
         ctx.shadowColor = portal.type === "fps"
@@ -5336,6 +5422,110 @@
     return isEnemyAlive(currentSideMassiveBoss(encounter));
   }
 
+  const fallbackWorldPropsCache = new Map();
+
+  function coherentFallbackWorldProps(environmentIndex) {
+    if (fallbackWorldPropsCache.has(environmentIndex)) {
+      return fallbackWorldPropsCache.get(environmentIndex);
+    }
+    const rawProps = bitmapAssets.worldProps[environmentIndex] || [];
+    const worldFiles = new Set([
+      "barriere-village",
+      "tonneau-provisions",
+      "foyer-incendie",
+      "charrette-cassee",
+      "tas-paille",
+      "puits-pierre",
+      "autel-route",
+      "escalier-bois",
+      "armure-vide",
+      "ratelier-vide",
+      "racines-donjon",
+    ]);
+    const frontFiles = new Set(["brasero-fer", "paravent-dechire"]);
+    const nearFiles = new Set([
+      "foyer-incendie",
+      "puits-pierre",
+      "autel-route",
+      "racines-donjon",
+    ]);
+    const normalized = rawProps.map((prop, index) => {
+      const layer = frontFiles.has(prop.file)
+        ? "front"
+        : (worldFiles.has(prop.file) ? "world" : (prop.layer || "back"));
+      const baselineY = layer === "front"
+        ? 304
+        : (nearFiles.has(prop.file) ? 302 : SIDE_GROUND_Y);
+      return {
+        ...prop,
+        id: `legacy-safe-${environmentIndex}-${prop.file}-${index}`,
+        layer,
+        bottomY: SIDE_GROUND_Y,
+        baselineY,
+        depthBias: layer === "front" ? 20 : (layer === "world" ? 0 : -20),
+        perspectiveScale: layer === "front" ? 1.05 : 1,
+        groundAnchor: [0.5, 1],
+        contactMode: "opaque-bottom",
+        legacyFallback: true,
+      };
+    });
+    const architecture = [];
+    const routeWidth = Math.max(2500, Number(game.side?.width) || 0);
+    if (environmentIndex === 0) {
+      const sequence = [
+        "mur-platre-intact",
+        "mur-platre-fume",
+        "mur-platre-lattis",
+        "mur-porte-service",
+        "mur-fenetre-barreaux",
+        "mur-volets-pluie",
+        "mur-cedre-brule",
+        "mur-quarantaine",
+        "mur-pierre-jokamachi",
+      ];
+      for (let x = 0, index = 0; x < routeWidth; x += 126, index += 1) {
+        const file = sequence[index % sequence.length];
+        architecture.push({
+          id: `legacy-safe-wall-${index}`,
+          file,
+          image: bitmapAssets.alleyWalls[file],
+          x,
+          width: Math.min(132, routeWidth - x + 6),
+          layer: "back",
+          bottomY: SIDE_GROUND_Y,
+          baselineY: SIDE_GROUND_Y,
+          depthBias: -40,
+          perspectiveScale: 1,
+          groundAnchor: [0.5, 1],
+          contactMode: "opaque-bottom",
+          legacyFallback: true,
+        });
+      }
+    } else if (environmentIndex === 2) {
+      const shoji = rawProps.find((prop) => prop.file === "mur-shoji")?.image;
+      for (let x = 0, index = 0; x < routeWidth; x += 166, index += 1) {
+        architecture.push({
+          id: `legacy-safe-shoji-${index}`,
+          file: "mur-shoji",
+          image: shoji,
+          x,
+          width: Math.min(176, routeWidth - x + 10),
+          layer: "back",
+          bottomY: SIDE_GROUND_Y,
+          baselineY: SIDE_GROUND_Y,
+          depthBias: -35,
+          perspectiveScale: 1,
+          groundAnchor: [0.5, 1],
+          contactMode: "opaque-bottom",
+          legacyFallback: true,
+        });
+      }
+    }
+    const fallback = [...architecture, ...normalized];
+    fallbackWorldPropsCache.set(environmentIndex, fallback);
+    return fallback;
+  }
+
   function currentWorldProps() {
     const areaProps = currentSideArea()?.props;
     if (Array.isArray(areaProps)) {
@@ -5346,7 +5536,9 @@
           image: worldPropImageByFile(prop.file),
         }));
     }
-    return bitmapAssets.worldProps[currentSideEnvironmentIndex()] || [];
+    return ALLOW_LEGACY_LAYOUT
+      ? coherentFallbackWorldProps(currentSideEnvironmentIndex())
+      : [];
   }
 
   function drawModularWorldProp(prop) {
@@ -5435,20 +5627,22 @@
       currentSideArea()?.groundVisual
     ] || tiles?.ground;
     const hasBackProps = drawModularWorldProps("back");
+    const visualGroundY = SIDE_GROUND_Y - SIDE_GROUND_VISUAL_OVERLAP;
+    const visualGroundDepth = SIDE_GROUND_DEPTH + SIDE_GROUND_VISUAL_OVERLAP;
     ctx.fillStyle = hasGeneratedBackdrop ? "rgba(16, 14, 19, .72)" : "#161219";
-    ctx.fillRect(0, SIDE_GROUND_Y, side.width, SIDE_GROUND_DEPTH);
+    ctx.fillRect(0, visualGroundY, side.width, visualGroundDepth);
     if (!drawContinuousGroundSprite(
       groundTile,
       0,
-      SIDE_GROUND_Y,
+      visualGroundY,
       side.width,
-      SIDE_GROUND_DEPTH,
+      visualGroundDepth,
     )) {
       ctx.fillStyle = hasGeneratedBackdrop ? "rgba(72, 49, 40, .78)" : "#2a2020";
-      ctx.fillRect(0, SIDE_GROUND_Y, side.width, 7);
+      ctx.fillRect(0, visualGroundY, side.width, 7);
       ctx.fillStyle = "#42302a";
       for (let x = 0; x < side.width; x += 18) {
-        ctx.fillRect(x, SIDE_GROUND_Y + 7 + (x % 3), 11, 3);
+        ctx.fillRect(x, visualGroundY + 7 + (x % 3), 11, 3);
       }
     }
 
@@ -8002,6 +8196,7 @@
         const scheme = currentFpsMaterialScheme();
         const mission = currentMission();
         const sideRules = currentSideRules();
+        const snapshotProps = currentWorldProps();
         const chamberSample = game.fps.current === 0
           ? { mapX: 9, mapY: 9 }
           : { mapX: 3, mapY: 3 };
@@ -8028,6 +8223,22 @@
           })),
           areaId: game.side.areaId,
           zoneKind: currentSideArea()?.zoneKind || "legacy",
+          propSource: currentSideArea()?.props
+            ? "kage-levels"
+            : (ALLOW_LEGACY_LAYOUT ? "legacy-explicit" : "missing"),
+          levelSchema: levelContract?.schema || null,
+          levelBuildId: levelContract?.buildId || null,
+          resolvedProps: snapshotProps.filter((prop) => bitmapReady(prop.image)).length,
+          missingPropFiles: [...new Set(
+            snapshotProps
+              .filter((prop) => !bitmapReady(prop.image))
+              .map((prop) => prop.file),
+          )],
+          wallStatus: {
+            ready: ALLEY_WALL_IDS.filter((id) =>
+              bitmapReady(bitmapAssets.alleyWalls[id])).length,
+            total: ALLEY_WALL_IDS.length,
+          },
           visitedAreas: [...(game.side.visitedAreas || [])],
           portals: currentSidePortals().map((portal) => ({
             id: portal.id,
@@ -8035,16 +8246,20 @@
             x: portal.x,
             destination: portal.destination ? { ...portal.destination } : null,
           })),
-          frontPropFootprints: currentWorldProps()
+          frontPropFootprints: snapshotProps
             .filter((prop) => prop.layer === "front")
             .map((prop) => ({ x: prop.x, w: prop.width, file: prop.file })),
-          props: currentWorldProps()
+          props: snapshotProps
             .map((prop) => ({
               x: prop.x,
               w: prop.width,
               file: prop.file,
               layer: prop.layer || "back",
               bottomY: prop.bottomY ?? SIDE_GROUND_Y,
+              baselineY: prop.baselineY ?? prop.bottomY ?? SIDE_GROUND_Y,
+              depthBias: Number(prop.depthBias) || 0,
+              compositionRole: prop.compositionRole || null,
+              legacyFallback: Boolean(prop.legacyFallback),
             })),
           entrancePassThrough: currentSideEntrance().collision === "passThrough",
           fps: {
@@ -8176,15 +8391,41 @@
     ]);
     if (previewModes.has(preview)) {
       startGame();
-      const castlePreview = preview === "bamboo"
+      const previewAreaId = previewParams.get("area");
+      const previewArea = previewAreaId ? sideAreaById(previewAreaId) : null;
+      if (previewAreaId && !previewArea) {
+        document.body.dataset.previewError = "unknown-area";
+        const panel = document.createElement("div");
+        panel.id = "preview-area-error";
+        panel.textContent = `ZONE DE PRÉVISUALISATION INCONNUE — ${previewAreaId}`;
+        Object.assign(panel.style, {
+          position: "fixed",
+          inset: "0",
+          zIndex: "99999",
+          display: "grid",
+          placeItems: "center",
+          padding: "24px",
+          color: "#f2d6a2",
+          background: "#090a0f",
+          font: "700 16px monospace",
+          textAlign: "center",
+        });
+        document.body.appendChild(panel);
+        throw new Error(`Zone de prévisualisation inconnue : ${previewAreaId}`);
+      }
+      const castlePreview = previewArea
+        ? previewArea.chapterId === "castle"
+        : preview === "bamboo"
         || preview === "gate-castle"
         || preview === "fps-castle";
       game.chapter = castlePreview ? 1 : 0;
       prepareSideChapter(game.chapter);
-      const previewAreaId = previewParams.get("area");
       const previewSpawnId = previewParams.get("spawn");
-      if (previewAreaId && sideAreaById(previewAreaId)) {
-        setCurrentSideArea(previewAreaId, previewSpawnId || undefined, true);
+      if (
+        previewArea
+        && !setCurrentSideArea(previewAreaId, previewSpawnId || undefined, true)
+      ) {
+        throw new Error(`Échec du chargement de la zone ${previewAreaId}`);
       }
       applyRosterToGame(game);
       if (preview?.startsWith("gate-")) {
@@ -8202,7 +8443,10 @@
         game.invulnerable = 999;
         enterFps(game.chapter, false);
         game.transition = 0;
-      } else if (Number.isFinite(Number(previewParams.get("x")))) {
+      } else if (
+        previewParams.has("x")
+        && Number.isFinite(Number(previewParams.get("x")))
+      ) {
         const targetX = clamp(
           Number(previewParams.get("x")),
           currentSideRules().minX,
