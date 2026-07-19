@@ -104,8 +104,12 @@
   const prologueHelp = document.getElementById("prologue-help");
   const gameStatus = document.getElementById("game-status");
 
+  const newGameConfirmScreen = document.getElementById("new-game-confirm-screen");
+  const newGameConfirmCancel = document.getElementById("new-game-confirm-cancel");
+  const newGameConfirmAccept = document.getElementById("new-game-confirm-accept");
   const settingsScreen = document.getElementById("settings-screen");
   const settingsButton = document.getElementById("settings-button");
+  const pauseSettingsButton = document.getElementById("pause-settings-button");
   const settingsClose = document.getElementById("settings-close");
   const settingsDone = document.getElementById("settings-done");
   const settingsStatus = document.getElementById("settings-status");
@@ -130,6 +134,9 @@
   let renderToken = 0;
   let allowOriginalStart = false;
   let settingsReturnFocus = null;
+  let settingsSourceOverlay = null;
+  let newGameConfirmReturnFocus = null;
+  let newGameStartApproved = false;
   let statusTimer = 0;
   let lastStatusText = "";
   const preloadedShots = new Map();
@@ -326,14 +333,52 @@
     return false;
   }
 
+  function hasContinuableChronicle() {
+    try {
+      return Boolean(window.KageSave?.hasContinue?.());
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function openNewGameConfirm() {
+    if (!newGameConfirmScreen || newGameConfirmScreen.classList.contains("active")) return;
+    newGameConfirmReturnFocus = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : startButton;
+    titleScreen?.setAttribute("aria-hidden", "true");
+    if (titleScreen) titleScreen.inert = true;
+    newGameConfirmScreen.classList.add("active");
+    newGameConfirmScreen.setAttribute("aria-hidden", "false");
+    newGameConfirmScreen.focus({ preventScroll: true });
+    newGameConfirmCancel?.focus({ preventScroll: true });
+  }
+
+  function closeNewGameConfirm({ restoreFocus = true } = {}) {
+    if (!newGameConfirmScreen?.classList.contains("active")) return;
+    newGameConfirmScreen.classList.remove("active");
+    newGameConfirmScreen.setAttribute("aria-hidden", "true");
+    titleScreen?.setAttribute("aria-hidden", "false");
+    if (titleScreen) titleScreen.inert = false;
+    if (restoreFocus) {
+      const target = newGameConfirmReturnFocus?.isConnected ? newGameConfirmReturnFocus : startButton;
+      target?.focus({ preventScroll: true });
+    }
+    newGameConfirmReturnFocus = null;
+  }
+
   function openSettings() {
     if (!settingsScreen || settingsScreen.classList.contains("active")) return;
     settingsReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : settingsButton;
+    settingsSourceOverlay = settingsReturnFocus?.closest?.(".screen-overlay.active")
+      || (titleScreen?.classList.contains("active") ? titleScreen : null);
     applyPreferences();
+    if (settingsSourceOverlay) {
+      settingsSourceOverlay.setAttribute("aria-hidden", "true");
+      settingsSourceOverlay.inert = true;
+    }
     settingsScreen.classList.add("active");
     settingsScreen.setAttribute("aria-hidden", "false");
-    titleScreen?.setAttribute("aria-hidden", "true");
-    if (titleScreen) titleScreen.inert = true;
     settingsScreen.focus({ preventScroll: true });
     settingsClose?.focus({ preventScroll: true });
   }
@@ -342,17 +387,31 @@
     if (!settingsScreen?.classList.contains("active")) return;
     settingsScreen.classList.remove("active");
     settingsScreen.setAttribute("aria-hidden", "true");
-    titleScreen?.setAttribute("aria-hidden", "false");
-    if (titleScreen) titleScreen.inert = false;
+    if (settingsSourceOverlay?.isConnected) {
+      settingsSourceOverlay.setAttribute("aria-hidden", "false");
+      settingsSourceOverlay.inert = false;
+    }
     const target = settingsReturnFocus?.isConnected ? settingsReturnFocus : settingsButton;
     target?.focus({ preventScroll: true });
+    settingsSourceOverlay = null;
   }
 
   settingsButton?.addEventListener("click", openSettings);
+  pauseSettingsButton?.addEventListener("click", openSettings);
   settingsClose?.addEventListener("click", closeSettings);
   settingsDone?.addEventListener("click", () => {
     applyPreferences({ announce: true });
     window.setTimeout(closeSettings, 180);
+  });
+
+  newGameConfirmCancel?.addEventListener("click", () => {
+    newGameStartApproved = false;
+    closeNewGameConfirm();
+  });
+  newGameConfirmAccept?.addEventListener("click", () => {
+    newGameStartApproved = true;
+    closeNewGameConfirm({ restoreFocus: false });
+    startButton.click();
   });
 
   [settingsMaster, settingsMusic, settingsSfx].forEach((input) => {
@@ -498,6 +557,11 @@
     event?.preventDefault();
     event?.stopImmediatePropagation();
     if (active) return;
+    if (!newGameStartApproved && hasContinuableChronicle()) {
+      openNewGameConfirm();
+      return;
+    }
+    newGameStartApproved = false;
 
     closeSettings();
     active = true;
@@ -549,6 +613,17 @@
   }
 
   function onKeyDown(event) {
+    if (newGameConfirmScreen?.classList.contains("active")) {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        newGameStartApproved = false;
+        closeNewGameConfirm();
+        return;
+      }
+      trapFocus(newGameConfirmScreen, event);
+      return;
+    }
     if (settingsScreen?.classList.contains("active")) {
       if (event.key === "Escape") {
         event.preventDefault();

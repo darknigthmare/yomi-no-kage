@@ -1063,6 +1063,7 @@
             blockWidth: 72,
             type: "fps",
             mission: "kurokawa-sick-house",
+            missionIndex: 2,
             destination: { missionId: "kurokawa-sick-house" },
             returnDestination: {
               areaId: "kurokawa-back-street",
@@ -1261,6 +1262,7 @@
             blockWidth: 72,
             type: "fps",
             mission: "market-road-shrine",
+            missionIndex: 3,
             destination: { missionId: "market-road-shrine" },
             returnDestination: {
               areaId: "kurokawa-market-east",
@@ -1791,6 +1793,7 @@
             blockWidth: 80,
             type: "fps",
             mission: "daimyo-archive",
+            missionIndex: 4,
             destination: { missionId: "daimyo-archive" },
             returnDestination: {
               areaId: "castle-residence",

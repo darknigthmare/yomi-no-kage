@@ -484,7 +484,10 @@
       fog: [12, 10, 14],
     },
   ];
-  const FPS_VIEWMODEL_RECT = { x: 80, y: 40, width: 480, height: 320 };
+  // Le corps FPS doit rester un repère périphérique, pas masquer l'arène.
+  // Un cadrage bas et resserré conserve les mains/arme lisibles tout en
+  // libérant le centre de l'écran pour les ennemis, portes et autels.
+  const FPS_VIEWMODEL_RECT = { x: 180, y: 170, width: 280, height: 188 };
   const FPS_PLAYER_WEAPON_MOUNTS = {
     idle: [
       [0.4677, 0.4724, -1.78, 1.00, 1], [0.4818, 0.3374, -1.76, 1.00, 1],
@@ -1168,18 +1171,27 @@
       }
     });
     state.fps.missions.forEach((mission, missionIndex) => {
-      const combatPool = missionIndex === 0 ? special : [...special.slice(10), ...miniboss];
+      const missionDef = FPS_DEFS[missionIndex] || {};
+      const explicitCombatPool = (missionDef.rosterIds || [])
+        .map((rosterId) => modularRoster.characters.find((entry) => entry.id === rosterId))
+        .filter(Boolean);
+      const combatPool = explicitCombatPool.length
+        ? explicitCombatPool
+        : (missionIndex === 0 ? special : [...special.slice(10), ...miniboss]);
       let combatIndex = 0;
       mission.enemies.forEach((enemy) => {
         if (enemy.boss) {
           // Aka-Ushi domine une arène de route en 2D. Le donjon conserve son
           // daimyō FPS : les deux formats ont ainsi une vraie arène dédiée.
-          const bossEntry = missionIndex === 1
+          const explicitBossEntry = missionDef.bossRosterId
+            ? modularRoster.characters.find((entry) => entry.id === missionDef.bossRosterId)
+            : null;
+          const bossEntry = explicitBossEntry || (missionIndex === 1
             ? modularRoster.characters.find((entry) => entry.id === "06-daimyo-corrupted")
               || bosses[missionIndex % bosses.length]
               || giants[missionIndex % giants.length]
             : bosses[missionIndex % bosses.length]
-              || giants[missionIndex % giants.length];
+              || giants[missionIndex % giants.length]);
           if (bossEntry) {
             equipRosterEntry(enemy, bossEntry, 40 + missionIndex);
           }
@@ -1249,6 +1261,7 @@
     endKills: document.getElementById("end-kills"),
     endTime: document.getElementById("end-time"),
     endRank: document.getElementById("end-rank"),
+    endRestart: document.getElementById("restart-button"),
   };
 
   const input = {
@@ -1293,10 +1306,85 @@
       "100000000000001",
       "111111111111111",
     ],
+    // Maison des malades : neuf pièces de tatami reliées par des portes
+    // étroites. Les cloisons forcent à fouiller les chambres sans produire
+    // un labyrinthe arbitraire.
+    [
+      "11111111111111111",
+      "10000100000100031",
+      "10000100000000001",
+      "10000000000100001",
+      "10000100000100001",
+      "11101111011111011",
+      "10000100000100001",
+      "10000100000000001",
+      "10000000000100001",
+      "10000100000100001",
+      "10000100000100001",
+      "11011110111110111",
+      "10000100000100001",
+      "10000100000000001",
+      "10000000000100001",
+      "10000100000100001",
+      "11111111111111111",
+    ],
+    // Chapelle de route : cour carrée, pavillons latéraux et massif rituel
+    // central. Le joueur peut contourner la cour par deux itinéraires.
+    [
+      "11111111111111111",
+      "10001000000010001",
+      "10000000000010001",
+      "10001000000000001",
+      "11011111011111011",
+      "10001000000010001",
+      "10001000000010001",
+      "10001001110010001",
+      "10000001110010001",
+      "10001001110000001",
+      "10001000000010001",
+      "10001000000010001",
+      "11101111101111011",
+      "10001000000010001",
+      "10000000000000001",
+      "10001000000010031",
+      "11111111111111111",
+    ],
+    // Archives du daimyō : salles de consultation et rayonnages réguliers,
+    // avec une voie centrale qui conduit au registre contaminé.
+    [
+      "1111111111111111111",
+      "1000001000001000031",
+      "1000000000001000001",
+      "1011101011100011001",
+      "1011101011101011001",
+      "1000001000001000001",
+      "1110111110111110111",
+      "1000001000001000001",
+      "1011101011101011001",
+      "1011100011100011001",
+      "1000001000001000001",
+      "1000001000001000001",
+      "1101111110111111011",
+      "1000001000001000001",
+      "1011101011101011001",
+      "1011101011100011001",
+      "1000000000001000001",
+      "1000001000001000001",
+      "1111111111111111111",
+    ],
   ];
 
   const FPS_DEFS = [
     {
+      id: "contaminated-sanctuary",
+      materialProfile: "contaminated-sanctuary",
+      label: "SANCTUAIRE CONTAMINÉ",
+      announcement: "SANCTUAIRE CONTAMINÉ — PURIFIEZ LE FOYER",
+      objective: "Purifier le sanctuaire",
+      altarObjective: "Rejoindre l'autel et poser le premier sceau",
+      altarAssetIndex: 0,
+      musicState: "yomi",
+      musicIntensity: 0.54,
       start: [1.5, 1.5, 0],
       altar: [12.5, 11.5],
       enemies: [
@@ -1304,12 +1392,134 @@
       ],
     },
     {
+      id: "kurokawa-donjon",
+      materialProfile: "kurokawa-donjon",
+      label: "DONJON DE KUROKAWA",
+      announcement: "DONJON DE KUROKAWA — TUEZ LE DAIMYŌ",
+      objective: "Abattre le daimyō et ses gardes",
+      altarObjective: "Rejoindre les racines et poser le sceau final",
+      altarAssetIndex: 1,
+      musicState: "boss",
+      musicIntensity: 0.92,
       start: [1.5, 13.2, -Math.PI / 2],
       altar: [12.5, 11.5],
       enemies: [
         [3.5, 11.5], [5.5, 7.5], [11.5, 7.5], [6.5, 3.5], [12.3, 1.6],
       ],
       boss: [9.5, 11.5],
+      bossRosterId: "06-daimyo-corrupted",
+    },
+    {
+      id: "kurokawa-sick-house",
+      materialProfile: "kurokawa-sick-house",
+      label: "MAISON DES MALADES",
+      announcement: "MAISON DES MALADES — LIBÉREZ LES CHAMBRES EN QUARANTAINE",
+      objective: "Délivrer les malades du Kegare",
+      altarObjective: "Brûler les linges contaminés au foyer",
+      completionAnnouncement: "MAISON PURIFIÉE — YOMOGI ET TANTŌ DE YAKUSHI RÉCUPÉRÉS",
+      alreadyPurifiedAnnouncement: "MAISON DES MALADES DÉJÀ PURIFIÉE — V POUR REPARTIR",
+      optional: true,
+      secretId: "sick-house-secret",
+      altarAssetIndex: 0,
+      musicState: "yomi",
+      musicIntensity: 0.46,
+      fog: [23, 17, 15],
+      rosterIds: [
+        "r13-yakushi-apprentice",
+        "r04-chaya-servant",
+        "r15-oku-servant",
+        "r18-washi-maker",
+        "s09-kuro-yakushi",
+      ],
+      reward: {
+        score: 1400,
+        health: 32,
+        ammo: 2,
+        currencies: { yomogi: 2 },
+        unlockWeapon: "tanto",
+      },
+      start: [1.5, 15.5, -Math.PI / 2],
+      altar: [15.5, 1.5],
+      enemies: [
+        [3.5, 15.5], [8.5, 14.5], [13.5, 14.5],
+        [2.5, 10.5], [8.5, 9.5], [14.5, 10.5],
+        [3.5, 7.5], [9.5, 6.5], [13.5, 3.5],
+      ],
+    },
+    {
+      id: "market-road-shrine",
+      materialProfile: "market-road-shrine",
+      label: "CHAPELLE DE ROUTE",
+      announcement: "CHAPELLE DE ROUTE — BRISEZ LA PROCESSION DES ONIBI",
+      objective: "Éteindre la procession des Onibi",
+      altarObjective: "Rendre les offrandes à la chapelle",
+      completionAnnouncement: "CHAPELLE PURIFIÉE — HIRA-SHURIKEN ET CENDRES DU YOMI RÉCUPÉRÉS",
+      alreadyPurifiedAnnouncement: "CHAPELLE DÉJÀ PURIFIÉE — V POUR REPARTIR",
+      optional: true,
+      secretId: "market-shrine-secret",
+      altarAssetIndex: 0,
+      musicState: "yomi",
+      musicIntensity: 0.6,
+      fog: [13, 17, 14],
+      rosterIds: [
+        "s04-onibi-adept",
+        "s11-biwa-revenant",
+        "s12-shikigami-scribe",
+        "s16-kage-mai-dancer",
+        "s18-yomi-herald",
+      ],
+      reward: {
+        score: 1800,
+        health: 18,
+        ammo: 6,
+        currencies: { yomiAsh: 2 },
+        unlockWeapon: "hira-shuriken",
+      },
+      start: [1.5, 1.5, 0],
+      altar: [15.5, 15.5],
+      enemies: [
+        [6.5, 1.5], [14.5, 2.5], [2.5, 6.5], [8.5, 5.5], [14.5, 7.5],
+        [5.5, 10.5], [10.5, 10.5], [2.5, 14.5], [9.5, 14.5], [14.5, 14.5],
+      ],
+    },
+    {
+      id: "daimyo-archive",
+      materialProfile: "daimyo-archive",
+      label: "ARCHIVES DU DAIMYŌ",
+      announcement: "ARCHIVES DU DAIMYŌ — RETROUVEZ LE REGISTRE DES DISPARUS",
+      objective: "Rompre la garde des archives",
+      altarObjective: "Sceller le registre contaminé",
+      completionAnnouncement: "ARCHIVES SCELLÉES — SHŌGUN NO IN ET TAMAHAGANE RÉCUPÉRÉS",
+      alreadyPurifiedAnnouncement: "ARCHIVES DÉJÀ SCELLÉES — V POUR REPARTIR",
+      optional: true,
+      secretId: "daimyo-archive-secret",
+      altarAssetIndex: 1,
+      musicState: "boss",
+      musicIntensity: 0.72,
+      fog: [14, 11, 17],
+      rosterIds: [
+        "s07-tessen-courtier",
+        "s10-hatamoto-fallen",
+        "s12-shikigami-scribe",
+        "s17-kurohata-bearer",
+        "mb-12-gardien-masque-fer",
+      ],
+      reward: {
+        score: 2600,
+        health: 24,
+        ammo: 4,
+        currencies: { tamahagane: 2, mon: 180 },
+        unlockWeapon: "02-shogun-no-in",
+      },
+      start: [1.5, 17.5, -Math.PI / 2],
+      altar: [17.5, 1.5],
+      enemies: [
+        [4.5, 17.5], [9.5, 16.5], [15.5, 17.5], [2.5, 13.5], [16.5, 13.5],
+        [3.5, 10.5], [15.5, 10.5], [2.5, 7.5], [9.5, 7.5], [15.5, 2.5],
+      ],
+      boss: [9.5, 1.5],
+      bossHp: 18,
+      bossRosterId: "mb-18-onmyoji-renard",
     },
   ];
   const FPS_ENGAGEMENT_ANGLES = [
@@ -1778,12 +1988,25 @@
     };
   }
 
+  function persistedOptionalFpsMission(secretId) {
+    if (!secretId) return false;
+    try {
+      return window.KageSave?.load?.()?.secrets?.[secretId] === true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   function makeFpsMission(index) {
     const def = FPS_DEFS[index];
+    const persistedPurification = Boolean(
+      def.optional && persistedOptionalFpsMission(def.secretId),
+    );
     const formationCount = def.enemies.length + (def.boss ? 1 : 0);
     const formationPhase = index * Math.PI / 7;
     const enemies = def.enemies.map((entry, i) => ({
-      x: entry[0], y: entry[1], hp: 4, maxHp: 4, dead: false, dying: false,
+      x: entry[0], y: entry[1], hp: persistedPurification ? 0 : 4, maxHp: 4,
+      dead: persistedPurification, dying: false,
       attack: 0, attackDuration: 0.68, attackCooldown: i * 0.12, attackHitApplied: false,
       hurtTimer: 0, deathTimer: 0, knockbackX: 0, knockbackY: 0,
       flash: 0, boss: false, impactMaterial: "flesh",
@@ -1795,8 +2018,13 @@
       ai: createFpsEnemyAi(entry[0], entry[1], i, false),
     }));
     if (def.boss) {
+      const bossHp = Math.max(1, Number(def.bossHp) || 26);
       enemies.push({
-        x: def.boss[0], y: def.boss[1], hp: 26, maxHp: 26, dead: false, dying: false,
+        x: def.boss[0], y: def.boss[1],
+        hp: persistedPurification ? 0 : bossHp,
+        maxHp: bossHp,
+        dead: persistedPurification,
+        dying: false,
         attack: 0, attackDuration: 0.92, attackCooldown: 0.4, attackHitApplied: false,
         hurtTimer: 0, deathTimer: 0, knockbackX: 0, knockbackY: 0,
         flash: 0, boss: true, spriteIndex: 5, impactMaterial: "armor",
@@ -1808,12 +2036,21 @@
       });
     }
     return {
+      id: def.id || `fps-mission-${index}`,
+      label: def.label || "FOYER CONTAMINÉ",
+      objective: def.objective || "Purifier le foyer",
+      altarObjective: def.altarObjective || "Rejoindre l'autel",
+      completionAnnouncement: def.completionAnnouncement || "",
+      alreadyPurifiedAnnouncement: def.alreadyPurifiedAnnouncement || "",
+      optional: Boolean(def.optional),
+      secretId: def.secretId || null,
+      reward: def.reward ? { ...def.reward } : null,
       map: MAPS[index],
       player: { x: def.start[0], y: def.start[1], angle: def.start[2] },
       altar: { x: def.altar[0], y: def.altar[1] },
       enemies,
       particles: [],
-      purified: false,
+      purified: persistedPurification,
     };
   }
 
@@ -1874,14 +2111,21 @@
     ].sort((a, b) => a.y - b.y);
   }
 
+  function fpsMissionIndexForPortal(portal) {
+    const candidate = portal?.missionIndex ?? portal?.mission;
+    const index = Number(candidate);
+    return Number.isFinite(index) ? index : null;
+  }
+
   function currentSideEntrance() {
     const area = currentSideArea();
     if (area?.portals?.length) {
       return area.portals.find((portal) =>
         portal.type === "fps"
-        && Number(portal.mission) === game.chapter)
+        && fpsMissionIndexForPortal(portal) === game.chapter)
         || area.portals.find((portal) => portal.type === "side")
-        || area.portals.find((portal) => portal.type === "fps" && Number.isFinite(Number(portal.mission)))
+        || area.portals.find((portal) =>
+          portal.type === "fps" && fpsMissionIndexForPortal(portal) !== null)
         || area.portals[0];
     }
     return SIDE_ENTRANCES[game.chapter] || SIDE_ENTRANCES[0];
@@ -1970,10 +2214,10 @@
   function sidePortalBlocksMovement(portal) {
     if (portal?.collision !== "solidDoor") return false;
     const portalType = portal.type
-      || (Number.isFinite(Number(portal.mission)) ? "fps" : "side");
+      || (fpsMissionIndexForPortal(portal) !== null ? "fps" : "side");
     if (
       portalType === "fps"
-      && !Number.isFinite(Number(portal.mission))
+      && fpsMissionIndexForPortal(portal) === null
     ) {
       // Les intérieurs secondaires encore non jouables restent des points
       // d'interaction manuels, mais ne coupent jamais la rue principale.
@@ -2007,7 +2251,7 @@
     for (const portal of sideBlockedPortals()) {
       const isChapterObjective = portal === currentSideEntrance()
         && (portal.type || "fps") === "fps"
-        && Number.isFinite(Number(portal.mission));
+        && fpsMissionIndexForPortal(portal) !== null;
       if (
         isChapterObjective
         && Number.isFinite(portal.blockX)
@@ -2202,6 +2446,21 @@
       return { state: "interior", intensity: area?.zoneKind === "castle" ? 0.7 : 0.52 };
     }
     return { state: "village", intensity: game.chapter > 0 ? 0.62 : 0.42 };
+  }
+
+  function sideFootstepSurface(surface = null) {
+    const token = [
+      surface?.surfaceProfile,
+      surface?.surface,
+      surface?.owner,
+      surface?.ownerPropId,
+    ].filter(Boolean).join(" ").toLowerCase();
+    if (/eau|water|flaque|ruisseau/.test(token)) return "water";
+    if (/tatami|natte/.test(token)) return "tatami";
+    if (/pierre|stone|tuile|castle|cour|marche/.test(token)) return "stone";
+    if (/bois|wood|cèdre|cedre|toit|charrette|grange|poutre|balcon|coursive/.test(token)) return "wood";
+    if (["building", "castle"].includes(currentSideArea()?.zoneKind)) return "wood";
+    return "earth";
   }
 
   function showOnly(screen) {
@@ -2453,8 +2712,8 @@
     }
     input.jumpQueued = false;
 
-    // Les portes restent des déclencheurs manuels, jamais des murs invisibles :
-    // Akio peut traverser leur plan 2D et continuer à explorer derrière.
+    // Les arches de route restent traversables. Une vraie porte de bâtiment
+    // conserve en revanche un plan solide jusqu'à l'action E.
     const chapterRules = currentSideRules();
     const previousX = p.x;
     p.x = clamp(
@@ -2475,6 +2734,7 @@
 
     // Les surfaces sont triées du haut vers le bas afin qu'un grand pas de
     // simulation ne traverse pas une plateforme pour finir sur le sol.
+    let landedSurface = null;
     for (const platform of currentSideSurfaces()) {
       const overlapsX = p.x + p.w > platform.x && p.x < platform.x + platform.w;
       const crossedTop = previousBottom <= platform.y + 3 && p.y + p.h >= platform.y;
@@ -2482,15 +2742,24 @@
         p.y = platform.y - p.h;
         p.vy = 0;
         p.grounded = true;
+        landedSurface = platform;
         break;
       }
     }
     const horizontalTravel = Math.abs(p.x - previousX);
     if (p.grounded && horizontalTravel > 0.01) {
       p.walkDistance = (p.walkDistance || 0) + horizontalTravel;
+      p.footstepSurface = sideFootstepSurface(landedSurface);
+      const stride = sprint ? 30 : 38;
+      const footstepIndex = Math.floor(p.walkDistance / stride);
+      if (p.footstepIndex !== footstepIndex) {
+        p.footstepIndex = footstepIndex;
+        playAudio("playFootstep", p.footstepSurface);
+      }
     } else if (p.grounded && Math.abs(p.vx) <= 8) {
       // Un nouveau départ commence toujours sur une pose de contact franche.
       p.walkDistance = 0;
+      p.footstepIndex = -1;
     }
     if (p.y > H + 30) damagePlayer(100);
 
@@ -4365,6 +4634,58 @@
     return true;
   }
 
+  function applyOptionalFpsReward(mission) {
+    const reward = mission.reward || {};
+    const score = Math.max(0, Number(reward.score) || 0);
+    const health = Math.max(0, Number(reward.health) || 0);
+    const ammo = Math.max(0, Number(reward.ammo) || 0);
+    const rangedWeapon = currentRangedWeapon();
+    const ammoType = rangedAmmoType(rangedWeapon);
+    const ammoCapacity = rangedAmmoCapacity(rangedWeapon);
+
+    game.score += score;
+    game.health = Math.min(100, game.health + health);
+    game.ammo = Math.min(ammoCapacity, game.ammo + ammo);
+    game.ammoByType[ammoType] = game.ammo;
+
+    try {
+      const profile = window.KageSave?.load?.();
+      if (profile) {
+        profile.secrets = profile.secrets || {};
+        profile.secrets[mission.secretId] = true;
+        profile.currencies = profile.currencies || {};
+        for (const [currencyId, amount] of Object.entries(reward.currencies || {})) {
+          profile.currencies[currencyId] = Math.max(
+            0,
+            Number(profile.currencies[currencyId] || 0) + Math.max(0, Number(amount) || 0),
+          );
+        }
+        profile.ammo = {
+          ...profile.ammo,
+          [ammoType]: game.ammo,
+        };
+        if (reward.unlockWeapon) {
+          profile.unlocks = profile.unlocks || {};
+          profile.unlocks.weapons = Array.isArray(profile.unlocks.weapons)
+            ? profile.unlocks.weapons
+            : [];
+          if (!profile.unlocks.weapons.includes(reward.unlockWeapon)) {
+            profile.unlocks.weapons.push(reward.unlockWeapon);
+          }
+        }
+        window.KageSave.save(profile);
+      }
+    } catch (_) {
+      // Hors stockage persistant, la récompense reste active pour la session.
+    }
+
+    persistRunProgress({
+      health: game.health,
+      seals: game.seals,
+      areaId: game.side.areaId,
+    });
+  }
+
   function interact() {
     if (game.status !== "playing") return;
     if (game.mode === "side") {
@@ -4374,7 +4695,7 @@
         return;
       }
       const portalType = portal.type
-        || (Number.isFinite(Number(portal.mission)) ? "fps" : "side");
+        || (fpsMissionIndexForPortal(portal) !== null ? "fps" : "side");
       if (["side", "return"].includes(portalType)) {
         const lockMessage = sidePortalLockMessage(portal);
         if (lockMessage) {
@@ -4385,8 +4706,8 @@
           portal.destination,
           portalType === "return" ? "RETOUR AU PLAN PRÉCÉDENT" : "PASSAGE EN PROFONDEUR",
         );
-      } else if (portalType === "fps" && Number.isFinite(Number(portal.mission))) {
-        enterFps(Number(portal.mission), false);
+      } else if (portalType === "fps" && fpsMissionIndexForPortal(portal) !== null) {
+        enterFps(fpsMissionIndexForPortal(portal), false);
       } else if (portalType === "fps") {
         announce("CET INTÉRIEUR SERA OUVERT PAR UNE MISSION SECONDAIRE");
       } else {
@@ -4405,8 +4726,23 @@
       announce("L'AUTEL RÉSISTE — ÉLIMINEZ LES INFECTÉS");
       return;
     }
+    if (mission.purified) {
+      if (mission.optional) {
+        returnToSide(false);
+        announce(mission.alreadyPurifiedAnnouncement || "FOYER DÉJÀ PURIFIÉ");
+      }
+      return;
+    }
     if (!mission.purified) {
       mission.purified = true;
+      if (mission.optional) {
+        applyOptionalFpsReward(mission);
+        playAudio("playPickup");
+        setMusicState("purified", 0.38);
+        returnToSide(true);
+        announce(mission.completionAnnouncement || "MISSION SECONDAIRE PURIFIÉE");
+        return;
+      }
       game.seals += 1;
       game.score += 1000;
       playAudio("playPickup");
@@ -4459,15 +4795,25 @@
     input.lookPointerId = null;
     game.side.player.vx = 0;
     game.side.player.vy = 0;
-    game.fps.current = clamp(index, 0, 1);
+    game.fps.current = clamp(
+      Math.floor(Number(index) || 0),
+      0,
+      Math.max(0, game.fps.missions.length - 1),
+    );
+    const def = FPS_DEFS[game.fps.current] || FPS_DEFS[0];
+    const mission = currentMission();
     game.mode = "fps";
     game.invulnerable = Math.max(game.invulnerable, 2.2);
     game.transition = 0.85;
     game.transitionLabel = automatic ? "LE VOILE DE YOMI SE DÉCHIRE" : "REGARD DE L'OMBRE";
     document.body.classList.add("fps-mode");
     playAudio("playTransition", "fps");
-    setMusicState(game.fps.current === 1 ? "boss" : "yomi", game.fps.current === 1 ? 0.92 : 0.54);
-    announce(game.fps.current === 0 ? "SANCTUAIRE CONTAMINÉ — PURIFIEZ LE FOYER" : "DONJON DE KUROKAWA — TUEZ LE DAIMYŌ");
+    setMusicState(def.musicState || "yomi", Number(def.musicIntensity) || 0.54);
+    announce(
+      mission.purified
+        ? (mission.alreadyPurifiedAnnouncement || `${mission.label} — FOYER DÉJÀ PURIFIÉ`)
+        : (def.announcement || `${mission.label} — PURIFIEZ LE FOYER`),
+    );
     if (canvas.requestPointerLock && matchMedia("(pointer: fine)").matches) {
       canvas.requestPointerLock()?.catch?.(() => {});
     }
@@ -4505,6 +4851,12 @@
     dom.endKills.textContent = game.kills;
     dom.endTime.textContent = `${minutes.toString().padStart(2, "0")}:${seconds}`;
     dom.endRank.textContent = rank;
+    if (dom.endRestart) {
+      dom.endRestart.textContent = victory
+        ? "NOUVELLE CHRONIQUE"
+        : "REPRENDRE AU DERNIER FOYER";
+      dom.endRestart.dataset.action = victory ? "new-game" : "restart";
+    }
     if (victory) {
       persistRunProgress({
         completed: true,
@@ -4679,7 +5031,7 @@
     for (const portal of currentSidePortals()) {
       const objectiveFpsPortal = portal === objective
         && portal.type === "fps"
-        && Number.isFinite(Number(portal.mission));
+        && fpsMissionIndexForPortal(portal) !== null;
       const image = objectiveFpsPortal
         ? bitmapAssets.sideEntrances[game.chapter]
         : bitmapAssets.depthPortals[portal.visual || "passage-ruelle"];
@@ -6727,11 +7079,10 @@
   let fpsFloorRenderSurface = null;
 
   function currentFpsMaterialScheme() {
-    const fallback = FPS_MATERIAL_SCHEMES[game.fps.current] || FPS_MATERIAL_SCHEMES[0];
+    const def = FPS_DEFS[game.fps.current] || FPS_DEFS[0];
+    const fallback = FPS_MATERIAL_SCHEMES[def.altarAssetIndex] || FPS_MATERIAL_SCHEMES[0];
     const materialLibrary = window.KageLevels?.visualStandards?.fpsMaterials;
-    const profileId = game.fps.current === 0
-      ? "contaminated-sanctuary"
-      : "kurokawa-donjon";
+    const profileId = def.materialProfile || def.id || "contaminated-sanctuary";
     const profile = materialLibrary?.profiles?.[profileId];
     if (!profile || !Array.isArray(materialLibrary.tiles)) return fallback;
     const tileIndex = (materialId, fallbackIndex) => {
@@ -6746,6 +7097,7 @@
       coreWall: tileIndex(profile.circulation, fallback.coreWall),
       chamberWall: tileIndex(profile.chamber, fallback.chamberWall),
       altarWall: tileIndex(profile.altar, fallback.altarWall),
+      fog: Array.isArray(def.fog) ? def.fog : fallback.fog,
       semanticProfile: profile,
     };
   }
@@ -7443,10 +7795,12 @@
     const angle = normalizeAngle(Math.atan2(dy, dx) - p.angle);
     if (Math.abs(angle) > FOV * 0.7 || distance < 0.2) return;
 
-    const image = bitmapAssets.fpsAltars[game.fps.current];
+    const missionDef = FPS_DEFS[game.fps.current] || FPS_DEFS[0];
+    const altarAssetIndex = clamp(Number(missionDef.altarAssetIndex) || 0, 0, bitmapAssets.fpsAltars.length - 1);
+    const image = bitmapAssets.fpsAltars[altarAssetIndex];
     const bounds = opaqueBoundsForImage(image);
     const aspect = bounds ? bounds.w / bounds.h : 0.9;
-    const worldHeight = game.fps.current === 0 ? 0.72 : 1.02;
+    const worldHeight = altarAssetIndex === 0 ? 0.72 : 1.02;
     const projection = projectFpsEntity(distance, angle, worldHeight, aspect);
     const left = projection.screenX - projection.width / 2;
 
@@ -7465,7 +7819,7 @@
 
     if (!mission.purified) {
       const pulse = 0.22 + Math.sin(performance.now() / 170) * 0.06;
-      ctx.shadowColor = game.fps.current === 0
+      ctx.shadowColor = altarAssetIndex === 0
         ? "rgba(116, 232, 152, .9)"
         : "rgba(178, 70, 95, .85)";
       ctx.shadowBlur = Math.max(5, projection.height * pulse);
@@ -7667,8 +8021,9 @@
     }
     const mission = currentMission();
     const remaining = mission.enemies.filter((e) => !e.dead).length;
-    if (remaining) return game.fps.current === 1 ? `Abattre le daimyō et ses gardes (${remaining})` : `Purifier le sanctuaire (${remaining})`;
-    return "Rejoindre l'autel et appuyer sur E";
+    if (remaining) return `${mission.objective} (${remaining})`;
+    if (mission.purified && mission.optional) return "Foyer purifié — V pour revenir dans la zone";
+    return `${mission.altarObjective} — E`;
   }
 
   function frame(now) {
@@ -8012,6 +8367,9 @@
       pendingTravel: game.pendingTravel ? { ...game.pendingTravel } : null,
       player2d: { ...game.side.player },
       playerFps: { ...currentMission().player },
+      fpsMissionId: currentMission().id,
+      fpsOptional: currentMission().optional,
+      fpsPurified: currentMission().purified,
       fpsRemaining: currentMission().enemies.filter((e) => !e.dead).length,
       nearEntrance: isNearSideEntrance(),
       entrance: { ...currentSideEntrance() },
@@ -8105,7 +8463,7 @@
         portals: currentSidePortals().map((portal) => ({
           id: portal.id,
           type: portal.type || "fps",
-          mission: Number.isFinite(Number(portal.mission)) ? Number(portal.mission) : null,
+          mission: fpsMissionIndexForPortal(portal),
           x: portal.x,
           destination: portal.destination ? { ...portal.destination } : null,
           requiresAction: true,

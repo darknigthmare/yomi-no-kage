@@ -112,6 +112,9 @@ class FakeImage extends FakeElement {
 const ids = [
   "prologue-screen",
   "start-button",
+  "new-game-confirm-screen",
+  "new-game-confirm-cancel",
+  "new-game-confirm-accept",
   "title-screen",
   "game-screen",
   "briefing-start-button",
@@ -132,6 +135,7 @@ elements["title-screen"].classList.add("active");
 elements["prologue-next"].firstChild.textContent = "PLAN SUIVANT ";
 
 global.Element = FakeElement;
+global.HTMLElement = FakeElement;
 global.Image = FakeImage;
 global.document = {
   body: { dataset: { state: "title" } },
@@ -154,6 +158,9 @@ global.window = {
     listeners.push(listener);
     windowListeners.set(type, listeners);
   },
+  KageSave: {
+    hasContinue: () => true,
+  },
 };
 
 let briefingCalls = 0;
@@ -171,6 +178,16 @@ async function flush() {
 (async () => {
   assert.ok(window.KageCinematic, "L'API cinématique doit être initialisée");
   elements["start-button"].click();
+  assert.equal(elements["new-game-confirm-screen"].classList.contains("active"), true, "Une sauvegarde active doit demander confirmation");
+  assert.equal(document.body.dataset.state, "title", "La confirmation ne doit pas lancer le prologue");
+  assert.equal(elements["title-screen"].inert, true, "Le titre doit être inerte sous la confirmation");
+
+  elements["new-game-confirm-cancel"].click();
+  assert.equal(elements["new-game-confirm-screen"].classList.contains("active"), false, "Annuler doit fermer la confirmation");
+  assert.equal(elements["title-screen"].inert, false, "Annuler doit réactiver le titre");
+
+  elements["start-button"].click();
+  elements["new-game-confirm-accept"].click();
   await flush();
 
   assert.equal(briefingCalls, 0, "Le clic titre doit d'abord ouvrir le prologue");
@@ -195,7 +212,7 @@ async function flush() {
   assert.equal(elements["game-screen"].inert, false);
   assert.equal(elements["briefing-start-button"].focused, true);
 
-  console.log("Cinematic smoke test OK — lancement, progression, skip et focus");
+  console.log("Cinematic smoke test OK — confirmation, lancement, progression, skip et focus");
 })().catch((error) => {
   console.error(error);
   process.exitCode = 1;

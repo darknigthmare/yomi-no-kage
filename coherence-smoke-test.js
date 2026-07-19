@@ -346,28 +346,81 @@ function findAreaProp(propId) {
     );
   });
 
-  await check("portes FPS secondaires non jouables sans mur invisible", async () => {
+  await check("trois missions FPS secondaires jouables, persistantes et sans sceau principal", async () => {
     const runtime = await bootRuntime();
-    runtime.KageGame.debug.setSideArea("kurokawa-market-east", "marketWest");
-    const door = KageLevels.areas["kurokawa-market-east"].portals.find(
-      (portal) => portal.id === "market-shrine-fps",
-    );
-    assert.equal(door.collision, "solidDoor");
-    assert.equal(typeof door.mission, "string");
-    runtime.KageGame.debug.setPlayer2d({
-      x: door.x - 25,
-      y: 273,
-      vx: 800,
-      vy: 0,
-      grounded: true,
-      facing: 1,
-    });
-    runtime.KageGame.debug.step(0.1);
-    const player = runtime.KageGame.getState().player2d;
-    assert.ok(
-      player.x > door.x,
-      `La mission secondaire ${door.id} crée encore un mur invisible`,
-    );
+    const missions = [
+      {
+        areaId: "kurokawa-back-street",
+        spawnId: "mainStreetReturn",
+        portalId: "sick-house-fps",
+        missionIndex: 2,
+        missionId: "kurokawa-sick-house",
+        secretId: "sick-house-secret",
+        weaponId: "tanto",
+      },
+      {
+        areaId: "kurokawa-market-east",
+        spawnId: "marketWest",
+        portalId: "market-shrine-fps",
+        missionIndex: 3,
+        missionId: "market-road-shrine",
+        secretId: "market-shrine-secret",
+        weaponId: "hira-shuriken",
+      },
+      {
+        areaId: "castle-residence",
+        spawnId: "lowerCourtReturn",
+        portalId: "archive-fps",
+        missionIndex: 4,
+        missionId: "daimyo-archive",
+        secretId: "daimyo-archive-secret",
+        weaponId: "02-shogun-no-in",
+      },
+    ];
+
+    for (const mission of missions) {
+      runtime.KageGame.debug.setSideArea(mission.areaId, mission.spawnId);
+      const door = KageLevels.areas[mission.areaId].portals.find(
+        (portal) => portal.id === mission.portalId,
+      );
+      assert.equal(door.collision, "solidDoor");
+      assert.equal(door.missionIndex, mission.missionIndex);
+
+      runtime.KageGame.debug.setPlayer2d({
+        x: door.x - 40,
+        y: 273,
+        vx: 800,
+        vy: 0,
+        grounded: true,
+        facing: 1,
+      });
+      runtime.KageGame.debug.step(0.1);
+      const player = runtime.KageGame.getState().player2d;
+      assert.ok(
+        player.x + player.w <= door.x + 1,
+        `${mission.portalId} doit rester une porte manuelle et solide avant E`,
+      );
+
+      runtime.KageGame.debug.warpToPortal(mission.portalId);
+      runtime.KageGame.interact();
+      let state = runtime.KageGame.getState();
+      assert.equal(state.mode, "fps");
+      assert.equal(state.fpsMissionId, mission.missionId);
+      assert.equal(state.fpsOptional, true);
+      assert.equal(state.seals, 0);
+
+      runtime.KageGame.debug.clearFps();
+      runtime.KageGame.debug.warpToAltar();
+      runtime.KageGame.interact();
+      state = runtime.KageGame.getState();
+      assert.equal(state.mode, "side");
+      assert.equal(state.sideAreaId, mission.areaId);
+      assert.equal(state.seals, 0, `${mission.missionId} ne doit jamais ajouter un sceau principal`);
+
+      const profile = runtime.KageSave.load();
+      assert.equal(profile.secrets[mission.secretId], true);
+      assert.equal(runtime.KageSave.isWeaponUnlocked(mission.weaponId), true);
+    }
   });
 
   await check("ennemis au sol capables de poursuivre sous les plateformes one-way", async () => {

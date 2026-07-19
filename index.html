@@ -9,7 +9,7 @@
       content="Yomi no Kage, un jeu d'action pixel-art alternant plateforme 2D et FPS rétro dans un Japon féodal ravagé par une épidémie zombie."
     />
     <title>Yomi no Kage — L'Ombre du Shogun</title>
-    <link rel="stylesheet" href="styles.css?v=25" />
+    <link rel="stylesheet" href="styles.css?v=26" />
   </head>
   <body>
     <main class="game-shell" aria-label="Yomi no Kage, jeu d'action pixel-art">
@@ -118,6 +118,30 @@
           </div>
         </div>
         <p class="title-credit">UNE CHRONIQUE INTERACTIVE ORIGINALE</p>
+      </section>
+
+      <section
+        id="new-game-confirm-screen"
+        class="screen-overlay new-game-confirm-screen"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="new-game-confirm-title"
+        aria-describedby="new-game-confirm-description"
+        aria-hidden="true"
+        tabindex="-1"
+      >
+        <div class="modal-card new-game-confirm-card">
+          <p class="japanese-glyph" aria-hidden="true">改</p>
+          <p class="eyebrow">CHRONIQUE EXISTANTE</p>
+          <h2 id="new-game-confirm-title">REMPLACER LA SAUVEGARDE&nbsp;?</h2>
+          <p id="new-game-confirm-description">
+            Une chronique est déjà en cours. Elle sera remplacée lorsque vous recevrez l’ordre du shogun après le prologue.
+          </p>
+          <div class="new-game-confirm-actions">
+            <button id="new-game-confirm-cancel" class="pixel-button ghost" type="button">ANNULER · CONSERVER</button>
+            <button id="new-game-confirm-accept" class="pixel-button primary" type="button">ÉCRASER ET COMMENCER</button>
+          </div>
+        </div>
       </section>
 
       <section
@@ -369,7 +393,8 @@
           <h2 id="pause-title">PAUSE</h2>
           <button id="resume-button" class="pixel-button primary" data-action="pause" type="button">REPRENDRE</button>
           <button class="pixel-button" data-loadout-open="pause" type="button">CONSULTER L’ÉQUIPEMENT</button>
-          <button class="pixel-button" data-action="restart" type="button">RECOMMENCER LA MISSION</button>
+          <button id="pause-settings-button" class="pixel-button" type="button" aria-controls="settings-screen">PARAMÈTRES</button>
+          <button class="pixel-button" data-action="restart" type="button">REPRENDRE AU DERNIER FOYER</button>
           <button class="pixel-button ghost" data-action="title" type="button">QUITTER VERS LE TITRE</button>
         </div>
       </section>
@@ -423,8 +448,8 @@
     <script src="arsenal.js?v=2"></script>
     <script src="save.js?v=2"></script>
     <script src="loadout.js?v=1"></script>
-    <script src="level-data.js?v=7"></script>
-    <script src="game.js?v=29"></script>
-    <script src="cinematic.js?v=6"></script>
+    <script src="level-data.js?v=8"></script>
+    <script src="game.js?v=30"></script>
+    <script src="cinematic.js?v=7"></script>
   </body>
 </html>

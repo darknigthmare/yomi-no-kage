@@ -4,7 +4,8 @@ Chapitre jouable en pixel-art qui alterne combat latéral 2D et FPS rétro
 raycast dans un Japon féodal frappé par une épidémie de morts-vivants.
 
 La version actuelle comprend une chronique sauvegardable, six zones 2D
-reliées, deux intérieurs FPS, des checkpoints, un boss massif et un boss final.
+reliées, cinq intérieurs FPS — deux principaux et trois missions secondaires
+persistantes —, des checkpoints, un boss massif et un boss final.
 La cible de campagne 8–10 heures reste décrite dans
 [`GAME_DESIGN_ROADMAP.md`](GAME_DESIGN_ROADMAP.md) ; les règles historiques et
 surnaturelles sont fixées dans [`LORE_BIBLE.md`](LORE_BIBLE.md).
@@ -77,7 +78,9 @@ pour tourner en FPS.
 
 Une nouvelle chronique commence avec Kurokage, le wakizashi et les kunai. Les
 53 armes restent visibles au dōjō ; les autres se débloquent selon leur
-provenance (boss, chapitre, contrat, secret ou artisan).
+provenance (boss, chapitre, contrat, secret ou artisan). La Maison des malades,
+la Chapelle de route et les Archives du daimyō offrent chacune une arme et des
+ressources sans modifier la progression des deux sceaux principaux.
 
 ## Prologue cinématique
 
