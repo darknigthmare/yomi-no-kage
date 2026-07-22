@@ -92,6 +92,17 @@ certaines orientations : elles ne sont plus fusionnées, mais devront être
 remplacées par de vraies vues dessinées pour la version 1.0. L’inspection
 anatomique de tous les sockets d’armes reste également à terminer.
 
+La première vague haute fidélité couvre sept ennemis fréquents. Pour chacun,
+six vues (`front`, les quatre trois-quarts et `back`) possèdent un atlas OpenAI
+distinct réellement dessiné, sans miroir, fusion, projection ni interpolation.
+Les profils `left/right` historiques restent deux banques séparées ; ils sont
+recalibrés phase par phase depuis une archive pristine versionnée et vérifiée,
+mais ne sont pas comptés
+comme des vues nouvellement dessinées. Le dépôt contient donc 42 atlas authored
+prêts sur les 630 requis pour convertir les 105 ennemis, avec 588 atlas encore
+à produire. La file reproductible et les prompts se trouvent dans
+`assets/modular/manifests/directional-authoring-prompts.json`.
+
 ## Pack visuel modulaire
 
 Les manifests sources déclarent :
@@ -124,7 +135,7 @@ leur provenance dans les manifests. Les exports runtime se trouvent dans
 
 En local, le jeu lit directement ces fichiers. Sur Vercel, `asset-runtime.js`
 résout les assets lourds depuis le tag GitHub immuable
-`complete-campaign-v2`. Le moteur et l’interface restent ainsi sous la limite
+`authored-fps-v1`. Le moteur et l’interface restent ainsi sous la limite
 du plan Hobby, tandis que les planches servies correspondent exactement au
 commit de publication. Les frames PNG unitaires ne sont pas versionnées :
 elles se régénèrent depuis les planches complètes avec le pipeline.
@@ -179,9 +190,12 @@ node coherence-smoke-test.js
 node visual-data-smoke-test.js
 py tools/validate-fps-player.py
 py tools/validate-fps-enemies.py
+py tools/validate-fps-authored-directions.py
+py tools/harmonize-fps-lateral-scale.py --check --categories regular special --ids r05-kome-porter r06-yama-woodcutter s01-kusa-shinobi s02-doku-kunoichi s05-raimei-yamabushi s13-kegare-sumotori s19-wana-trapper
 py tools/validate-2d-spatial.py
 node tools/validate-modular-pack.mjs
 node tools/verify-modular-registry.mjs
+node tools/build-directional-authoring-prompts.mjs --check
 py tools/sprite_pipeline.py validate --root assets/modular
 ```
 

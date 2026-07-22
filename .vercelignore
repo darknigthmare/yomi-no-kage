@@ -8,7 +8,7 @@ tools/
 smoke-test.js
 
 # Les banques visuelles sont versionnées dans le tag GitHub immuable
-# `complete-campaign-v2` et résolues par asset-runtime.js en production.
+# `authored-fps-v1` et résolues par asset-runtime.js en production.
 # Vercel ne reçoit ainsi que le moteur et l'interface (< limite Hobby).
 assets/generated/
 assets/modular/

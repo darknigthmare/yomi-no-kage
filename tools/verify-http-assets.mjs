@@ -4,7 +4,7 @@ import https from "node:https";
 
 const baseUrl = process.argv[2] || "http://127.0.0.1:8765/";
 const expectedLevelBuildId = "20260719-complete-campaign-v2";
-const assetReleaseRef = "complete-campaign-v2";
+const assetReleaseRef = "authored-fps-v1";
 const assetRepositoryRoot = `https://raw.githubusercontent.com/darknigthmare/yomi-no-kage/${assetReleaseRef}/`;
 const productionAssets = /(^|\.)vercel\.app$/i.test(new URL(baseUrl).hostname);
 const indexSource = fs.readFileSync("index.html", "utf8");

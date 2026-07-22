@@ -1,0 +1,90 @@
+{
+  "canvas": [
+    96,
+    128
+  ],
+  "character": {
+    "category": "special",
+    "id": "s19-wana-trapper"
+  },
+  "entries": [
+    {
+      "animation": "idle",
+      "archivePath": "assets/modular/fps/characters/special/s19-wana-trapper/sources-authored-six-way-v1/lateral-pristine-v1/left/idle.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/special/s19-wana-trapper/sheets/idle.png",
+      "sha256": "d271461c5e407e716c95040364f01587624f61662510c51af4faee3eef2624ef"
+    },
+    {
+      "animation": "move",
+      "archivePath": "assets/modular/fps/characters/special/s19-wana-trapper/sources-authored-six-way-v1/lateral-pristine-v1/left/move.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/special/s19-wana-trapper/sheets/move.png",
+      "sha256": "8882c70e8cf3724e818e283d7db5e983bf19c3af77a77909eff16834ab0f96c2"
+    },
+    {
+      "animation": "attack",
+      "archivePath": "assets/modular/fps/characters/special/s19-wana-trapper/sources-authored-six-way-v1/lateral-pristine-v1/left/attack.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/special/s19-wana-trapper/sheets/attack.png",
+      "sha256": "f79b2de3669ed480e6f3f9103026ec79efdb1a68f5f61da0418a8779506980ae"
+    },
+    {
+      "animation": "hurt",
+      "archivePath": "assets/modular/fps/characters/special/s19-wana-trapper/sources-authored-six-way-v1/lateral-pristine-v1/left/hurt.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/special/s19-wana-trapper/sheets/hurt.png",
+      "sha256": "0fdc2eb1daa89cf6ed8841297185c3708c5d72b3321e883bdb8ef7def8c28762"
+    },
+    {
+      "animation": "death",
+      "archivePath": "assets/modular/fps/characters/special/s19-wana-trapper/sources-authored-six-way-v1/lateral-pristine-v1/left/death.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/special/s19-wana-trapper/sheets/death.png",
+      "sha256": "b805f908f4f3ab86d3d54932cd218effcde22c467c2fde049a7d2e95f7120a68"
+    },
+    {
+      "animation": "idle",
+      "archivePath": "assets/modular/fps/characters/special/s19-wana-trapper/sources-authored-six-way-v1/lateral-pristine-v1/right/idle.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/special/s19-wana-trapper/directions/right/sheets/idle.png",
+      "sha256": "3c610b9f838792b135241ad2cc9c3b653f62f3d010104aaf60edea4e203e84ac"
+    },
+    {
+      "animation": "move",
+      "archivePath": "assets/modular/fps/characters/special/s19-wana-trapper/sources-authored-six-way-v1/lateral-pristine-v1/right/move.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/special/s19-wana-trapper/directions/right/sheets/move.png",
+      "sha256": "43736d1d3c4c88caf5df5c3f42f3dd50734a147940bba7a40ddcc6c8f354e057"
+    },
+    {
+      "animation": "attack",
+      "archivePath": "assets/modular/fps/characters/special/s19-wana-trapper/sources-authored-six-way-v1/lateral-pristine-v1/right/attack.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/special/s19-wana-trapper/directions/right/sheets/attack.png",
+      "sha256": "5304c56d04ee7d86a563152d7f27589263ae98ee6363bdc40b7630eead85d9ea"
+    },
+    {
+      "animation": "hurt",
+      "archivePath": "assets/modular/fps/characters/special/s19-wana-trapper/sources-authored-six-way-v1/lateral-pristine-v1/right/hurt.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/special/s19-wana-trapper/directions/right/sheets/hurt.png",
+      "sha256": "b5c392052c7143a0722cfb4e3e7b84c2d9d78b4a10c7eefb992b12932ec48a48"
+    },
+    {
+      "animation": "death",
+      "archivePath": "assets/modular/fps/characters/special/s19-wana-trapper/sources-authored-six-way-v1/lateral-pristine-v1/right/death.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/special/s19-wana-trapper/directions/right/sheets/death.png",
+      "sha256": "5e71bcf7d50fccba5ef4f15946749c173e2aedd0cadb3f0a22fff74011feb90f"
+    }
+  ],
+  "frameCount": 6,
+  "kind": "fps-lateral-pristine-v1",
+  "schema": 1,
+  "sheetSize": [
+    576,
+    128
+  ],
+  "sourceRevision": "9dfc34baf3596f3f9013dab18a9b09b9c706b4e5"
+}

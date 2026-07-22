@@ -22,26 +22,26 @@ assert.equal(local.resolve("assets/modular/registry.json"), "assets/modular/regi
 
 const production = boot("yomi-no-kage.vercel.app");
 assert.equal(production.remoteAssets, true);
-assert.equal(production.releaseRef, "complete-campaign-v2");
+assert.equal(production.releaseRef, "authored-fps-v1");
 assert.equal(
   production.resolve("assets/modular/registry.json?v=test"),
-  "https://raw.githubusercontent.com/darknigthmare/yomi-no-kage/complete-campaign-v2/assets/modular/registry.json?v=test",
+  "https://raw.githubusercontent.com/darknigthmare/yomi-no-kage/authored-fps-v1/assets/modular/registry.json?v=test",
 );
-assert.equal(production.resolve("game.js?v=41"), "game.js?v=41");
+assert.equal(production.resolve("game.js?v=42"), "game.js?v=42");
 
 const index = fs.readFileSync("index.html", "utf8");
 assert.ok(
-  index.indexOf("asset-runtime.js?v=2") < index.indexOf("game.js?v=41"),
+  index.indexOf("asset-runtime.js?v=3") < index.indexOf("game.js?v=42"),
   "index: le résolveur CDN doit précéder le moteur",
 );
 assert.ok(
-  index.indexOf("asset-runtime.js?v=2") < index.indexOf("cinematic.js?v=13"),
+  index.indexOf("asset-runtime.js?v=3") < index.indexOf("cinematic.js?v=13"),
   "index: le résolveur CDN doit précéder la cinématique",
 );
 
 const gallery = fs.readFileSync("assets.html", "utf8");
 assert.ok(
-  gallery.indexOf("asset-runtime.js?v=2") < gallery.indexOf("assets-gallery.js?v=20260719-6"),
+  gallery.indexOf("asset-runtime.js?v=3") < gallery.indexOf("assets-gallery.js?v=20260722-authored-fps-v1"),
   "artbook: le résolveur CDN doit précéder la galerie",
 );
 

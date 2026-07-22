@@ -26,6 +26,7 @@ FPS_PLAYER_SPRITE = (
 )
 ANIMATIONS = ("idle", "move", "attack", "hurt", "death")
 LIVE_LAYERS = {"behind-body", "front-body"}
+REAR_DIRECTIONS = {"back-left", "back", "back-right"}
 
 # Targets are expressed inside the opaque character bounds.  The nearest
 # contour pixel is then selected, so different silhouettes get different
@@ -213,9 +214,69 @@ def clamp(value: float, low: float, high: float) -> float:
     return max(low, min(high, value))
 
 
-def opaque_geometry(frame_path: Path) -> tuple[int, int, tuple[int, int, int, int], list[tuple[int, int]]]:
-    with Image.open(frame_path) as source:
-        image = source.convert("RGBA")
+def opaque_geometry(
+    frame_path: Path,
+    sheet_path: Path | None = None,
+    frame_index: int | None = None,
+    frame_rect: list[int] | tuple[int, int, int, int] | None = None,
+) -> tuple[int, int, tuple[int, int, int, int], list[tuple[int, int]]]:
+    """Read a declared frame or crop it losslessly from its canonical sheet.
+
+    Individual ``frames/`` PNGs are a regenerable cache and are intentionally
+    git-ignored.  Rig generation must therefore remain deterministic when only
+    the six-frame ``sheets/<animation>.png`` source is present.
+    """
+
+    if frame_path.exists():
+        with Image.open(frame_path) as source:
+            image = source.convert("RGBA")
+    elif sheet_path is not None and sheet_path.exists() and frame_index is not None:
+        with Image.open(sheet_path) as source:
+            sheet = source.convert("RGBA")
+        if frame_index < 0 or frame_index >= 6:
+            raise ValueError(f"invalid frame index {frame_index}")
+        if frame_rect is not None and len(frame_rect) == 4:
+            x, y, frame_width, frame_height = map(int, frame_rect)
+            # Per-animation sheets retain the master-atlas rect in metadata;
+            # their local row always starts at y=0.
+            local_y = y if y + frame_height <= sheet.height else 0
+            if (
+                x < 0
+                or local_y < 0
+                or frame_width <= 0
+                or frame_height <= 0
+                or x + frame_width > sheet.width
+                or local_y + frame_height > sheet.height
+            ):
+                raise ValueError(
+                    f"{sheet_path.relative_to(ROOT)} cannot crop {frame_rect}"
+                )
+            crop_box = (
+                x,
+                local_y,
+                x + frame_width,
+                local_y + frame_height,
+            )
+        else:
+            if sheet.width % 6:
+                raise ValueError(
+                    f"{sheet_path.relative_to(ROOT)} cannot provide frame {frame_index}"
+                )
+            frame_width = sheet.width // 6
+            crop_box = (
+                frame_index * frame_width,
+                0,
+                (frame_index + 1) * frame_width,
+                sheet.height,
+            )
+        image = sheet.crop(crop_box)
+        sheet.close()
+    else:
+        raise FileNotFoundError(
+            f"{frame_path.relative_to(ROOT)} missing and no canonical sheet fallback"
+        )
+
+    try:
         width, height = image.size
         alpha = image.getchannel("A")
         bounds = alpha.getbbox()
@@ -242,6 +303,8 @@ def opaque_geometry(frame_path: Path) -> tuple[int, int, tuple[int, int, int, in
         if not contour:
             raise ValueError(f"{frame_path.relative_to(ROOT)} has no opaque contour")
         return width, height, bounds, contour
+    finally:
+        image.close()
 
 
 def target_in_bounds(
@@ -294,8 +357,15 @@ def rig_from_enemy_frame(
     frame_index: int,
     category: str,
     direction: str = "left",
+    sheet_path: Path | None = None,
+    frame_rect: list[int] | tuple[int, int, int, int] | None = None,
 ) -> dict[str, Any]:
-    width, height, bounds, contour = opaque_geometry(frame_path)
+    width, height, bounds, contour = opaque_geometry(
+        frame_path,
+        sheet_path,
+        frame_index,
+        frame_rect,
+    )
     target_profile = FPS_DIRECTION_TARGETS.get(direction, ENEMY_TARGETS)
     primary_target, secondary_target = target_profile[animation]
     y_nudge = FRAME_Y_NUDGES[animation][frame_index]
@@ -324,12 +394,15 @@ def rig_from_enemy_frame(
     span_scale = clamp(0.88 + hand_span * 1.35, 0.88, 1.18)
     scale = BASE_SCALE[animation] * category_scale * span_scale
     hidden = animation == "death"
+    live_layer = (
+        "behind-body" if direction in REAR_DIRECTIONS else "front-body"
+    )
     return {
         "primaryHand": primary,
         "secondaryHand": secondary,
         "angle": rounded(angle if not hidden else 0.0),
-        "scale": rounded(scale),
-        "layer": "hidden" if hidden else "front-body",
+        "scale": 0.0 if hidden else rounded(scale),
+        "layer": "hidden" if hidden else live_layer,
     }
 
 
@@ -431,6 +504,8 @@ def enemy_weapon_rig(
                     index,
                     category,
                     direction,
+                    folder / "sheets" / f"{animation}.png",
+                    frame.get("rect"),
                 )
             )
         if len(frames) != 6:
@@ -470,6 +545,8 @@ def fps_directional_weapon_rigs(
                 raise ValueError(
                     f"fpsDirections.{direction}.{animation}: expected 6 frame paths"
                 )
+            sheet_value = bank.get("animations", {}).get(animation)
+            sheet_path = ROOT / str(sheet_value) if sheet_value else None
             rig_animations[animation] = [
                 rig_from_enemy_frame(
                     ROOT / str(frame_path),
@@ -477,6 +554,7 @@ def fps_directional_weapon_rigs(
                     index,
                     category,
                     direction,
+                    sheet_path,
                 )
                 for index, frame_path in enumerate(paths)
             ]

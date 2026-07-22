@@ -1,0 +1,90 @@
+{
+  "canvas": [
+    96,
+    128
+  ],
+  "character": {
+    "category": "regular",
+    "id": "r05-kome-porter"
+  },
+  "entries": [
+    {
+      "animation": "idle",
+      "archivePath": "assets/modular/fps/characters/regular/r05-kome-porter/sources-authored-six-way-v1/lateral-pristine-v1/left/idle.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/regular/r05-kome-porter/sheets/idle.png",
+      "sha256": "4da8f4128c5037f91d283c7c3fefb5cd250501571879ebd0afe6d7cd4330e59e"
+    },
+    {
+      "animation": "move",
+      "archivePath": "assets/modular/fps/characters/regular/r05-kome-porter/sources-authored-six-way-v1/lateral-pristine-v1/left/move.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/regular/r05-kome-porter/sheets/move.png",
+      "sha256": "197f11c193e070771cf80dca5aa8258920e69ea28865dd81e451a8928839297f"
+    },
+    {
+      "animation": "attack",
+      "archivePath": "assets/modular/fps/characters/regular/r05-kome-porter/sources-authored-six-way-v1/lateral-pristine-v1/left/attack.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/regular/r05-kome-porter/sheets/attack.png",
+      "sha256": "737fedf707b052a2f7b6a62164b8c65da536fa746e45880c697256f98bbf3e63"
+    },
+    {
+      "animation": "hurt",
+      "archivePath": "assets/modular/fps/characters/regular/r05-kome-porter/sources-authored-six-way-v1/lateral-pristine-v1/left/hurt.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/regular/r05-kome-porter/sheets/hurt.png",
+      "sha256": "d958e2b18503849d43904169e0f7e1b78eba07fbd4f61359bd85284800e56bb9"
+    },
+    {
+      "animation": "death",
+      "archivePath": "assets/modular/fps/characters/regular/r05-kome-porter/sources-authored-six-way-v1/lateral-pristine-v1/left/death.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/regular/r05-kome-porter/sheets/death.png",
+      "sha256": "f52c6784539b00d589f9d038bd59630388fa0332d970a1d3285efa4cb5a9dcf6"
+    },
+    {
+      "animation": "idle",
+      "archivePath": "assets/modular/fps/characters/regular/r05-kome-porter/sources-authored-six-way-v1/lateral-pristine-v1/right/idle.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/regular/r05-kome-porter/directions/right/sheets/idle.png",
+      "sha256": "3f1868ad1e0ed59f9c0c011126809ec14216487225e60be9b779186e62e16db7"
+    },
+    {
+      "animation": "move",
+      "archivePath": "assets/modular/fps/characters/regular/r05-kome-porter/sources-authored-six-way-v1/lateral-pristine-v1/right/move.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/regular/r05-kome-porter/directions/right/sheets/move.png",
+      "sha256": "63822d1f8a80f0e3e05f773856f7a463fc8283328187acfe906167da3d604be4"
+    },
+    {
+      "animation": "attack",
+      "archivePath": "assets/modular/fps/characters/regular/r05-kome-porter/sources-authored-six-way-v1/lateral-pristine-v1/right/attack.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/regular/r05-kome-porter/directions/right/sheets/attack.png",
+      "sha256": "710c94032e74a2404bbe8f0a3da397ade5850cf1f02ca8a5ff89262de49a6491"
+    },
+    {
+      "animation": "hurt",
+      "archivePath": "assets/modular/fps/characters/regular/r05-kome-porter/sources-authored-six-way-v1/lateral-pristine-v1/right/hurt.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/regular/r05-kome-porter/directions/right/sheets/hurt.png",
+      "sha256": "271a7baec7406f9e4370eca5570fe44ae26fa570ff9e5b2013c7b800529cf26a"
+    },
+    {
+      "animation": "death",
+      "archivePath": "assets/modular/fps/characters/regular/r05-kome-porter/sources-authored-six-way-v1/lateral-pristine-v1/right/death.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/regular/r05-kome-porter/directions/right/sheets/death.png",
+      "sha256": "785fe7f60cf9631d18dbcd50015ebd5d5de361aaade4c122a04074d1af9bc689"
+    }
+  ],
+  "frameCount": 6,
+  "kind": "fps-lateral-pristine-v1",
+  "schema": 1,
+  "sheetSize": [
+    576,
+    128
+  ],
+  "sourceRevision": "9dfc34baf3596f3f9013dab18a9b09b9c706b4e5"
+}

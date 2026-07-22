@@ -18,7 +18,7 @@
   ctx.setTransform(RENDER_SCALE_X, 0, 0, RENDER_SCALE_Y, 0, 0);
   const TAU = Math.PI * 2;
   const FOV = Math.PI / 3;
-  const ASSET_VERSION = "20260719-complete-campaign-v2";
+  const ASSET_VERSION = "20260722-authored-fps-v1";
   const REQUIRED_LEVEL_SCHEMA = 2;
   const REQUIRED_LEVEL_BUILD_ID = "20260719-complete-campaign-v2";
   const ALLOW_LEGACY_LAYOUT = typeof location !== "undefined"

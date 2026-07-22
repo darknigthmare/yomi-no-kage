@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "character": {
+    "category": "regular",
+    "id": "r06-yama-woodcutter"
+  },
+  "layout": {
+    "columns": 6,
+    "rows": 5,
+    "rowOrder": [
+      "idle",
+      "move",
+      "attack",
+      "hurt",
+      "death"
+    ]
+  },
+  "assertions": {
+    "directionsAreIndividuallyAuthored": true,
+    "handsEmpty": true,
+    "weaponsBakedIntoBody": false,
+    "oneCharacterPerCell": true
+  },
+  "background": {
+    "mode": "color",
+    "color": "#ff00ff",
+    "tolerance": 140,
+    "alphaThreshold": 8
+  },
+  "normalization": {
+    "frameWidth": 96,
+    "frameHeight": 128,
+    "padding": 2,
+    "scaleMode": "global-character",
+    "resampling": "nearest",
+    "grounding": "bottom-center",
+    "allowUpscale": false,
+    "maxIdleMoveDirectionScaleRatio": 1.35,
+    "phaseValidation": "semantic-v1"
+  },
+  "directions": {
+    "front": {
+      "file": "front-imagegen-raw.png"
+    },
+    "front-left": {
+      "file": "front-left-imagegen-raw.png"
+    },
+    "back-left": {
+      "file": "back-left-imagegen-raw.png"
+    },
+    "back": {
+      "file": "back-imagegen-raw.png"
+    },
+    "back-right": {
+      "file": "back-right-imagegen-raw.png"
+    },
+    "front-right": {
+      "file": "front-right-imagegen-raw.png"
+    }
+  }
+}

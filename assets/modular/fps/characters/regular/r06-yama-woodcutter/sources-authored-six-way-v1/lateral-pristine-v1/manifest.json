@@ -1,0 +1,90 @@
+{
+  "canvas": [
+    96,
+    128
+  ],
+  "character": {
+    "category": "regular",
+    "id": "r06-yama-woodcutter"
+  },
+  "entries": [
+    {
+      "animation": "idle",
+      "archivePath": "assets/modular/fps/characters/regular/r06-yama-woodcutter/sources-authored-six-way-v1/lateral-pristine-v1/left/idle.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/regular/r06-yama-woodcutter/sheets/idle.png",
+      "sha256": "bb39b5a1c08477d71d6376147b425e119f4400088134dd050846dac0c753dc3c"
+    },
+    {
+      "animation": "move",
+      "archivePath": "assets/modular/fps/characters/regular/r06-yama-woodcutter/sources-authored-six-way-v1/lateral-pristine-v1/left/move.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/regular/r06-yama-woodcutter/sheets/move.png",
+      "sha256": "d20a644da0697355060a84c1399fbc039919af1dcbd8ccae526d780dc9dfcc0d"
+    },
+    {
+      "animation": "attack",
+      "archivePath": "assets/modular/fps/characters/regular/r06-yama-woodcutter/sources-authored-six-way-v1/lateral-pristine-v1/left/attack.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/regular/r06-yama-woodcutter/sheets/attack.png",
+      "sha256": "eef8b225e74cb56434d78882dea2a4c928173f032eaaf56d1da7feb892a0903f"
+    },
+    {
+      "animation": "hurt",
+      "archivePath": "assets/modular/fps/characters/regular/r06-yama-woodcutter/sources-authored-six-way-v1/lateral-pristine-v1/left/hurt.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/regular/r06-yama-woodcutter/sheets/hurt.png",
+      "sha256": "897cfe172c3526f0b7477cbccb9c1e2fd1a99dfcf738b9ba503b9994ed3d4e2d"
+    },
+    {
+      "animation": "death",
+      "archivePath": "assets/modular/fps/characters/regular/r06-yama-woodcutter/sources-authored-six-way-v1/lateral-pristine-v1/left/death.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/regular/r06-yama-woodcutter/sheets/death.png",
+      "sha256": "b4a3807782e53c9e1def0e0adb665c650cd5245fce1c27edd88b7e4b2206ef69"
+    },
+    {
+      "animation": "idle",
+      "archivePath": "assets/modular/fps/characters/regular/r06-yama-woodcutter/sources-authored-six-way-v1/lateral-pristine-v1/right/idle.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/regular/r06-yama-woodcutter/directions/right/sheets/idle.png",
+      "sha256": "ec915394abc900123ca49ff2960dffe1bf92c127197c928134eda1834cb232fd"
+    },
+    {
+      "animation": "move",
+      "archivePath": "assets/modular/fps/characters/regular/r06-yama-woodcutter/sources-authored-six-way-v1/lateral-pristine-v1/right/move.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/regular/r06-yama-woodcutter/directions/right/sheets/move.png",
+      "sha256": "b07a14d560523441faf5d4a6b5a20ea7bbaa5189b9585305974bfb4d12ffe058"
+    },
+    {
+      "animation": "attack",
+      "archivePath": "assets/modular/fps/characters/regular/r06-yama-woodcutter/sources-authored-six-way-v1/lateral-pristine-v1/right/attack.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/regular/r06-yama-woodcutter/directions/right/sheets/attack.png",
+      "sha256": "b969775c49efa5d79ce520e3fd494e8c8313480cb3aee5f4b52197ba8918459f"
+    },
+    {
+      "animation": "hurt",
+      "archivePath": "assets/modular/fps/characters/regular/r06-yama-woodcutter/sources-authored-six-way-v1/lateral-pristine-v1/right/hurt.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/regular/r06-yama-woodcutter/directions/right/sheets/hurt.png",
+      "sha256": "e2742b37899a0cdc783e72903563823d178d8d3b06b2cef2cb03305c5a3bef8b"
+    },
+    {
+      "animation": "death",
+      "archivePath": "assets/modular/fps/characters/regular/r06-yama-woodcutter/sources-authored-six-way-v1/lateral-pristine-v1/right/death.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/regular/r06-yama-woodcutter/directions/right/sheets/death.png",
+      "sha256": "6a00708be5fc7e63dfc93577cc0b4e732a659be5c118b6bbe5104d3978fb3018"
+    }
+  ],
+  "frameCount": 6,
+  "kind": "fps-lateral-pristine-v1",
+  "schema": 1,
+  "sheetSize": [
+    576,
+    128
+  ],
+  "sourceRevision": "9dfc34baf3596f3f9013dab18a9b09b9c706b4e5"
+}

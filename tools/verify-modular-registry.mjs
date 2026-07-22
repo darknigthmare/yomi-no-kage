@@ -45,6 +45,9 @@ function assertWeaponRig(rig, label) {
     `${label}: ordre weapon/body invalide`,
   );
   let frameCount = 0;
+  const liveLayer = ["back-left", "back", "back-right"].includes(rig?.facing)
+    ? "behind-body"
+    : "front-body";
   for (const animation of ["idle", "move", "attack", "hurt", "death"]) {
     const frames = rig?.animations?.[animation];
     assert(Array.isArray(frames) && frames.length === 6, `${label}/${animation}: 6 rigs attendus`);
@@ -73,8 +76,8 @@ function assertWeaponRig(rig, label) {
       } else {
         assert(frame?.scale > 0, `${label}/${animation}/${index}: arme vivante masquee`);
         assert(
-          frame?.layer === "front-body",
-          `${label}/${animation}/${index}: arme vivante pas au premier plan`,
+          frame?.layer === liveLayer,
+          `${label}/${animation}/${index}: couche d'arme incoherente avec ${rig?.facing}`,
         );
       }
     }
@@ -246,13 +249,31 @@ for (const character of registry.characters || []) {
         `${character.id}/fps/${direction}: source multi-silhouette interdite`,
       );
       const cardinal = ["front", "back", "left", "right"].includes(direction);
-      assert(
-        bank?.sourceKind === (
-          cardinal ? "cardinal-bitmap-source" : "derived-diagonal-bitmap"
-        ),
-        `${character.id}/fps/${direction}: type de source invalide`,
-      );
-      if (!cardinal) {
+      const authored = bank?.authoredDirection === true;
+      if (authored) {
+        assert(
+          bank?.sourceKind === "authored-directional-atlas"
+            && bank?.derivedFrom === null
+            && bank?.weaponsBakedIntoBody === false,
+          `${character.id}/fps/${direction}: contrat authored invalide`,
+        );
+        assert(
+          bank?.pixelTransforms?.fusion === false
+            && bank?.pixelTransforms?.mirror === false
+            && bank?.pixelTransforms?.projection === false
+            && bank?.pixelTransforms?.interpolation === false
+            && bank?.pixelTransforms?.phaseSynthesis === false,
+          `${character.id}/fps/${direction}: transformation authored interdite`,
+        );
+      } else {
+        assert(
+          bank?.sourceKind === (
+            cardinal ? "cardinal-bitmap-source" : "derived-diagonal-bitmap"
+          ),
+          `${character.id}/fps/${direction}: type de source invalide`,
+        );
+      }
+      if (!authored && !cardinal) {
         const expectedAxial = direction.startsWith("front") ? "front" : "back";
         const expectedSide = direction.endsWith("left") ? "left" : "right";
         assert(

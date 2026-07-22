@@ -1,0 +1,90 @@
+{
+  "canvas": [
+    96,
+    128
+  ],
+  "character": {
+    "category": "special",
+    "id": "s13-kegare-sumotori"
+  },
+  "entries": [
+    {
+      "animation": "idle",
+      "archivePath": "assets/modular/fps/characters/special/s13-kegare-sumotori/sources-authored-six-way-v1/lateral-pristine-v1/left/idle.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/special/s13-kegare-sumotori/sheets/idle.png",
+      "sha256": "7dcf9af12b37653b0754540c054672be90666d0a907da3d6c4f2ad59b3e17e8e"
+    },
+    {
+      "animation": "move",
+      "archivePath": "assets/modular/fps/characters/special/s13-kegare-sumotori/sources-authored-six-way-v1/lateral-pristine-v1/left/move.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/special/s13-kegare-sumotori/sheets/move.png",
+      "sha256": "70d4205c011bf37da5f116ce99cbfb4473bc6c29cb218ce831fe7103ab657e92"
+    },
+    {
+      "animation": "attack",
+      "archivePath": "assets/modular/fps/characters/special/s13-kegare-sumotori/sources-authored-six-way-v1/lateral-pristine-v1/left/attack.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/special/s13-kegare-sumotori/sheets/attack.png",
+      "sha256": "248224bf22a2815574102dea5cdbbaf451b65c7e49c71de22d5155bc16f83abd"
+    },
+    {
+      "animation": "hurt",
+      "archivePath": "assets/modular/fps/characters/special/s13-kegare-sumotori/sources-authored-six-way-v1/lateral-pristine-v1/left/hurt.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/special/s13-kegare-sumotori/sheets/hurt.png",
+      "sha256": "6f65f9107d91d76bf05f88d8df3ff2dc2300d893c1cf7b2365ea6417b32c1330"
+    },
+    {
+      "animation": "death",
+      "archivePath": "assets/modular/fps/characters/special/s13-kegare-sumotori/sources-authored-six-way-v1/lateral-pristine-v1/left/death.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/special/s13-kegare-sumotori/sheets/death.png",
+      "sha256": "bf639ad5b435372cac94595017e6f10b9cbe3ad72196ae2cbc1e1a07b2cc970e"
+    },
+    {
+      "animation": "idle",
+      "archivePath": "assets/modular/fps/characters/special/s13-kegare-sumotori/sources-authored-six-way-v1/lateral-pristine-v1/right/idle.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/special/s13-kegare-sumotori/directions/right/sheets/idle.png",
+      "sha256": "07964b88d4f48e07d4a8c225383c9a4a9c4ee4d08a4bddf9f8d71950f5ef9e47"
+    },
+    {
+      "animation": "move",
+      "archivePath": "assets/modular/fps/characters/special/s13-kegare-sumotori/sources-authored-six-way-v1/lateral-pristine-v1/right/move.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/special/s13-kegare-sumotori/directions/right/sheets/move.png",
+      "sha256": "65bc05c934f3df6df386f392b43d216e7c820f9acdc0811262fcbf43d7c6b708"
+    },
+    {
+      "animation": "attack",
+      "archivePath": "assets/modular/fps/characters/special/s13-kegare-sumotori/sources-authored-six-way-v1/lateral-pristine-v1/right/attack.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/special/s13-kegare-sumotori/directions/right/sheets/attack.png",
+      "sha256": "9dfdd0cd8b9bcf05bfa4ccd5513e27a2f5471e66373713a15edcc15cc6412755"
+    },
+    {
+      "animation": "hurt",
+      "archivePath": "assets/modular/fps/characters/special/s13-kegare-sumotori/sources-authored-six-way-v1/lateral-pristine-v1/right/hurt.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/special/s13-kegare-sumotori/directions/right/sheets/hurt.png",
+      "sha256": "8be4e8a3d0001cbee4d2c68790d3e51ca9eac280aa8a88755942323cf142653f"
+    },
+    {
+      "animation": "death",
+      "archivePath": "assets/modular/fps/characters/special/s13-kegare-sumotori/sources-authored-six-way-v1/lateral-pristine-v1/right/death.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/special/s13-kegare-sumotori/directions/right/sheets/death.png",
+      "sha256": "ff6b0e72b657f68dc9ad0c03332a2ebd35a7c6ff14af0787978d4d7cca73a840"
+    }
+  ],
+  "frameCount": 6,
+  "kind": "fps-lateral-pristine-v1",
+  "schema": 1,
+  "sheetSize": [
+    576,
+    128
+  ],
+  "sourceRevision": "9dfc34baf3596f3f9013dab18a9b09b9c706b4e5"
+}

@@ -1596,14 +1596,16 @@ body.reduce-motion *::after {
     position: absolute;
     top: 0;
     left: 0;
-    width: auto;
-    min-width: 100%;
-    max-width: none;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
     height: 100%;
+    object-fit: contain;
+    object-position: center;
   }
   body.fps-mode #game-canvas {
-    left: 50%;
-    translate: -50% 0;
+    left: 0;
+    translate: none;
   }
   .title-screen { align-items: center; background-position: 62% center; }
   .title-content { width: min(94%, 28rem); margin: 0 auto; padding: max(1rem, env(safe-area-inset-top)) 0 max(1rem, env(safe-area-inset-bottom)); align-self: center; }
@@ -1641,7 +1643,10 @@ body.reduce-motion *::after {
   .hud-resources { display: grid; gap: 0.08rem; padding: 0.2rem 0.28rem; }
   .hud-resources span:nth-child(2) { display: block; }
   .hud-resources span:nth-child(3) { display: none; }
-  .hud-objective-wrap { padding: 0.22rem 0.35rem 0.3rem; }
+  .hud-objective-wrap {
+    min-height: 2.8rem;
+    padding: 0.22rem 8rem 0.3rem 0.35rem;
+  }
   .hud-objective-wrap .eyebrow { font-size: 0.5rem; }
   .hud-objective-wrap strong { margin-top: 0.1rem; font-size: 0.58rem; line-height: 1.25; }
   .hud-bottom { padding: 0.25rem 0.35rem; }
@@ -1650,10 +1655,10 @@ body.reduce-motion *::after {
 
   .pause-button,
   .audio-button,
-  .campaign-button { top: max(0.65rem, env(safe-area-inset-top)); width: 2.7rem; height: 2.7rem; }
-  .pause-button { right: max(0.65rem, env(safe-area-inset-right)); }
-  .audio-button { right: calc(max(0.65rem, env(safe-area-inset-right)) + 3.05rem); }
-  .campaign-button { right: calc(max(0.65rem, env(safe-area-inset-right)) + 6.1rem); }
+  .campaign-button { top: 3.45rem; width: 2.25rem; height: 2.25rem; }
+  .pause-button { right: max(0.35rem, env(safe-area-inset-right)); }
+  .audio-button { right: calc(max(0.35rem, env(safe-area-inset-right)) + 2.5rem); }
+  .campaign-button { right: calc(max(0.35rem, env(safe-area-inset-right)) + 5rem); }
 
   .touch-controls {
     right: 0;

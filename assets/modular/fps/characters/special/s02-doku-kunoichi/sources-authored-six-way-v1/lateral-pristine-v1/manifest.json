@@ -1,0 +1,90 @@
+{
+  "canvas": [
+    96,
+    128
+  ],
+  "character": {
+    "category": "special",
+    "id": "s02-doku-kunoichi"
+  },
+  "entries": [
+    {
+      "animation": "idle",
+      "archivePath": "assets/modular/fps/characters/special/s02-doku-kunoichi/sources-authored-six-way-v1/lateral-pristine-v1/left/idle.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/special/s02-doku-kunoichi/sheets/idle.png",
+      "sha256": "7053a53b2cd4be1d7db3c356514e652d9558cbd69f97db737f6007efad962558"
+    },
+    {
+      "animation": "move",
+      "archivePath": "assets/modular/fps/characters/special/s02-doku-kunoichi/sources-authored-six-way-v1/lateral-pristine-v1/left/move.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/special/s02-doku-kunoichi/sheets/move.png",
+      "sha256": "1be0605078e46b5308a38a93e262c7ab01b4c6e0c24d6613ad5da1e2f3e2334e"
+    },
+    {
+      "animation": "attack",
+      "archivePath": "assets/modular/fps/characters/special/s02-doku-kunoichi/sources-authored-six-way-v1/lateral-pristine-v1/left/attack.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/special/s02-doku-kunoichi/sheets/attack.png",
+      "sha256": "559964d083bbbb7a2c98fcccdaa0b62c7692f944e1af10fc4d2e4ab6df9caa88"
+    },
+    {
+      "animation": "hurt",
+      "archivePath": "assets/modular/fps/characters/special/s02-doku-kunoichi/sources-authored-six-way-v1/lateral-pristine-v1/left/hurt.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/special/s02-doku-kunoichi/sheets/hurt.png",
+      "sha256": "82021b65681a29282254a2a33aea61cc46cc01bbdec6fe5aefa7b24189d92b03"
+    },
+    {
+      "animation": "death",
+      "archivePath": "assets/modular/fps/characters/special/s02-doku-kunoichi/sources-authored-six-way-v1/lateral-pristine-v1/left/death.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/special/s02-doku-kunoichi/sheets/death.png",
+      "sha256": "58281a97191e9b1dfd1436a20a7fedc54c3d36db901877ceae565156ad40701d"
+    },
+    {
+      "animation": "idle",
+      "archivePath": "assets/modular/fps/characters/special/s02-doku-kunoichi/sources-authored-six-way-v1/lateral-pristine-v1/right/idle.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/special/s02-doku-kunoichi/directions/right/sheets/idle.png",
+      "sha256": "cee50a769244cb0a1b914065c77f9dd328f48c0eccad14f6e0e69f9bb57eac52"
+    },
+    {
+      "animation": "move",
+      "archivePath": "assets/modular/fps/characters/special/s02-doku-kunoichi/sources-authored-six-way-v1/lateral-pristine-v1/right/move.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/special/s02-doku-kunoichi/directions/right/sheets/move.png",
+      "sha256": "0226d7e910c20f03065614ddb059f388b38f7b72c8059c8b982b743abf702db5"
+    },
+    {
+      "animation": "attack",
+      "archivePath": "assets/modular/fps/characters/special/s02-doku-kunoichi/sources-authored-six-way-v1/lateral-pristine-v1/right/attack.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/special/s02-doku-kunoichi/directions/right/sheets/attack.png",
+      "sha256": "458ae8091d025d5309ca748707d111c501cd9c882bc701ffec4cd505a2036adf"
+    },
+    {
+      "animation": "hurt",
+      "archivePath": "assets/modular/fps/characters/special/s02-doku-kunoichi/sources-authored-six-way-v1/lateral-pristine-v1/right/hurt.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/special/s02-doku-kunoichi/directions/right/sheets/hurt.png",
+      "sha256": "fb556a8cc8b60813785cfd6d2763b26be81437d06116744dbb91c063ea9c1a9f"
+    },
+    {
+      "animation": "death",
+      "archivePath": "assets/modular/fps/characters/special/s02-doku-kunoichi/sources-authored-six-way-v1/lateral-pristine-v1/right/death.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/special/s02-doku-kunoichi/directions/right/sheets/death.png",
+      "sha256": "fcd45f18ea346dad8a16971553d42c4a70d15c23fb4c1aee408571c5fcd2e93f"
+    }
+  ],
+  "frameCount": 6,
+  "kind": "fps-lateral-pristine-v1",
+  "schema": 1,
+  "sheetSize": [
+    576,
+    128
+  ],
+  "sourceRevision": "9dfc34baf3596f3f9013dab18a9b09b9c706b4e5"
+}

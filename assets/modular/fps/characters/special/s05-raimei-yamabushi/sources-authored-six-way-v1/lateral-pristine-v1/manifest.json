@@ -1,0 +1,90 @@
+{
+  "canvas": [
+    96,
+    128
+  ],
+  "character": {
+    "category": "special",
+    "id": "s05-raimei-yamabushi"
+  },
+  "entries": [
+    {
+      "animation": "idle",
+      "archivePath": "assets/modular/fps/characters/special/s05-raimei-yamabushi/sources-authored-six-way-v1/lateral-pristine-v1/left/idle.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/special/s05-raimei-yamabushi/sheets/idle.png",
+      "sha256": "62a01d8f162eadbd731c407d218ce0ec8051df23fba694c2eb0848110304f410"
+    },
+    {
+      "animation": "move",
+      "archivePath": "assets/modular/fps/characters/special/s05-raimei-yamabushi/sources-authored-six-way-v1/lateral-pristine-v1/left/move.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/special/s05-raimei-yamabushi/sheets/move.png",
+      "sha256": "b6ea1688c49511fa37d5939230505cedc9afd096c8e1b60029fa069dd6025ba8"
+    },
+    {
+      "animation": "attack",
+      "archivePath": "assets/modular/fps/characters/special/s05-raimei-yamabushi/sources-authored-six-way-v1/lateral-pristine-v1/left/attack.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/special/s05-raimei-yamabushi/sheets/attack.png",
+      "sha256": "f27b89577eb9145cd07305cd8bc69ec06be4d9ca5a4efa87d7365e2303d94943"
+    },
+    {
+      "animation": "hurt",
+      "archivePath": "assets/modular/fps/characters/special/s05-raimei-yamabushi/sources-authored-six-way-v1/lateral-pristine-v1/left/hurt.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/special/s05-raimei-yamabushi/sheets/hurt.png",
+      "sha256": "244f79faf6b9b2222d0a5850852811b42f8f33eab34d560f758c4b9352727ebc"
+    },
+    {
+      "animation": "death",
+      "archivePath": "assets/modular/fps/characters/special/s05-raimei-yamabushi/sources-authored-six-way-v1/lateral-pristine-v1/left/death.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/special/s05-raimei-yamabushi/sheets/death.png",
+      "sha256": "af6e33345b516c0262599d9381627ab7ec1e0f3fa077ddf0dc7554a9bb8ebe57"
+    },
+    {
+      "animation": "idle",
+      "archivePath": "assets/modular/fps/characters/special/s05-raimei-yamabushi/sources-authored-six-way-v1/lateral-pristine-v1/right/idle.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/special/s05-raimei-yamabushi/directions/right/sheets/idle.png",
+      "sha256": "b9fc3e276865aa0b01f6e01f18986f1bc917f96e7ab0d59fd7f879b1d4456811"
+    },
+    {
+      "animation": "move",
+      "archivePath": "assets/modular/fps/characters/special/s05-raimei-yamabushi/sources-authored-six-way-v1/lateral-pristine-v1/right/move.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/special/s05-raimei-yamabushi/directions/right/sheets/move.png",
+      "sha256": "8dc4722ccba601e693744280c3e0462f91f24e25791eb0368f5824e20c1e6daa"
+    },
+    {
+      "animation": "attack",
+      "archivePath": "assets/modular/fps/characters/special/s05-raimei-yamabushi/sources-authored-six-way-v1/lateral-pristine-v1/right/attack.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/special/s05-raimei-yamabushi/directions/right/sheets/attack.png",
+      "sha256": "f3ad7e067eb740e9f78cc816497cec2a4f6659538d9818efb40418c8a9162d1d"
+    },
+    {
+      "animation": "hurt",
+      "archivePath": "assets/modular/fps/characters/special/s05-raimei-yamabushi/sources-authored-six-way-v1/lateral-pristine-v1/right/hurt.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/special/s05-raimei-yamabushi/directions/right/sheets/hurt.png",
+      "sha256": "ea926747b080ff97ff88a0c452313a4da66536d59443b420ce8ecc62ba10c376"
+    },
+    {
+      "animation": "death",
+      "archivePath": "assets/modular/fps/characters/special/s05-raimei-yamabushi/sources-authored-six-way-v1/lateral-pristine-v1/right/death.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/special/s05-raimei-yamabushi/directions/right/sheets/death.png",
+      "sha256": "12135aa0997303b05c817d6e89c5c23082b32da59e7f497525ccd62ddefa3855"
+    }
+  ],
+  "frameCount": 6,
+  "kind": "fps-lateral-pristine-v1",
+  "schema": 1,
+  "sheetSize": [
+    576,
+    128
+  ],
+  "sourceRevision": "9dfc34baf3596f3f9013dab18a9b09b9c706b4e5"
+}

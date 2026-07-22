@@ -99,6 +99,9 @@ function validateWeaponRig(rig, label) {
     `${label}: ordre weapon/body invalide`,
   );
   let count = 0;
+  const liveLayer = ["back-left", "back", "back-right"].includes(rig?.facing)
+    ? "behind-body"
+    : "front-body";
   for (const animation of animationNames) {
     const frames = rig?.animations?.[animation] || [];
     assert(frames.length === 6, `${label}: ${animation} n'a pas 6 weaponRig`);
@@ -124,9 +127,9 @@ function validateWeaponRig(rig, label) {
       );
       assert(
         animation === "death"
-          ? frame?.layer === "hidden"
-          : frame?.layer === "front-body",
-        `${label}: ${animation}/${index} doit placer l'arme au premier plan`,
+          ? frame?.layer === "hidden" && frame?.scale === 0
+          : frame?.layer === liveLayer && frame?.scale > 0,
+        `${label}: ${animation}/${index} couche/visibilite d'arme incoherente`,
       );
     }
   }
@@ -141,6 +144,7 @@ function validateFpsDirections(entry, fpsSprite, label) {
     const bank = fpsSprite?.fpsDirections?.[direction];
     const registryBank = entry?.fpsDirections?.[direction];
     const cardinal = ["front", "back", "left", "right"].includes(direction);
+    const authored = bank?.authoredDirection === true;
     assert(bank, `${label}: fpsDirections.${direction} absent`);
     assert(
       bank?.singleSilhouetteSource === true,
@@ -150,7 +154,23 @@ function validateFpsDirections(entry, fpsSprite, label) {
       JSON.stringify(registryBank) === JSON.stringify(bank),
       `${label}: fpsDirections.${direction} désynchronisé`,
     );
-    if (!cardinal) {
+    if (authored) {
+      assert(
+        bank?.sourceKind === "authored-directional-atlas"
+          && bank?.derivedFrom === null
+          && bank?.weaponsBakedIntoBody === false,
+        `${label}: ${direction} contrat authored invalide`,
+      );
+      assert(
+        bank?.pixelTransforms?.fusion === false
+          && bank?.pixelTransforms?.mirror === false
+          && bank?.pixelTransforms?.projection === false
+          && bank?.pixelTransforms?.interpolation === false
+          && bank?.pixelTransforms?.phaseSynthesis === false,
+        `${label}: ${direction} transformation authored interdite`,
+      );
+    }
+    if (!authored && !cardinal) {
       const expectedAxial = direction.startsWith("front") ? "front" : "back";
       const expectedSide = direction.endsWith("left") ? "left" : "right";
       assert(

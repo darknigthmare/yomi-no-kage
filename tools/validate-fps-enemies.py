@@ -168,6 +168,9 @@ def main():
     non_mirrored_axial_checks = 0
     cardinal_bank_count = 0
     diagonal_bank_count = 0
+    authored_bank_count = 0
+    authored_directional_characters = 0
+    legacy_directional_characters = 0
     single_silhouette_diagonal_checks = 0
     single_silhouette_axial_checks = 0
     anti_composite_checks = 0
@@ -200,14 +203,31 @@ def main():
         if metadata.get("alphaMode") != "straight-transparent":
             errors.append(f"{category}/{character.name}: alphaMode invalide")
         coverage = metadata.get("viewCoverage", {})
-        if (
-            coverage.get("frontBackAuthored") is not False
-            or coverage.get("runtimeSequence") != "single-lateral-frame-locked"
-            or coverage.get("imagegenRawRuntimeUse", False) is not False
-        ):
-            errors.append(
-                f"{category}/{character.name}: contrat runtime frame-locké invalide"
-            )
+        authored_character = (
+            coverage.get("mode") == "fps-eight-way-explicit-authored"
+        )
+        if authored_character:
+            if (
+                coverage.get("frontBackAuthored") is not True
+                or coverage.get("runtimeSequence")
+                != "authored-six-plus-preserved-lateral"
+                or coverage.get("imagegenRawRuntimeUse", False) is not False
+                or len(coverage.get("authoredDirections", [])) != 6
+            ):
+                errors.append(
+                    f"{category}/{character.name}: contrat runtime authored invalide"
+                )
+            authored_directional_characters += 1
+        else:
+            legacy_directional_characters += 1
+            if (
+                coverage.get("frontBackAuthored") is not False
+                or coverage.get("runtimeSequence") != "single-lateral-frame-locked"
+                or coverage.get("imagegenRawRuntimeUse", False) is not False
+            ):
+                errors.append(
+                    f"{category}/{character.name}: contrat runtime frame-locké invalide"
+                )
 
         if character.name in CROSS_ERA_IMAGEGEN_SOURCE_IDS:
             source_folder = character / "sources-directional"
@@ -366,8 +386,33 @@ def main():
                     f"{category}/{character.name}/{direction}: "
                     "contrat singleSilhouetteSource absent"
                 )
+            authored_bank = bank.get("authoredDirection") is True
+            if authored_bank:
+                transforms = bank.get("pixelTransforms", {})
+                if (
+                    bank.get("sourceKind") != "authored-directional-atlas"
+                    or bank.get("derivedFrom") is not None
+                    or bank.get("weaponsBakedIntoBody") is not False
+                    or any(
+                        transforms.get(name) is not False
+                        for name in (
+                            "fusion",
+                            "mirror",
+                            "projection",
+                            "interpolation",
+                            "phaseSynthesis",
+                        )
+                    )
+                ):
+                    errors.append(
+                        f"{category}/{character.name}/{direction}: "
+                        "contrat atlas authored invalide"
+                    )
+                else:
+                    authored_bank_count += 1
             if (
-                character.name in CROSS_ERA_IMAGEGEN_SOURCE_IDS
+                not authored_bank
+                and character.name in CROSS_ERA_IMAGEGEN_SOURCE_IDS
                 and direction in {"front", "back"}
             ):
                 if bank.get("authoredAxialView") is not False:
@@ -382,7 +427,7 @@ def main():
                     )
                 else:
                     imagegen_source_references.add(character.name)
-            if direction in {"front", "back"} and (
+            if not authored_bank and direction in {"front", "back"} and (
                 bank.get("authoredAxialView") is not False
                 or "frame-locked" not in str(bank.get("source", "")).lower()
             ):
@@ -390,7 +435,7 @@ def main():
                     f"{category}/{character.name}/{direction}: "
                     "projection axiale runtime non frame-lockée"
                 )
-            if direction in CARDINAL_DIRECTIONS:
+            if not authored_bank and direction in CARDINAL_DIRECTIONS:
                 if bank.get("sourceKind") != "cardinal-bitmap-source":
                     errors.append(
                         f"{category}/{character.name}/{direction}: "
@@ -398,7 +443,7 @@ def main():
                     )
                 else:
                     cardinal_bank_count += 1
-            else:
+            elif not authored_bank:
                 expected_axial = "front" if direction.startswith("front") else "back"
                 expected_side = "left" if direction.endswith("left") else "right"
                 if (
@@ -543,10 +588,15 @@ def main():
                                 "arme non masquée"
                             )
                         continue
-                    if rig.get("layer") != "front-body":
+                    expected_layer = (
+                        "behind-body"
+                        if direction in {"back-left", "back", "back-right"}
+                        else "front-body"
+                    )
+                    if rig.get("layer") != expected_layer:
                         errors.append(
                             f"{category}/{character.name}/{direction}/{animation}/{index}: "
-                            "arme hors premier plan"
+                            f"couche d'arme invalide ({expected_layer} attendu)"
                         )
                     for field in ("primaryHand", "secondaryHand"):
                         if not valid_socket(rig.get(field)):
@@ -554,6 +604,12 @@ def main():
                                 f"{category}/{character.name}/{direction}/{animation}/{index}: "
                                 f"socket {field} invalide"
                             )
+
+        if authored_character:
+            # The dedicated authored validator checks cross-view phase order,
+            # source digests and anti-mirror provenance. Projection-envelope
+            # checks below are meaningful only for the legacy derived banks.
+            continue
 
         if character.name:
             for direction in ("front", "back"):
@@ -685,13 +741,16 @@ def main():
             "références source ImageGen manquantes: "
             f"{sorted(CROSS_ERA_IMAGEGEN_SOURCE_IDS - imagegen_source_references)}"
         )
-    expected_axial_checks = EXPECTED_CHARACTERS * 2 * len(ANIMATIONS) * 6
-    expected_diagonal_checks = EXPECTED_CHARACTERS * 4 * len(ANIMATIONS) * 6
+    expected_axial_checks = legacy_directional_characters * 2 * len(ANIMATIONS) * 6
+    expected_diagonal_checks = legacy_directional_characters * 4 * len(ANIMATIONS) * 6
     expected_anti_composite_checks = (
         EXPECTED_CHARACTERS * len(DIRECTIONS) * len(ANIMATIONS) * 6
     )
     expected_phase_locked_checks = (
-        EXPECTED_CHARACTERS * (len(DIRECTIONS) - 1) * len(ANIMATIONS) * 6
+        legacy_directional_characters
+        * (len(DIRECTIONS) - 1)
+        * len(ANIMATIONS)
+        * 6
     )
     if single_silhouette_axial_checks != expected_axial_checks:
         errors.append(
@@ -729,6 +788,9 @@ def main():
         "directionalCharacters": directional_characters,
         "cardinalBitmapSourceBanks": cardinal_bank_count,
         "derivedDiagonalBitmapBanks": diagonal_bank_count,
+        "authoredDirectionalAtlasBanks": authored_bank_count,
+        "authoredDirectionalCharacters": authored_directional_characters,
+        "legacyDirectionalCharacters": legacy_directional_characters,
         "singleSilhouetteDiagonalChecks": single_silhouette_diagonal_checks,
         "singleSilhouetteAxialChecks": single_silhouette_axial_checks,
         "antiCompositeChecks": anti_composite_checks,

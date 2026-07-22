@@ -122,7 +122,9 @@ function asText(value) {
 
 function walkFiles(directory) {
   if (!fs.existsSync(directory)) return [];
-  return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+  return fs.readdirSync(directory, { withFileTypes: true })
+    .sort((left, right) => left.name.localeCompare(right.name, "fr"))
+    .flatMap((entry) => {
     const fullPath = path.join(directory, entry.name);
     return entry.isDirectory() ? walkFiles(fullPath) : [fullPath];
   });
@@ -143,6 +145,13 @@ const manifestFiles = [
   ...walkFiles(path.join(modularRoot, "environments")),
   ...walkFiles(path.join(modularRoot, "weapons")),
 ].filter((file) => file.endsWith(".json") && fs.existsSync(file));
+
+// Authoring queues contain character IDs for prompt routing, not runtime
+// metadata. Indexing them would let a build-only record overwrite canonical
+// boss/enemy manifests through the generic recursive metadata walker.
+const runtimeManifestFiles = manifestFiles.filter(
+  (file) => path.basename(file) !== "directional-authoring-prompts.json",
+);
 
 function indexMetadata(value, sourceFile) {
   if (Array.isArray(value)) {
@@ -172,7 +181,7 @@ function indexMetadata(value, sourceFile) {
   Object.values(value).forEach((entry) => indexMetadata(entry, sourceFile));
 }
 
-for (const manifestFile of manifestFiles) {
+for (const manifestFile of runtimeManifestFiles) {
   indexMetadata(readJson(manifestFile), toWebPath(manifestFile));
 }
 
@@ -473,6 +482,10 @@ const fpsDirectionalCharacters = fpsEnemies.filter((entry) =>
     entry.fpsDirections?.[direction]?.animations
   )
 );
+const fpsAuthoredDirectionalCharacters = fpsDirectionalCharacters.filter((entry) =>
+  ["front", "front-left", "back-left", "back", "back-right", "front-right"]
+    .every((direction) => entry.fpsDirections?.[direction]?.authoredDirection === true)
+);
 const fpsPlayerSprite = readJsonIfExists(path.join(fpsPlayerBodyRoot, "sprite.json"));
 const firstEnemyFpsSprite = fpsEnemies.length > 0
   ? readJsonIfExists(path.join(root, fpsEnemies[0].fpsSprite))
@@ -492,6 +505,7 @@ const fpsPipeline = {
   cardinalBitmapSources: ["front", "back", "left", "right"],
   derivedDiagonalBanks: ["front-left", "back-left", "back-right", "front-right"],
   directionalCharacterCount: fpsDirectionalCharacters.length,
+  authoredDirectionalCharacterCount: fpsAuthoredDirectionalCharacters.length,
   directionalContract: "fpsDirections.<direction>.animations/frames",
 };
 const fps = {
@@ -508,7 +522,8 @@ const fps = {
   enemySource: "Detailed OpenAI 2D masters normalized as grounded Doom billboards",
   directions: fpsDirectionNames,
   directionalCharacters: fpsDirectionalCharacters.length,
-  directionBanks: fpsDirectionalCharacters.length * 4,
+  directionBanks: fpsDirectionalCharacters.length * fpsDirectionNames.length,
+  authoredDirectionalCharacters: fpsAuthoredDirectionalCharacters.length,
 };
 
 writeUtf8Replacing(outputRegistry, `${JSON.stringify({

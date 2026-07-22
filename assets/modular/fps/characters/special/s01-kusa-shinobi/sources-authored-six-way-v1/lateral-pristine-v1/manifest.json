@@ -1,0 +1,90 @@
+{
+  "canvas": [
+    96,
+    128
+  ],
+  "character": {
+    "category": "special",
+    "id": "s01-kusa-shinobi"
+  },
+  "entries": [
+    {
+      "animation": "idle",
+      "archivePath": "assets/modular/fps/characters/special/s01-kusa-shinobi/sources-authored-six-way-v1/lateral-pristine-v1/left/idle.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/special/s01-kusa-shinobi/sheets/idle.png",
+      "sha256": "2cd05132cb75fe4545c5fe538bcc12a1b93476e88fa33534c4237bfe93589f36"
+    },
+    {
+      "animation": "move",
+      "archivePath": "assets/modular/fps/characters/special/s01-kusa-shinobi/sources-authored-six-way-v1/lateral-pristine-v1/left/move.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/special/s01-kusa-shinobi/sheets/move.png",
+      "sha256": "484357b46e5d1f4c364bb6616553c6327126f2eb460dbeb57b57b1fd809700bc"
+    },
+    {
+      "animation": "attack",
+      "archivePath": "assets/modular/fps/characters/special/s01-kusa-shinobi/sources-authored-six-way-v1/lateral-pristine-v1/left/attack.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/special/s01-kusa-shinobi/sheets/attack.png",
+      "sha256": "2c132b7645bd965e33f5b830c5adda5fa8e1b7495d9e6507e32ede5c1b74230d"
+    },
+    {
+      "animation": "hurt",
+      "archivePath": "assets/modular/fps/characters/special/s01-kusa-shinobi/sources-authored-six-way-v1/lateral-pristine-v1/left/hurt.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/special/s01-kusa-shinobi/sheets/hurt.png",
+      "sha256": "276c53afff51416838bd63eee24cd673b5bd05d99fd6f9edef995417f6e07739"
+    },
+    {
+      "animation": "death",
+      "archivePath": "assets/modular/fps/characters/special/s01-kusa-shinobi/sources-authored-six-way-v1/lateral-pristine-v1/left/death.png",
+      "direction": "left",
+      "runtimePath": "assets/modular/fps/characters/special/s01-kusa-shinobi/sheets/death.png",
+      "sha256": "24589e2383cac55cbcc25bc10d09307c859dfae5ae2a6ba5e3c46a9d498bc501"
+    },
+    {
+      "animation": "idle",
+      "archivePath": "assets/modular/fps/characters/special/s01-kusa-shinobi/sources-authored-six-way-v1/lateral-pristine-v1/right/idle.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/special/s01-kusa-shinobi/directions/right/sheets/idle.png",
+      "sha256": "5944edc1fe68fb9e44280162aed957a7ebef92c744fab5bbaedb7f772ce2fa07"
+    },
+    {
+      "animation": "move",
+      "archivePath": "assets/modular/fps/characters/special/s01-kusa-shinobi/sources-authored-six-way-v1/lateral-pristine-v1/right/move.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/special/s01-kusa-shinobi/directions/right/sheets/move.png",
+      "sha256": "3cbfaa15f72a34e83c1a8c7e5395be5232f92ddefab05322cfbf445348ffdc08"
+    },
+    {
+      "animation": "attack",
+      "archivePath": "assets/modular/fps/characters/special/s01-kusa-shinobi/sources-authored-six-way-v1/lateral-pristine-v1/right/attack.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/special/s01-kusa-shinobi/directions/right/sheets/attack.png",
+      "sha256": "44c79460ce992b10cc9b7bd39c040a83875709d58b1c2d0072a62dd2ec41cede"
+    },
+    {
+      "animation": "hurt",
+      "archivePath": "assets/modular/fps/characters/special/s01-kusa-shinobi/sources-authored-six-way-v1/lateral-pristine-v1/right/hurt.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/special/s01-kusa-shinobi/directions/right/sheets/hurt.png",
+      "sha256": "28ee73fe1d67a8fec8bfb3ee0537eaa73bc26605445639bb407464dbd20a01ce"
+    },
+    {
+      "animation": "death",
+      "archivePath": "assets/modular/fps/characters/special/s01-kusa-shinobi/sources-authored-six-way-v1/lateral-pristine-v1/right/death.png",
+      "direction": "right",
+      "runtimePath": "assets/modular/fps/characters/special/s01-kusa-shinobi/directions/right/sheets/death.png",
+      "sha256": "643cf6cdaa3139f25918d8b4f8837bbe98dbd3cca8c9857997544889276b2951"
+    }
+  ],
+  "frameCount": 6,
+  "kind": "fps-lateral-pristine-v1",
+  "schema": 1,
+  "sheetSize": [
+    576,
+    128
+  ],
+  "sourceRevision": "9dfc34baf3596f3f9013dab18a9b09b9c706b4e5"
+}

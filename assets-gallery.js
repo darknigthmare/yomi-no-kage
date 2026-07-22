@@ -231,7 +231,7 @@
     if (event.target === dialog) dialog.close();
   });
 
-  fetch(assetUrl("assets/modular/catalog.json?v=20260719-complete-campaign-v2"))
+  fetch(assetUrl("assets/modular/catalog.json?v=20260722-authored-fps-v1"))
     .then((response) => {
       if (!response.ok) throw new Error(`Catalogue indisponible (${response.status})`);
       return response.json();

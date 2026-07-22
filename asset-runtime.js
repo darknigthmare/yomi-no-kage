@@ -7,7 +7,7 @@
    * servies depuis un tag immuable en production. En local, les chemins restent
    * inchangés afin que l'édition et les validateurs travaillent sur les sources.
    */
-  const releaseRef = "complete-campaign-v2";
+  const releaseRef = "authored-fps-v1";
   const repositoryRoot = `https://raw.githubusercontent.com/darknigthmare/yomi-no-kage/${releaseRef}/`;
   const hostname = typeof location === "object" ? String(location.hostname || "") : "";
   const remoteAssets = /(^|\.)vercel\.app$/i.test(hostname);
