@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "id": "fps-authored-wave-02",
+  "updated": "2026-11-20",
+  "description": "Six prochains ennemis des trois premières missions FPS, sans déclarer produits des atlas sources absents.",
+  "directions": [
+    "front",
+    "front-left",
+    "back-left",
+    "back",
+    "back-right",
+    "front-right"
+  ],
+  "animations": [
+    "idle",
+    "move",
+    "attack",
+    "hurt",
+    "death"
+  ],
+  "grid": {
+    "columns": 6,
+    "rows": 5,
+    "posesPerAtlas": 30,
+    "frameWidth": 96,
+    "frameHeight": 128
+  },
+  "requiredUniqueAtlases": 36,
+  "state": "awaiting-authored-originals",
+  "characters": [
+    {
+      "category": "regular",
+      "id": "r09-haka-digger",
+      "mission": "forest-root-seal",
+      "name": "Fossoyeur",
+      "note": "Pelle et main vides ; pivot de l'outil séparé"
+    },
+    {
+      "category": "miniboss",
+      "id": "mb-09-pisteur-kegare",
+      "mission": "forest-root-seal",
+      "name": "Pisteur du Kegare",
+      "note": "Masque et lecture de la silhouette de traque"
+    },
+    {
+      "category": "special",
+      "id": "s16-kage-mai-dancer",
+      "mission": "bamboo-moon-sanctum",
+      "name": "Danseuse Kage-mai",
+      "note": "Vérifier la pose latérale avant tout remplacement"
+    },
+    {
+      "category": "miniboss",
+      "id": "mb-06-shinobi-brumes",
+      "mission": "bamboo-moon-sanctum",
+      "name": "Shinobi des Brumes",
+      "note": "Télégraphe de combat et posture de contact"
+    },
+    {
+      "category": "regular",
+      "id": "r17-umaya-groom",
+      "mission": "fields-granary-cellar",
+      "name": "Palefrenier d'Umaya",
+      "note": "Chigiriki séparé, chaîne et ancrages des mains"
+    },
+    {
+      "category": "miniboss",
+      "id": "mb-17-sumotori-namazu",
+      "mission": "fields-granary-cellar",
+      "name": "Sumotori Namazu",
+      "note": "Volume corporel et baseline constants"
+    }
+  ],
+  "qualityGates": {
+    "originalSixDirections": true,
+    "emptyHands": true,
+    "oneCompleteSilhouettePerCell": true,
+    "phaseLock": true,
+    "noMirroring": true,
+    "noProjectedViewsCountedAsAuthored": true,
+    "preserveLateralProfiles": true,
+    "provenanceSha256": true,
+    "manualBossReview": true
+  }
+}
