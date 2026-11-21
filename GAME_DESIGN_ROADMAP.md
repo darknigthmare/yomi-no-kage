@@ -60,8 +60,11 @@ toutes vraies :
 Ces tâches passent avant l’ajout de nouveau contenu.
 
 La vérification reproductible est en place : `node tools/verify-all.mjs`
-matérialise le cache de frames ignoré, exécute les 17 smoke tests et écrit ses
-logs dans `tmp/verify/`. Un clone neuf se vérifie donc en une commande.
+matérialise le cache de frames ignoré, exécute les 21 smoke tests et écrit ses
+logs dans `tmp/verify/`. Un clone neuf se vérifie donc en une commande. Ces
+tests couvrent le canon, le codex (237 fiches), les 28 zones et leurs
+objectifs, les rôles IA, la manette et le remapping clavier, ainsi que la
+traversée séquentielle des sept actes.
 
 ### P0.1 — terminer le pipeline FPS huit directions
 
@@ -116,7 +119,21 @@ Critères de sortie :
 
 ### P0.3 — playthrough technique de bout en bout
 
-Travail restant :
+État actuel :
+
+- la logique de campagne est déjà prouvée hors navigateur par
+  `campaign-playthrough-smoke-test.js` : 28 zones, 28 objectifs, sept actes et
+  sept sceaux traversés dans l’ordre canonique, avec rechargement de sauvegarde
+  entre les actes, sans double récompense et sans zone rejouée ;
+- cette preuve porte sur les données et les transitions de campagne, pas sur le
+  rendu ni sur les collisions : portes, checkpoints, missions FPS, boss et fin
+  ne sont pas exercés ;
+- `campaign-save-smoke-test.js` couvre en complément la persistance d’une zone
+  isolée ;
+- `node tools/verify-all.mjs` rejoue l’ensemble (21 smoke tests) en une
+  commande.
+
+Travail restant (runtime navigateur) :
 
 - jouer les 28 zones dans l’ordre sans commande debug ;
 - accomplir les 28 objectifs et les sept missions FPS obligatoires ;
@@ -129,7 +146,7 @@ Travail restant :
 
 Critères de sortie :
 
-- trois runs techniques consécutifs terminés sans impasse ;
+- trois runs navigateur consécutifs terminés sans impasse ;
 - `28/28` objectifs persistants ;
 - `7/7` sceaux persistants ;
 - aucune récompense reçue deux fois ;
@@ -436,7 +453,7 @@ Ces modes enrichissent le jeu, mais ne doivent pas retarder la campagne 1.0 :
 ### Jalonnage A — candidat technique
 
 - P0.1 à P0.5 terminés ;
-- trois runs techniques complets ;
+- trois runs navigateur complets ;
 - registre directionnel `105/105` ;
 - aucune impasse ou incohérence de sauvegarde ;
 - budgets de chargement documentés.
@@ -468,8 +485,15 @@ Ces modes enrichissent le jeu, mais ne doivent pas retarder la campagne 1.0 :
 
 ## Priorité immédiate
 
-La prochaine livraison doit fermer le P0 : huit directions FPS validées,
-sockets d’armes fiables, parcours complet sans impasse, audit visuel des
-28 zones et budget de chargement mesuré. Ajouter de nouveaux ennemis ou de
-nouvelles zones avant cette fermeture augmenterait surtout la dette de
-validation.
+Le premier livrable est le **harnais navigateur** : une commande qui charge la
+vraie page, pilote les 28 zones avec une horloge fixe et des entrées
+scriptées, recharge la sauvegarde à chaque acte et échoue sur toute erreur
+console. C’est lui qui transforme la preuve de données de P0.3 en preuve de
+runtime, et qui rend les incohérences de P0.4 et les budgets de P0.5
+mesurables au lieu d’inspectables à la main.
+
+Une fois ce harnais en place, la prochaine livraison doit fermer le P0 : huit
+directions FPS validées, sockets d’armes fiables, parcours complet sans
+impasse, audit visuel des 28 zones et budget de chargement mesuré. Ajouter de
+nouveaux ennemis ou de nouvelles zones avant cette fermeture augmenterait
+surtout la dette de validation.
