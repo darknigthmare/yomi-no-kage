@@ -853,7 +853,7 @@
     {
       id: "act-07-cyberpunk",
       order: 7,
-      label: "Acte VII — Les ombres de Neo-Tokyo",
+      label: "Acte VII — Les ombres de Neo-Edo",
       biomeId: "cyberpunk-japan",
       environmentId: "env-neo-tokyo-cyberpunk",
       rosterId: "roster-cyberpunk",

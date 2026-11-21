@@ -1491,6 +1491,8 @@
 
   function enemyBehaviorFamily(enemy, entry = enemy?.modularEntry) {
     if (isMassiveEnemy(enemy)) return "charger";
+    const roles = window.KageEnemyRoles;
+    if (roles && typeof roles.classify === "function") return roles.classify(entry, enemy);
     const text = [
       entry?.id,
       entry?.name,
@@ -1755,6 +1757,11 @@
     jumpQueued: false,
     lookPointerId: null,
     lookLastX: 0,
+    padX: 0,
+    padY: 0,
+    padLookX: 0,
+    padDpad: { up: false, down: false, left: false, right: false },
+    boundGuardKey: null,
   };
 
   const MAPS = [
@@ -2492,6 +2499,13 @@
         nextActId: allActZonesComplete ? nextAct?.id : "",
         actCompletionReward: campaignActCompletionReward(),
       });
+      // Le sceau de chronique atteste l'acte compris : il ouvre ses entrées.
+      if (allActZonesComplete && window.KageCodex) {
+        const profile = window.KageSave.load();
+        if (window.KageCodex.grantSeal(profile, meta.actOrder) > 0) {
+          window.KageSave.save(profile);
+        }
+      }
       return true;
     } catch (_) {
       return false;
@@ -2938,7 +2952,7 @@
     const entries = Array.isArray(definitions) && definitions.length
       ? definitions
       : rules.enemyXs.map((x) => ({ x }));
-    return entries.map((definition, i) => {
+    const enemies = entries.map((definition, i) => {
       const massive = definition.presentationClass === "massive"
         || Boolean(definition.profileId);
       const width = definition.w || (massive ? 128 : 16);
@@ -3033,6 +3047,30 @@
       enemy.ai = createSideEnemyAi(definition, area, width, height, i, massive);
       return enemy;
     });
+    observeCodexEnemies(enemies);
+    return enemies;
+  }
+
+  /* Une rencontre suffit : la fiche s'ouvre à l'apparition, jamais à la mise à
+   * mort. Un échec du codex ne doit jamais bloquer le chargement d'une aire. */
+  function observeCodexEnemies(enemies) {
+    if (!window.KageCodex || !window.KageSave || !enemies.length) return;
+    try {
+      const ids = enemies
+        .filter((enemy) => !enemy.dead)
+        .map((enemy) => enemy.rosterId || enemy.profileId || enemy.sourceId);
+      const profile = window.KageSave.load();
+      if (window.KageCodex.observe(profile, ids) > 0) window.KageSave.save(profile);
+    } catch (_) { /* le codex est un journal, pas une condition de jeu */ }
+  }
+
+  /* Fin du prologue : les cinq entrées qui précèdent le premier sceau. */
+  function openCodexPrologue() {
+    if (!window.KageCodex || !window.KageSave) return;
+    try {
+      const profile = window.KageSave.load();
+      if (window.KageCodex.openPrologue(profile) > 0) window.KageSave.save(profile);
+    } catch (_) { /* idem */ }
   }
 
   function makeSideEnemies(chapter) {
@@ -4027,6 +4065,7 @@
         upgradeLevel: Number(profile.mastery?.upgradeLevels?.[game.activeWeaponId]) || 0,
       },
       save: window.KageSave?.storageStatus?.() || {},
+      codex: window.KageCodex?.summary?.(profile) || null,
       refugeServicesAvailable: refugeServicesAvailable(),
     };
   }
@@ -4297,8 +4336,9 @@
   function updateSide(dt) {
     const side = game.side;
     const p = side.player;
-    const left = key("a") || key("ArrowLeft");
-    const right = key("d") || key("ArrowRight");
+    const padX = Number(input.padX) || 0;
+    const left = key("a") || key("ArrowLeft") || padX < -0.25 || input.padDpad.left;
+    const right = key("d") || key("ArrowRight") || padX > 0.25 || input.padDpad.right;
     const guarding = game.guardHeld || game.guardTimer > 0;
     const dodging = game.dodgeTimer > 0;
     const controlsLocked = game.transition > 0.05 || game.playerStagger > 0 || dodging;
@@ -4493,7 +4533,23 @@
     return phases[Math.max(0, (enemy.massivePhase || 1) - 1)] || null;
   }
 
+  /* Second pattern de boss : au-dessous de 50 % des points de vie, le profil
+   * de combat change d'attaque, de télégraphe et de portée. */
+  function withBossPattern(enemy, profile) {
+    const roles = window.KageEnemyRoles;
+    if (!roles || typeof roles.patternFor !== "function") return profile;
+    if (!enemy.boss && !isMassiveEnemy(enemy)) return profile;
+    const bossId = enemy.rosterId || enemy.modularEntry?.id || enemy.sourceId || "";
+    const ratio = enemy.maxHp > 0 ? enemy.hp / enemy.maxHp : 1;
+    const pattern = roles.patternFor(bossId, ratio);
+    return pattern ? roles.applyPattern(profile, pattern) : profile;
+  }
+
   function sideEnemyCombatProfile(enemy) {
+    return withBossPattern(enemy, baseSideEnemyCombatProfile(enemy));
+  }
+
+  function baseSideEnemyCombatProfile(enemy) {
     const family = enemy.behaviorFamily || enemyBehaviorFamily(enemy);
     if (isMassiveEnemy(enemy)) {
       const phase = activeMassivePhase(enemy);
@@ -4518,6 +4574,10 @@
       };
     }
     const elite = enemy.maxHp >= 3;
+    const roleBehaviour = window.KageEnemyRoles?.behavior?.(family, "side", elite);
+    if (roleBehaviour && family !== "ranged" && !enemy.boss) {
+      return { family, ...roleBehaviour };
+    }
     if (family === "ranged") {
       return {
         family, speed: 18, damage: elite ? 14 : 10, postureDamage: 18,
@@ -4893,6 +4953,21 @@
         ai.memoryTime = Math.max(0, ai.memoryTime - dt);
       }
 
+      /* Alarme : un guetteur qui voit le joueur rallie une fois ses voisins. */
+      if (profile.alarm && !ai.alarmRaised && (ai.targetVisible || ai.targetAudible)) {
+        ai.alarmRaised = true;
+        const roles = window.KageEnemyRoles;
+        const alerted = roles?.alarmTargets?.(game.side.enemies, enemy) || [];
+        for (const ally of alerted) {
+          ally.ai = ally.ai || ensureSideEnemyAi(ally);
+          ally.ai.state = "pursue";
+          ally.ai.previousState = "patrol";
+          ally.ai.lastKnownX = playerCenter;
+          ally.ai.memoryTime = 4;
+        }
+        if (alerted.length) announce("ALARME — LA ZONE SE RALLIE");
+      }
+
       if (enemy.attack > 0) {
         transitionEnemyAi(enemy, "attack", "attack-active");
         enemy.attack = Math.max(0, enemy.attack - dt);
@@ -4940,7 +5015,9 @@
         const targetX = ai.targetVisible || ai.targetAudible
           ? playerCenter
           : ai.lastKnownX;
+        const hunterRole = window.KageEnemyRoles?.isHunter?.(profile.family) === true;
         const beyondLeash = !isMassiveEnemy(enemy)
+          && !hunterRole
           && Math.abs(enemy.x - ai.homeX) > ai.leash
           && !ai.targetVisible;
         if (beyondLeash || !Number.isFinite(targetX)) {
@@ -4948,7 +5025,47 @@
         } else {
           enemy.facing = Math.sign(targetX - enemyCenter) || enemy.facing;
           const distance = Math.abs(dx);
-          if (
+          if (profile.support) {
+            const roles = window.KageEnemyRoles;
+            const healTarget = roles?.supportTarget?.(game.side.enemies, enemy) || null;
+            if (healTarget && enemy.attackCooldown <= 0) {
+              healTarget.hp = Math.min(
+                healTarget.maxHp,
+                healTarget.hp + (roles?.supportHeal || 2),
+              );
+              healTarget.posture = Math.max(
+                0,
+                (healTarget.posture || 0) - (roles?.supportPostureRelief || 8),
+              );
+              enemy.attackCooldown = roles?.supportCooldown || 2.4;
+              for (let index = 0; index < 6; index += 1) {
+                game.side.particles.push({
+                  x: healTarget.x + healTarget.w / 2,
+                  y: healTarget.y + healTarget.h * 0.4,
+                  vx: (index % 3 - 1) * 12,
+                  vy: -30,
+                  gravity: -40,
+                  drag: 0.94,
+                  life: 0.35,
+                  max: 0.45,
+                  color: "#9fd2a8",
+                  screen: false,
+                  kind: "spark",
+                });
+              }
+            }
+            if (distance < profile.minRange) {
+              const retreatTarget = enemyCenter - Math.sign(dx || enemy.facing) * 96;
+              moveSideEnemyToward(enemy, retreatTarget, profile.speed * 1.2, dt);
+            } else if (healTarget) {
+              moveSideEnemyToward(
+                enemy,
+                healTarget.x + healTarget.w / 2,
+                profile.speed * 0.8,
+                dt,
+              );
+            }
+          } else if (
             profile.ranged
             && distance < profile.minRange
             && feetGap < 55
@@ -5114,13 +5231,32 @@
     const mission = currentMission();
     const p = mission.player;
     const controlsLocked = game.transition > 0.05 || game.playerStagger > 0;
+    const padX = Number(input.padX) || 0;
+    const padY = Number(input.padY) || 0;
+    const padForward = padY > 0.25 ? 1 : (padY < -0.25 ? -1 : 0);
+    const padStrafe = padX > 0.25 ? 1 : (padX < -0.25 ? -1 : 0);
+    const padTurn = (input.padDpad.right ? 1 : 0) - (input.padDpad.left ? 1 : 0);
     const forward = controlsLocked
       ? 0
-      : (key("w") || key("ArrowUp") ? 1 : 0) - (key("s") || key("ArrowDown") ? 1 : 0);
-    const strafe = controlsLocked ? 0 : (key("d") ? 1 : 0) - (key("a") ? 1 : 0);
+      : clamp(
+        (key("w") || key("ArrowUp") ? 1 : 0)
+          - (key("s") || key("ArrowDown") ? 1 : 0)
+          + padForward,
+        -1,
+        1,
+      );
+    const strafe = controlsLocked
+      ? 0
+      : clamp((key("d") ? 1 : 0) - (key("a") ? 1 : 0) + padStrafe, -1, 1);
     const turning = controlsLocked
       ? 0
-      : (key("ArrowRight") ? 1 : 0) - (key("ArrowLeft") ? 1 : 0);
+      : clamp(
+        (key("ArrowRight") ? 1 : 0)
+          - (key("ArrowLeft") ? 1 : 0)
+          + padTurn,
+        -1,
+        1,
+      );
     const guarding = game.guardHeld || game.guardTimer > 0;
     const sprint = !guarding && key("Shift") && game.stamina > 1 && (forward || strafe);
     const speed = (sprint ? 3.55 : 2.25) * dt;
@@ -5294,6 +5430,10 @@
   }
 
   function fpsEnemyCombatProfile(enemy) {
+    return withBossPattern(enemy, baseFpsEnemyCombatProfile(enemy));
+  }
+
+  function baseFpsEnemyCombatProfile(enemy) {
     const family = enemy.behaviorFamily || enemyBehaviorFamily(enemy);
     if (isMassiveEnemy(enemy)) {
       const phase = activeMassivePhase(enemy);
@@ -5331,6 +5471,10 @@
         ranged: false,
         attackKind: family === "shield" ? "shield-bash" : "boss-strike",
       };
+    }
+    const roleBehaviour = window.KageEnemyRoles?.behavior?.(family, "fps", enemy.maxHp >= 3);
+    if (roleBehaviour && family !== "ranged" && !enemy.boss) {
+      return { family, ...roleBehaviour };
     }
     if (family === "ranged") {
       return {
@@ -6518,6 +6662,7 @@
           prepareSideChapter(1);
         }
         applyRosterToGame(game);
+        openCodexPrologue();
         const rangedWeapon = currentRangedWeapon();
         const ammoType = rangedAmmoType(rangedWeapon);
         game.ammo = Math.min(rangedAmmoCapacity(rangedWeapon), game.ammo + 3);
@@ -10249,6 +10394,14 @@
   function frame(now) {
     const dt = Math.min(0.033, Math.max(0, (now - lastTime) / 1000));
     lastTime = now;
+    pollGamepad();
+    if (
+      game.status === "playing"
+      && game.mode === "fps"
+      && Math.abs(Number(input.padLookX) || 0) > 0.25
+    ) {
+      applyFpsLookDelta(Number(input.padLookX) * 1100 * dt);
+    }
     if (game.status === "playing") update(dt);
     else if (game.status === "dying") {
       game.deathTimer = Math.max(0, game.deathTimer - dt);
@@ -10328,6 +10481,99 @@
     game.engagementGrace = Math.min(game.engagementGrace, 0.65);
   }
 
+  function inputBindings() {
+    const api = window.KageInput;
+    return api && typeof api.load === "function" ? api.load() : null;
+  }
+
+  /* Porte unique des actions remappées : clavier et manette appellent les
+   * mêmes fonctions que les touches historiques. */
+  function dispatchBoundAction(action) {
+    if (!action) return;
+    if (["attack", "heavy", "guard", "dodge", "ranged", "interact"].includes(action)) {
+      signalPlayerIntent();
+    }
+    if (action === "guard") { performGuard(true); return; }
+    if (action === "jump") { input.jumpQueued = true; return; }
+    if (action === "weapon-primary") { equipWeapon("primary"); return; }
+    if (action === "weapon-secondary") { equipWeapon("secondary"); return; }
+    if (action === "weapon-swap") { swapActiveWeapon(); return; }
+    handleAction(action);
+  }
+
+  function campaignFocusables() {
+    if (!dom.campaign?.querySelectorAll) return [];
+    return [...dom.campaign.querySelectorAll(
+      'button:not([disabled]), [href], [role="tab"]',
+    )].filter((element) => !element.hidden);
+  }
+
+  function moveCampaignFocus(delta) {
+    const items = campaignFocusables();
+    if (!items.length) return false;
+    const index = items.indexOf(document.activeElement);
+    const next = items[(index + delta + items.length) % items.length];
+    next.focus?.({ preventScroll: true });
+    return true;
+  }
+
+  /* Manette sur le refuge : croix directionnelle pour le focus, A pour
+   * confirmer, B pour revenir. Aucune souris n'est nécessaire. */
+  function navigateCampaignWithPad(result) {
+    if (result.nav.back || result.pressed.includes("pause")) {
+      closeCampaignScreen();
+      return;
+    }
+    if (
+      result.nav.confirm
+      || result.pressed.includes("interact")
+      || result.pressed.includes("dodge")
+    ) {
+      document.activeElement?.click?.();
+      return;
+    }
+    if (result.nav.up || result.nav.left) moveCampaignFocus(-1);
+    else if (result.nav.down || result.nav.right) moveCampaignFocus(1);
+  }
+
+  const padState = {
+    buttons: [],
+    axes: [0, 0, 0, 0],
+    dpad: {},
+    previousAxes: [0, 0],
+  };
+
+  function pollGamepad() {
+    const api = window.KageInput;
+    if (!api || typeof api.pollPad !== "function") return null;
+    const pads = typeof navigator !== "undefined"
+      && typeof navigator.getGamepads === "function"
+      ? navigator.getGamepads()
+      : null;
+    const pad = pads
+      ? Array.from(pads).find((candidate) => candidate && candidate.connected !== false)
+      : null;
+    if (!pad) {
+      input.padX = 0;
+      input.padY = 0;
+      input.padLookX = 0;
+      input.padDpad = { up: false, down: false, left: false, right: false };
+      return null;
+    }
+    const result = api.pollPad(padState, pad, api.load());
+    input.padX = result.axes.x;
+    input.padY = result.axes.y;
+    input.padLookX = result.axes.lookX;
+    input.padDpad = result.dpad;
+    if (game.status === "campaign") {
+      navigateCampaignWithPad(result);
+      return result;
+    }
+    for (const action of result.pressed) dispatchBoundAction(action);
+    if (result.released.includes("guard")) releaseGuard();
+    return result;
+  }
+
   function onKeyDown(event) {
     const k = event.key;
     if (game.status === "campaign") {
@@ -10346,6 +10592,15 @@
     input.keys.add(k);
     input.keys.add(k.toLowerCase());
     if (event.repeat) return;
+    const boundAction = window.KageInput?.actionForKey?.(inputBindings(), k) || null;
+    if (boundAction) {
+      // Pause et refuge restent disponibles hors jeu, comme Échap/P et C.
+      const alwaysAvailable = boundAction === "pause" || boundAction === "campaign";
+      if (!alwaysAvailable && game.status !== "playing") return;
+      dispatchBoundAction(boundAction);
+      if (boundAction === "guard") input.boundGuardKey = k;
+      return;
+    }
     if (k === "Escape" || k.toLowerCase() === "p") togglePause();
     if (game.status !== "playing") return;
     if (["a", "d", "w", "s", "arrowleft", "arrowright", "arrowup", "arrowdown", " ", "j", "l", "u", "h", "k", "e"].includes(k.toLowerCase())) {
@@ -10370,7 +10625,9 @@
   function onKeyUp(event) {
     input.keys.delete(event.key);
     input.keys.delete(event.key.toLowerCase());
-    if (event.key.toLowerCase() === "u") releaseGuard();
+    const boundAction = window.KageInput?.actionForKey?.(inputBindings(), event.key) || null;
+    if (boundAction === "guard" || event.key.toLowerCase() === "u") releaseGuard();
+    if (input.boundGuardKey === event.key) input.boundGuardKey = null;
   }
 
   function handleAction(action) {
@@ -10753,6 +11010,7 @@
         if (game.status === "playing") update(clamp(Number(dt) || 0, 0, 0.25));
         return window.KageGame.getState();
       },
+      pollGamepad: () => pollGamepad(),
       setPlayer2d: (patch = {}) => { Object.assign(game.side.player, patch); },
       setSideEnemy: (index, patch = {}) => {
         const enemy = game.side.enemies[clamp(Number(index) || 0, 0, game.side.enemies.length - 1)];

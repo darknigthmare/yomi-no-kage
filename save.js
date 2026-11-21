@@ -90,6 +90,25 @@
     return [...new Set(value.filter((entry) => typeof entry === "string"))];
   }
 
+  /* Le codex est un champ optionnel normalisé : il ne change pas le schéma.
+   * Le module runtime `codex.js` fixe la règle quand il est chargé ; sinon le
+   * catalogue généré borne la taille, ou 512 ids à défaut de catalogue. */
+  function normalizeCodex(value) {
+    const api = global.KageCodex;
+    if (api && typeof api.normalize === "function") return api.normalize(value);
+    const source = value && typeof value === "object" && !Array.isArray(value) ? value : {};
+    const catalog = global.KageCodexData;
+    const max = catalog && Array.isArray(catalog.entries) && catalog.entries.length
+      ? catalog.entries.length
+      : 512;
+    const clean = (list) => uniqueStrings(list).sort().slice(0, max);
+    return {
+      version: 1,
+      seen: clean(source.seen),
+      unlocked: clean(source.unlocked),
+    };
+  }
+
   function arsenal() {
     return global.KageArsenal || null;
   }
@@ -206,6 +225,7 @@
         reducedMotion: false,
         screenShake: true,
       },
+      codex: normalizeCodex(null),
     };
   }
 
@@ -419,6 +439,7 @@
         reducedMotion: Boolean(source.settings?.reducedMotion),
         screenShake: source.settings?.screenShake !== false,
       },
+      codex: normalizeCodex(source.codex),
     };
   }
 
@@ -840,6 +861,7 @@
     schema: SAVE_SCHEMA,
     defaults: defaultProfile,
     normalize: normalizeProfile,
+    normalizeCodex,
     load,
     save,
     getProgress,

@@ -89,6 +89,7 @@ global.fetch = async (url) => {
 };
 
 require("./level-data.js");
+require("./enemy-roles.js");
 require("./game.js");
 
 (async () => {
@@ -115,6 +116,25 @@ require("./game.js");
     global.KageLevels.areas["kai-forest-pass"].environmentIndex,
     5,
     "Le prologue doit démarrer dans le pack forêt dédié",
+  );
+
+  // Rôles IA (P1.5) : les ennemis instanciés portent un rôle connu et la forêt
+  // de Kai contient déjà une alarme et un chasseur authored.
+  const enemyRoles = global.KageEnemyRoles;
+  assert.ok(enemyRoles, "Les rôles IA doivent être chargés avec le moteur.");
+  const roleFamilies = global.KageGame.debug
+    .combatSnapshot()
+    .sideEnemies.map((enemy) => enemy.behaviorFamily);
+  for (const family of roleFamilies) {
+    assert.ok(enemyRoles.roles.includes(family), `Rôle inconnu instancié : ${family}`);
+  }
+  assert.ok(
+    roleFamilies.includes("alarm"),
+    "Le guetteur de la forêt de Kai doit tenir le rôle d'alarme.",
+  );
+  assert.ok(
+    roleFamilies.includes("hunter"),
+    "Le pisteur de la forêt de Kai doit tenir le rôle de chasseur.",
   );
 
   // La suite du smoke historique couvre Kurokawa : elle y entre

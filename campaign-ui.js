@@ -15,7 +15,7 @@
     "Kurokawa, ville des cendres",
     "Le trône du Yomi",
     "Tokyo, année zéro",
-    "Les ombres de Neo-Tokyo",
+    "Les ombres de Neo-Edo",
   ];
   const residentLabels = {
     "chiyo-apothicaire": "Chiyo, apothicaire",
@@ -50,7 +50,19 @@
     status: document.getElementById("campaign-status"),
     rest: screen.querySelector('[data-campaign-action="rest"]'),
     weaponUpgrade: screen.querySelector('[data-campaign-action="upgrade-weapon"]'),
+    codexCount: document.getElementById("campaign-codex-count"),
+    codexTabs: document.querySelector(".codex-tabs"),
+    codexList: document.getElementById("campaign-codex-list"),
+    codexDetail: document.getElementById("campaign-codex-detail"),
   };
+  const CODEX_FAMILIES = [
+    ["creatures", "Créatures"],
+    ["katana", "Lames"],
+    ["places", "Lieux"],
+    ["seals", "Sceaux"],
+    ["chronicle", "Chronique"],
+  ];
+  const codexState = { family: "creatures", selectedId: null };
 
   function escapeHtml(value) {
     return String(value ?? "")
@@ -177,6 +189,76 @@
     }).join("");
   }
 
+  function codexApi() {
+    return global.KageCodex && global.KageSave ? global.KageCodex : null;
+  }
+
+  function codexProfile() {
+    try { return global.KageSave?.load?.() || {}; } catch (_) { return {}; }
+  }
+
+  function renderCodexDetail(profile) {
+    const api = codexApi();
+    const entry = codexState.selectedId ? api.detail(profile, codexState.selectedId) : null;
+    if (!entry) {
+      dom.codexDetail.innerHTML = `<p class="codex-locked">Choisissez une entrée dans la liste.</p>`;
+      return;
+    }
+    if (!entry.unlocked) {
+      dom.codexDetail.innerHTML = `<h4>${escapeHtml(entry.spoiler.safeText)}</h4><p class="codex-locked">${escapeHtml(entry.hint)}</p>`;
+      return;
+    }
+    const meta = [];
+    if (entry.meta?.tier) meta.push(entry.meta.tier);
+    if (Number(entry.meta?.act) > 0) meta.push(`acte ${roman(entry.meta.act)}`);
+    if (Array.isArray(entry.refs) && entry.refs.length) meta.push(entry.refs.join(", "));
+    dom.codexDetail.innerHTML = `
+      <h4>${escapeHtml(entry.title)}</h4>
+      ${entry.subtitle ? `<small>${escapeHtml(entry.subtitle)}</small>` : ""}
+      <p>${escapeHtml(entry.body)}</p>
+      <small>${escapeHtml(meta.join(" · "))}</small>
+    `;
+  }
+
+  function renderCodex() {
+    if (!dom.codexCount || !dom.codexTabs || !dom.codexList || !dom.codexDetail) return;
+    const api = codexApi();
+    if (!api) {
+      dom.codexCount.textContent = "0 / 0";
+      dom.codexTabs.innerHTML = "";
+      dom.codexList.innerHTML = "";
+      dom.codexDetail.innerHTML = `<p class="codex-locked">Le codex n’est pas chargé.</p>`;
+      return;
+    }
+    const profile = codexProfile();
+    const summary = api.summary(profile);
+    dom.codexCount.textContent = `${summary.unlocked} / ${summary.total}`;
+    dom.codexTabs.innerHTML = CODEX_FAMILIES.map(([family, label]) => {
+      const counts = summary.families[family];
+      return `<button type="button" role="tab" data-codex-family="${family}" aria-selected="${family === codexState.family}">${escapeHtml(label)} <b>${counts.unlocked}/${counts.total}</b></button>`;
+    }).join("");
+    const entries = api.list(profile, codexState.family);
+    if (codexState.selectedId && !entries.some((entry) => entry.id === codexState.selectedId)) {
+      codexState.selectedId = null;
+    }
+    dom.codexList.innerHTML = entries.map((entry) => {
+      const selected = entry.id === codexState.selectedId;
+      const label = entry.unlocked ? entry.title : entry.spoiler.safeText;
+      const meta = entry.unlocked ? (entry.subtitle || "") : entry.hint;
+      return `
+        <li>
+          <button
+            type="button"
+            class="${entry.unlocked ? "" : "locked"}"
+            data-codex-id="${escapeHtml(entry.id)}"
+            aria-current="${selected ? "true" : "false"}"
+          ><b>${escapeHtml(label)}</b><small>${escapeHtml(meta)}</small></button>
+        </li>
+      `;
+    }).join("");
+    renderCodexDetail(profile);
+  }
+
   function setStatus(message, tone = "neutral") {
     dom.status.textContent = message;
     dom.status.dataset.tone = tone;
@@ -207,6 +289,7 @@
     renderObjectives(snapshot);
     renderQuests(snapshot);
     renderFacilities(snapshot);
+    renderCodex();
     return true;
   }
 
@@ -232,6 +315,19 @@
   }
 
   screen.addEventListener("click", (event) => {
+    const family = event.target.closest("[data-codex-family]");
+    if (family) {
+      codexState.family = family.dataset.codexFamily;
+      codexState.selectedId = null;
+      render();
+      return;
+    }
+    const entry = event.target.closest("[data-codex-id]");
+    if (entry) {
+      codexState.selectedId = entry.dataset.codexId;
+      renderCodex();
+      return;
+    }
     const button = event.target.closest("[data-campaign-action]");
     if (!button || button.disabled) return;
     const action = button.dataset.campaignAction;
@@ -240,7 +336,36 @@
     setStatus(resultMessage(action, result), result?.ok ? "success" : "error");
   });
 
+  if (dom.codexList) {
+    dom.codexList.addEventListener("keydown", (event) => {
+      if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+      const buttons = [...dom.codexList.querySelectorAll("[data-codex-id]")];
+      const index = buttons.indexOf(document.activeElement);
+      if (index < 0) return;
+      event.preventDefault();
+      const offset = event.key === "ArrowDown" ? 1 : -1;
+      buttons[Math.max(0, Math.min(buttons.length - 1, index + offset))]?.focus();
+    });
+  }
+
   screen.addEventListener("keydown", (event) => {
+    if (event.defaultPrevented) return;
+    if (event.key === "ArrowDown" || event.key === "ArrowUp"
+      || event.key === "ArrowRight" || event.key === "ArrowLeft") {
+      const focusable = [...screen.querySelectorAll(
+        'button:not([disabled]), [href], [role="tab"]',
+      )].filter((element) => !element.hidden);
+      if (!focusable.length) return;
+      event.preventDefault();
+      const index = focusable.indexOf(document.activeElement);
+      const forward = event.key === "ArrowDown" || event.key === "ArrowRight";
+      const offset = forward ? 1 : -1;
+      const next = index < 0
+        ? focusable[0]
+        : focusable[(index + offset + focusable.length) % focusable.length];
+      next.focus();
+      return;
+    }
     if (event.key !== "Tab") return;
     const focusable = [...screen.querySelectorAll(
       'button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])',

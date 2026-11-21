@@ -53,6 +53,7 @@ const context = {
   console,
 };
 vm.createContext(context);
+vm.runInContext(fs.readFileSync("codex-data.js", "utf8"), context, { filename: "codex-data.js" });
 vm.runInContext(fs.readFileSync("save.js", "utf8"), context, { filename: "save.js" });
 
 const save = window.KageSave;
@@ -182,6 +183,52 @@ assert(
   "Le journal de campagne doit défiler verticalement en portrait.",
 );
 assert(events.some((event) => event.type === "yomi:save-updated"), "La sauvegarde doit notifier l'interface.");
+
+// Codex : contrats 11 à 15.
+const withoutCodex = save.normalize({ schema: 2, progress: { health: 70 } });
+assert(
+  withoutCodex.codex
+    && Array.isArray(withoutCodex.codex.seen)
+    && withoutCodex.codex.unlocked.length === 0,
+  "Un profil sans codex doit être normalisé.",
+);
+assert(withoutCodex.progress.health === 70, "La normalisation du codex ne doit rien perdre.");
+assert(withoutCodex.schema === save.schema, "Le codex ne doit pas changer le schéma.");
+
+const scrambled = save.normalize({
+  schema: 2,
+  codex: { version: 1, seen: ["b", "a", "a"], unlocked: ["C02", "C01", "C01"] },
+});
+assert(
+  JSON.stringify(scrambled.codex.seen) === JSON.stringify(["a", "b"]),
+  "Les rencontres doivent être triées et dédupliquées.",
+);
+assert(
+  JSON.stringify(scrambled.codex.unlocked) === JSON.stringify(["C01", "C02"]),
+  "Les fiches ouvertes doivent être triées et dédupliquées.",
+);
+
+const unknownCodex = save.normalize({ schema: 2, codex: { seen: [], unlocked: ["r99-futur"] } });
+assert(unknownCodex.codex.unlocked.includes("r99-futur"), "Un id inconnu doit être conservé.");
+
+const flooded = save.normalize({
+  schema: 2,
+  codex: { seen: [], unlocked: Array.from({ length: 600 }, (_, index) => `x-${index}`) },
+});
+assert(
+  flooded.codex.unlocked.length <= window.KageCodexData.entries.length,
+  "Le codex doit rester borné par le catalogue.",
+);
+
+const codexProfile = save.load();
+codexProfile.codex = { version: 1, seen: ["01-shibito-villager"], unlocked: ["C01"] };
+save.save(codexProfile);
+const reloadedCodex = save.load();
+assert(reloadedCodex.codex.unlocked.includes("C01"), "Une fiche ouverte doit survivre au rechargement.");
+assert(
+  reloadedCodex.codex.seen.includes("01-shibito-villager"),
+  "Une rencontre doit survivre au rechargement.",
+);
 
 console.log(JSON.stringify({
   ok: true,

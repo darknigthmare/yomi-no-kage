@@ -2,6 +2,32 @@
   "schema": 1,
   "id": "yomi-no-kage-canon",
   "period": "Kan'ei 15 (1638)",
+  "bible": "LORE_BIBLE.md",
+  "bibleVersion": "2.0",
+  "naming": {
+    "capitalInstitutional": "Neo-Edo",
+    "capitalPopular": "Neo-Tokyo",
+    "rule": "Neo-Edo désigne le shogunat et ses institutions ; Neo-Tokyo désigne la rue, les néons et le marché. Les deux graphies sont canoniques pour la même cité."
+  },
+  "chronology": {
+    "feudal": {
+      "year": 1638,
+      "label": "Kan'ei 15",
+      "eraId": "kanei-1638"
+    },
+    "contemporary": {
+      "year": 2026,
+      "label": "Tokyo contemporain",
+      "eraId": "contemporary-japan"
+    },
+    "far": {
+      "year": 2188,
+      "label": "Neo-Edo",
+      "eraId": "cyberpunk-japan"
+    },
+    "sharedNight": "17 juin",
+    "rule": "Les trois époques partagent la même nuit du 17 juin : 1638, 2026, 2188."
+  },
   "geography": {
     "country": "Japon",
     "province": "Kai",
@@ -10,38 +36,4071 @@
     "canonicalStatement": "Kurokawa est le district fortifié de Tsuru, dans la province de Kai.",
     "fictionPolicy": "La géographie locale est fictionnelle mais reste compatible avec le cadre historique de Kai en 1638."
   },
+  "seals": {
+    "actSeals": {
+      "total": 22,
+      "perAct": [
+        2,
+        2,
+        3,
+        3,
+        4,
+        3,
+        5
+      ],
+      "rule": "Un sceau d'acte est un verrou local posé par les antagonistes sur un lieu, une porte, une cloche, une vanne ou un autel."
+    },
+    "chronicleSeals": {
+      "total": 7,
+      "rule": "Un sceau de chronique atteste qu'un acte a été compris, pas seulement traversé. Seuls ces sept sceaux sont lus par l'épilogue.",
+      "entries": [
+        {
+          "id": "chronicle-01",
+          "index": 1,
+          "act": 1,
+          "name": "Sceau du Camp",
+          "condition": "purifier le camp des bûcherons",
+          "ifMissing": "l'acte est « traversé », pas compris"
+        },
+        {
+          "id": "chronicle-02",
+          "index": 2,
+          "act": 2,
+          "name": "Sceau du Bambou",
+          "condition": "sauver l'éclaireur avant Kumo",
+          "ifMissing": "Suzu n'arrive pas au refuge"
+        },
+        {
+          "id": "chronicle-03",
+          "index": 3,
+          "act": 3,
+          "name": "Sceau de la Moisson",
+          "condition": "défendre les survivants des rizières",
+          "ifMissing": "les vivres manquent à l'acte IV"
+        },
+        {
+          "id": "chronicle-04",
+          "index": 4,
+          "act": 4,
+          "name": "Sceau du Pin",
+          "condition": "ouvrir le refuge du quartier marchand",
+          "ifMissing": "le hub reste une auberge"
+        },
+        {
+          "id": "chronicle-05",
+          "index": 5,
+          "act": 5,
+          "name": "Sceau de la Faille",
+          "condition": "stabiliser la faille après Kanrei",
+          "ifMissing": "la faille reste muette, pas fermée"
+        },
+        {
+          "id": "chronicle-06",
+          "index": 6,
+          "act": 6,
+          "name": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "ifMissing": "Rei doute de la chronologie"
+        },
+        {
+          "id": "chronicle-07",
+          "index": 7,
+          "act": 7,
+          "name": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "ifMissing": "la fin « brèche » est inaccessible"
+        }
+      ]
+    },
+    "rule": "Aucun sceau ne s'obtient par une monnaie, un niveau ou une statistique.",
+    "acts": [
+      {
+        "act": 1,
+        "actId": "act-01-forest",
+        "label": "Acte I - La foret qui murmure",
+        "totalSeals": 2,
+        "bossId": "giant-03-take-mori",
+        "zoneIds": [
+          "forest-kaido-trail",
+          "forest-abandoned-camp",
+          "forest-root-sanctuary"
+        ],
+        "breaks": [
+          "purification du camp",
+          "mort de Take-Mori"
+        ],
+        "chronicle": {
+          "index": 1,
+          "name": "Sceau du Camp",
+          "condition": "purifier le camp des bûcherons",
+          "ifMissing": "l'acte est « traversé », pas compris"
+        }
+      },
+      {
+        "act": 2,
+        "actId": "act-02-bamboo",
+        "label": "Acte II - Les lames de Shigure",
+        "totalSeals": 2,
+        "bossId": "boss-14-maitre-shinobi-kumo",
+        "zoneIds": [
+          "bamboo-rain-gate",
+          "bamboo-hollow-path",
+          "bamboo-moon-clearing"
+        ],
+        "breaks": [
+          "sceaux de bambou rompus",
+          "mort de Kumo"
+        ],
+        "chronicle": {
+          "index": 2,
+          "name": "Sceau du Bambou",
+          "condition": "sauver l'éclaireur avant Kumo",
+          "ifMissing": "Suzu n'arrive pas au refuge"
+        }
+      },
+      {
+        "act": 3,
+        "actId": "act-03-fields",
+        "label": "Acte III - La moisson noire",
+        "totalSeals": 3,
+        "bossId": "giant-07-shiro-kabuto",
+        "zoneIds": [
+          "fields-west-dikes",
+          "fields-drowned-paddies",
+          "fields-mill-road",
+          "fields-burning-granary"
+        ],
+        "breaks": [
+          "survivants défendus",
+          "moulin à spores",
+          "carapace de Shiro-Kabuto"
+        ],
+        "chronicle": {
+          "index": 3,
+          "name": "Sceau de la Moisson",
+          "condition": "défendre les survivants des rizières",
+          "ifMissing": "les vivres manquent à l'acte IV"
+        }
+      },
+      {
+        "act": 4,
+        "actId": "act-04-city",
+        "label": "Acte IV - Kurokawa, ville des cendres",
+        "totalSeals": 3,
+        "bossId": "boss-11-brigadier-engeki",
+        "zoneIds": [
+          "city-south-gate",
+          "city-market-wards",
+          "city-canal-roofs",
+          "city-castle-approach"
+        ],
+        "breaks": [
+          "refuge ouvert",
+          "cloche d'incendie",
+          "mort d'Engeki"
+        ],
+        "chronicle": {
+          "index": 4,
+          "name": "Sceau du Pin",
+          "condition": "ouvrir le refuge du quartier marchand",
+          "ifMissing": "le hub reste une auberge"
+        }
+      },
+      {
+        "act": 5,
+        "actId": "act-05-castle",
+        "label": "Acte V - Le trone du Yomi",
+        "totalSeals": 4,
+        "bossId": "giant-10-yomi-no-kanrei",
+        "zoneIds": [
+          "castle-lower-court-expansion",
+          "castle-residence-expansion",
+          "castle-armory",
+          "castle-donjon-expansion",
+          "castle-yomi-rift"
+        ],
+        "breaks": [
+          "sceau de la garnison",
+          "armurerie purifiée",
+          "daimyō",
+          "Kanrei"
+        ],
+        "chronicle": {
+          "index": 5,
+          "name": "Sceau de la Faille",
+          "condition": "stabiliser la faille après Kanrei",
+          "ifMissing": "la faille reste muette, pas fermée"
+        }
+      },
+      {
+        "act": 6,
+        "actId": "act-06-contemporary",
+        "label": "Acte VI - Tokyo, annee zero",
+        "totalSeals": 3,
+        "bossId": "new-modern-metro-colossus",
+        "zoneIds": [
+          "modern-shibuya-side-street",
+          "modern-subway-station",
+          "modern-quarantine-hospital",
+          "modern-metropolitan-lab"
+        ],
+        "breaks": [
+          "courant rétabli",
+          "échantillon sécurisé",
+          "colosse du métro"
+        ],
+        "chronicle": {
+          "index": 6,
+          "name": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "ifMissing": "Rei doute de la chronologie"
+        }
+      },
+      {
+        "act": 7,
+        "actId": "act-07-cyberpunk",
+        "label": "Acte VII - Les ombres de Neo-Edo",
+        "totalSeals": 5,
+        "bossId": "new-cyber-shogun-zero",
+        "zoneIds": [
+          "cyber-shrine-sector",
+          "cyber-neon-market",
+          "cyber-maglev-ruins",
+          "cyber-yomi-datacenter",
+          "cyber-shogun-core"
+        ],
+        "breaks": [
+          "lame calibrée",
+          "moines libérés",
+          "nids de drones",
+          "Kannushi",
+          "Shogun Zero"
+        ],
+        "chronicle": {
+          "index": 7,
+          "name": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "ifMissing": "la fin « brèche » est inaccessible"
+        }
+      }
+    ]
+  },
+  "rift": {
+    "id": "loi-des-trois-echos",
+    "nature": "spiritual-resonance",
+    "rule": "La faille n'est pas une porte mais un accord entre deux lieux qui se souviennent du même crime ; elle s'ouvre à la troisième veille pour ce qui porte la cendre.",
+    "echoes": [
+      "Kurokawa brûle ses malades (1638)",
+      "Tokyo met un quartier en quarantaine (2026)",
+      "Neo-Edo archive et rappelle ses morts (2188)"
+    ],
+    "crosses": [
+      "Akio marqué par la cendre",
+      "les armes liées à son serment",
+      "les blessures et la Souillure",
+      "une intention claire"
+    ],
+    "doesNotCross": [
+      "tout autre vivant non marqué",
+      "les objets sans lien, l'argent, les vivres",
+      "les morts et la cendre d'autrui",
+      "les documents écrits intacts"
+    ],
+    "formNotMatter": "Le Yomi conserve la forme (forge, maîtrise, techniques) et jamais la matière (lames perdues, réserves, monnaie).",
+    "cost": "Chaque traversée augmente la Souillure ; aucun farm ne peut la réduire hors sanctuaire, repos ou choix narratif."
+  },
   "contamination": {
     "phase1": {
       "id": "biological-outbreak",
+      "name": "Fièvre des Cendres",
       "nature": "biological",
       "transmission": [
         "fluides contaminés",
         "morsures",
-        "eau et réserves souillées"
+        "eau et réserves souillées",
+        "inhalation de poussière de foyers"
       ],
       "effects": [
         "fièvre",
         "nécrose",
         "agressivité",
         "mort clinique"
-      ]
+      ],
+      "incubationHours": [
+        12,
+        72
+      ],
+      "criticalDay": [
+        6,
+        9
+      ],
+      "lethality": "sept morts sur dix au neuvième jour"
     },
     "phase2": {
       "id": "yomi-resonance",
+      "name": "Kegare du Yomi",
       "nature": "spiritual-amplification",
       "rule": "La résonance du Yomi réanime et transforme les corps déjà contaminés; elle amplifie le foyer biologique sans le remplacer.",
       "vectors": [
         "sanctuaires profanés",
         "racines contaminées",
         "rites de domination du daimyō"
-      ]
-    }
+      ],
+      "anchors": [
+        "objet de serment",
+        "lieu de rite profané",
+        "racine contaminée"
+      ],
+      "breakRule": "Les ofuda, lames consacrées et sceaux brisent l'ancrage ; ils ne guérissent pas la Fièvre.",
+      "relapseRule": "Un corps guéri qui garde de la cendre dans les poumons peut être repris plus tard."
+    },
+    "purificationRule": "Purifier un lieu le rend habitable, pas sain ; guérir un corps ne nettoie pas un lieu ; brûler nettoie et rend inhabitable."
   },
+  "stages": [
+    {
+      "id": 0,
+      "name": "exposé",
+      "symptoms": "fièvre, toux, confusion",
+      "visual": "peau pâle, cendre mate"
+    },
+    {
+      "id": 1,
+      "name": "fiévreux",
+      "symptoms": "agressivité, douleur, encore vivant",
+      "visual": "vert malade discret"
+    },
+    {
+      "id": 2,
+      "name": "revenu",
+      "symptoms": "mort animé, mémoire fragmentaire",
+      "visual": "yeux ternes, fissures vertes"
+    },
+    {
+      "id": 3,
+      "name": "lié",
+      "symptoms": "armure, arme ou rite fusionné au Kegare",
+      "visual": "racines sombres, lueur retenue"
+    },
+    {
+      "id": 4,
+      "name": "brèche",
+      "symptoms": "mutation massive ou manifestation spirituelle",
+      "visual": "veines rouges au cœur de la brèche"
+    }
+  ],
+  "playerCorruption": {
+    "tiers": [
+      {
+        "range": [
+          0,
+          19
+        ],
+        "name": "Blanc",
+        "effect": "dialogues normaux, aucune déformation"
+      },
+      {
+        "range": [
+          20,
+          39
+        ],
+        "name": "Marqué",
+        "effect": "un PNJ mentionne l'odeur de cendre"
+      },
+      {
+        "range": [
+          40,
+          59
+        ],
+        "name": "Fiévreux",
+        "effect": "répliques plus sèches, doute au refuge"
+      },
+      {
+        "range": [
+          60,
+          79
+        ],
+        "name": "Revenu",
+        "effect": "les morts le reconnaissent"
+      },
+      {
+        "range": [
+          80,
+          99
+        ],
+        "name": "Brèche",
+        "effect": "le refuge hésite à le laisser entrer"
+      },
+      {
+        "range": [
+          100,
+          100
+        ],
+        "name": "Fin de chronique",
+        "effect": "déclenche la fin brèche"
+      }
+    ],
+    "rule": "Les seuils sont ceux du moteur ; la bible fixe la lecture diégétique. Aucun palier ne bloque une zone."
+  },
+  "factions": [
+    {
+      "id": "habitants-kai",
+      "name": "Habitants de Kai",
+      "composition": [
+        "paysans",
+        "bûcherons",
+        "artisans",
+        "bateliers",
+        "pèlerins",
+        "miliciens"
+      ],
+      "rule": "Ils mentent par peur, cachent leurs malades et brûlent parfois avant l'arrivée d'Akio."
+    },
+    {
+      "id": "garde-bakufu",
+      "name": "Garde du bakufu",
+      "composition": [
+        "ashigaru",
+        "yoriki",
+        "dōshin",
+        "jōban"
+      ],
+      "rule": "Elle applique un ordre écrit par des gens qui n'ont pas vu la ville."
+    },
+    {
+      "id": "religieux",
+      "name": "Religieux",
+      "composition": [
+        "miko",
+        "yamabushi",
+        "desservants locaux"
+      ],
+      "rule": "Jamais une religion unique responsable de l'épidémie, jamais un bloc."
+    },
+    {
+      "id": "lies-au-yomi",
+      "name": "Liés au Yomi",
+      "rule": "Nommés lorsqu'ils sont uniques, archétypes anonymes lorsqu'ils peuvent réapparaître ; chacun garde un geste de son ancien métier."
+    },
+    {
+      "id": "ordre-de-l-ombre",
+      "name": "Ordre de l'Ombre",
+      "composition": [
+        "Akio Kageyama"
+      ],
+      "rule": "Un nom, un édit scellé, une méthode : aucune recrue, aucun uniforme, aucun grade."
+    },
+    {
+      "id": "veilleurs-du-pin-noir",
+      "name": "Veilleurs du Pin Noir",
+      "composition": [
+        "Chiyo",
+        "Masanori",
+        "Suzu",
+        "Rei"
+      ],
+      "rule": "On ne refuse personne de propre, on refuse tout le reste ; le refuge ne se défend jamais seul.",
+      "facilities": [
+        {
+          "id": "forge",
+          "label": "Forge de Masanori",
+          "rule": "une lame reforgée garde sa forme, jamais son histoire"
+        },
+        {
+          "id": "infirmary",
+          "label": "Infirmerie de Chiyo",
+          "rule": "soins et réduction de la Souillure au repos"
+        },
+        {
+          "id": "dojo",
+          "label": "Dōjō des éclaireurs",
+          "rule": "on n'enseigne que ce qu'on a survécu"
+        },
+        {
+          "id": "shrine",
+          "label": "Sanctuaire des sceaux",
+          "rule": "purifier un lieu ne guérit personne"
+        }
+      ]
+    },
+    {
+      "id": "chapitre-des-memoires",
+      "name": "Chapitre des Mémoires",
+      "composition": [
+        "archivistes de 2188",
+        "Kannushi du réseau Yomi (infecté)"
+      ],
+      "rule": "Le Chapitre ne ment pas : il omet ; il parle du Yomi comme d'un format, jamais comme d'un dieu."
+    }
+  ],
   "finalBoss": {
     "id": "giant-10-yomi-no-kanrei",
     "name": "Yomi-no-Kanrei",
     "hostRole": "daimyo-of-kurokawa",
+    "hostName": "Kurokawa Suketada",
     "phase": 2,
     "identityRule": "Yomi-no-Kanrei est la seconde phase du daimyō corrompu et conserve sa volonté de régner."
+  },
+  "endings": {
+    "rule": "Trois textes de fin : faille refermée, Souillure haute, épilogue des trois époques.",
+    "riftClosed": "La faille se referme sur une question, pas sur une victoire.",
+    "highCorruption": "Akio survit mais n'est plus identifiable comme humain.",
+    "epilogue": "Chiyo ouvre l'épilogue ; la forge de Masanori en est le dernier plan."
+  },
+  "characters": [
+    {
+      "id": "akio-kageyama",
+      "name": "Akio Kageyama",
+      "role": "samouraï de l'ombre",
+      "factionId": "ordre-de-l-ombre",
+      "age1638": 34,
+      "stage": null,
+      "acts": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "fate": "vivant quel que soit l'épilogue",
+      "voice": "phrases courtes, une question par scène, aucune menace"
+    },
+    {
+      "id": "tokugawa-iemitsu-fiction",
+      "name": "Tokugawa Iemitsu (fiction)",
+      "role": "shogun commanditaire",
+      "factionId": "garde-bakufu",
+      "age1638": 34,
+      "stage": null,
+      "acts": [
+        1,
+        7
+      ],
+      "fate": "mort bien avant 2026 ; sa mémoire militaire construit Shogun Zero",
+      "voice": "impérative, économe, jamais cruelle"
+    },
+    {
+      "id": "kurokawa-suketada",
+      "name": "Kurokawa Suketada",
+      "role": "daimyō mineur de Kurokawa",
+      "factionId": "lies-au-yomi",
+      "age1638": 51,
+      "stage": 3,
+      "acts": [
+        5
+      ],
+      "fate": "absorbé dans Yomi-no-Kanrei",
+      "voice": "administrative, plaintive ; parle de comptes et de devoirs"
+    },
+    {
+      "id": "yomi-no-kanrei",
+      "name": "Yomi-no-Kanrei",
+      "role": "seconde phase de Suketada",
+      "factionId": "lies-au-yomi",
+      "age1638": null,
+      "stage": 4,
+      "acts": [
+        5
+      ],
+      "fate": "détruit ; la cendre retombe sur Kurokawa",
+      "voice": "la voix de Suketada, en retard d'un souffle, répétée"
+    },
+    {
+      "id": "engeki",
+      "name": "Engeki",
+      "role": "chef de la levée de pompiers (hikeshi), appelé brigadier par les habitants",
+      "factionId": "garde-bakufu",
+      "age1638": 46,
+      "stage": 3,
+      "acts": [
+        4
+      ],
+      "fate": "meurt en ordonnant de fermer la rue ; son registre devient un codex",
+      "voice": "ordres numérotés, comptes à voix haute, aucune insulte"
+    },
+    {
+      "id": "kumo",
+      "name": "Kumo",
+      "role": "maître shinobi",
+      "factionId": "lies-au-yomi",
+      "age1638": 43,
+      "stage": 3,
+      "acts": [
+        2
+      ],
+      "fate": "tué ; ses pièges restent actifs",
+      "voice": "douce, commerciale ; propose un prix avant un combat"
+    },
+    {
+      "id": "shigure",
+      "name": "Shigure",
+      "role": "gardienne de la bambouseraie",
+      "factionId": "religieux",
+      "age1638": 31,
+      "stage": null,
+      "acts": [
+        2,
+        7
+      ],
+      "fate": "morte avant l'arrivée d'Akio, jamais relevée",
+      "voice": "uniquement par codex, notes et un écho à l'acte VII"
+    },
+    {
+      "id": "giant-03-take-mori",
+      "name": "Take-Mori",
+      "role": "colosse de la bambouseraie",
+      "factionId": "lies-au-yomi",
+      "age1638": null,
+      "stage": 4,
+      "acts": [
+        1
+      ],
+      "fate": "détruit ; ses crêtes restent plantées dans la clairière",
+      "voice": "aucun mot ; des coups de bélier en télégraphe"
+    },
+    {
+      "id": "giant-02-aka-ushi",
+      "name": "Aka-Ushi",
+      "role": "bœuf de trait pestiféré",
+      "factionId": "lies-au-yomi",
+      "age1638": null,
+      "stage": 2,
+      "acts": [
+        3
+      ],
+      "fate": "abattu ; le joug devient une arme de dōjō",
+      "voice": "beuglements courts"
+    },
+    {
+      "id": "giant-07-shiro-kabuto",
+      "name": "Shiro-Kabuto",
+      "role": "scarabée pâle de la peste",
+      "factionId": "lies-au-yomi",
+      "age1638": null,
+      "stage": 4,
+      "acts": [
+        3
+      ],
+      "fate": "tué ; sa carapace sert de matériau de forge",
+      "voice": "cliquetis, aucun cri"
+    },
+    {
+      "id": "giant-01-kurogane-warder",
+      "name": "Gardien Kurogane",
+      "role": "gardien de la porte du château",
+      "factionId": "lies-au-yomi",
+      "age1638": null,
+      "stage": 3,
+      "acts": [
+        5
+      ],
+      "fate": "détruit avec la porte",
+      "voice": "répète « La porte reste close. »"
+    },
+    {
+      "id": "numa-no-oyakata",
+      "name": "Numa-no-Oyakata",
+      "role": "gardien d'ancre des rizières",
+      "factionId": "lies-au-yomi",
+      "age1638": null,
+      "stage": 3,
+      "acts": [
+        3
+      ],
+      "fate": "dissous quand la vanne s'ouvre",
+      "voice": "comptes d'eau et de redevances"
+    },
+    {
+      "id": "giant-04-enjin-bozu",
+      "name": "Enjin-Bōzu",
+      "role": "moine du foyer consumé",
+      "factionId": "lies-au-yomi",
+      "age1638": null,
+      "stage": 4,
+      "acts": [
+        4
+      ],
+      "fate": "s'effondre sur sa cloche, qui reste en décor",
+      "voice": "sutras incomplets, une syllabe manquante"
+    },
+    {
+      "id": "geoeliere-sekimon",
+      "name": "Geôlière de Sekimon",
+      "role": "gardienne de la geôle",
+      "factionId": "lies-au-yomi",
+      "age1638": null,
+      "stage": 3,
+      "acts": [
+        4,
+        5
+      ],
+      "fate": "enfermée dans sa propre geôle, vivante et immobile",
+      "voice": "procédurale : numéro de cellule, motif, heure"
+    },
+    {
+      "id": "abbe-de-kurotaki",
+      "name": "Abbé de Kurotaki",
+      "role": "abbé du temple de la cascade noire",
+      "factionId": "religieux",
+      "age1638": null,
+      "stage": 3,
+      "acts": [
+        2,
+        4
+      ],
+      "fate": "meurt en sonnant la cloche du Yomi",
+      "voice": "douce, sûre, ne ment jamais"
+    },
+    {
+      "id": "chatelain-ibushi",
+      "name": "Châtelain Ibushi",
+      "role": "seigneur rival",
+      "factionId": "garde-bakufu",
+      "age1638": null,
+      "stage": 3,
+      "acts": [
+        3,
+        5
+      ],
+      "fate": "tué ou en fuite ; seule apparition multiple autorisée",
+      "voice": "mépris de rang, références constantes au statut"
+    },
+    {
+      "id": "matriarche-beni-tsuru",
+      "name": "Matriarche Beni-Tsuru",
+      "role": "matriarche des tisseuses de Tsuru",
+      "factionId": "habitants-kai",
+      "age1638": null,
+      "stage": 3,
+      "acts": [
+        3
+      ],
+      "fate": "meurt en demandant qu'on brûle les bannières",
+      "voice": "maternelle, épuisée, prénoms des enfants"
+    },
+    {
+      "id": "shiranui",
+      "name": "Shiranui",
+      "role": "commandant de suigun fluvial",
+      "factionId": "garde-bakufu",
+      "age1638": null,
+      "stage": 3,
+      "acts": [
+        3,
+        4
+      ],
+      "fate": "coule avec sa barge",
+      "voice": "ordres de manœuvre, vocabulaire de batelier"
+    },
+    {
+      "id": "new-cyber-yomi-hacker",
+      "name": "Kannushi du réseau Yomi",
+      "role": "prêtre-réseau du Chapitre des Mémoires",
+      "factionId": "chapitre-des-memoires",
+      "age1638": null,
+      "stage": 3,
+      "acts": [
+        7
+      ],
+      "fate": "dissous dans le réseau ; sa dernière phrase est un nom de 1638",
+      "voice": "liturgique et technique, chaque phrase est une entrée de journal datée"
+    },
+    {
+      "id": "new-cyber-shogun-zero",
+      "name": "Shogun Zero",
+      "role": "boss final de Neo-Edo",
+      "factionId": "lies-au-yomi",
+      "age1638": null,
+      "stage": 4,
+      "acts": [
+        7
+      ],
+      "fate": "détruit ; la faille se referme sur une question",
+      "voice": "voix de Iemitsu reconstituée, avec des coupures"
+    },
+    {
+      "id": "rei-archiviste",
+      "name": "Rei",
+      "role": "archiviste temporelle du Chapitre des Mémoires",
+      "factionId": "chapitre-des-memoires",
+      "age1638": null,
+      "stage": null,
+      "acts": [
+        6,
+        7
+      ],
+      "fate": "repart en 2188 avant la fin",
+      "voice": "précise, rapide, cite des cotes de documents"
+    },
+    {
+      "id": "chiyo-apothicaire",
+      "name": "Chiyo",
+      "role": "apothicaire du Pin Noir",
+      "factionId": "veilleurs-du-pin-noir",
+      "age1638": 38,
+      "stage": null,
+      "acts": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "fate": "survit ; première voix de l'épilogue",
+      "voice": "directe, sans consolation, annonce les nouvelles comme des résultats"
+    },
+    {
+      "id": "masanori-forgeron",
+      "name": "Masanori",
+      "role": "forgeron du Pin Noir",
+      "factionId": "veilleurs-du-pin-noir",
+      "age1638": 55,
+      "stage": null,
+      "acts": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "fate": "survit ; sa forge est le dernier plan de l'épilogue",
+      "voice": "grommelle des questions techniques"
+    },
+    {
+      "id": "suzu-eclaireuse",
+      "name": "Suzu",
+      "role": "éclaireuse du Pin Noir, apprentie de Shigure",
+      "factionId": "veilleurs-du-pin-noir",
+      "age1638": 17,
+      "stage": null,
+      "acts": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "fate": "survit ; hérite du masque de Shigure si le joueur l'a trouvé",
+      "voice": "rapide, concrète, coupe la parole quand elle a peur"
+    }
+  ],
+  "writingBans": [
+    "pas de paradoxe temporel ni de boucle qui annule un acte",
+    "pas de résurrection d'un personnage nommé",
+    "pas d'élu, pas de prophétie, pas de sang spécial",
+    "pas d'explication scientifique totale du Yomi",
+    "pas de sauvetage rétroactif d'un mort du prologue",
+    "pas de « c'était un rêve », pas de simulation"
+  ],
+  "zones": {
+    "total": 28,
+    "entries": [
+      {
+        "id": "forest-abandoned-camp",
+        "areaId": "forest-abandoned-camp",
+        "act": 1,
+        "label": "Camp abandonne des bucherons",
+        "objective": {
+          "id": "obj-forest-purify-camp",
+          "type": "purify",
+          "label": "Purifier le camp abandonne",
+          "sealReward": 1
+        },
+        "bossId": null
+      },
+      {
+        "id": "forest-kaido-trail",
+        "areaId": "kai-forest-pass",
+        "act": 1,
+        "label": "Forêt noyée de Kai",
+        "objective": {
+          "id": "obj-forest-follow-traces",
+          "type": "investigate",
+          "label": "Suivre les traces de la patrouille du shogun",
+          "sealReward": 0
+        },
+        "bossId": null
+      },
+      {
+        "id": "forest-root-sanctuary",
+        "areaId": "forest-root-sanctuary",
+        "act": 1,
+        "label": "Sanctuaire des racines",
+        "objective": {
+          "id": "obj-forest-defeat-take-mori",
+          "type": "boss",
+          "label": "Abattre Take-Mori, gardien des racines",
+          "sealReward": 1
+        },
+        "bossId": "giant-03-take-mori"
+      },
+      {
+        "id": "bamboo-hollow-path",
+        "areaId": "bamboo-hollow-path",
+        "act": 2,
+        "label": "Chemin des tiges creuses",
+        "objective": {
+          "id": "obj-bamboo-rescue-scout",
+          "type": "rescue",
+          "label": "Retrouver l'eclaireur de la patrouille",
+          "sealReward": 0
+        },
+        "bossId": null
+      },
+      {
+        "id": "bamboo-moon-clearing",
+        "areaId": "bamboo-moon-clearing",
+        "act": 2,
+        "label": "Clairiere de la lune fendue",
+        "objective": {
+          "id": "obj-bamboo-defeat-kumo",
+          "type": "boss",
+          "label": "Vaincre Kumo dans la clairiere",
+          "sealReward": 1
+        },
+        "bossId": "boss-14-maitre-shinobi-kumo"
+      },
+      {
+        "id": "bamboo-rain-gate",
+        "areaId": "shigure-bamboo-grove",
+        "act": 2,
+        "label": "Bambouseraie de Shigure",
+        "objective": {
+          "id": "obj-bamboo-cut-wards",
+          "type": "destroy-nodes",
+          "label": "Rompre les sceaux poses sur les bambous",
+          "sealReward": 1
+        },
+        "bossId": null
+      },
+      {
+        "id": "fields-burning-granary",
+        "areaId": "fields-burning-granary",
+        "act": 3,
+        "label": "Grenier de la moisson noire",
+        "objective": {
+          "id": "obj-fields-defeat-aka-ushi",
+          "type": "boss",
+          "label": "Briser la carapace de Shiro-Kabuto",
+          "sealReward": 1
+        },
+        "bossId": "giant-07-shiro-kabuto"
+      },
+      {
+        "id": "fields-drowned-paddies",
+        "areaId": "fields-drowned-paddies",
+        "act": 3,
+        "label": "Rizieres noyees",
+        "objective": {
+          "id": "obj-fields-defend-farmers",
+          "type": "defense",
+          "label": "Defendre les survivants des rizieres",
+          "sealReward": 1
+        },
+        "bossId": null
+      },
+      {
+        "id": "fields-mill-road",
+        "areaId": "fields-mill-road",
+        "act": 3,
+        "label": "Route du moulin",
+        "objective": {
+          "id": "obj-fields-break-spore-mill",
+          "type": "purify",
+          "label": "Detruire le moulin a spores",
+          "sealReward": 1
+        },
+        "bossId": null
+      },
+      {
+        "id": "fields-west-dikes",
+        "areaId": "tsuru-rice-fields",
+        "act": 3,
+        "label": "Rizières de Tsuru",
+        "objective": {
+          "id": "obj-fields-open-irrigation",
+          "type": "world-state",
+          "label": "Rouvrir les vannes d'irrigation",
+          "sealReward": 0
+        },
+        "bossId": null
+      },
+      {
+        "id": "city-canal-roofs",
+        "areaId": "kurokawa-market-east",
+        "act": 4,
+        "label": "Marché oriental",
+        "objective": {
+          "id": "obj-city-ring-fire-bell",
+          "type": "world-state",
+          "label": "Sonner la cloche d'incendie de Kurokawa",
+          "sealReward": 1
+        },
+        "bossId": null
+      },
+      {
+        "id": "city-castle-approach",
+        "areaId": "city-castle-approach",
+        "act": 4,
+        "label": "Avenue fortifiee du chateau",
+        "objective": {
+          "id": "obj-city-defeat-engeki",
+          "type": "boss",
+          "label": "Vaincre le brigadier Engeki",
+          "sealReward": 1
+        },
+        "bossId": "boss-11-brigadier-engeki"
+      },
+      {
+        "id": "city-market-wards",
+        "areaId": "kurokawa-back-street",
+        "act": 4,
+        "label": "Ruelle des puits",
+        "objective": {
+          "id": "obj-city-open-refuge",
+          "type": "refuge",
+          "label": "Ouvrir un refuge dans le quartier marchand",
+          "sealReward": 1
+        },
+        "bossId": null
+      },
+      {
+        "id": "city-south-gate",
+        "areaId": "kurokawa-main-street",
+        "act": 4,
+        "label": "Grande rue de Kurokawa",
+        "objective": {
+          "id": "obj-city-enter-quarantine",
+          "type": "breach",
+          "label": "Franchir le cordon de quarantaine",
+          "sealReward": 0
+        },
+        "bossId": null
+      },
+      {
+        "id": "castle-armory",
+        "areaId": "castle-armory",
+        "act": 5,
+        "label": "Armurerie du clan Kurokawa",
+        "objective": {
+          "id": "obj-castle-purify-armory",
+          "type": "purify",
+          "label": "Purifier l'armurerie du clan",
+          "sealReward": 1
+        },
+        "bossId": null
+      },
+      {
+        "id": "castle-donjon-expansion",
+        "areaId": "castle-donjon",
+        "act": 5,
+        "label": "Donjon supérieur",
+        "objective": {
+          "id": "obj-castle-defeat-kanrei",
+          "type": "boss",
+          "label": "Abattre le daimyo corrompu",
+          "sealReward": 1
+        },
+        "bossId": "06-daimyo-corrupted"
+      },
+      {
+        "id": "castle-lower-court-expansion",
+        "areaId": "castle-lower-court",
+        "act": 5,
+        "label": "Cour basse du château",
+        "objective": {
+          "id": "obj-castle-break-barracks-seal",
+          "type": "destroy-nodes",
+          "label": "Briser le sceau de la garnison",
+          "sealReward": 1
+        },
+        "bossId": null
+      },
+      {
+        "id": "castle-residence-expansion",
+        "areaId": "castle-residence",
+        "act": 5,
+        "label": "Résidence du daimyō",
+        "objective": {
+          "id": "obj-castle-find-daimyo-records",
+          "type": "investigate",
+          "label": "Retrouver les registres du daimyo",
+          "sealReward": 0
+        },
+        "bossId": null
+      },
+      {
+        "id": "castle-yomi-rift",
+        "areaId": "castle-yomi-rift",
+        "act": 5,
+        "label": "Faille du Yomi",
+        "objective": {
+          "id": "obj-castle-stabilize-warp",
+          "type": "boss",
+          "label": "Detruire Yomi-no-Kanrei et stabiliser la faille",
+          "sealReward": 1
+        },
+        "bossId": "giant-10-yomi-no-kanrei"
+      },
+      {
+        "id": "modern-metropolitan-lab",
+        "areaId": "modern-metropolitan-lab",
+        "act": 6,
+        "label": "Laboratoire metropolitain",
+        "objective": {
+          "id": "obj-modern-defeat-metro-colossus",
+          "type": "boss",
+          "label": "Abattre le colosse de la ligne Yomi",
+          "sealReward": 1
+        },
+        "bossId": "new-modern-metro-colossus"
+      },
+      {
+        "id": "modern-quarantine-hospital",
+        "areaId": "modern-quarantine-hospital",
+        "act": 6,
+        "label": "Hopital de quarantaine",
+        "objective": {
+          "id": "obj-modern-secure-sample",
+          "type": "retrieval",
+          "label": "Securiser l'echantillon originel",
+          "sealReward": 1
+        },
+        "bossId": null
+      },
+      {
+        "id": "modern-shibuya-side-street",
+        "areaId": "tokyo-contemporary-rift",
+        "act": 6,
+        "label": "Tokyo contemporain — quarantaine Yomi",
+        "objective": {
+          "id": "obj-modern-read-emergency-records",
+          "type": "investigate",
+          "label": "Lire les archives d'urgence de Tokyo",
+          "sealReward": 0
+        },
+        "bossId": null
+      },
+      {
+        "id": "modern-subway-station",
+        "areaId": "modern-subway-station",
+        "act": 6,
+        "label": "Station de metro condamnee",
+        "objective": {
+          "id": "obj-modern-restore-power",
+          "type": "world-state",
+          "label": "Retablir le courant de la station",
+          "sealReward": 1
+        },
+        "bossId": null
+      },
+      {
+        "id": "cyber-maglev-ruins",
+        "areaId": "cyber-maglev-ruins",
+        "act": 7,
+        "label": "Ruines du maglev",
+        "objective": {
+          "id": "obj-cyber-destroy-drone-nests",
+          "type": "destroy-nodes",
+          "label": "Detruire les nids de drones",
+          "sealReward": 1
+        },
+        "bossId": null
+      },
+      {
+        "id": "cyber-neon-market",
+        "areaId": "cyber-neon-market",
+        "act": 7,
+        "label": "Marche aux neons",
+        "objective": {
+          "id": "obj-cyber-free-memory-monks",
+          "type": "rescue",
+          "label": "Liberer les moines-memoires",
+          "sealReward": 1
+        },
+        "bossId": null
+      },
+      {
+        "id": "cyber-shogun-core",
+        "areaId": "cyber-shogun-core",
+        "act": 7,
+        "label": "Coeur du Shogun Zero",
+        "objective": {
+          "id": "obj-cyber-defeat-shogun-zero",
+          "type": "boss",
+          "label": "Vaincre le Shogun Zero",
+          "sealReward": 1
+        },
+        "bossId": "new-cyber-shogun-zero"
+      },
+      {
+        "id": "cyber-shrine-sector",
+        "areaId": "neo-edo-cyber-rift",
+        "act": 7,
+        "label": "Neo-Edo — secteur du Shōgun Zéro",
+        "objective": {
+          "id": "obj-cyber-calibrate-katana",
+          "type": "upgrade",
+          "label": "Calibrer la lame sur la frequence Yomi",
+          "sealReward": 1
+        },
+        "bossId": null
+      },
+      {
+        "id": "cyber-yomi-datacenter",
+        "areaId": "cyber-yomi-datacenter",
+        "act": 7,
+        "label": "Centre de donnees Yomi",
+        "objective": {
+          "id": "obj-cyber-defeat-hacker",
+          "type": "boss",
+          "label": "Neutraliser le kannushi du reseau",
+          "sealReward": 1
+        },
+        "bossId": "new-cyber-yomi-hacker"
+      }
+    ]
+  },
+  "bestiary": {
+    "total": 105,
+    "tiers": {
+      "legacy": 6,
+      "regular": 22,
+      "special": 24,
+      "miniboss": 21,
+      "boss": 22,
+      "massive": 10
+    },
+    "entries": [
+      {
+        "id": "01-shibito-villager",
+        "name": "Shibito des rizières",
+        "subtitle": "Infecté villageois",
+        "tier": "legacy",
+        "stage": 2,
+        "role": "legacy",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il compte encore les gerbes qu'on ne rentrera pas."
+      },
+      {
+        "id": "02-ashigaru-revenant",
+        "name": "Ashigaru revenant",
+        "subtitle": "Fantassin discipliné",
+        "tier": "legacy",
+        "stage": 2,
+        "role": "legacy",
+        "acts": [],
+        "zones": [],
+        "rumor": "Sa lance garde une porte qui n'existe plus."
+      },
+      {
+        "id": "03-kegare-sohei",
+        "name": "Sōhei du Kegare",
+        "subtitle": "Moine guerrier infecté",
+        "tier": "legacy",
+        "stage": 3,
+        "role": "legacy",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il frappe au rythme d'un sutra dont il a perdu la fin."
+      },
+      {
+        "id": "04-onryo-miko",
+        "name": "Miko onryō",
+        "subtitle": "Desservante spectrale",
+        "tier": "legacy",
+        "stage": 3,
+        "role": "legacy",
+        "acts": [],
+        "zones": [],
+        "rumor": "Elle purifie des autels déjà vides."
+      },
+      {
+        "id": "05-kabuto-brute",
+        "name": "Brute au kabuto",
+        "subtitle": "Infecté lourd",
+        "tier": "legacy",
+        "stage": 2,
+        "role": "legacy",
+        "acts": [],
+        "zones": [],
+        "rumor": "Le casque a survécu au visage."
+      },
+      {
+        "id": "06-daimyo-corrupted",
+        "name": "Daimyō corrompu",
+        "subtitle": "Seigneur infecté",
+        "tier": "legacy",
+        "stage": 3,
+        "role": "act-boss",
+        "acts": [
+          5
+        ],
+        "zones": [
+          "castle-donjon-expansion"
+        ],
+        "rumor": "Il signe encore des ordres que personne ne lit."
+      },
+      {
+        "id": "r01-nureta-fisher",
+        "name": "Pêcheur de Nureta",
+        "subtitle": "Harceleur côtier",
+        "tier": "regular",
+        "stage": 2,
+        "role": "regular",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il pêche dans un canal qui n'a jamais eu de poissons."
+      },
+      {
+        "id": "r02-sekisho-messenger",
+        "name": "Messager du Sekisho",
+        "subtitle": "Coureur d'interception",
+        "tier": "regular",
+        "stage": 2,
+        "role": "regular",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il court une route dont le péage a brûlé."
+      },
+      {
+        "id": "r03-kurokawa-miner",
+        "name": "Mineur de Kurokawa",
+        "subtitle": "Briseur lourd",
+        "tier": "regular",
+        "stage": 2,
+        "role": "regular",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il cherche une veine qui l'a déjà enseveli."
+      },
+      {
+        "id": "r04-chaya-servant",
+        "name": "Servante du Chaya",
+        "subtitle": "Assaillante vive",
+        "tier": "regular",
+        "stage": 2,
+        "role": "regular",
+        "acts": [],
+        "zones": [],
+        "rumor": "Elle sert un thé que personne ne boit."
+      },
+      {
+        "id": "r05-kome-porter",
+        "name": "Porteur de riz",
+        "subtitle": "Colosse de proximité",
+        "tier": "regular",
+        "stage": 2,
+        "role": "regular",
+        "acts": [
+          3
+        ],
+        "zones": [
+          "fields-burning-granary",
+          "fields-drowned-paddies",
+          "fields-mill-road",
+          "fields-west-dikes"
+        ],
+        "rumor": "Le sac sur son dos est plein de cendre."
+      },
+      {
+        "id": "r06-yama-woodcutter",
+        "name": "Bûcheron des montagnes",
+        "subtitle": "Frappeur vertical",
+        "tier": "regular",
+        "stage": 2,
+        "role": "regular",
+        "acts": [
+          1
+        ],
+        "zones": [
+          "forest-abandoned-camp",
+          "forest-kaido-trail"
+        ],
+        "rumor": "Il compte ses coups sur des troncs qui saignent."
+      },
+      {
+        "id": "r07-shio-worker",
+        "name": "Saunière",
+        "subtitle": "Balayeuse de zone",
+        "tier": "regular",
+        "stage": 2,
+        "role": "regular",
+        "acts": [],
+        "zones": [],
+        "rumor": "Elle revient d'un convoi de sel jamais arrivé."
+      },
+      {
+        "id": "r08-kawara-roofer",
+        "name": "Couvreur de Kawara",
+        "subtitle": "Bondisseur agile",
+        "tier": "regular",
+        "stage": 2,
+        "role": "regular",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il monte encore sur des toits effondrés."
+      },
+      {
+        "id": "r09-haka-digger",
+        "name": "Fossoyeur de Haka",
+        "subtitle": "Piqueur tenace",
+        "tier": "regular",
+        "stage": 2,
+        "role": "regular",
+        "acts": [
+          1
+        ],
+        "zones": [
+          "forest-abandoned-camp",
+          "forest-kaido-trail",
+          "forest-root-sanctuary"
+        ],
+        "rumor": "Il creuse pour ceux qu'il n'a pas enterrés."
+      },
+      {
+        "id": "r10-hikeshi-watchman",
+        "name": "Veilleur Hikeshi",
+        "subtitle": "Contrôle frontal",
+        "tier": "regular",
+        "stage": 2,
+        "role": "regular",
+        "acts": [
+          4
+        ],
+        "zones": [
+          "city-castle-approach"
+        ],
+        "rumor": "Il surveille un incendie éteint depuis des jours."
+      },
+      {
+        "id": "r11-nohara-ronin",
+        "name": "Rōnin des plaines",
+        "subtitle": "Duelliste errant",
+        "tier": "regular",
+        "stage": 2,
+        "role": "regular",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il cherche un seigneur pour légitimer sa lame."
+      },
+      {
+        "id": "r12-miya-porter",
+        "name": "Porteuse de Miya",
+        "subtitle": "Lancière de sanctuaire",
+        "tier": "regular",
+        "stage": 2,
+        "role": "regular",
+        "acts": [],
+        "zones": [],
+        "rumor": "Elle porte un palanquin vide depuis Tsuru."
+      },
+      {
+        "id": "r13-yakushi-apprentice",
+        "name": "Apprenti Yakushi",
+        "subtitle": "Attaquant toxique",
+        "tier": "regular",
+        "stage": 2,
+        "role": "regular",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il soigne des plaies qui ne saignent plus."
+      },
+      {
+        "id": "r14-kaido-bandit",
+        "name": "Bandite du Kaidō",
+        "subtitle": "Embusqueuse rapide",
+        "tier": "regular",
+        "stage": 2,
+        "role": "regular",
+        "acts": [
+          2
+        ],
+        "zones": [
+          "bamboo-hollow-path",
+          "bamboo-rain-gate"
+        ],
+        "rumor": "Elle rançonne des voyageurs qui ne paient plus."
+      },
+      {
+        "id": "r15-oku-servant",
+        "name": "Servante de l'Oku",
+        "subtitle": "Bretteuse disciplinée",
+        "tier": "regular",
+        "stage": 2,
+        "role": "regular",
+        "acts": [
+          5
+        ],
+        "zones": [
+          "castle-armory"
+        ],
+        "rumor": "Elle range un intérieur qu'elle ne reconnaît pas."
+      },
+      {
+        "id": "r16-kusari-prisoner",
+        "name": "Prisonnier aux chaînes",
+        "subtitle": "Contrôle circulaire",
+        "tier": "regular",
+        "stage": 2,
+        "role": "regular",
+        "acts": [],
+        "zones": [],
+        "rumor": "Ses chaînes tiennent encore à un mur absent."
+      },
+      {
+        "id": "r17-umaya-groom",
+        "name": "Palefrenier d'Umaya",
+        "subtitle": "Harceleur à distance",
+        "tier": "regular",
+        "stage": 2,
+        "role": "regular",
+        "acts": [
+          3
+        ],
+        "zones": [
+          "fields-drowned-paddies",
+          "fields-mill-road",
+          "fields-west-dikes"
+        ],
+        "rumor": "Il panse un cheval mangé l'hiver dernier."
+      },
+      {
+        "id": "r18-washi-maker",
+        "name": "Fabricante de washi",
+        "subtitle": "Tailleuse fragile",
+        "tier": "regular",
+        "stage": 2,
+        "role": "regular",
+        "acts": [],
+        "zones": [],
+        "rumor": "Elle déchire des registres pour en faire du papier."
+      },
+      {
+        "id": "r19-kago-bearer",
+        "name": "Porteur de kago",
+        "subtitle": "Fantassin de poussée",
+        "tier": "regular",
+        "stage": 2,
+        "role": "regular",
+        "acts": [
+          3
+        ],
+        "zones": [
+          "fields-burning-granary",
+          "fields-drowned-paddies",
+          "fields-west-dikes"
+        ],
+        "rumor": "Il porte un brancard qui n'a plus de blessé."
+      },
+      {
+        "id": "r20-komuso-wanderer",
+        "name": "Errant Komusō",
+        "subtitle": "Sentinelle aveugle",
+        "tier": "regular",
+        "stage": 2,
+        "role": "regular",
+        "acts": [
+          1,
+          2
+        ],
+        "zones": [
+          "bamboo-hollow-path",
+          "bamboo-rain-gate",
+          "forest-kaido-trail",
+          "forest-root-sanctuary"
+        ],
+        "rumor": "Il écoute une flûte qu'il ne joue pas."
+      },
+      {
+        "id": "new-modern-commuter",
+        "name": "Navetteur contaminé",
+        "subtitle": "Errant de quai",
+        "tier": "regular",
+        "stage": 2,
+        "role": "regular",
+        "acts": [
+          6
+        ],
+        "zones": [
+          "modern-metropolitan-lab",
+          "modern-quarantine-hospital",
+          "modern-shibuya-side-street",
+          "modern-subway-station"
+        ],
+        "rumor": "Il attend une rame qui ne viendra plus."
+      },
+      {
+        "id": "new-cyber-neon-shinobi",
+        "name": "Shinobi néon",
+        "subtitle": "Assassin de faille",
+        "tier": "regular",
+        "stage": 3,
+        "role": "regular",
+        "acts": [
+          7
+        ],
+        "zones": [
+          "cyber-maglev-ruins",
+          "cyber-neon-market",
+          "cyber-shogun-core",
+          "cyber-shrine-sector",
+          "cyber-yomi-datacenter"
+        ],
+        "rumor": "Il saute entre des immeubles qui n'ont plus de rues."
+      },
+      {
+        "id": "s01-kusa-shinobi",
+        "name": "Éclaireur shinobi de Kusa",
+        "subtitle": "Traqueur furtif",
+        "tier": "special",
+        "stage": 2,
+        "role": "special",
+        "acts": [
+          2
+        ],
+        "zones": [
+          "bamboo-hollow-path",
+          "bamboo-moon-clearing",
+          "bamboo-rain-gate"
+        ],
+        "rumor": "Il observe une armée qui n'est jamais venue."
+      },
+      {
+        "id": "s02-doku-kunoichi",
+        "name": "Kunoichi au poison",
+        "subtitle": "Assassineuse toxique",
+        "tier": "special",
+        "stage": 2,
+        "role": "special",
+        "acts": [
+          2
+        ],
+        "zones": [
+          "bamboo-hollow-path",
+          "bamboo-moon-clearing",
+          "bamboo-rain-gate"
+        ],
+        "rumor": "Son poison fut distillé pour un seigneur mort."
+      },
+      {
+        "id": "s03-bakusai-runner",
+        "name": "Coureur Bakusai",
+        "subtitle": "Sapeur explosif",
+        "tier": "special",
+        "stage": 2,
+        "role": "special",
+        "acts": [
+          4
+        ],
+        "zones": [
+          "city-castle-approach"
+        ],
+        "rumor": "Il porte une mèche allumée depuis la première nuit."
+      },
+      {
+        "id": "s04-onibi-adept",
+        "name": "Adepte de l'Onibi",
+        "subtitle": "Exorciste corrompu",
+        "tier": "special",
+        "stage": 3,
+        "role": "special",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il allume des feux pour éclairer les morts."
+      },
+      {
+        "id": "s05-raimei-yamabushi",
+        "name": "Yamabushi de Raimei",
+        "subtitle": "Ascète de la foudre",
+        "tier": "special",
+        "stage": 3,
+        "role": "special",
+        "acts": [
+          1
+        ],
+        "zones": [
+          "forest-abandoned-camp",
+          "forest-kaido-trail",
+          "forest-root-sanctuary"
+        ],
+        "rumor": "Il appelle la foudre sur une montagne sans orage."
+      },
+      {
+        "id": "s06-oni-men-executioner",
+        "name": "Bourreau au masque d'oni",
+        "subtitle": "Exécuteur colossal",
+        "tier": "special",
+        "stage": 3,
+        "role": "special",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il exécute des condamnés déjà morts."
+      },
+      {
+        "id": "s07-tessen-courtier",
+        "name": "Courtisan au tessen",
+        "subtitle": "Duelliste de cour",
+        "tier": "special",
+        "stage": 3,
+        "role": "special",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il évente un protocole qui n'a plus de cour."
+      },
+      {
+        "id": "s08-gomon-jailer",
+        "name": "Geôlier de Gomon",
+        "subtitle": "Gardien de contrôle",
+        "tier": "special",
+        "stage": 3,
+        "role": "special",
+        "acts": [
+          5
+        ],
+        "zones": [
+          "castle-armory"
+        ],
+        "rumor": "Il vérifie des identités que plus personne ne porte."
+      },
+      {
+        "id": "s09-kuro-yakushi",
+        "name": "Yakushi noir",
+        "subtitle": "Médecin de la peste",
+        "tier": "special",
+        "stage": 3,
+        "role": "special",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il prescrit la cendre comme remède."
+      },
+      {
+        "id": "s10-hatamoto-fallen",
+        "name": "Hatamoto déchue",
+        "subtitle": "Élite du bakufu",
+        "tier": "special",
+        "stage": 3,
+        "role": "special",
+        "acts": [
+          5
+        ],
+        "zones": [
+          "castle-yomi-rift"
+        ],
+        "rumor": "Son rang tient encore dans sa poitrine."
+      },
+      {
+        "id": "s11-biwa-revenant",
+        "name": "Revenant au biwa",
+        "subtitle": "Musicien d'onde",
+        "tier": "special",
+        "stage": 3,
+        "role": "special",
+        "acts": [],
+        "zones": [],
+        "rumor": "Son onde fait saigner les murs."
+      },
+      {
+        "id": "s12-shikigami-scribe",
+        "name": "Scribe aux shikigami",
+        "subtitle": "Invocatrice tactique",
+        "tier": "special",
+        "stage": 3,
+        "role": "special",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il écrit des noms qui se relèvent."
+      },
+      {
+        "id": "s13-kegare-sumotori",
+        "name": "Sumotori souillé",
+        "subtitle": "Mur de chair",
+        "tier": "special",
+        "stage": 3,
+        "role": "special",
+        "acts": [
+          3
+        ],
+        "zones": [
+          "fields-burning-granary",
+          "fields-drowned-paddies",
+          "fields-mill-road",
+          "fields-west-dikes"
+        ],
+        "rumor": "Il cherche un cercle assez grand pour lui."
+      },
+      {
+        "id": "s14-mizuchi-diver",
+        "name": "Plongeuse Mizuchi",
+        "subtitle": "Chasseuse amphibie",
+        "tier": "special",
+        "stage": 3,
+        "role": "special",
+        "acts": [],
+        "zones": [],
+        "rumor": "Elle attend sous l'eau un adversaire qui respire."
+      },
+      {
+        "id": "s15-teppo-corpsman",
+        "name": "Arquebusier Teppō",
+        "subtitle": "Tireur d'élite",
+        "tier": "special",
+        "stage": 3,
+        "role": "special",
+        "acts": [
+          5
+        ],
+        "zones": [
+          "castle-armory"
+        ],
+        "rumor": "Il recharge un fusil dont la mèche est morte."
+      },
+      {
+        "id": "s16-kage-mai-dancer",
+        "name": "Danseuse Kage-mai",
+        "subtitle": "Lame tournoyante",
+        "tier": "special",
+        "stage": 3,
+        "role": "special",
+        "acts": [
+          2
+        ],
+        "zones": [
+          "bamboo-moon-clearing",
+          "bamboo-rain-gate"
+        ],
+        "rumor": "Elle tourne pour un public de cendres."
+      },
+      {
+        "id": "s17-kurohata-bearer",
+        "name": "Porte-étendard Kurohata",
+        "subtitle": "Commandant de horde",
+        "tier": "special",
+        "stage": 3,
+        "role": "special",
+        "acts": [
+          4
+        ],
+        "zones": [
+          "city-castle-approach"
+        ],
+        "rumor": "Son étendard recrute plus vite que la parole."
+      },
+      {
+        "id": "s18-yomi-herald",
+        "name": "Héraut du Yomi",
+        "subtitle": "Officiant du gong",
+        "tier": "special",
+        "stage": 3,
+        "role": "special",
+        "acts": [
+          5
+        ],
+        "zones": [
+          "castle-yomi-rift"
+        ],
+        "rumor": "Il annonce un édit que personne n'a écrit."
+      },
+      {
+        "id": "s19-wana-trapper",
+        "name": "Trappeur de Wana",
+        "subtitle": "Contrôleur forestier",
+        "tier": "special",
+        "stage": 2,
+        "role": "special",
+        "acts": [
+          1,
+          3
+        ],
+        "zones": [
+          "fields-mill-road",
+          "fields-west-dikes",
+          "forest-abandoned-camp",
+          "forest-kaido-trail",
+          "forest-root-sanctuary"
+        ],
+        "rumor": "Ses pièges servent encore quelqu'un."
+      },
+      {
+        "id": "s20-mekura-oracle",
+        "name": "Oracle Mekura",
+        "subtitle": "Voyante aveugle",
+        "tier": "special",
+        "stage": 3,
+        "role": "special",
+        "acts": [
+          5
+        ],
+        "zones": [
+          "castle-yomi-rift"
+        ],
+        "rumor": "Elle voit les vivants et se trompe sur eux."
+      },
+      {
+        "id": "new-modern-riot-host",
+        "name": "Hôte antiémeute",
+        "subtitle": "Rempart contaminé",
+        "tier": "special",
+        "stage": 3,
+        "role": "special",
+        "acts": [
+          6
+        ],
+        "zones": [
+          "modern-metropolitan-lab",
+          "modern-quarantine-hospital",
+          "modern-shibuya-side-street",
+          "modern-subway-station"
+        ],
+        "rumor": "Il tient une ligne que la foule a déjà franchie."
+      },
+      {
+        "id": "new-modern-response-officer",
+        "name": "Agent d'intervention",
+        "subtitle": "Tireur de confinement",
+        "tier": "special",
+        "stage": 3,
+        "role": "special",
+        "acts": [
+          6
+        ],
+        "zones": [
+          "modern-metropolitan-lab",
+          "modern-quarantine-hospital",
+          "modern-shibuya-side-street",
+          "modern-subway-station"
+        ],
+        "rumor": "Il tire sur des gens qu'il croit contaminés."
+      },
+      {
+        "id": "new-cyber-drone-corpse",
+        "name": "Cadavre-porteur de drone",
+        "subtitle": "Relais nécro-technique",
+        "tier": "special",
+        "stage": 3,
+        "role": "special",
+        "acts": [
+          7
+        ],
+        "zones": [
+          "cyber-maglev-ruins",
+          "cyber-neon-market",
+          "cyber-shogun-core",
+          "cyber-shrine-sector",
+          "cyber-yomi-datacenter"
+        ],
+        "rumor": "Le drone repart quand le corps s'arrête."
+      },
+      {
+        "id": "new-cyber-oni-frame",
+        "name": "Châssis Oni",
+        "subtitle": "Briseur cybernétique",
+        "tier": "special",
+        "stage": 3,
+        "role": "special",
+        "acts": [
+          7
+        ],
+        "zones": [
+          "cyber-maglev-ruins",
+          "cyber-neon-market",
+          "cyber-shogun-core",
+          "cyber-shrine-sector",
+          "cyber-yomi-datacenter"
+        ],
+        "rumor": "Le châssis a gardé la démarche de son pilote."
+      },
+      {
+        "id": "mb-01-gunso-croc-fer",
+        "name": "Gunsō Croc de Fer",
+        "subtitle": "Capitaine ashigaru",
+        "tier": "miniboss",
+        "stage": 3,
+        "role": "miniboss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il tient la ligne avec des dents de fer."
+      },
+      {
+        "id": "mb-02-ronin-kurogane",
+        "name": "Rōnin de Kurogane",
+        "subtitle": "Duelliste sans maître",
+        "tier": "miniboss",
+        "stage": 3,
+        "role": "miniboss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il n'a jamais trouvé de maître à sa taille."
+      },
+      {
+        "id": "mb-03-sohei-cent-prieres",
+        "name": "Sōhei aux Cent Prières",
+        "subtitle": "Moine guerrier corrompu",
+        "tier": "miniboss",
+        "stage": 3,
+        "role": "miniboss",
+        "acts": [],
+        "zones": [],
+        "rumor": "La centième prière est un coup de poing."
+      },
+      {
+        "id": "mb-04-miko-tsukikage",
+        "name": "Miko de Tsukikage",
+        "subtitle": "Gardienne du sanctuaire lunaire",
+        "tier": "miniboss",
+        "stage": 3,
+        "role": "miniboss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Elle garde un sanctuaire que la lune a déserté."
+      },
+      {
+        "id": "mb-05-yamabushi-akaoni",
+        "name": "Yamabushi Akaoni",
+        "subtitle": "Ascète de la montagne rouge",
+        "tier": "miniboss",
+        "stage": 3,
+        "role": "miniboss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Son visage rouge n'est pas un masque."
+      },
+      {
+        "id": "mb-06-shinobi-brumes",
+        "name": "Shinobi des Brumes",
+        "subtitle": "Agent de la vallée noyée",
+        "tier": "miniboss",
+        "stage": 3,
+        "role": "miniboss",
+        "acts": [
+          2
+        ],
+        "zones": [
+          "bamboo-hollow-path",
+          "bamboo-moon-clearing",
+          "bamboo-rain-gate"
+        ],
+        "rumor": "Il ne quitte pas une vallée noyée."
+      },
+      {
+        "id": "mb-07-arquebusier-jigoku",
+        "name": "Arquebusier de Jigoku",
+        "subtitle": "Vétéran du teppō",
+        "tier": "miniboss",
+        "stage": 3,
+        "role": "miniboss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Sa salve est réglée comme un enterrement."
+      },
+      {
+        "id": "mb-08-archer-os",
+        "name": "Archer d’Os",
+        "subtitle": "Sentinelle des remparts",
+        "tier": "miniboss",
+        "stage": 3,
+        "role": "miniboss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Ses flèches sont des côtes."
+      },
+      {
+        "id": "mb-09-pisteur-kegare",
+        "name": "Pisteur du Kegare",
+        "subtitle": "Chasseur de quarantaine",
+        "tier": "miniboss",
+        "stage": 3,
+        "role": "miniboss",
+        "acts": [
+          1
+        ],
+        "zones": [
+          "forest-abandoned-camp",
+          "forest-kaido-trail"
+        ],
+        "rumor": "Il chasse les contaminés et les compte."
+      },
+      {
+        "id": "mb-10-forgeron-hibana",
+        "name": "Forgeron Hibana",
+        "subtitle": "Armurier du château",
+        "tier": "miniboss",
+        "stage": 3,
+        "role": "miniboss",
+        "acts": [
+          5
+        ],
+        "zones": [
+          "castle-armory"
+        ],
+        "rumor": "Il forge des lames pour des mains mortes."
+      },
+      {
+        "id": "mb-11-hatamoto-inazuma",
+        "name": "Hatamoto Inazuma",
+        "subtitle": "Retainer de l’éclair",
+        "tier": "miniboss",
+        "stage": 3,
+        "role": "miniboss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il frappe une fois, puis écoute."
+      },
+      {
+        "id": "mb-12-gardien-masque-fer",
+        "name": "Gardien au Masque de Fer",
+        "subtitle": "Verrou vivant",
+        "tier": "miniboss",
+        "stage": 3,
+        "role": "miniboss",
+        "acts": [
+          5
+        ],
+        "zones": [
+          "castle-armory"
+        ],
+        "rumor": "La porte est en lui."
+      },
+      {
+        "id": "mb-13-komuso-grue-noire",
+        "name": "Komusō de la Grue Noire",
+        "subtitle": "Moine du souffle creux",
+        "tier": "miniboss",
+        "stage": 3,
+        "role": "miniboss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Son souffle creux ouvre des portes."
+      },
+      {
+        "id": "mb-14-pirate-shioyake",
+        "name": "Pirate Shioyake",
+        "subtitle": "Raider des côtes brûlées",
+        "tier": "miniboss",
+        "stage": 3,
+        "role": "miniboss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il pille un convoi fluvial échoué."
+      },
+      {
+        "id": "mb-15-kunoichi-veuve",
+        "name": "Kunoichi de la Veuve",
+        "subtitle": "Assassine au fil noir",
+        "tier": "miniboss",
+        "stage": 3,
+        "role": "miniboss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Son fil noir relie les morts."
+      },
+      {
+        "id": "mb-16-yoriki-gashadokuro",
+        "name": "Yoriki Gashadokuro",
+        "subtitle": "Officier du magistrat",
+        "tier": "miniboss",
+        "stage": 3,
+        "role": "miniboss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il dresse des procès-verbaux de décès."
+      },
+      {
+        "id": "mb-17-sumotori-namazu",
+        "name": "Sumotori Namazu",
+        "subtitle": "Champion du poisson-chat",
+        "tier": "miniboss",
+        "stage": 3,
+        "role": "miniboss",
+        "acts": [
+          3
+        ],
+        "zones": [
+          "fields-burning-granary",
+          "fields-drowned-paddies",
+          "fields-mill-road",
+          "fields-west-dikes"
+        ],
+        "rumor": "Il fait trembler le sol sans bouger."
+      },
+      {
+        "id": "mb-18-onmyoji-renard",
+        "name": "Onmyōji du Renard",
+        "subtitle": "Divinateur aux neuf feintes",
+        "tier": "miniboss",
+        "stage": 3,
+        "role": "miniboss",
+        "acts": [
+          5
+        ],
+        "zones": [
+          "castle-yomi-rift"
+        ],
+        "rumor": "Ses neuf feintes sont neuf deuils."
+      },
+      {
+        "id": "mb-19-faucon-orage",
+        "name": "Faucon de l’Orage",
+        "subtitle": "Capitaine des crêtes",
+        "tier": "miniboss",
+        "stage": 3,
+        "role": "miniboss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il tombe du ciel comme une dette."
+      },
+      {
+        "id": "mb-20-capitaine-byakko",
+        "name": "Capitaine Byakko",
+        "subtitle": "Commandant du Tigre blanc",
+        "tier": "miniboss",
+        "stage": 3,
+        "role": "miniboss",
+        "acts": [
+          4
+        ],
+        "zones": [
+          "city-castle-approach"
+        ],
+        "rumor": "Il commande un tigre blanc et des hommes gris."
+      },
+      {
+        "id": "new-cyber-yomi-hacker",
+        "name": "Kannushi du réseau Yomi",
+        "subtitle": "Officiant des mémoires contaminées",
+        "tier": "miniboss",
+        "stage": 3,
+        "role": "act-boss",
+        "acts": [
+          7
+        ],
+        "zones": [
+          "cyber-yomi-datacenter"
+        ],
+        "rumor": "Il récite les derniers instants comme des commandes."
+      },
+      {
+        "id": "boss-01-geoliere-sekimon",
+        "name": "Geôlière de Sekimon",
+        "subtitle": "Commandante de la prison rouge",
+        "tier": "boss",
+        "stage": 3,
+        "role": "optional-boss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Ses clés ouvrent des cellules pleines."
+      },
+      {
+        "id": "boss-02-abbe-kurotaki",
+        "name": "Abbé de Kurotaki",
+        "subtitle": "Gardien de la cascade noire",
+        "tier": "boss",
+        "stage": 3,
+        "role": "optional-boss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il a scellé ses malades pour ne pas les brûler."
+      },
+      {
+        "id": "boss-03-chatelain-ibushi",
+        "name": "Châtelain Ibushi",
+        "subtitle": "Seigneur de la forteresse fumante",
+        "tier": "boss",
+        "stage": 3,
+        "role": "optional-boss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il pille une ville qui n'a plus rien."
+      },
+      {
+        "id": "boss-04-prince-marchand-kane",
+        "name": "Prince Marchand Kane",
+        "subtitle": "Maître des greniers d’argent",
+        "tier": "boss",
+        "stage": 3,
+        "role": "optional-boss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il vend du riz qui pousse sur des morts."
+      },
+      {
+        "id": "boss-05-matriarche-beni-tsuru",
+        "name": "Matriarche Beni-Tsuru",
+        "subtitle": "Grue rouge du clan",
+        "tier": "boss",
+        "stage": 3,
+        "role": "optional-boss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Elle a cousu les bannières de quarantaine."
+      },
+      {
+        "id": "boss-06-amiral-shiranui",
+        "name": "Amiral Shiranui",
+        "subtitle": "Commandant des feux de mer",
+        "tier": "boss",
+        "stage": 3,
+        "role": "optional-boss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il a sabordé sa flottille pour garder le passage."
+      },
+      {
+        "id": "boss-07-bourreau-lune-rouge",
+        "name": "Bourreau de la Lune Rouge",
+        "subtitle": "Exécuteur du tribunal nocturne",
+        "tier": "boss",
+        "stage": 3,
+        "role": "optional-boss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il exécute au nom d'un tribunal nocturne."
+      },
+      {
+        "id": "boss-08-medecin-shirohebi",
+        "name": "Médecin Shirohebi",
+        "subtitle": "Physicien du serpent blanc",
+        "tier": "boss",
+        "stage": 4,
+        "role": "optional-boss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il greffe la Fièvre comme un traitement."
+      },
+      {
+        "id": "boss-09-maitre-noh-utsuro",
+        "name": "Maître Nō Utsuro",
+        "subtitle": "Masque de la scène vide",
+        "tier": "boss",
+        "stage": 3,
+        "role": "optional-boss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Son masque vide joue tous les rôles."
+      },
+      {
+        "id": "boss-10-seigneur-riz-noir",
+        "name": "Seigneur du Riz Noir",
+        "subtitle": "Tyran des greniers pestiférés",
+        "tier": "boss",
+        "stage": 3,
+        "role": "optional-boss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il compte les grains, pas les vivants."
+      },
+      {
+        "id": "boss-11-brigadier-engeki",
+        "name": "Brigadier Engeki",
+        "subtitle": "Chef des pompiers d’Edo",
+        "tier": "boss",
+        "stage": 3,
+        "role": "act-boss",
+        "acts": [
+          4
+        ],
+        "zones": [
+          "city-castle-approach"
+        ],
+        "rumor": "Il a brûlé la ville pour la tenir."
+      },
+      {
+        "id": "boss-12-generale-murasaki",
+        "name": "Générale Murasaki",
+        "subtitle": "Commandante des archers violets",
+        "tier": "boss",
+        "stage": 3,
+        "role": "optional-boss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Ses archers tirent sur un ordre écrit."
+      },
+      {
+        "id": "boss-13-prieur-lotus-noir",
+        "name": "Prieur du Lotus Noir",
+        "subtitle": "Ascète aux paumes souillées",
+        "tier": "boss",
+        "stage": 3,
+        "role": "optional-boss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Ses paumes souillées guérissent mal."
+      },
+      {
+        "id": "boss-14-maitre-shinobi-kumo",
+        "name": "Maître Shinobi Kumo",
+        "subtitle": "Chef de la toile obscure",
+        "tier": "boss",
+        "stage": 3,
+        "role": "act-boss",
+        "acts": [
+          2
+        ],
+        "zones": [
+          "bamboo-moon-clearing"
+        ],
+        "rumor": "Il a vendu les passages qu'il avait ouverts."
+      },
+      {
+        "id": "boss-15-cavalier-kurogoma",
+        "name": "Cavalier Kurogoma",
+        "subtitle": "Commandant de la monture noire",
+        "tier": "boss",
+        "stage": 3,
+        "role": "optional-boss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Sa monture noire ne s'arrête plus."
+      },
+      {
+        "id": "boss-16-emissaire-kagemori",
+        "name": "Émissaire Kagemori",
+        "subtitle": "Voix masquée du bakufu",
+        "tier": "boss",
+        "stage": 3,
+        "role": "optional-boss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il parle au nom d'un bakufu qui l'a oublié."
+      },
+      {
+        "id": "boss-17-yokozuna-ganryu",
+        "name": "Yokozuna Ganryū",
+        "subtitle": "Montagne du cercle sacré",
+        "tier": "boss",
+        "stage": 3,
+        "role": "optional-boss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il cherche un adversaire à sa mesure."
+      },
+      {
+        "id": "boss-18-pretresse-cendres-suzaku",
+        "name": "Prêtresse des Cendres Suzaku",
+        "subtitle": "Officiante du feu purificateur",
+        "tier": "boss",
+        "stage": 3,
+        "role": "optional-boss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Son feu purifie tout, y compris les vivants."
+      },
+      {
+        "id": "boss-19-apothicaire-midori",
+        "name": "Apothicaire Midori",
+        "subtitle": "Maître des remèdes verts",
+        "tier": "boss",
+        "stage": 3,
+        "role": "optional-boss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Ses remèdes verts soulagent et contaminent."
+      },
+      {
+        "id": "boss-20-vaisseau-yomi",
+        "name": "Vaisseau du Yomi",
+        "subtitle": "Premier inquisiteur entièrement réclamé",
+        "tier": "boss",
+        "stage": 4,
+        "role": "optional-boss",
+        "acts": [],
+        "zones": [],
+        "rumor": "Le premier inquisiteur entièrement réclamé."
+      },
+      {
+        "id": "new-modern-metro-colossus",
+        "name": "Colosse de la ligne Yomi",
+        "subtitle": "Terminus vivant de Tokyo",
+        "tier": "boss",
+        "stage": 4,
+        "role": "act-boss",
+        "acts": [
+          6
+        ],
+        "zones": [
+          "modern-metropolitan-lab"
+        ],
+        "rumor": "Le terminus a mangé les rames et les voyageurs."
+      },
+      {
+        "id": "new-cyber-shogun-zero",
+        "name": "Shōgun Zéro",
+        "subtitle": "Souverain de Neo-Tokyo réclamé par le Yomi",
+        "tier": "boss",
+        "stage": 4,
+        "role": "act-boss",
+        "acts": [
+          7
+        ],
+        "zones": [
+          "cyber-shogun-core"
+        ],
+        "rumor": "Il gouverne des morts qu'il croit vivants."
+      },
+      {
+        "id": "giant-01-kurogane-warder",
+        "name": "Gardien Kurogane",
+        "subtitle": "Geôlier colossal de la porte noire",
+        "tier": "massive",
+        "stage": 3,
+        "role": "massive",
+        "acts": [],
+        "zones": [],
+        "rumor": "La porte reste close, même sans mur."
+      },
+      {
+        "id": "giant-02-aka-ushi",
+        "name": "Aka-Ushi",
+        "subtitle": "Bœuf de trait pestiféré",
+        "tier": "massive",
+        "stage": 2,
+        "role": "massive",
+        "acts": [
+          4
+        ],
+        "zones": [
+          "city-canal-roofs"
+        ],
+        "rumor": "Le convoi l'a laissé sur la route."
+      },
+      {
+        "id": "giant-03-take-mori",
+        "name": "Take-Mori",
+        "subtitle": "Colosse de la bambouseraie",
+        "tier": "massive",
+        "stage": 4,
+        "role": "act-boss",
+        "acts": [
+          1
+        ],
+        "zones": [
+          "forest-root-sanctuary"
+        ],
+        "rumor": "Ses crêtes ont poussé comme du bambou."
+      },
+      {
+        "id": "giant-04-enjin-bozu",
+        "name": "Enjin-Bōzu",
+        "subtitle": "Moine du foyer consumé",
+        "tier": "massive",
+        "stage": 4,
+        "role": "massive",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il a brûlé avec le brasier qu'il gardait."
+      },
+      {
+        "id": "giant-05-numa-no-oyakata",
+        "name": "Numa-no-Oyakata",
+        "subtitle": "Seigneur noyé du domaine fluvial",
+        "tier": "massive",
+        "stage": 3,
+        "role": "massive",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il tient encore le niveau des eaux."
+      },
+      {
+        "id": "giant-06-kinoko-haha",
+        "name": "Kinoko-Haha",
+        "subtitle": "Matrone fongique de la quarantaine",
+        "tier": "massive",
+        "stage": 4,
+        "role": "massive",
+        "acts": [],
+        "zones": [],
+        "rumor": "La quarantaine l'a laissée fleurir."
+      },
+      {
+        "id": "giant-07-shiro-kabuto",
+        "name": "Shiro-Kabuto",
+        "subtitle": "Scarabée pâle de la peste",
+        "tier": "massive",
+        "stage": 4,
+        "role": "act-boss",
+        "acts": [
+          3
+        ],
+        "zones": [
+          "fields-burning-granary"
+        ],
+        "rumor": "Il a mangé les fosses communes."
+      },
+      {
+        "id": "giant-08-nuno-kyojin",
+        "name": "Nuno-Kyojin",
+        "subtitle": "Titan des linceuls de quarantaine",
+        "tier": "massive",
+        "stage": 4,
+        "role": "massive",
+        "acts": [],
+        "zones": [],
+        "rumor": "Il est fait des linceuls qu'on n'a pas eu le temps de coudre."
+      },
+      {
+        "id": "giant-09-ganseki-otoko",
+        "name": "Ganseki-Otoko",
+        "subtitle": "Contremaître pétrifié de la carrière",
+        "tier": "massive",
+        "stage": 4,
+        "role": "massive",
+        "acts": [],
+        "zones": [],
+        "rumor": "La carrière l'a repris."
+      },
+      {
+        "id": "giant-10-yomi-no-kanrei",
+        "name": "Yomi-no-Kanrei",
+        "subtitle": "Régent à quatre bras du château",
+        "tier": "massive",
+        "stage": 4,
+        "role": "act-boss",
+        "acts": [
+          5
+        ],
+        "zones": [
+          "castle-yomi-rift"
+        ],
+        "rumor": "Le daimyō, avec assez de bras pour tenir la ville."
+      }
+    ]
+  },
+  "katanas": {
+    "total": 10,
+    "entries": [
+      {
+        "id": "01-kurokage",
+        "name": "Kurokage",
+        "subtitle": "L’ombre noire",
+        "rarity": "rare",
+        "lore": "Sabre d’un messager du bakufu, marqué par les routes de quarantaine.",
+        "gameplay": "Une lame équilibrée qui récompense les attaques portées dans le dos.",
+        "passive": {
+          "id": "shadow-step",
+          "name": "Pas de l’ombre",
+          "description": "Détection réduite et dégâts accrus dans le dos.",
+          "trigger": "onBackstab"
+        },
+        "unlock": {
+          "type": "starter",
+          "label": "Confié à Akio par le shogun",
+          "id": null,
+          "act": null
+        },
+        "act": 1,
+        "bibleRef": "§10.1"
+      },
+      {
+        "id": "02-shogun-no-in",
+        "name": "Shōgun no In",
+        "subtitle": "Le sceau du shogun",
+        "rarity": "legendary",
+        "lore": "Une lame de présentation attestant l’ordre d’éradication venu d’Edo.",
+        "gameplay": "La parade parfaite renforce brièvement Akio.",
+        "passive": {
+          "id": "bakufu-authority",
+          "name": "Autorité du bakufu",
+          "description": "Une parade parfaite accorde 20 % de résistance pendant deux secondes.",
+          "trigger": "onPerfectParry"
+        },
+        "unlock": {
+          "type": "chapter",
+          "label": "Récompense du chapitre 2",
+          "id": null,
+          "act": null
+        },
+        "act": 2,
+        "bibleRef": "§10.2"
+      },
+      {
+        "id": "03-hinezumi",
+        "name": "Hinezumi",
+        "subtitle": "Le rat de feu",
+        "rarity": "uncommon",
+        "lore": "Retrouvé intact sous les poutres d’un relais incendié.",
+        "gameplay": "Une esquive parfaite accélère les attaques suivantes.",
+        "passive": {
+          "id": "ember-flight",
+          "name": "Fuite des braises",
+          "description": "Une esquive parfaite augmente la cadence de 15 % pendant trois secondes.",
+          "trigger": "onPerfectDodge"
+        },
+        "unlock": {
+          "type": "secret",
+          "label": "Secret du relais incendié",
+          "id": null,
+          "act": null
+        },
+        "act": 2,
+        "bibleRef": "§10.3"
+      },
+      {
+        "id": "04-shirogane",
+        "name": "Shirogane",
+        "subtitle": "L’acier d’argent",
+        "rarity": "epic",
+        "lore": "Une lame de Mino sortie de son coffre lorsque les morts forcèrent le domaine.",
+        "gameplay": "Fenêtre de parade plus large et meilleur rendement contre l’armure.",
+        "passive": {
+          "id": "immaculate-edge",
+          "name": "Fil immaculé",
+          "description": "La fenêtre de parade parfaite est élargie de 18 %.",
+          "trigger": "passive"
+        },
+        "unlock": {
+          "type": "artisan",
+          "label": "Forgeron Kaji — restauration",
+          "id": null,
+          "act": null
+        },
+        "act": null,
+        "bibleRef": "§10.4"
+      },
+      {
+        "id": "05-yomibane",
+        "name": "Yomibane",
+        "subtitle": "La plume de Yomi",
+        "rarity": "rare",
+        "lore": "Sabre funéraire des gardiens qui brûlaient les contaminés.",
+        "gameplay": "Les exécutions restaurent une partie de la résolution.",
+        "passive": {
+          "id": "last-breath",
+          "name": "Dernier souffle",
+          "description": "Exécuter un infecté étourdi rend huit points de résolution.",
+          "trigger": "onExecution"
+        },
+        "unlock": {
+          "type": "boss",
+          "label": "Dépouille de la Miko Tsukikage",
+          "id": null,
+          "act": null
+        },
+        "act": null,
+        "bibleRef": "§10.5"
+      },
+      {
+        "id": "06-kegare-kiri",
+        "name": "Kegare-kiri",
+        "subtitle": "Le tranche-souillure",
+        "rarity": "uncommon",
+        "lore": "Une lame raccourcie et repolie après les premiers assauts.",
+        "gameplay": "Excellent contre les infectés lourds et les membres mutés.",
+        "passive": {
+          "id": "eradication-tool",
+          "name": "Outil d’éradication",
+          "description": "Les cibles lourdes subissent 22 % de dégâts supplémentaires.",
+          "trigger": "onDamage"
+        },
+        "unlock": {
+          "type": "contract",
+          "label": "Contrat des fosses de quarantaine",
+          "id": null,
+          "act": null
+        },
+        "act": null,
+        "bibleRef": "§10.6"
+      },
+      {
+        "id": "07-takekaze",
+        "name": "Takekaze",
+        "subtitle": "Le vent du bambou",
+        "rarity": "common",
+        "lore": "Un sabre rural conçu pour être réparé loin des grandes forges.",
+        "gameplay": "Les attaques légères et les esquives consomment moins de Ki.",
+        "passive": {
+          "id": "reed-flexibility",
+          "name": "Souplesse du roseau",
+          "description": "Le coût des attaques légères est réduit de 12 %.",
+          "trigger": "passive"
+        },
+        "unlock": {
+          "type": "chapter",
+          "label": "Sanctuaire du bambou brisé",
+          "id": null,
+          "act": null
+        },
+        "act": 2,
+        "bibleRef": "§10.7"
+      },
+      {
+        "id": "08-raijin-no-tsume",
+        "name": "Raijin no Tsume",
+        "subtitle": "La griffe de Raijin",
+        "rarity": "epic",
+        "lore": "Une lame d’Echizen dont le hamon anguleux nourrit la légende.",
+        "gameplay": "Les attaques lourdes chargées brisent rapidement la posture.",
+        "passive": {
+          "id": "guard-breaker",
+          "name": "Brise-garde",
+          "description": "Les attaques lourdes infligent 25 % de dégâts de posture supplémentaires.",
+          "trigger": "onHeavyHit"
+        },
+        "unlock": {
+          "type": "boss",
+          "label": "Vaincre le Hatamoto Inazuma",
+          "id": null,
+          "act": null
+        },
+        "act": null,
+        "bibleRef": "§10.8"
+      },
+      {
+        "id": "09-akatsuki",
+        "name": "Akatsuki",
+        "subtitle": "L’aube",
+        "rarity": "rare",
+        "lore": "Porté lors de la reprise d’une forteresse contaminée à l’aube.",
+        "gameplay": "Akio frappe plus fort tant qu’il reste presque indemne.",
+        "passive": {
+          "id": "first-ray",
+          "name": "Premier rayon",
+          "description": "Les dégâts augmentent de 15 % au-dessus de 80 % de santé.",
+          "trigger": "onDamage"
+        },
+        "unlock": {
+          "type": "rank",
+          "label": "Obtenir le rang A au chapitre 3",
+          "id": null,
+          "act": null
+        },
+        "act": 3,
+        "bibleRef": "§10.9"
+      },
+      {
+        "id": "10-mujo",
+        "name": "Mujō",
+        "subtitle": "L’impermanence",
+        "rarity": "legendary",
+        "lore": "Un vieux sabre réparé, passé entre les mains de rōnin oubliés.",
+        "gameplay": "Les parades deviennent plus rentables lorsque la santé est basse.",
+        "passive": {
+          "id": "nothing-remains",
+          "name": "Rien ne demeure",
+          "description": "Sous 30 % de santé, une parade parfaite rend dix points de Ki.",
+          "trigger": "onPerfectParry"
+        },
+        "unlock": {
+          "type": "ngplus",
+          "label": "Héritage du mode Nouvelle Partie +",
+          "id": null,
+          "act": null
+        },
+        "act": null,
+        "bibleRef": "§10.10"
+      }
+    ]
+  },
+  "codex": {
+    "total": 80,
+    "written": 80,
+    "eras": {
+      "1638": 30,
+      "2026": 25,
+      "2188": 25
+    },
+    "rule": "Une entrée s'ouvre par le sceau de chronique de son acte : le sceau atteste que l'acte a été compris, pas seulement traversé. Les entrées du prologue s'ouvrent à la fin du prologue, avant le premier sceau.",
+    "entries": [
+      {
+        "id": "C01",
+        "era": 1638,
+        "act": 1,
+        "title": "Le col de Kai",
+        "voice": "carnet de route d'Akio, encre encore humide.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-01",
+          "sealName": "Sceau du Camp",
+          "condition": "purifier le camp des bûcherons",
+          "trigger": "entrer dans la zone forest-kaido-trail (acte I)"
+        },
+        "text": "Le col sent la résine et le fer mouillé. Trois jours de pluie ont gonflé la route, et la barrière du péage est ouverte : personne n'a pensé à la fermer, ou personne n'est resté pour le faire. Le registre des voyageurs est posé sur la planche, ouvert à la dernière page. La dernière ligne date de la nuit de la cloche. L'encre a bavé sur le nom.\n\nEn contrebas, la fumée de Kurokawa ne monte pas droit. Elle s'étale, grasse, comme si le feu n'avait pas trouvé assez d'air. J'ai compté les toits visibles depuis la crête : quarante-deux. J'en connais dix-huit par leur nom.\n\nJe n'ai pas signé le registre. Un nom sur une route de quarantaine est une promesse qu'on ne peut pas tenir. J'ai laissé une pièce sous la pierre, pour le péager, au cas où il reviendrait réclamer."
+      },
+      {
+        "id": "C02",
+        "era": 1638,
+        "act": 1,
+        "title": "La forêt noyée",
+        "voice": "note clouée à un tronc par un bûcheron, écriture maladroite.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-01",
+          "sealName": "Sceau du Camp",
+          "condition": "purifier le camp des bûcherons",
+          "trigger": "atteindre le sanctuaire des racines (acte I)"
+        },
+        "text": "Si vous lisez ceci, ne coupez pas les racines du sanctuaire. On l'a fait, et l'eau est montée. Pas une crue : l'eau est montée comme si elle attendait qu'on ouvre. Le ruisseau a changé de lit trois fois en une semaine. Les bûcherons disent que la forêt se souvient de l'ancien cours.\n\nOn a laissé les outils debout, contre les troncs. Ce n'est pas de la superstition : c'est pour retrouver le chantier quand l'eau redescendra. Le contremaître a emporté les contrats, pas les hommes. Ne lui en veuillez pas trop : il avait neuf malades dans sa cabane et un fils à nourrir.\n\nLes racines du sanctuaire sont marquées d'un lien de paille. Ne le dénouez pas. Si le lien est défait quand vous arrivez, courez."
+      },
+      {
+        "id": "C03",
+        "era": 1638,
+        "act": 1,
+        "title": "Le camp des bûcherons",
+        "voice": "inventaire de camp tenu par le contremaître, à la mine de charbon.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-01",
+          "sealName": "Sceau du Camp",
+          "condition": "purifier le camp des bûcherons",
+          "trigger": "purifier le camp (forest-abandoned-camp, acte I)"
+        },
+        "text": "Trente-quatre hommes au départ. Vingt-deux au dernier compte. Neuf malades isolés dans la cabane du fond, dont deux qui ne se lèvent plus. Le feu reste allumé jour et nuit : c'est la seule chose que nous savons faire qui marche. On fait bouillir l'eau. On brûle les vêtements des morts, pas les hommes.\n\nLes rations sont comptées : trois mesures de riz par jour et par homme, plus une pour les malades. Le sel est fini depuis six jours. La viande séchée est réservée à ceux qui portent l'eau. Personne ne discute : celui qui discute est celui qui n'a pas vu la cabane du fond.\n\nSi le camp est vide à votre arrivée, la cendre sur les poutres n'est pas celle d'un incendie. C'est celle qu'on a balayée pour la garder au sec."
+      },
+      {
+        "id": "C04",
+        "era": 1638,
+        "act": 2,
+        "title": "La bambouseraie de Shigure",
+        "voice": "avis de garde cloué à la lisière, écrit par une main de gardienne.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-02",
+          "sealName": "Sceau du Bambou",
+          "condition": "sauver l'éclaireur avant Kumo",
+          "trigger": "franchir la porte de pluie (acte II)"
+        },
+        "text": "Les tiges marquées d'un lien blanc sont sous sceau. Ne les coupez pas, ne les déplacez pas, ne les touchez pas avec une lame qui a servi sur un corps. Le lien blanc n'est pas une décoration : il tient un endroit qui n'a pas de nom et qui n'aime pas qu'on le nomme.\n\nLa gardienne passe chaque matin, à la première lumière. Elle compte les sceaux à voix haute, dans l'ordre. Si elle s'arrête au milieu d'un compte, éloignez-vous de la tige qu'elle regarde. Elle ne se trompe jamais sur les nombres, mais elle a déjà vu des choses qui n'étaient pas là.\n\nLe sentier des tiges creuses est plus court, et c'est un piège : il traverse l'ancienne bambouseraie coupée. Le bois y est encore en train de tomber, trente ans après."
+      },
+      {
+        "id": "C05",
+        "era": 1638,
+        "act": 3,
+        "title": "Les rizières de Tsuru",
+        "voice": "page du registre de redevances de Tsuru, annotée au dos.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-03",
+          "sealName": "Sceau de la Moisson",
+          "condition": "défendre les survivants des rizières",
+          "trigger": "entrer dans les digues occidentales (acte III)"
+        },
+        "text": "Redevance de la troisième saison, arrêtée au douzième jour : cent vingt mesures de riz, plus le quart pour le passage des convois. Les digues ouest ont été renforcées par corvée, onze hommes pendant quatre jours. Les vannes sont restées fermées pour ne pas laver les semis.\n\nAu dos, à la main, d'un autre jour : les vannes sont fermées et le niveau monte. Les paysans disent qu'on veut noyer les morts pour ne pas les compter. Trois familles ont quitté la rive est. Le meunier a fermé le moulin, ou le moulin s'est fermé tout seul.\n\nSi vous traversez la rizière noyée, longez les digues hautes. L'eau est tiède même quand il gèle, et ce n'est pas le soleil qui la chauffe."
+      },
+      {
+        "id": "C06",
+        "era": 1638,
+        "act": 1,
+        "title": "Le Pin Noir",
+        "voice": "livre de comptes de l'auberge, colonnes et marges.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-01",
+          "sealName": "Sceau du Camp",
+          "condition": "purifier le camp des bûcherons",
+          "trigger": "première visite du refuge (acte I–II)"
+        },
+        "text": "Chambre une : deux voyageurs, payés d'avance, la nuit de la cloche. Chambre deux : trois porcelets et un sac de sel, oubliés. Chambre trois : vide, avec un fusil sous la paillasse — je l'ai laissé là, on ne fouille pas un homme qui paie.\n\nEn marge, à l'encre pâle : le pin est fendu de haut en bas, mais pas brûlé. La fente est propre, comme si la foudre avait demandé la permission. Je la nettoie chaque matin. Je ne sais pas qui l'a fait la nuit dernière, et je ne pose pas la question : le pin est plus vieux que l'auberge et plus discret que nous.\n\nRègle de la maison : on ne refuse personne de propre, on refuse tout le reste. Une chambre propre contre deux jours de travail. Pas de rançon, pas de dette sur un enfant."
+      },
+      {
+        "id": "C07",
+        "era": 1638,
+        "act": 4,
+        "title": "Kurokawa",
+        "voice": "rapport d'un yoriki du bakufu, encre noire, une rature.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-04",
+          "sealName": "Sceau du Pin",
+          "condition": "ouvrir le refuge du quartier marchand",
+          "trigger": "franchir la porte sud (acte IV)"
+        },
+        "text": "Population avant la cloche : deux mille quatre cents âmes, plus les passants du relais. Dernier recensement : quatre cents, dont un tiers qui ne sortent plus. La porte sud est barrée par un cordon de cendre et de piques croisées. Le marché est fermé depuis le onzième jour. La cloche d'incendie fonctionne : on ne s'en sert plus.\n\nLes rues ouest tiennent encore debout. Les rues est se sont affaissées sur les caves : les maisons ont bu l'eau des canaux. Le canal est propre en surface, et c'est ce qui inquiète le plus les anciens.\n\nMention raturée : le seigneur n'a pas ouvert le donjon.\n\nLa corde de la cloche a été coupée net, pas usée. Le registre des morts n'a pas été ouvert : on compte à la craie, sur des ardoises, et la pluie a effacé la moitié des noms."
+      },
+      {
+        "id": "C08",
+        "era": 1638,
+        "act": 5,
+        "title": "Le château du daimyō",
+        "voice": "plan annoté par un charpentier du clan.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-05",
+          "sealName": "Sceau de la Faille",
+          "condition": "stabiliser la faille après Kanrei",
+          "trigger": "entrer dans la basse-cour (acte V)"
+        },
+        "text": "Basse-cour : deux portes, un pont de bois, un mur de pierre sèche qui s'effondre côté rivière. Résidence : trois salles, une galerie extérieure, un four à charbon sous l'office. Armurerie : au-dessus de la cour, sol de terre battue, charpente en cèdre — le seul bâtiment qui ne craigne pas le feu, ce qui ne laisse pas de me faire réfléchir.\n\nDonjon : quatre niveaux, escalier unique, fenêtres fermées depuis l'hiver. Le seigneur a fait poser les volets de l'intérieur. Je n'ai pas vu qui a payé les gonds neufs.\n\nÀ l'encre, en bas du plan : les marches intérieures sont décalées d'une demi- main. Ce n'est pas du mauvais travail, c'est du travail pressé. Faites attention en montant, on y a déjà laissé deux chevilles."
+      },
+      {
+        "id": "C09",
+        "era": 1638,
+        "act": 0,
+        "title": "L'Ordre de l'Ombre",
+        "voice": "note interne du secrétaire du shogun, non signée.",
+        "unlock": {
+          "type": "prologue",
+          "seal": null,
+          "sealName": null,
+          "condition": "terminer le prologue",
+          "trigger": "après le prologue, première entrée de l'édit scellé"
+        },
+        "text": "L'Ordre n'existe pas. Il n'a ni sceau propre, ni registre, ni caserne. Il se compose d'un nom, d'un commanditaire et d'une méthode. Si l'homme parle, l'Ordre n'existe pas. Si l'homme meurt, l'Ordre n'a jamais existé.\n\nMéthode : entrer seul, purifier sans prêtre, rendre compte à un seul secrétaire. Pas de troupe, pas de proclamation, pas de soin aux contaminés dans les villages de passage. Une armée aurait offert mille corps à la maladie ; un homme seul n'en offre qu'un.\n\nNe pas écrire le nom dans les minutes. Ne pas le prononcer devant les religieux. Le bruit d'un Ordre suffit à faire renaître l'ordre qu'on tue.\n\nLe secrétaire qui écrit ces lignes ne connaît pas le nom de l'homme. Il l'a entendu une fois, à la troisième veille, et il l'a oublié exprès : c'est plus sûr pour tout le monde."
+      },
+      {
+        "id": "C10",
+        "era": 1638,
+        "act": 1,
+        "title": "La garde du bakufu",
+        "voice": "ordre du jour d'un yoriki, affiché à la caserne.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-01",
+          "sealName": "Sceau du Camp",
+          "condition": "purifier le camp des bûcherons",
+          "trigger": "premier ashigaru revenant vaincu (acte I)"
+        },
+        "text": "Consigne du jour : tenir la porte sud, ne pas la tenir fermée. Deux vedettes sur la tour, une au pont, deux en réserve. Rations : une mesure de riz, un hachi de sel. Les malades ne montent pas la garde.\n\nRappel des ordres reçus : on ne tire pas le premier. On ne détruit pas une maison sans ordre écrit. On ne refuse pas un enfant qui demande un médecin, même si le médecin est mort.\n\nNote du chef : la troupe a changé de visage pendant la nuit. J'ai recensé trente-deux hommes ce matin, dont onze qui ne répondent pas à l'appel par leur nom. Je ne les ai pas inscrits absents. Je ne suis pas sûr qu'ils le soient.\n\nLes hommes qui ne répondent pas à l'appel gardent leur paquetage au clou. Personne n'a encore osé décrocher un fusil, ni rendre son nom à l'appel."
+      },
+      {
+        "id": "C11",
+        "era": 1638,
+        "act": 4,
+        "title": "La levée de pompiers",
+        "voice": "extrait du manuel de la levée, annoté à la poche.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-04",
+          "sealName": "Sceau du Pin",
+          "condition": "ouvrir le refuge du quartier marchand",
+          "trigger": "vaincre Engeki (acte IV)"
+        },
+        "text": "Un incendie bien conduit vaut une garnison. On coupe la maison de l'ouest pour sauver la rue ; on coupe la rue pour sauver le quartier. Les crocs arrachent les toits, les seaux mouillent les murs voisins, la paille humide étouffe le plancher.\n\nÀ retenir : personne n'entre dans une maison fermée sans un ordre écrit. Un propriétaire qui refuse de sortir ne doit pas être tiré par le col : il porte ses papiers, ses comptes, l'argent de ses obsèques. On lui donne un jour.\n\nEn marge, une autre main : le jour a été donné, puis retiré. Les quartiers coupés ont été comptés par maisons et non par âmes. Le registre de réquisition mentionne deux maisons et quarante vies, ce qui ne s'ajoute pas, même en fermant les yeux."
+      },
+      {
+        "id": "C12",
+        "era": 1638,
+        "act": 2,
+        "title": "Le relais de Kōshū",
+        "voice": "page arrachée du registre des voyageurs, brûlure sur le bord.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-02",
+          "sealName": "Sceau du Bambou",
+          "condition": "sauver l'éclaireur avant Kumo",
+          "trigger": "trouver le relais incendié (acte II, secret)"
+        },
+        "text": "Voyageurs entrés le quatorzième jour : un marchand de sel de Mino, sa servante, deux porteurs ; un pèlerin malade et son frère ; une femme de Kurokawa venue chercher un médecin. Sortis : aucun, à l'exception du marchand, dont la ligne a été barrée de la main de l'aubergiste.\n\nLes quatorze et quinze se confondent : l'encre a pris l'eau. Le seizième jour, le relais a fermé tôt. Le dix-septième au soir, la cloche de Kurokawa a sonné. Le relais n'a rien noté, ce qui est déjà une réponse.\n\nSous la poutre qui a résisté, on a retrouvé le registre au sec. C'est là que je l'ai trouvé, entre deux poutres noires. Le feu n'a pas mangé cette page : il a mangé le reste."
+      },
+      {
+        "id": "C13",
+        "era": 1638,
+        "act": 2,
+        "title": "Les veilleurs du Pin Noir",
+        "voice": "règle de la maison, affichée dans la cour, sans signature.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-02",
+          "sealName": "Sceau du Bambou",
+          "condition": "sauver l'éclaireur avant Kumo",
+          "trigger": "installation de Masanori au refuge (acte II)"
+        },
+        "text": "Un : on n'abrite que ceux qui sont propres. Pas par dureté ; parce qu'un malade abrité contamine ceux qui restent debout, et nous avons besoin de ceux qui restent debout.\n\nDeux : tout entrant est inscrit au registre de cendre, avec la date, le nom s'il en a un, et ce qu'il porte. Tout sortant aussi. Ce n'est pas une méfiance, c'est un compte.\n\nTrois : aucun combat dans la cour. On laisse les armes à la porte, y compris les courtes, y compris les barbes de la hache.\n\nQuatre : on ne coupe pas le pin. On ne gratte pas la fente, on ne la nettoye pas avec du vinaigre, on ne la couvre pas. Il est là avant nous.\n\nCinq : on note la date du départ, jamais celle du retour. Un retour ne se date pas, et une maison qui compte ses revenants finit par ne plus compter que ça."
+      },
+      {
+        "id": "C14",
+        "era": 1638,
+        "act": 2,
+        "title": "Le sanctuaire laïque",
+        "voice": "note de la veilleuse, encre pâle.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-02",
+          "sealName": "Sceau du Bambou",
+          "condition": "sauver l'éclaireur avant Kumo",
+          "trigger": "débloquer le sanctuaire des sceaux (acte II)"
+        },
+        "text": "Je ne suis ni prêtresse ni miko. Je tiens le sanctuaire parce qu'il tient debout et que personne n'en voulait. Je n'ai prononcé aucun vœu, ce qui ne m'empêche pas de faire les gestes : le bol, l'eau, l'ofuda écrit à la main avant l'aube, le sel aux deux coins.\n\nSur la planche, j'ai gravé ce qu'on m'a appris et qu'aucun desservant ne dira jamais tout haut : purifier un lieu ne guérit personne. On peut nettoyer une cour et laisser les malades dans la maison. On peut sauver une maison et laisser la cour. Personne n'a le droit de promettre les trois.\n\nJe brûle l'ofuda usé, je garde la cendre dans un bol, et je ne la donne à personne : c'est la seule chose ici qui ait de la valeur et qu'on ne puisse pas voler."
+      },
+      {
+        "id": "C15",
+        "era": 1638,
+        "act": 0,
+        "title": "Akio Kageyama",
+        "voice": "fiche de service du bakufu, deux feuillets attachés.",
+        "unlock": {
+          "type": "prologue",
+          "seal": null,
+          "sealName": null,
+          "condition": "terminer le prologue",
+          "trigger": "après le prologue"
+        },
+        "text": "Né à Tsuru, fils d'un contrôleur de digues. Engagé comme page à quatorze ans, service d'escorte à dix-huit, route de Kōshū à vingt-deux. Ne boit pas, ne joue pas, ne parle pas de sa sœur.\n\nSa sœur est morte dans le premier foyer, avec son mari et un enfant. Le dossier ne dit pas comment. La fiche non plus.\n\nMission en cours : ordre scellé, à seule fin de reconnaître la route de Kai, l'entrée du village de Kurokawa et l'état de la garnison. Autorisation de détruire les foyers contaminés par le feu. Interdiction de prendre une troupe, de se présenter comme officier, de consigner un ordre reçu. Autorisation de ne laisser personne vivre qui soit déjà mort.\n\nLa dernière ligne de la fiche est ajoutée d'une main plus ferme : l'homme ne doit pas revenir avant d'avoir vu ce qu'il y a sous le donjon."
+      },
+      {
+        "id": "C16",
+        "era": 1638,
+        "act": 0,
+        "title": "Tokugawa Iemitsu (fiction)",
+        "voice": "minute de la troisième veille, papier non signé, cachet brisé.",
+        "unlock": {
+          "type": "prologue",
+          "seal": null,
+          "sealName": null,
+          "condition": "terminer le prologue",
+          "trigger": "terminer le prologue (plan 4, « L'ordre du shogun »)"
+        },
+        "text": "Présents : le shogun, deux conseillers, un secrétaire. Objet : les rapports de Kai. Lecture faite des trois lettres : la cloche, la garnison, le seigneur qui ne répond plus.\n\nDécision : aucune troupe. Une armée offrirait mille corps à la maladie et donnerait à Edo l'air d'avoir peur. Un seul homme, sans escorte, sans proclamation, avec un ordre scellé qu'il ne montrera pas.\n\nLe secrétaire a demandé ce qu'il fallait faire des malades. Le shogun n'a pas répondu tout de suite. Il a dit ensuite : « N'épargnez que les vivants. » Personne n'a demandé à qui l'ordre s'adressait.\n\nMention en bas de page, d'une autre encre : l'homme choisi n'est pas un officier. Il a une sœur enterrée à Tsuru. On ne l'a pas choisi pour ça, mais on ne l'a pas écarté pour ça non plus."
+      },
+      {
+        "id": "C17",
+        "era": 1638,
+        "act": 5,
+        "title": "Kurokawa Suketada",
+        "voice": "inventaire de dettes tenu par un clerc du clan.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-05",
+          "sealName": "Sceau de la Faille",
+          "condition": "stabiliser la faille après Kanrei",
+          "trigger": "retrouver les registres du daimyō (acte V)"
+        },
+        "text": "État des obligations du seigneur de Kurokawa, arrêté à la troisième lune : quatre cents ryō dus aux marchands de Kōfu, deux cent dix au temple de Kurotaki, une rente viagère à la veuve d'un intendant. Recettes : le riz de Tsuru, le bois, le passage du relais. Le compte ne se ferme pas.\n\nPoste particulier, à la main du clerc : frais de sépulture des morts de la première fièvre, non engagés. Les corps ont été déposés sous le donjon, dans les caves basses, en attendant une décision. La décision n'est pas venue.\n\nLe seigneur a fait demander si une sépulture collective coûterait moins. On lui a répondu que oui, à condition de ne pas nommer les morts. Il a répondu que les noms coûtaient trop cher. La réponse est écrite ici, de sa main."
+      },
+      {
+        "id": "C18",
+        "era": 1638,
+        "act": 4,
+        "title": "Engeki",
+        "voice": "carnet de réquisition de la levée de pompiers, signé à chaque page.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-04",
+          "sealName": "Sceau du Pin",
+          "condition": "ouvrir le refuge du quartier marchand",
+          "trigger": "vaincre Engeki (acte IV)"
+        },
+        "text": "Jour quatorze : coupé la maison de l'ouest, rue du canal. Deux maisons, quarante vies. Le compte des âmes est estimé, non vérifié. Signé Engeki.\n\nJour quinze : réquisition de vingt-deux hommes pour la levée. Refus de trois familles. Les trois familles ont été inscrites comme contaminées, ce qui les dispense de service et les prive de ration. Signé Engeki.\n\nJour seize : demande de renfort au bakufu, sans réponse. Demande de prêtres, sans réponse. Le seigneur fait savoir que la ville tient. Signé Engeki, avec un trait plus appuyé que les autres.\n\nJour dix-sept : la cloche. Nous n'avons pas sonné : nous n'avions plus assez d'hommes pour tenir la corde. Signé Engeki.\n\nJour dix-huit : rien. Le carnet s'arrête là, non par manque d'encre, mais parce que la main qui écrivait ne tenait plus la plume."
+      },
+      {
+        "id": "C19",
+        "era": 1638,
+        "act": 2,
+        "title": "Kumo",
+        "voice": "bordereau de passage, une feuille pliée en quatre.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-02",
+          "sealName": "Sceau du Bambou",
+          "condition": "sauver l'éclaireur avant Kumo",
+          "trigger": "vaincre Kumo (acte II)"
+        },
+        "text": "Passages sous les remparts, par la bambouseraie. Tarif par tête, payé d'avance, sans nom de famille. Enfants : demi-tarif jusqu'à douze ans. Nourrices et porteurs : prix double, ils ralentissent.\n\nListe des acquéreurs, par ordre de date : un marchand de sel, deux fonctionnaires du relais, une famille de Tsuru, puis plus rien pendant trois jours. Le nom suivant a été gratté au couteau. Sous la gratture, on lit encore : « la gardienne ». Aucun remboursement n'est prévu, y compris en cas de mort en route.\n\nNote du vendeur, en bas : le prix monte quand la brume tombe. Le prix est donc monté chaque nuit. Les passages ne sont plus vendus depuis que la gardienne a cessé de compter les sceaux.\n\nLe vendeur note aussi les heures : la brume tombe après la troisième veille, ce qui laisse aux familles le temps de payer, ou de renoncer sans bruit."
+      },
+      {
+        "id": "C20",
+        "era": 1638,
+        "act": 2,
+        "title": "Shigure",
+        "voice": "dernière page du carnet de garde de la bambouseraie.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-02",
+          "sealName": "Sceau du Bambou",
+          "condition": "sauver l'éclaireur avant Kumo",
+          "trigger": "ramasser le masque fendu (acte II)"
+        },
+        "text": "Compte des sceaux, matin du quinzième jour : trente et un, tous tenus. Le trente-deuxième a été retrouvé défait. Je l'ai refait deux fois. La deuxième fois, il a tenu jusqu'au soir.\n\nLes hommes de Kumo sont passés par la tige creuse, ce qui ne devrait pas être possible sans défaire les liens. Ils n'ont pas coupé. Ils ont défait, proprement, comme des gens qui savent ce qu'ils font.\n\nSi mon masque est retrouvé fendu, ne le réparez pas. Il est fendu parce qu'il a fait son travail : un masque se fend quand il arrête quelque chose qui ne voulait pas s'arrêter. Posez-le sur l'autel du refuge et ne le portez pas. Je ne le porterai plus.\n\nLe carnet est mouillé sur la dernière page. Ce n'est pas la pluie : la bambouseraie ne laisse pas passer la pluie, elle la boit."
+      },
+      {
+        "id": "C21",
+        "era": 1638,
+        "act": 1,
+        "title": "Chiyo",
+        "voice": "première page du registre de cendre.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-01",
+          "sealName": "Sceau du Camp",
+          "condition": "purifier le camp des bûcherons",
+          "trigger": "première utilisation de l'infirmerie (acte I)"
+        },
+        "text": "J'ouvre ce registre parce qu'on m'a demandé qui était entré, qui était sorti et qui était revenu. Je ne sais pas lire les trois colonnes sans mentir : personne ne revient vraiment.\n\nColonne une : nom, ou ce qu'on en sait. Colonne deux : ce qu'il porte. Colonne trois : ce qu'on a fait pour lui. Colonne quatre : ce qu'il est devenu. Je tiens la quatre à l'encre pâle, pour pouvoir la corriger.\n\nCe que j'ai appris depuis la cloche : la fièvre prend neuf jours ; le septième, on croit guérir ; le neuvième, on ne croit plus rien. L'eau bouillie vaut mieux que les prières. Le feu sauve une rue et condamne une maison.\n\nJe soigne. Je ne promets pas.\n\nJe n'écris pas les âges : ils changent trop vite ici, et un âge faux est pire qu'une case vide."
+      },
+      {
+        "id": "C22",
+        "era": 1638,
+        "act": 2,
+        "title": "Masanori",
+        "voice": "commande de forge, écrite au crayon gras sur une planche.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-02",
+          "sealName": "Sceau du Bambou",
+          "condition": "sauver l'éclaireur avant Kumo",
+          "trigger": "ouverture de la forge au refuge (acte II)"
+        },
+        "text": "Une lame ne se raconte pas. Elle se pèse, se chauffe, se plie. Si vous me demandez de reforger un sabre sans me dire ce qu'il a fait, je vous rendrai un morceau de fer propre et vous n'aurez rien.\n\nJe prends le tamahagane, je le trie, je le plie. Deux jours pour une lame courte, six pour une longue, et je ne travaille pas quand il pleut : la forge se noie plus facilement qu'un homme.\n\nPrix : le métal d'abord, l'argent ensuite. Si vous n'avez pas de métal, apportez une pièce de boss, une plaque, un joug, une carapace. Je ne fais pas de lame avec les morts ; je fais des lames avec ce que les morts ont porté.\n\nEt je ne réponds pas aux questions sur Kaji. Il travaille de l'autre côté de la rue, et nos lames ne se parlent pas."
+      },
+      {
+        "id": "C23",
+        "era": 1638,
+        "act": 0,
+        "title": "Kurokage",
+        "voice": "inventaire du magasin du bakufu, ligne unique.",
+        "unlock": {
+          "type": "prologue",
+          "seal": null,
+          "sealName": null,
+          "condition": "terminer le prologue",
+          "trigger": "après le prologue (arme de départ)"
+        },
+        "text": "Lame longue, sans signature, fourreau noir sans monture. Entrée au magasin il y a trois ans, provenance : messager du bakufu décédé en route. Aucun héritier déclaré. La lame a été répertoriée comme « pièce de service », ce qui permet de la confier à un homme sans lui en donner la propriété.\n\nObservation de l'armurier : lame équilibrée, hamon discret, poignée remontée deux fois. Le messager l'a portée trois ans sans dégainer, ce qui n'est pas un défaut : c'est le métier.\n\nMention ajoutée à l'encre fraîche : remise à Akio Kageyama sur ordre verbal. Ne pas inscrire le motif. L'homme qui la porte ne doit pas croire qu'elle est à lui.\n\nLe fourreau porte une marque de relais, presque effacée : le messager posait la lame sur la planche du péage, toujours du même côté."
+      },
+      {
+        "id": "C24",
+        "era": 1638,
+        "act": 2,
+        "title": "Takekaze",
+        "voice": "note attachée au fourreau, écriture de gardienne.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-02",
+          "sealName": "Sceau du Bambou",
+          "condition": "sauver l'éclaireur avant Kumo",
+          "trigger": "secret du sanctuaire du bambou brisé (acte II)"
+        },
+        "text": "Ce sabre est rural, réparé trois fois, et il coupe encore. Je l'ai fait faire par un forgeron de passage qui ne savait pas lire et qui travaillait mieux que ceux qui savaient.\n\nIl ne sert pas contre les hommes. Il sert contre les sceaux : une lame commune glisse sur un lien tenu, une lame rurale le coupe net, parce qu'elle est plus souple et qu'elle pardonne moins.\n\nSi vous le prenez, laissez le fourreau. Le fourreau est à la bambouseraie. Si vous le rendez un jour, le fourreau sera encore là, et le sabre saura qu'il est revenu.\n\nLe bois du fourreau est plus vieux que la lame. C'est normal : on change la lame, jamais l'étui, quand on n'a pas les moyens de changer les deux."
+      },
+      {
+        "id": "C25",
+        "era": 1638,
+        "act": 2,
+        "title": "Le masque fendu",
+        "voice": "instruction du faiseur de masques, copiée par un desservant.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-02",
+          "sealName": "Sceau du Bambou",
+          "condition": "sauver l'éclaireur avant Kumo",
+          "trigger": "ramasser le masque (acte II, clairière)"
+        },
+        "text": "On ne fend pas un masque de gardienne : il se fend. Le bois travaille quand ce qu'il arrête pousse plus fort que lui. Une fente franche est un bon signe ; une fente qui revient sur elle-même ne l'est pas.\n\nUn masque de gardienne se pose, ne se porte pas. On le met sur l'autel, face en bas, pour que la fente ne regarde pas la porte. On ne le nettoie pas avec de l'eau bénite : elle le fait blanchir et il perd son odeur.\n\nSi le masque est retrouvé loin du corps de sa gardienne, c'est qu'elle l'a retiré elle-même. Cela se fait quand on n'a plus assez de mains pour tenir le bois et la lame.\n\nUne fente se lit comme une écriture : de haut en bas, elle protège ; en travers, elle avertit ; en étoile, elle dit de laisser le masque où il est."
+      },
+      {
+        "id": "C26",
+        "era": 1638,
+        "act": 1,
+        "title": "Le registre de cendre",
+        "voice": "page de compte du Pin Noir, quatre colonnes.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-01",
+          "sealName": "Sceau du Camp",
+          "condition": "purifier le camp des bûcherons",
+          "trigger": "premier repos au refuge (acte I)"
+        },
+        "text": "Colonne une : entrés ce jour, onze. Colonne deux : sortis, quatre. Colonne trois : revenus, un — le porteur de kago, qui avait laissé son frère dans la rizière et qui est allé le chercher.\n\nColonne quatre : ce qu'on a fait. On a donné de l'eau bouillie, une couverture propre, une place près du feu. On a refusé deux hommes qui toussaient. On a gardé leur nom, pour le jour où ils reviendront ou pour celui où ils ne reviendront pas.\n\nNote en bas : le compte des revenus est faux. Un homme qui revient n'est pas le même que celui qui est parti. Je le note quand même, parce que le registre n'a pas de colonne pour ce qu'on devient.\n\nOn ne marque pas les morts dans ce registre. Il y a un autre livre pour ça, et il est plus mince."
+      },
+      {
+        "id": "C27",
+        "era": 1638,
+        "act": 0,
+        "title": "L'édit scellé",
+        "voice": "transcription de l'édit, faite pour la bibliothèque du Chapitre.",
+        "unlock": {
+          "type": "prologue",
+          "seal": null,
+          "sealName": null,
+          "condition": "terminer le prologue",
+          "trigger": "prologue, après la scène du serment"
+        },
+        "text": "Transcription d'un ordre scellé, original non conservé. Le sceau a été brisé à la remise, selon l'usage.\n\nTexte : « À l'homme qui portera ceci. Reconnaître la route, l'entrée du village et l'état de la garnison. Détruire les foyers par le feu. Ne pas prendre de troupe. Ne pas se nommer officier. Ne pas consigner l'ordre reçu. N'épargner que les vivants. »\n\nNote du secrétaire : l'ordre ne porte pas de numéro. Un ordre sans numéro n'existe pas dans les minutes, ce qui est le but. Si l'homme le montre, l'ordre perd sa valeur et l'homme perd sa protection.\n\nLe sceau brisé a été conservé dans une enveloppe de papier, avec la date. Une enveloppe vide et scellée vaut mieux qu'un ordre sans preuve : c'est ce que le Chapitre appelle une archive honnête."
+      },
+      {
+        "id": "C28",
+        "era": 1638,
+        "act": 1,
+        "title": "Rapport de la dernière cloche",
+        "voice": "rapport du chef de relais au bakufu, copie au carbone.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-01",
+          "sealName": "Sceau du Camp",
+          "condition": "purifier le camp des bûcherons",
+          "trigger": "objectif « suivre les traces » (acte I)"
+        },
+        "text": "À l'attention du magistrat de Kōfu. La cloche d'incendie de Kurokawa a sonné à la troisième veille, sans incendie visible. Douze morts dans la nuit, dont trois dans la maison du sonneur. Le sonneur n'est pas parmi les morts.\n\nDemandes : instructions, médecin, prêtres, et autorisation de fermer la route de Kōshū. Aucune réponse reçue à ce jour. La garnison a reçu l'ordre de tenir la porte sud et de ne pas tirer la première.\n\nObservation personnelle : les bêtes de somme refusent d'entrer dans la rue du canal depuis la cloche. Les hommes n'ont pas ce luxe.\n\nLe relais a envoyé trois copies : deux par le nord, une par le sud. La copie du sud est la seule qui soit arrivée, et elle est arrivée ici, entre mes mains."
+      },
+      {
+        "id": "C29",
+        "era": 1638,
+        "act": 5,
+        "title": "Registre des réquisitions",
+        "voice": "page arrachée, écriture de la levée, taches de suie.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-05",
+          "sealName": "Sceau de la Faille",
+          "condition": "stabiliser la faille après Kanrei",
+          "trigger": "ramasser le registre après Engeki (acte V)"
+        },
+        "text": "Réquisition du quinzième jour : vingt-deux hommes, quatre charrettes, six crocs, deux échelles. Réquisition du seizième : dix hommes, une charrette, plus de crocs — les crocs ont été laissés dans la rue coupée.\n\nCompte des maisons coupées : deux. Compte des vies : quarante. Vérification faite par le secrétaire de la levée : les deux nombres ne correspondent pas aux registres de population, qui donnaient vingt-huit âmes pour ces deux maisons. Il manque douze vies, ou il y a douze visiteurs.\n\nEn marge, une main plus ferme : ne pas corriger le compte. Le compte est ce qui a été décidé, pas ce qui a été trouvé.\n\nLe registre porte une tache sombre sur la dernière page. Le secrétaire de la levée écrit que c'est de l'encre renversée. L'encre ne brûle pas le papier."
+      },
+      {
+        "id": "C30",
+        "era": 1638,
+        "act": 1,
+        "title": "Lettre de Tsuru",
+        "voice": "lettre d'une femme de Tsuru à son frère, pliée en quatre, jamais",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-01",
+          "sealName": "Sceau du Camp",
+          "condition": "purifier le camp des bûcherons",
+          "trigger": "fouiller le camp des bûcherons (acte I, secret)"
+        },
+        "text": "Frère, l'eau monte et les hommes du seigneur ont fermé les vannes pour garder les semis. Je t'écris parce que la petite a la fièvre depuis trois jours et que le médecin de Tsuru est parti à Kurokawa chercher des remèdes. Il n'est pas revenu, et sa femme ne parle plus.\n\nSi tu peux venir, viens avant la moisson. Ne prends pas la route basse : elle est coupée par la rizière noyée, et ce qui marche dans l'eau n'a pas besoin de respirer.\n\nJe garde ta part de riz dans le coffre, avec le sel. Si je ne t'écris plus, ce n'est pas que j'ai oublié.\n\nLa lettre n'a pas de cachet. Elle a été pliée et repliée jusqu'à ce que le papier devienne doux, comme si on l'avait relue en cachette plus d'une fois."
+      },
+      {
+        "id": "C31",
+        "era": 2026,
+        "act": 6,
+        "title": "Shibuya",
+        "voice": "carnet de route d'Akio, écrit debout sous un auvent.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-06",
+          "sealName": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "trigger": "entrer dans modern-shibuya-side-street (acte VI)"
+        },
+        "text": "La rue est mouillée sans qu'il ait plu. Les écrans au-dessus des magasins montrent une file d'attente qui n'existe pas : des gens patients, numérotés, qui avancent d'un pas toutes les dix secondes. Personne ne regarde.\n\nLes affiches sont toutes la même : un fond blanc, un numéro vert, la date du 17 juin. Aucune année. En bas de la troisième, quelqu'un a écrit au marqueur : « ils comptaient encore hier ».\n\nJe note l'heure : trois heures douze. C'est la seule chose ici qui ne mente pas encore. Le reste est une administration qui a appris à faire semblant d'être une ville.\n\nLes geta d'un passant sont posés à l'envers devant une porte close. Je note la pointure. C'est une pointure d'enfant, et la porte est fermée depuis plus longtemps que la pluie."
+      },
+      {
+        "id": "C32",
+        "era": 2026,
+        "act": 6,
+        "title": "La station condamnée",
+        "voice": "avis de fermeture de la préfecture, plastifié, encore lisible.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-06",
+          "sealName": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "trigger": "entrer dans modern-subway-station (acte VI)"
+        },
+        "text": "Station fermée au public pour travaux de mise aux normes. Réouverture prévue au printemps. Puis, en surimpression, un second avis : réquisition sanitaire, accès réservé aux agents, aucune date de fin.\n\nLes grilles ont été soudées sur place, pas livrées soudées : les points de soudure sont irréguliers, faits à la main, en plusieurs fois.\n\nLa ventilation tourne toujours. C'est écrit noir sur blanc dans le registre de maintenance : « ne pas couper, risque de condensation ». Personne n'a ajouté de ligne depuis la réquisition.\n\nUn agent a coché « conforme » à chaque visite. La dernière case est datée du 18 juin et signée d'une initiale qui ne correspond à personne sur la liste du personnel.\n\nLa clef est introuvable, et la serrure a été changée deux fois : la première fois par la préfecture, la seconde par personne."
+      },
+      {
+        "id": "C33",
+        "era": 2026,
+        "act": 6,
+        "title": "L'hôpital de quarantaine",
+        "voice": "plan d'évacuation annoté par une infirmière, stylo bleu.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-06",
+          "sealName": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "trigger": "entrer dans modern-quarantine-hospital (acte VI)"
+        },
+        "text": "Ailes A, B, C. Pression négative en A et B. La C n'a jamais été branchée : les gaines sont dehors, sous bâche.\n\nChambre 12 : ne pas ouvrir sans masque. Chambre 12, deuxième annotation, plus tard : ne pas ouvrir. La troisième est un trait, comme si la main avait renoncé au milieu du mot.\n\nLes flèches d'évacuation ont été refaites dans l'autre sens. On sort par le hall, mais le hall mène au cordon, et le cordon ne laisse pas sortir. J'ai entouré le mot « sortie » et j'ai écrit à côté : « demander ».\n\nEn bas de page, à l'encre : « Si vous lisez ce plan, c'est que vous êtes entré. Il n'y a pas de plan pour ressortir. »\n\nLe nom de l'infirmière est effacé au crayon, pas à l'encre. On efface au crayon ce qu'on espère reprendre."
+      },
+      {
+        "id": "C34",
+        "era": 2026,
+        "act": 6,
+        "title": "Le laboratoire métropolitain",
+        "voice": "bon de commande de matériel, tamponné « urgent ».",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-06",
+          "sealName": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "trigger": "entrer dans modern-metropolitan-lab (acte VI)"
+        },
+        "text": "Quatre cents flacons de prélèvement, deux mille gants, six cents sacs d'incinération, vingt litres de désinfectant. Livraison demandée pour le 16 juin, avant midi, quai arrière.\n\nMention manuscrite du magasinier : « stock de sacs insuffisant pour la semaine. Relance faite. Réponse : priorité nationale. »\n\nDeuxième mention, autre écriture : « Les flacons sont arrivés vides. Le bon dit pleins. Je ne signe pas. » La signature manque, en effet.\n\nLe bon est agrafé à une facture payée le 17 juin à 05 h 40, soit une heure après la clôture du dossier. La comptabilité n'a jamais demandé pourquoi. C'est le genre de détail qu'une administration appelle « régularisation » et qu'un enquêteur appelle « preuve ».\n\nLe quai arrière donne sur une rue barrée depuis le 12. Le livreur a signé quand même, à l'heure demandée."
+      },
+      {
+        "id": "C35",
+        "era": 2026,
+        "act": 6,
+        "title": "Le cordon sanitaire",
+        "voice": "consigne affichée aux agents, format poche.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-06",
+          "sealName": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "trigger": "franchir le ruban du cordon (acte VI, entrée de zone)"
+        },
+        "text": "Un agent ne franchit pas le cordon. Il le tient.\n\nToute personne qui sort est reconduite à l'intérieur, sans contact physique. Toute personne qui insiste est signalée, pas maîtrisée. Le ruban ne se contourne pas : il se remplace, par un autre agent, au même endroit.\n\nNe pas répondre aux questions sur la durée. Ne pas confirmer de décès. Ne pas prononcer le nom du syndrome devant un riverain.\n\nEn cas de mouvement de foule : reculer d'un pas, garder le ruban tendu, appeler. Le recul d'un pas est la seule manœuvre autorisée et la seule qui n'a jamais échoué.\n\nNote au dos, au crayon : « Le ruban a été coupé deux fois cette semaine. Pas par la foule. Par des gens qui avaient un badge. »"
+      },
+      {
+        "id": "C36",
+        "era": 2026,
+        "act": 6,
+        "title": "La rame du terminus",
+        "voice": "rapport de maintenance, deux pages, la seconde tachée.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-06",
+          "sealName": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "trigger": "objectif obj-modern-restore-power terminé (acte VI)"
+        },
+        "text": "Rame immobilisée au quai 2, frein de stationnement engagé, clef absente. Le courant est revenu à 03 h 41 ; la rame s'est remise à annoncer les arrêts.\n\nAnnonce en boucle : « Prochain arrêt : terminus. » La rame ne bouge pas. Les portes s'ouvrent et se ferment à chaque annonce, sans voyageur.\n\nLe système indique douze personnes à bord. Le système compte par capteurs de poids. Le quai est vide. Les capteurs ne sont pas défectueux : ils ont été testés avant remise en service.\n\nLe technicien a écrit : « Ne pas monter. » Puis, plus bas, d'une main qui tremble : « J'ai monté. Il n'y a personne et ils sont douze. » Le rapport s'arrête là. La deuxième page est un formulaire de congé maladie, non signé."
+      },
+      {
+        "id": "C37",
+        "era": 2026,
+        "act": 6,
+        "title": "La cellule de crise",
+        "voice": "compte rendu de réunion, page 1, diffusé restreint.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-06",
+          "sealName": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "trigger": "objectif obj-modern-read-emergency-records terminé (acte VI)"
+        },
+        "text": "Présents : six. Excusés : quatre. Ordre du jour unique : la communication.\n\nDécision 1 : ne pas nommer la maladie. Décision 2 : parler d'un syndrome, d'origine à déterminer. Décision 3 : ne pas fermer la ville, mais réduire les accès. Décision 4 : demander aux hôpitaux de ne pas remplir la case « lieu de décès » quand il s'agit du même quartier.\n\nLa question de la presse est reportée à la séance suivante. La séance suivante est annulée. La troisième n'a pas de compte rendu.\n\nEn marge, une écriture différente : « On ne protège pas les gens en leur cachant le nom. On protège la préfecture. » Le procès-verbal n'a pas été relu avant diffusion, ce qui explique peut-être la marge.\n\nLa salle de réunion a été nettoyée avant la diffusion du compte rendu, ce qui n'est pas l'ordre habituel."
+      },
+      {
+        "id": "C38",
+        "era": 2026,
+        "act": 6,
+        "title": "L'agence sanitaire",
+        "voice": "note de service interne, deux paragraphes et un tableau.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-06",
+          "sealName": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "trigger": "ramasser la note de service tamponnée (acte VI, hôpital)"
+        },
+        "text": "Définition de cas retenue : fièvre supérieure à 38,5 °C et contact documenté avec un cas confirmé dans les sept jours. Le tableau des contacts n'est pas joint : il est « en cours de consolidation » depuis le 12 juin.\n\nLes agents sont invités à ne pas employer l'expression « syndrome de Kurokawa » devant les familles. L'expression reste valable en interne, pour les dossiers, à condition qu'ils soient classés.\n\nSigné : direction de la veille sanitaire. Contresigné : personne.\n\nAu dos, quelqu'un a noté à la main : « Nous n'avons pas de définition de cas. Nous avons une définition de dossier. » La phrase est écrite sur le seul exemplaire de la note qui n'a pas été classé.\n\nLe tableau des contacts est annoncé pour le 19 juin. Le 19 juin n'a pas eu lieu, et personne n'a reposé la question."
+      },
+      {
+        "id": "C39",
+        "era": 2026,
+        "act": 6,
+        "title": "La sécurité privée",
+        "voice": "contrat de prestation, annexe 2, clauses opérationnelles.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-06",
+          "sealName": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "trigger": "première rencontre avec l'agent d'intervention (acte VI)"
+        },
+        "text": "Prestation : garde statique et dissuasion. Effectif : soixante agents, deux équipes, douze heures. Aucune compétence médicale n'est requise et aucune ne doit être revendiquée devant la population.\n\nÉquipement fourni : gilet, lampe, masque, menottes souples. Équipement interdit : arme à feu, matraque, produit irritant. Le client précise que « l'image de la mission est celle d'une assistance, pas d'un maintien de l'ordre ».\n\nClause 7 : l'agent qui constate un décès ne le déclare pas. Il sécurise la zone et attend le relais sanitaire. Le relais sanitaire n'a pas de créneau après minuit.\n\nClause 8, ajoutée à la main : « Ne pas poursuivre dans les escaliers. » L'avenant n'est pas daté, mais la signature est celle du même directeur que le reste du contrat.\n\nLe gilet porte un numéro, pas un nom. C'est voulu : un nom se retient, un numéro se relève."
+      },
+      {
+        "id": "C40",
+        "era": 2026,
+        "act": 6,
+        "title": "Le comité d'archive",
+        "voice": "fil de courriels imprimé, trois messages, en-têtes coupés.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-06",
+          "sealName": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "trigger": "trouver l'échange imprimé (acte VI, laboratoire)"
+        },
+        "text": "Message 1 : « Qui conserve les dossiers de la cellule ? » Réponse : « La préfecture, aux archives, trente ans. »\n\nMessage 2 : « Les pièces du 17 juin ne sont pas des pièces de procédure. » Réponse : « Alors elles ne sont pas des pièces. »\n\nMessage 3 : « Il y a un dossier de 1638 dans le fonds ancien, même cote, même libellé. C'est une coquille ? » Pas de réponse pendant quatre jours. Puis : « Ne pas rouvrir ce fonds. »\n\nL'impression s'arrête au milieu du message suivant. La dernière ligne lisible est : « Le comité n'a pas compétence pour les documents qu'il n'a pas produits. » Ce qui, appliqué aux morts, règle la question du nombre.\n\nLe fonds ancien est fermé à clé depuis 1997. La clé est au comité, dans un tiroir qui n'a pas de serrure."
+      },
+      {
+        "id": "C41",
+        "era": 2026,
+        "act": 6,
+        "title": "Rei",
+        "voice": "badge de lecteur, annoté au verso.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-06",
+          "sealName": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "trigger": "rencontrer Rei au laboratoire (acte VI, échantillon)"
+        },
+        "text": "Nom : Rei. Qualité : lectrice autorisée, fonds ancien et fonds contemporain. Accès : salles 1 à 4, archives fermées, magasin 12. Photographie : nette, prise sans flash, regard dirigé vers l'objectif, ce qui est rare.\n\nAu verso, à l'encre : « Ne pas classer avant la fin. » Puis, plus petit : « La fin, c'est quand tout est daté. »\n\nLe badge porte deux dates de validité, l'une imprimée, l'autre corrigée à la main. La seconde dépasse la durée de vie du support de plusieurs siècles. Le service de sécurité n'a jamais signalé l'anomalie : le badge passe.\n\nLe service du personnel n'a pas de photographie récente. La dernière date de l'entrée en fonction, et l'entrée en fonction est la même année que la fermeture du fonds ancien. Personne n'a demandé de mise à jour."
+      },
+      {
+        "id": "C42",
+        "era": 2026,
+        "act": 6,
+        "title": "L'agent d'intervention",
+        "voice": "ordre de mission, fiche cartonnée, coin corné.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-06",
+          "sealName": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "trigger": "vaincre un agent d'intervention (acte VI)"
+        },
+        "text": "Sujet signalé : agité, ne répond pas aux injonctions, porteur d'une arme blanche de type sabre. Conduite à tenir : contenir, ne pas engager.\n\nSi le sujet court : ne pas suivre dans le couloir. Le couloir est un axe de propagation ; la consigne est de fermer la porte et d'appeler.\n\nSi le sujet parle : noter ses phrases. Ne pas répondre. Les phrases sont transmises au relais, qui les classe.\n\nEn bas de fiche : « Le sujet a été vu pour la première fois le 17 juin. Il n'était pas sur la liste. » La mention est barrée, puis réécrite à l'identique par une autre main. Personne n'a expliqué pourquoi.\n\nLa fiche est tirée en trois exemplaires : un pour le relais, un pour la sécurité, un pour le comité. Le comité n'en a jamais réclamé."
+      },
+      {
+        "id": "C43",
+        "era": 2026,
+        "act": 6,
+        "title": "La soignante de nuit",
+        "voice": "cahier de relève, écriture serrée, quatre heures.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-06",
+          "sealName": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "trigger": "utiliser le poste de soins (acte VI, hôpital)"
+        },
+        "text": "22 h : quatorze patients. Trois sous oxygène. Un a demandé son nom, je lui ai dit, il l'a répété jusqu'à ce qu'il s'endorme.\n\n2 h : neuf patients. Je n'ai pas vu sortir les cinq autres. La porte était fermée. J'ai vérifié deux fois.\n\n4 h : toujours neuf, mais ce ne sont pas les mêmes. Deux visages que je connais, sept que je ne connais pas. J'ai recommencé le tour, feuille à la main, en cochant. Neuf. Le compte est juste et c'est ça qui ne va pas.\n\n5 h : je note ce que je vois et je ne conclus pas. La relève de jour lira. Si elle me trouve exagérée, tant mieux. Si elle ne me trouve pas, la page est là."
+      },
+      {
+        "id": "C44",
+        "era": 2026,
+        "act": 6,
+        "title": "Le fonctionnaire signataire",
+        "voice": "courrier de refus adressé à une famille, réponse type.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-06",
+          "sealName": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "trigger": "lire l'ordre de clôture signé (acte VI, archives)"
+        },
+        "text": "Madame, Monsieur, votre demande d'autorisation de sortie du périmètre a été examinée. Elle ne peut pas recevoir une suite favorable.\n\nMotif : procédure. Le motif est unique et ne sera pas précisé. Vous pouvez déposer un recours dans les quinze jours ; le recours sera examiné par le même service, dans les mêmes conditions.\n\nLe courrier est signé d'une main ferme, sans paraphe. Le nom du signataire n'apparaît pas, seulement sa fonction. En bas de page, la mention « correspondance non personnalisée » explique peut-être l'absence de nom, ou peut-être l'inverse.\n\nTrois cent douze courriers identiques ont été imprimés le 17 juin entre 04 h et 05 h. Le dernier porte une annotation : « Arrêter après le 313. » Il n'y a pas de 313.\n\nLe 313 a été imprimé le lendemain, sans mention ni numéro. Il n'a pas été envoyé."
+      },
+      {
+        "id": "C45",
+        "era": 2026,
+        "act": 6,
+        "title": "Le dossier « syndrome de Kurokawa »",
+        "voice": "page de garde, cartonnée, tamponnée trois fois.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-06",
+          "sealName": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "trigger": "ouvrir le dossier d'urgence (acte VI)"
+        },
+        "text": "Objet : syndrome de Kurokawa. Cas signalés : cent quarante-sept. Cas confirmés : zéro. Définis : cent quarante-sept. Décès : quatre-vingt-onze.\n\nOrigine : inconnue. Transmission : à l'étude. Traitement : symptomatique. Diffusion : restreinte. Le dossier est complet, propre, et ne contient aucune photographie de corps.\n\nTrois tampons se superposent, tous datés du 17 juin : « reçu », « classé », « clos ». L'ordre des tampons est inversé par rapport à l'ordre des heures.\n\nSur la tranche, une cote manuscrite renvoie au fonds ancien. Le document correspondant porte la même cote et le même intitulé, mais il est daté de 1638 et signé d'un nom que personne au laboratoire n'a su lire.\n\nLa couverture porte une agrafe double. La seconde agrafe ne tient aucun papier. Le dossier a été relié après clôture, ce qui est contraire à la procédure."
+      },
+      {
+        "id": "C46",
+        "era": 2026,
+        "act": 6,
+        "title": "L'échantillon originel",
+        "voice": "étiquette du flacon, texte imprimé et mentions à la main.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-06",
+          "sealName": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "trigger": "objectif obj-modern-secure-sample terminé (acte VI)"
+        },
+        "text": "Flacon 00. Prélèvement du 17 juin, 03 h 12. Sujet : non identifié. Volume : 4 ml. Milieu : sérum. Conservation : −80 °C, ne pas décongeler.\n\nMentions à la main : « ne pas ouvrir », puis « destruction interdite », puis, d'une troisième écriture, « ne pas rendre ». Le flacon a donc trois propriétaires et aucun responsable.\n\nL'étiquette porte un second numéro, plus ancien, partiellement gratté. Sous la gratture, on lit « K-1638 ». Le conditionnement, lui, est neuf : le bouchon n'a jamais été percé.\n\nLa chaîne de froid n'a pas été interrompue. C'est le seul élément du dossier qui soit irréprochable, et c'est aussi le plus inquiétant : quelqu'un a payé l'électricité pendant trois siècles sans jamais réclamer la facture.\n\nLe carton porte une date de péremption : 17 juin. Sans année."
+      },
+      {
+        "id": "C47",
+        "era": 2026,
+        "act": 6,
+        "title": "Le masque de 1638",
+        "voice": "fiche de conservation, musée municipal, département des objets.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-06",
+          "sealName": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "trigger": "ramasser le masque de bois (acte VI, secret de l'hôpital)"
+        },
+        "text": "Masque de bois, bois de cèdre, fente axiale franche. Dimensions : vingt-deux centimètres. Provenance : don anonyme, 1997. Inventaire : M-1638-04.\n\nDatation : XVIIe siècle, cohérente avec la facture. La fiche précise que le bois a été « nettoyé lors de l'entrée », ce qui a probablement effacé les traces d'usage. Deux fragments de paille ont été retrouvés dans la fente et conservés à part, dans un sachet coté.\n\nRecommandation : ne pas exposer. Motif : « pièce sensible, susceptible de troubler le public ». La recommandation n'a jamais été révisée.\n\nAu dos de la fiche, au crayon : « Le donateur a demandé qu'on ne le nomme pas. Il parlait un japonais que le conservateur n'a pas reconnu. Il est reparti à pied, sous la pluie, sans laisser d'adresse. »\n\nLe sachet coté est vide. La cote, elle, est restée dans la boîte."
+      },
+      {
+        "id": "C48",
+        "era": 2026,
+        "act": 6,
+        "title": "La caméra du quai",
+        "voice": "rapport de visionnage, une page, deux signatures.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-06",
+          "sealName": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "trigger": "visionner la caméra du quai (acte VI, station)"
+        },
+        "text": "Caméra 4, quai 2, angle fixe. Enregistrement continu, horodatage en surimpression. À 03 h 12, le quai est vide. À 03 h 13, il y a douze silhouettes immobiles, alignées face à la voie.\n\nAucune entrée n'est visible : ni porte, ni escalier, ni rame. Les silhouettes n'ont pas de reflet sur le sol mouillé, alors que le quai est mouillé.\n\nÀ 03 h 14, elles ont disparu. L'horodatage indique alors 03 h 18 : quatre minutes ont été sautées, sans coupure d'image. Le technicien a noté « dérive horloge » et n'a pas relancé l'extraction.\n\nLe second signataire a ajouté : « La caméra n'a pas d'horloge propre. Elle reçoit l'heure du réseau. » Le réseau n'a pas été vérifié. Personne n'a voulu savoir à quelle heure il croyait être."
+      },
+      {
+        "id": "C49",
+        "era": 2026,
+        "act": 6,
+        "title": "Le registre des entrées",
+        "voice": "registre manuscrit, pages prédatées, écriture de guichet.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-06",
+          "sealName": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "trigger": "ramasser le registre du quai (acte VI, station)"
+        },
+        "text": "Colonnes : heure, nom, motif, sortie. L'écriture est régulière jusqu'à la page onze, puis elle se serre, puis elle s'arrête.\n\n03 h 04, Tanaka, transfert, —. 03 h 06, Sato, transfert, —. 03 h 09, Inoue, transfert, —. La colonne « sortie » reste vide pour toutes les lignes, y compris celles du personnel.\n\nÀ la page douze, une ligne est écrite en caractères anciens, d'une main qui n'est pas celle du guichet : « 十七日、黒川、影 ». Personne n'a traduit. Le guichetier suivant a simplement tiré un trait sous la ligne, comme on clôt un compte.\n\nLe registre s'arrête au 17 juin, 05 h 40. La page suivante est arrachée, et l'onglet du classeur porte encore l'empreinte d'une agrafe.\n\nLe stylo du guichet est encore sur la page, capuchon retiré, encre sèche depuis longtemps."
+      },
+      {
+        "id": "C50",
+        "era": 2026,
+        "act": 6,
+        "title": "La note manuscrite de Rei",
+        "voice": "note pliée en huit, papier de bibliothèque, encre noire.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-06",
+          "sealName": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "trigger": "trouver la note de Rei (acte VI, après l'échantillon)"
+        },
+        "text": "Trois dates, une seule nuit. C'est la phrase que je dois vérifier avant de classer quoi que ce soit.\n\nSi vous lisez cette note, vous êtes en avance, et ce n'est pas un compliment : ça veut dire que quelqu'un a ouvert un dossier avant qu'il soit complet. Ne corrigez rien. Notez ce que vous voyez, l'heure, et laissez le reste.\n\nJe ne peux pas vous dire pourquoi les cotes se répondent. Je peux vous dire ce que j'ai vérifié : les reliures sont neuves, le papier est ancien, et la colle des deux est la même. Ce n'est pas une preuve. C'est une gêne.\n\nSi je ne reviens pas, la note est pour vous. Si je reviens, brûlez-la, et nous dirons que nous ne nous sommes pas parlé."
+      },
+      {
+        "id": "C51",
+        "era": 2026,
+        "act": 6,
+        "title": "Le Kegare-code",
+        "voice": "note technique, section 4, diffusée en interne.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-06",
+          "sealName": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "trigger": "première rencontre avec un hôte antiémeute (acte VI)"
+        },
+        "text": "Le Kegare-code n'est pas un programme. C'est une écriture qui se relit : des séquences de huit signes, répétées avec des variantes, qui se comportent comme une consigne plutôt que comme un calcul.\n\nUne machine qui la lit ne devient pas vivante. Elle devient obéissante — à la consigne, pas à l'auteur. C'est la différence avec un virus, et c'est pourquoi le mot « virus » ne devrait pas être employé ici.\n\nLes séquences apparaissent sur des supports qui ont servi à compter des morts : registres, listes, sauvegardes de recensement. L'hypothèse de travail est qu'elles se recopient par relecture, pas par exécution.\n\nRecommandation : ne pas la traduire, ne pas la commenter, ne pas la citer en réunion. La section 5, qui proposait de la traduire, a été retirée du document."
+      },
+      {
+        "id": "C52",
+        "era": 2026,
+        "act": 6,
+        "title": "L'ancre de sauvegarde",
+        "voice": "inventaire de salle serveur, feuille agrafée.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-06",
+          "sealName": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "trigger": "trouver la salle des ancres (acte VI, laboratoire)"
+        },
+        "text": "Ancre 1 : recensement communal, 2019. Ancre 2 : registre des décès, 2024. Ancre 3 : sauvegarde du 17 juin, 03 h 12. Ancre 4 : sauvegarde du 17 juin, 03 h 12. Ancre 5 : sauvegarde du 17 juin, 03 h 12.\n\nLes ancres 3 à 5 sont identiques à l'octet près. L'inventaire les distingue par un numéro de baie, pas par un contenu. Le technicien a écrit à côté : « Ne pas restaurer. Ce n'est pas une sauvegarde, c'est une adresse. »\n\nL'alimentation est sur onduleur, doublée, et une troisième ligne arrive d'un local dont la porte n'a pas de poignée. Le câble est chaud.\n\nEn bas de feuille : « Toute restauration doit être demandée par écrit au comité. » Le comité n'a plus de secrétariat depuis le 18 juin."
+      },
+      {
+        "id": "C53",
+        "era": 2026,
+        "act": 6,
+        "title": "La cendre grise",
+        "voice": "rapport d'analyse, laboratoire mobile, une page.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-06",
+          "sealName": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "trigger": "vaincre le Colosse de la ligne Yomi (acte VI)"
+        },
+        "text": "Prélèvement : cendre grise, fine, non grasse au toucher. Masse volumique faible. Ne fond pas à la flamme. Ne se dissout pas dans l'eau.\n\nComposition : résidu de combustion incomplète, fibres de papier, traces de bois de cèdre, matière organique non identifiable. Aucun agent pathogène viable. Le rapport le dit en gras, comme si c'était une bonne nouvelle.\n\nLe prélèvement a été fait sur un quai de métro, à trois mètres du sol, sur une surface qui n'a jamais brûlé. Le conditionnement porte la mention « origine : extérieure au site ».\n\nLe laboratoire a refusé de conclure. Il propose une seconde série. La direction a répondu : « Pas de seconde série. Classer comme résidu environnemental. » Le mot « environnemental » n'est pas défini dans la nomenclature, ce qui a permis de classer."
+      },
+      {
+        "id": "C54",
+        "era": 2026,
+        "act": 6,
+        "title": "Le témoin de 1638",
+        "voice": "procès-verbal d'audition, interprète requis, deux pages.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-06",
+          "sealName": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "trigger": "libérer le vieil homme (acte VI, hôpital, aile C)"
+        },
+        "text": "Le sujet est âgé, vêtu d'un vêtement qui n'est pas de sa taille. Il parle un japonais ancien, avec l'accent des campagnes de Kai. Il comprend les questions écrites et refuse les questions orales.\n\nIl dit être né à Kurokawa et refuse de donner son nom : « Un nom sur un registre, on me l'a déjà pris. » Il demande si la cloche a sonné. On lui répond que non. Il répond : « Alors il est encore temps, ou il est trop tard, et je ne sais pas laquelle des deux. »\n\nIl décrit une rue, un canal, une porte fermée de l'intérieur. Il ne décrit aucun bâtiment qui existe aujourd'hui.\n\nÀ la fin de l'audition, il demande à être conduit vers « celui qui porte la lame noire ». L'interprète a traduit littéralement. Le procès-verbal s'arrête là, non par refus du sujet, mais parce que l'interprète a demandé à sortir."
+      },
+      {
+        "id": "C55",
+        "era": 2026,
+        "act": 6,
+        "title": "Le protocole de rappel",
+        "voice": "procédure interne, pages numérotées, une page manquante.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-06",
+          "sealName": "Sceau de l'Archive",
+          "condition": "sécuriser l'échantillon originel",
+          "trigger": "lire le protocole (acte VI, laboratoire, après le courant)"
+        },
+        "text": "Étape 1 : vérifier l'identité de l'ancre. Étape 2 : vérifier la date de dernière écriture. Étape 3 : ne pas restaurer si la date est la même que l'heure courante. Étape 4 : consigner.\n\nL'étape 3 est celle qui a été ajoutée après l'incident, et l'incident n'est pas décrit. À sa place, une note de trois lignes : « Un rappel n'est pas une résurrection. Il ne rend pas les derniers instants. Il rend un état, et l'état ignore ce qui l'a produit. »\n\nRègle absolue : ne jamais rappeler un sujet nommé. Un nommé se souvient de son nom et pas de sa mort ; il comble le vide, et ce qu'il met dans le vide n'est pas à lui.\n\nLa page 4 manque. Le sommaire l'intitule « sujets non nommés ». La pagination suivante ne reprend pas."
+      },
+      {
+        "id": "C56",
+        "era": 2188,
+        "act": 7,
+        "title": "Neo-Edo",
+        "voice": "guide officiel de la cité, première page.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-07",
+          "sealName": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "trigger": "entrer dans cyber-shrine-sector (acte VII)"
+        },
+        "text": "Neo-Edo, capitale du shogunat automatisé, accueille onze millions d'habitants enregistrés. La cité ne connaît aucun décès depuis quarante ans, ce dont elle s'enorgueillit dans chaque édition de ce guide.\n\nLe visiteur trouvera des rues propres, un réseau de transport fiable, des sanctuaires entretenus et des archives ouvertes à tous les porteurs de mandat. Il est rappelé que la mémoire est une monnaie et que l'accès est un salaire : les deux se déclarent à l'entrée.\n\nLes passants sont priés de ne pas importuner les archivistes en service. Les enfants sont invités à visiter le secteur des sanctuaires, où l'histoire de la cité est racontée par des documents authentiques.\n\nLa dernière page du guide est un formulaire de déclaration de décès. Le formulaire est à remplir sous trente jours. Aucune des personnes qui ont imprimé ce guide n'a jamais vu la dernière page."
+      },
+      {
+        "id": "C57",
+        "era": 2188,
+        "act": 7,
+        "title": "Le secteur des sanctuaires",
+        "voice": "plan de quartier annoté par un technicien de maintenance.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-07",
+          "sealName": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "trigger": "objectif obj-cyber-calibrate-katana terminé (acte VII)"
+        },
+        "text": "Douze sanctuaires, douze autels, douze points d'accès. Le plan officiel les nomme « équipements culturels ». Le plan technique les nomme « nœuds ».\n\nChaque autel est alimenté par une ligne dédiée, enterrée, doublée. La consigne est explicite : ne pas couper l'alimentation d'un autel, même pour travaux. Un autel hors tension pendant plus de quatre minutes est déclaré « indisponible », et l'indisponibilité se paie en mémoire.\n\nLes prêtres sont des archivistes en robe. Ils ne récitent pas : ils lisent à voix haute, et ce qu'ils lisent est daté.\n\nLe technicien a ajouté à la main, en marge du plan : « Les autels ne reçoivent pas de courant. Ils en rendent. » La phrase est entourée, puis barrée, puis réécrite à l'identique en dessous.\n\nLes noms des autels sont ceux des quartiers, pas ceux des dieux. C'est plus facile à entretenir."
+      },
+      {
+        "id": "C58",
+        "era": 2188,
+        "act": 7,
+        "title": "Le marché aux néons",
+        "voice": "tarif d'étal, affiché à l'entrée, cinq lignes et un avertissement.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-07",
+          "sealName": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "trigger": "entrer dans cyber-neon-market (acte VII)"
+        },
+        "text": "Mémoire certifiée : à partir de trois ans, selon qualité et rareté. Enfance complète : sur devis. Souvenir de métier : bon prix, demande forte. Mauvais souvenir : repris au tiers, écoulé en gros.\n\nAccès temporaire : une heure contre un an. Accès permanent : négociable, jamais inférieur à douze ans. Les paiements en années sont acceptés ; les paiements en promesses ne le sont pas.\n\nAvertissement : tout vendeur consentant renonce à la propriété du souvenir cédé. Le vendeur conserve le droit de ne pas se le rappeler. Aucune réclamation ne sera reçue pour un souvenir vendu deux fois.\n\nSous l'affiche, une main a écrit : « Ils achètent les mauvais souvenirs pour les revendre aux gens qui veulent oublier. Ça marche. » L'écriture est celle d'un enfant, ce qui n'est pas interdit : au marché, un enfant est un vendeur comme un autre."
+      },
+      {
+        "id": "C59",
+        "era": 2188,
+        "act": 7,
+        "title": "Les ruines du maglev",
+        "voice": "rapport d'accident, version publique, quatre pages.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-07",
+          "sealName": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "trigger": "entrer dans cyber-maglev-ruins (acte VII)"
+        },
+        "text": "Le 17 juin, à 03 h 12, la rame 7 s'est arrêtée entre deux stations. Cinq cents passagers à bord. À 03 h 41, l'alimentation revient ; une minute plus tard, la rame repart vide.\n\nLe rapport public parle d'une « défaillance de signalisation » et d'une « évacuation réussie ». Il ne donne aucun chiffre de blessés, ce qui est inhabituel pour un document de ce type.\n\nLa version technique, jointe par erreur, indique que les portes se sont ouvertes sur le viaduc et que la rame a été retrouvée à l'arrêt, freins engagés, sans conducteur. Les capteurs de poids indiquaient cinq cents personnes. Les caméras n'indiquaient personne.\n\nRecommandation finale : « Ne pas remettre la rame en service. Ne pas restaurer les capteurs. » La ligne 7 est aujourd'hui fermée, et le guide officiel la mentionne comme « en travaux »."
+      },
+      {
+        "id": "C60",
+        "era": 2188,
+        "act": 7,
+        "title": "Le centre de données Yomi",
+        "voice": "plan de salle, format technique, légende manuscrite.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-07",
+          "sealName": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "trigger": "entrer dans cyber-yomi-datacenter (acte VII)"
+        },
+        "text": "Douze baies, alignées comme des autels, orientées vers l'ouest. Chaque baie porte un numéro et un nom de lieu : Kurokawa, Tsuru, Kai, Edo, puis des noms qui ne figurent sur aucune carte.\n\nL'alimentation est indépendante du réseau de la cité, avec deux groupes et une réserve de quarante jours. La climatisation est réglée à seize degrés, sans variation, et la consigne précise qu'elle ne doit pas être modifiée pour le confort du personnel.\n\nLégende manuscrite, en bas du plan : « Ne pas éteindre. Une baie éteinte ne perd pas de données : elle perd une adresse. »\n\nLe plan indique une porte sans symbole, entre les baies 6 et 7, avec la mention « local technique ». Le local n'a pas de poignée côté couloir, et le câble qui en sort est plus chaud que les autres."
+      },
+      {
+        "id": "C61",
+        "era": 2188,
+        "act": 7,
+        "title": "Le cœur du Shōgun Zéro",
+        "voice": "protocole d'accès, feuille unique, laminée.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-07",
+          "sealName": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "trigger": "entrer dans cyber-shogun-core (acte VII)"
+        },
+        "text": "Accès réservé au mandat et à ses archivistes. Aucun siège n'est prévu dans la salle : l'estrade est vide, et c'est l'estrade qui est le siège.\n\nTrois règles. Un : ne pas s'asseoir sur l'estrade, même pour attendre. Deux : ne pas répondre quand la salle parle. Trois : ne pas prononcer de nom daté avant 2100.\n\nLa salle parle. Le registre des accès note des « émissions vocales non sollicitées » à chaque visite depuis l'ouverture, toujours entre 03 h 10 et 03 h 20, toujours en japonais classique.\n\nLe protocole ne dit pas ce qu'il faut faire si la salle pose une question. Une note manuscrite, ajoutée au dos, propose : « Répondre par une date. Les dates le calment. » La note n'est pas signée et n'a pas été validée."
+      },
+      {
+        "id": "C62",
+        "era": 2188,
+        "act": 7,
+        "title": "Le shogunat automatisé",
+        "voice": "extrait de décret, affiché en placard, caractères réguliers.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-07",
+          "sealName": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "trigger": "lire le premier décret affiché (acte VII, sanctuaire)"
+        },
+        "text": "Article 1 : la cité est gouvernée par le mandat, sans interruption et sans successeur. Article 2 : tout habitant enregistré bénéficie de la protection du mandat, y compris après la fin de sa vie civile. Article 3 : les archives font foi.\n\nArticle 4 : nul ne peut exercer une charge sans avoir déclaré ses mémoires disponibles à l'archive. Article 5 : la mémoire déclarée est protégée ; la mémoire non déclarée ne l'est pas.\n\nLe décret est contresigné par le Chapitre des Mémoires, dont le sceau est apposé mécaniquement, à la même place, sur tous les exemplaires depuis quarante ans.\n\nArticle 12, en petits caractères : « Le mandat ne meurt pas. » Aucun article ne définit ce qu'est un vivant, ce qui explique peut-être la longévité de la formule et certainement celle du shogunat."
+      },
+      {
+        "id": "C63",
+        "era": 2188,
+        "act": 7,
+        "title": "Le Chapitre des Mémoires",
+        "voice": "note de service, trois paragraphes, ton administratif.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-07",
+          "sealName": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "trigger": "objectif obj-cyber-free-memory-monks terminé (acte VII)"
+        },
+        "text": "Le Chapitre tient l'archive, et l'archive tient la légitimité. Ce qui n'est pas archivé n'a pas eu lieu ; ce qui a eu lieu sans archive est un incident, pas un fait.\n\nEn conséquence, les agents du Chapitre ne détruisent jamais un document. Ils le déclarent « non conforme » et le déplacent. Le déplacement est une forme de conservation qui ne dit pas son nom, ce qui est préférable dans les périodes de révision.\n\nLes moines-mémoires sont des conservateurs, pas des prêtres. Ils lisent à voix haute pour que le texte reste audible dans les sauvegardes. Cette pratique est ancienne et n'a jamais été interrompue, même quand elle coûtait plus cher que la lecture machine.\n\nNote finale : « Ne pas confondre le Chapitre et le mandat. Le Chapitre peut être révisé. » La phrase est suivie d'un blanc, puis de la mention « révision en cours » datée de quarante ans."
+      },
+      {
+        "id": "C64",
+        "era": 2188,
+        "act": 7,
+        "title": "Les moines-mémoires",
+        "voice": "témoignage recueilli, transcrit par un archiviste, une page.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-07",
+          "sealName": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "trigger": "libérer un moine-mémoire (acte VII, marché)"
+        },
+        "text": "On nous lisait. Pas pour nous instruire : pour que le texte reste dit. Un texte dit existe deux fois, une fois écrit, une fois porté. C'est ce qu'on nous a appris, et c'est ce que nous faisons.\n\nJe me souviens de gens que je n'ai pas connus. C'est le métier. On m'a lu leurs noms pendant vingt ans, et maintenant je les porte comme on porte une charge : sans les voir, sans les perdre.\n\nQuand ils m'ont débranché, je n'ai pas eu mal. J'ai eu froid aux mains, ce qui est ridicule, parce que mes mains ne sont plus là depuis longtemps.\n\nLe dernier nom que je portais est celui d'un homme de 1638. Je peux le dire si vous voulez, mais si je le dis, il faudra l'écrire, et si vous l'écrivez, il faudra le relire. C'est comme ça que ça recommence."
+      },
+      {
+        "id": "C65",
+        "era": 2188,
+        "act": 7,
+        "title": "Le mandat sans lignée",
+        "voice": "extrait de traité juridique, édition scolaire.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-07",
+          "sealName": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "trigger": "lire la stèle du mandat (acte VII, sanctuaire)"
+        },
+        "text": "Le mandat est la charge, non la personne. Il se transmet par investiture et non par naissance, ce qui le rend, en théorie, indépendant de la lignée.\n\nEn pratique, une investiture suppose un investisseur. Le shogunat automatisé a résolu la difficulté en conservant l'investisseur comme archive : le mandat est conféré par une autorité qui n'existe plus qu'à l'état de document, et cette autorité suffit.\n\nUn lecteur attentif objectera qu'un mort ne peut investir. Le traité répond que la question est mal posée : ce n'est pas le mort qui investit, c'est l'archive du mort, et une archive ne meurt pas.\n\nLa dernière phrase de l'édition scolaire est en italique, ce qui, dans ce type d'ouvrage, signale une définition : « Gouverner sans vivants, c'est gouverner sans successeur. » Aucun exercice n'accompagne cette phrase."
+      },
+      {
+        "id": "C66",
+        "era": 2188,
+        "act": 7,
+        "title": "Shogun Zero",
+        "voice": "fiche de sécurité, deux pages, diffusion restreinte.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-07",
+          "sealName": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "trigger": "vaincre Shogun Zero (acte VII)"
+        },
+        "text": "Objet : autorité du cœur. Nature : mandat reconstitué à partir d'un fonds sonore et de décrets. Ne pas qualifier de personne, ne pas qualifier de programme.\n\nConduite à tenir en sa présence : répondre par des dates. Ne pas prononcer le nom de Kurokawa. Ne pas mentionner 1638. Ne pas corriger une phrase incomplète : la correction est interprétée comme une prise de parole.\n\nLa voix présente des coupures. Elles ne sont pas des pannes : le fonds d'origine en contient, et le mandat les conserve comme des silences authentiques. Un technicien a tenté de les restaurer. Il a été muté.\n\nPage 2 : « L'autorité ne se négocie pas. Elle se date. » La phrase est présentée comme une citation de 1638, sans référence. Vérification faite, elle n'apparaît dans aucun document de cette année-là, ce qui n'empêche pas le mandat de la répéter."
+      },
+      {
+        "id": "C67",
+        "era": 2188,
+        "act": 7,
+        "title": "Le Kannushi du réseau",
+        "voice": "journal d'entrées, une ligne par événement, dates en tête.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-07",
+          "sealName": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "trigger": "vaincre le Kannushi (acte VII, centre de données)"
+        },
+        "text": "Entrée 40 809 : un archiviste demande l'accès au fonds ancien. Refusé. Motif : cote incomplète.\n\nEntrée 40 810 : l'archiviste revient avec la cote. Accès accordé. Le document est un registre de décès de 1638. Il est en bon état.\n\nEntrée 40 811 : l'archiviste ne revient pas. Le document est retrouvé ouvert à la page des noms. Nous le classons.\n\nEntrée 40 812 : un homme entre dans la salle. Il ne ressort pas. Nous consignons l'heure et nous ne consignons pas son nom, conformément à la règle qui veut qu'un nom non vérifié ne soit pas écrit.\n\nEntrée 40 813 : le registre de 1638 a été relu. Il contient une ligne de plus que la veille. Nous ne l'avons pas écrite. Nous ne l'effaçons pas : effacer serait admettre."
+      },
+      {
+        "id": "C68",
+        "era": 2188,
+        "act": 7,
+        "title": "Les archivistes",
+        "voice": "consigne affichée dans la salle de lecture, quatre lignes.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-07",
+          "sealName": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "trigger": "atteindre la salle des archivistes (acte VII, centre de données)"
+        },
+        "text": "Ne pas lire à voix haute. Le texte lu s'entend dans les sauvegardes, et une sauvegarde qui entend n'est plus une sauvegarde.\n\nNe pas répondre aux noms. Si un nom est prononcé par le fonds, ce n'est pas une adresse : c'est une citation.\n\nNe pas classer un document que vous n'avez pas ouvert. Ne pas ouvrir un document que vous ne pouvez pas classer.\n\nEn cas de doute, appeler le conservateur. Le conservateur est en réunion depuis quarante ans ; la consigne précise qu'il ne faut pas le déranger, ce qui règle la plupart des doutes.\n\nLa salle de lecture compte douze places, toutes occupées par des classeurs. Aucune chaise n'a été retirée : les classeurs sont posés dessus. Le conservateur a une chaise, mais pas de bureau."
+      },
+      {
+        "id": "C69",
+        "era": 2188,
+        "act": 7,
+        "title": "Le pilote du châssis",
+        "voice": "dossier de service, photographie agrafée, coin arraché.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-07",
+          "sealName": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "trigger": "détruire un châssis Oni (acte VII, maglev)"
+        },
+        "text": "Pilote : numéro 118, affecté au châssis Oni 4 pendant onze ans. Aucun accident signalé. Deux félicitations, une pour la précision, une pour le silence.\n\nLe dossier indique une « fin de service » sans date précise, ce qui est rare dans un document militaire. La case « décès » n'est pas cochée ; la case « radiation » non plus. Le pilote est donc, administrativement, toujours en service.\n\nLa photographie montre un homme de profil, casqué, sans visage visible. Au dos, une main a écrit : « Il marche encore comme lui. »\n\nLe châssis 4 est toujours en circulation. Son allure a été décrite par trois témoins comme « celle d'un homme qui va quelque part », ce qui n'est pas une description technique et n'a jamais été corrigé dans les rapports."
+      },
+      {
+        "id": "C70",
+        "era": 2188,
+        "act": 7,
+        "title": "Le nodachi de phase",
+        "voice": "fiche d'arme, atelier de calibration, deux pages.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-07",
+          "sealName": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "trigger": "ramasser le nodachi de phase (acte VII, secret du maglev)"
+        },
+        "text": "Longueur hors tout : cent quatre-vingts centimètres. Lame à section plate, sans gorge, montée sur soie longue. Poids : deux kilos quatre. Le fourreau est blindé, ce qui est inhabituel pour une lame de cette taille.\n\nCalibration : la lame est accordée sur une fréquence de réseau, entre 40 et 60 hertz selon la baie. À l'accord, le hamon luit par intermittence ; hors accord, la lame est une lame ordinaire, ce qui est déjà beaucoup.\n\nConsigne : ne pas calibrer sur un vivant. Un vivant produit une fréquence instable, et une lame instable se comporte comme une lame qui a peur.\n\nNote de l'atelier : « Nous ne savons pas ce que la lame coupe quand elle est accordée. Nous savons qu'elle coupe. » La note est signée d'un initiale, et l'atelier a fermé l'année suivante."
+      },
+      {
+        "id": "C71",
+        "era": 2188,
+        "act": 7,
+        "title": "L'holo-shakujo",
+        "voice": "notice d'usage, pliée dans l'étui, caractères serrés.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-07",
+          "sealName": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "trigger": "ramasser l'holo-shakujo (acte VII, marché)"
+        },
+        "text": "Objet : bâton de commandement à projection. Usage prévu : rétablir l'autorité d'un supérieur absent devant un groupe hésitant.\n\nMise en route : saisir le bâton à deux mains, prononcer un ordre daté. La projection affiche le supérieur en pied, à l'échelle, avec sa voix. La projection ne répond pas aux questions ; elle répète l'ordre.\n\nAvertissement : ne pas utiliser devant un archiviste. Un archiviste vérifie les dates ; une projection qui cite une date fausse s'effondre, et l'effet sur le groupe est inverse à celui recherché.\n\nLa dernière ligne de la notice est manuscrite : « Ne projetez jamais quelqu'un que vous n'avez pas connu. Il dira des choses que vous n'attendez pas. » La phrase n'est pas signée, et l'objet était vendu avec sa notice, ce qui est déjà une anomalie au marché."
+      },
+      {
+        "id": "C72",
+        "era": 2188,
+        "act": 7,
+        "title": "La mémoire marchandise",
+        "voice": "contrat de cession, formulaire à souches, encre épaisse.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-07",
+          "sealName": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "trigger": "lire un contrat de cession (acte VII, marché)"
+        },
+        "text": "Le vendeur cède à l'acquéreur douze années de mémoire d'enfance, y compris les visages, les lieux et les chansons. Sont exclues les années de maladie, qui sont cédées séparément et à un autre prix.\n\nLe vendeur déclare avoir été informé que la cession est définitive et qu'il ne pourra pas racheter les souvenirs cédés, sauf clause de rappel. La clause de rappel figure en bas de page, en caractères plus petits, et son prix est supérieur au prix de cession.\n\nSignature du vendeur : lisible. Signature de l'acquéreur : un sceau de société, appliqué de travers.\n\nAu dos, une main a noté : « Douze ans pour trois ans d'accès. C'est le tarif. Ne pas discuter. » La note est datée, ce qui est rare dans ce commerce, et elle est signée d'un prénom que porte aussi l'acquéreur."
+      },
+      {
+        "id": "C73",
+        "era": 2188,
+        "act": 7,
+        "title": "Le châssis Oni",
+        "voice": "fiche technique, section blindage, tableau et deux notes.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-07",
+          "sealName": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "trigger": "première rencontre avec un châssis Oni (acte VII)"
+        },
+        "text": "Châssis lourd, bipède, hauteur deux mètres vingt. Blindage frontal en trois couches, articulation d'épaule à vérin hydraulique. Démarche calibrée sur l'allure d'un porteur chargé, ce qui explique le balancement du tronc.\n\nLe poste de pilotage est logé dans le thorax. L'accès se fait par l'arrière, en deux temps. La fiche précise qu'un pilote ne doit jamais sortir en cours de mission, non pour des raisons de sécurité, mais parce que la sortie désaccorde le châssis.\n\nNote 1 : « Le pilote décédé ne peut pas être relevé. Le châssis continue. » Note 2 : « Ne pas répondre aux ordres verbaux du châssis. Il répète les ordres reçus, il n'en donne pas. »\n\nLa fiche ne décrit pas de procédure d'arrêt. La case correspondante porte la mention « non applicable »."
+      },
+      {
+        "id": "C74",
+        "era": 2188,
+        "act": 7,
+        "title": "Le sceau de Neo-Edo",
+        "voice": "description héraldique officielle, protocole de la cité.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-07",
+          "sealName": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "trigger": "examiner un sceau de mandat (acte VII, sanctuaire)"
+        },
+        "text": "Champ : cercle vide, sans devise. Bordure : deux traits, l'un plein, l'autre interrompu. Au centre, aucun emblème : le sceau de Neo-Edo ne représente rien et ne représente personne.\n\nUsage : le sceau ne scelle pas un document, il scelle une personne. Apposé sur un mandat, il engage l'habitant, non l'autorité. Apposé sur un acte de décès, il constate la radiation et non la mort.\n\nLe protocole précise que le sceau ne doit jamais être apposé sur un document blanc. La raison donnée est technique : un blanc scellé devient un ordre.\n\nEn marge, une note de conservateur : « Le cercle vide est une décision politique, pas une économie de dessin. » La phrase a été imprimée en petit dans l'édition de référence, puis retirée des éditions suivantes."
+      },
+      {
+        "id": "C75",
+        "era": 2188,
+        "act": 7,
+        "title": "L'archive d'Iemitsu",
+        "voice": "inventaire de fonds, une page et demie, pagination sautée.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-07",
+          "sealName": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "trigger": "trouver le fonds sonore (acte VII, centre de données)"
+        },
+        "text": "Fonds : voix de Tokugawa Iemitsu, reconstitution. Durée : trois mille heures. Support : sauvegardes successives, copiées sans restauration.\n\nContenu : ordres, audiences, silences. Les silences sont inventoriés comme des pièces, avec une cote, et c'est la partie la plus consultée du fonds.\n\nConsigne de consultation : ne pas restaurer les silences. Un silence restauré devient un bruit, et un bruit attribué à cette voix est un ordre.\n\nL'inventaire passe de la pièce 812 à la pièce 814. La 813 n'est pas manquante : elle est « en cours de vérification » depuis quarante ans. Une note indique qu'elle contient une phrase de onze mots, prononcée deux fois, dont la seconde est incomplète.\n\nLa pièce 813 est décrite comme « onze mots, deux fois ». Le registre des écoutes n'en compte que dix la première fois."
+      },
+      {
+        "id": "C76",
+        "era": 2188,
+        "act": 7,
+        "title": "Le rappel",
+        "voice": "procédure, format réglementaire, une page.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-07",
+          "sealName": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "trigger": "assister à un rappel (acte VII, marché)"
+        },
+        "text": "Le rappel consiste à rétablir un état enregistré. Il ne rétablit pas la mémoire des derniers instants, qui n'est pas enregistrée. Il ne rétablit pas non plus le corps : il rétablit une place, avec ce que la place contient.\n\nTrois conditions : une ancre valide, un état daté, un mandat en cours. Sans mandat, l'état est un document. Avec mandat, l'état est une personne.\n\nRègle absolue : aucun sujet nommé n'est rappelé. Il se souvient de son nom, pas de sa mort, et il remplit le vide avec ce qu'il rencontre. Ce qu'il rencontre n'est pas à lui, et il le défendra comme si c'était le sien.\n\nMention finale, en italique : « Le rappel n'est pas une résurrection. La résurrection rendrait la personne ; le rappel rend la fonction. »"
+      },
+      {
+        "id": "C77",
+        "era": 2188,
+        "act": 7,
+        "title": "L'infrastructure-ancre",
+        "voice": "plan de maintenance, légende technique.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-07",
+          "sealName": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "trigger": "inspecter les ancres du centre (acte VII, centre de données)"
+        },
+        "text": "Une ancre n'est pas un objet. C'est un lieu qui accepte d'être relu. Le plan en recense douze, réparties entre le centre de données, deux sanctuaires et un tronçon de maglev. Chacune est reliée à une baie par un câble dédié.\n\nEntretien : vérifier la continuité, ne pas couper, ne pas déplacer. Une ancre déplacée perd son adresse et se comporte comme une sauvegarde sans nom, ce qui provoque des rappels incomplets — « incomplets » étant le terme administratif ; le terme technique est « bruyants ».\n\nLe plan signale une treizième ligne, sans numéro, qui sort du cadre et se perd dans la marge. Le cartouche indique « hors inventaire ».\n\nEn bas de page : « Les ancres ne sont pas des tombes. Ne pas y déposer d'objets. » La consigne est datée de l'ouverture, et personne ne l'a jamais respectée : on trouve des offrandes au pied de la ligne 7."
+      },
+      {
+        "id": "C78",
+        "era": 2188,
+        "act": 7,
+        "title": "Le nom de 1638",
+        "voice": "transcription d'une lecture à voix haute, une page.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-07",
+          "sealName": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "trigger": "entendre le dernier moine (acte VII, après les moines libérés)"
+        },
+        "text": "Le moine s'arrête au milieu de la liste. Il dit : « Kurokawa Suketada. » Puis il attend.\n\nL'archiviste lui demande de continuer. Le moine répond que le nom ne se lit pas comme les autres : ceux d'avant sont des noms de morts, celui-ci est un nom de dette. On ne le lit pas pour se souvenir, on le lit pour appeler.\n\nL'archiviste note la phrase, la relit, et demande si l'appel a déjà fonctionné. Le moine dit que oui, deux fois, et que les deux fois quelqu'un est venu.\n\nLa transcription s'arrête là. La ligne suivante est vide, puis reprend d'une autre encre : « Suite non transcrite sur demande du lecteur. » Le lecteur est le moine. Il n'a pas le droit de demander cela ; personne ne le lui a refusé non plus."
+      },
+      {
+        "id": "C79",
+        "era": 2188,
+        "act": 7,
+        "title": "La cendre de Kurokawa",
+        "voice": "note d'analyse, une page, tampon « non concluant ».",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-07",
+          "sealName": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "trigger": "prélever la cendre grise (acte VII, sanctuaire)"
+        },
+        "text": "Prélèvement : dépôt gris, fin, sur le seuil d'un sanctuaire. Épaisseur : deux millimètres. Aucune source de combustion à proximité.\n\nComparaison : identique, à la composition près, à l'échantillon de 2026 et à la cendre de 1638 décrite dans les registres anciens. Les trois prélèvements sont séparés par des siècles et par moins d'un kilomètre.\n\nLe laboratoire refuse de conclure à une continuité. Il note une « convergence de composition » et recommande une seconde campagne, qui n'a pas été autorisée.\n\nEn marge, une main a écrit : « Ce n'est pas la même cendre. C'est la même combustion. » La phrase est soulignée deux fois, puis recouverte d'un trait qui laisse encore lire les mots.\n\nLe dépôt a été prélevé deux fois, à dix jours d'intervalle, sans que l'épaisseur change."
+      },
+      {
+        "id": "C80",
+        "era": 2188,
+        "act": 7,
+        "title": "Le silence du mandat",
+        "voice": "procès-verbal de constat, rédigé après les faits, une page.",
+        "unlock": {
+          "type": "chronicle-seal",
+          "seal": "chronicle-07",
+          "sealName": "Sceau du Mandat",
+          "condition": "détruire Shogun Zero",
+          "trigger": "terminer l'acte VII (objectif obj-cyber-defeat-shogun-zero)"
+        },
+        "text": "À 03 h 12, le mandat a cessé d'émettre. La salle n'a plus parlé. Les baies sont restées alimentées ; les archives n'ont pas été modifiées.\n\nLe constat relève trois faits. Un : aucun décret n'a été publié depuis. Deux : les registres de population ont cessé d'être mis à jour, sans erreur technique. Trois : les archivistes ont continué à classer, comme si de rien n'était, ce qui est la seule chose qui n'ait pas changé.\n\nLe procès-verbal ne qualifie pas l'événement. Il ne parle ni de victoire, ni de fin, ni de libération. Le rédacteur a écrit : « Le mandat est silencieux », et s'est arrêté là.\n\nEn bas de page, une mention ajoutée plus tard : « Le silence n'est pas la paix. C'est une archive qui ne répond plus. » La mention n'est pas signée, et c'est la dernière ligne du codex."
+      }
+    ]
   }
 }

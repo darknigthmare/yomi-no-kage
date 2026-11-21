@@ -208,6 +208,20 @@
               </select>
               <p class="settings-note">Les commandes clavier et tactiles restent affichées dans les écrans de mission.</p>
             </fieldset>
+
+            <fieldset class="settings-bindings-fieldset">
+              <legend>Commandes</legend>
+              <div id="settings-binding-list" class="binding-list"></div>
+              <button id="settings-bindings-reset" class="pixel-button ghost compact" type="button">
+                RÉTABLIR LES COMMANDES
+              </button>
+              <p class="settings-note">
+                Cliquez une touche puis appuyez sur la nouvelle pour la remplacer
+                (Échap annule). Manette : A esquive, X attaque, Y attaque lourde,
+                LB garde, RB tir, LT refuge, RT arsenal, Back bascule, Start pause ;
+                stick gauche pour se déplacer, stick droit pour orienter en FPS.
+              </p>
+            </fieldset>
           </div>
 
           <footer class="settings-footer">
@@ -475,6 +489,16 @@
                 </button>
               </div>
             </aside>
+
+            <section class="campaign-codex" aria-labelledby="campaign-codex-title">
+              <div class="campaign-section-heading">
+                <p class="eyebrow">ARCHIVE DU PIN · <b id="campaign-codex-count">0 / 0</b></p>
+                <h3 id="campaign-codex-title">Codex</h3>
+              </div>
+              <div class="codex-tabs" role="tablist" aria-label="Familles du codex"></div>
+              <ol id="campaign-codex-list" class="codex-list"></ol>
+              <article id="campaign-codex-detail" class="codex-detail" aria-live="polite"></article>
+            </section>
           </div>
 
           <footer class="campaign-footer">
@@ -504,8 +528,8 @@
         <div class="modal-card end-card">
           <p id="end-glyph" class="japanese-glyph" aria-hidden="true">勝</p>
           <p id="end-kicker" class="eyebrow">MISSION ACCOMPLIE</p>
-          <h2 id="end-title">L'AUBE REVIENT SUR KUROKAWA</h2>
-          <p id="end-message">Les morts reposent. Pour cette nuit.</p>
+          <h2 id="end-title">LA FAILLE SE REFERME SUR NEO-EDO</h2>
+          <p id="end-message">Akio renvoie l'ombre vers le Yomi. Le Japon respire à travers les siècles.</p>
           <div class="end-stats">
             <span><small>INFECTÉS ABATTUS</small><b id="end-kills">0</b></span>
             <span><small>TEMPS</small><b id="end-time">00:00</b></span>
@@ -548,9 +572,13 @@
     <script src="asset-runtime.js?v=3"></script>
     <script src="audio.js?v=5"></script>
     <script src="arsenal.js?v=2"></script>
+    <script src="codex-data.js?v=1"></script>
+    <script src="codex.js?v=1"></script>
     <script src="save.js?v=5"></script>
     <script src="loadout.js?v=1"></script>
     <script src="level-data.js?v=13"></script>
+    <script src="input-bindings.js?v=1"></script>
+    <script src="enemy-roles.js?v=1"></script>
     <script src="game.js?v=42"></script>
     <script src="campaign-ui.js?v=2"></script>
     <script src="cinematic.js?v=13"></script>

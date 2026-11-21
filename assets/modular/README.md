@@ -5,7 +5,7 @@ directement dans le moteur.
 
 ## Inventaire final
 
-- 97 personnages, dont 96 adversaires ;
+- 106 personnages, dont 105 adversaires ;
 - 485 planches d'animation et 2 910 frames PNG individuelles ;
 - 48 armes modulaires avec point de prise, plus 10 katanas de lore existants ;
 - 84 sprites de décor : 12 couches, 36 accessoires et 36 plateformes.

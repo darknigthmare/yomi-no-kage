@@ -59,6 +59,10 @@ toutes vraies :
 
 Ces tâches passent avant l’ajout de nouveau contenu.
 
+La vérification reproductible est en place : `node tools/verify-all.mjs`
+matérialise le cache de frames ignoré, exécute les 17 smoke tests et écrit ses
+logs dans `tmp/verify/`. Un clone neuf se vérifie donc en une commande.
+
 ### P0.1 — terminer le pipeline FPS huit directions
 
 État actuel :

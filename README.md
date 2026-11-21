@@ -170,34 +170,50 @@ L’artbook interactif est disponible sur
 - `Échap` ou `P` : pause ;
 - `M` : couper ou réactiver le son.
 
+Les dix actions (attaque, attaque lourde, garde, esquive, tir, interaction,
+bascule 2D/FPS, pause, refuge, arsenal) sont remappables dans **Paramètres →
+Commandes** : cliquez une touche, appuyez sur la nouvelle, `Échap` annule.
+Les liaisons sont conservées dans `localStorage` (`yomi-no-kage-bindings-v1`) et
+« RÉTABLIR LES COMMANDES » retrouve les valeurs d’origine. Les déplacements
+restent sur `WASD`/flèches et le stick gauche.
+
+La manette standard (W3C) est reconnue sans configuration : A esquive, B
+interagit/revient, X attaque, Y attaque lourde, LB garde, RB tir, LT refuge, RT
+arsenal, Back bascule 2D/FPS, Start pause ; la croix et le stick gauche se
+déplacent, le stick droit oriente la caméra en FPS. Dans le refuge, la croix
+déplace le focus, A valide et B referme — l’écran reste aussi navigable aux
+flèches et à `Tab`, sans souris.
+
 ## Vérification locale
 
-Les contrôles principaux sont :
+Une seule commande matérialise le cache de frames ignoré par Git, puis exécute
+les 21 smoke tests :
 
-```powershell
-node --check game.js
-node --check level-data.js
-node --check save.js
-node asset-runtime-smoke-test.js
-node campaign-runtime-smoke-test.js
-node campaign-fps-smoke-test.js
-node campaign-objective-runtime-smoke-test.js
-node campaign-save-smoke-test.js
-node progression-integrity-smoke-test.js
-node fps-era-materials-smoke-test.js
-node fps-directional-runtime-smoke-test.js
-node coherence-smoke-test.js
-node visual-data-smoke-test.js
-py tools/validate-fps-player.py
-py tools/validate-fps-enemies.py
-py tools/validate-fps-authored-directions.py
-py tools/harmonize-fps-lateral-scale.py --check --categories regular special --ids r05-kome-porter r06-yama-woodcutter s01-kusa-shinobi s02-doku-kunoichi s05-raimei-yamabushi s13-kegare-sumotori s19-wana-trapper
-py tools/validate-2d-spatial.py
-node tools/validate-modular-pack.mjs
-node tools/verify-modular-registry.mjs
-node tools/build-directional-authoring-prompts.mjs --check
-py tools/sprite_pipeline.py validate --root assets/modular
+```bash
+node tools/verify-all.mjs
 ```
+
+Options : `--skip-assets` (tests sans assets uniquement), `--recheck-assets`
+(force la matérialisation), `--only <motif>`, `--list`, `--json`,
+`--with-validators`, `--fail-fast`, `--timeout <secondes>`.
+
+Codes de sortie : `0` tout est vert, `1` au moins un test échoue, `2` usage,
+`3` prérequis manquant (Node, Python, Pillow, espace disque), `4` cache de
+frames en échec. Les logs sont écrits dans `tmp/verify/<horodatage>/`.
+
+Le premier passage matérialise environ 28 000 frames (quelques minutes) ; les
+suivants sont sautés tant que les sources n'ont pas changé. Les tests restent
+exécutables seuls (`node coherence-smoke-test.js`), et les validateurs de
+`tools/` s'ajoutent avec `--with-validators`.
+
+Le codex jouable (`codex-data.js`) est généré depuis le canon machine : ne
+l’éditez pas à la main, régénérez-le après toute modification du canon.
+
+```bash
+node tools/build-codex-data.mjs
+```
+
+`codex-smoke-test.js` échoue si le fichier versionné diverge du générateur.
 
 Un test automatisé valide un contrat de données ; il ne remplace pas un
 playthrough naturel, une inspection frame par frame, un test sur téléphone
