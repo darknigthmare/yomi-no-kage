@@ -458,6 +458,22 @@ function completeManualObjective(areaId, options = {}) {
     );
   }
 
+  // Le parcours complet doit clore chaque acte et ouvrir son sceau de chronique.
+  const finalProfile = global.KageSave.load();
+  const actCount = Object.keys(global.KageLevels.campaignActs).length;
+  const openedSeals = finalProfile.codex.unlocked
+    .filter((id) => /^chronicle-0[1-7]$/.test(id)).length;
+  assert.equal(
+    finalProfile.campaign.completedActs.length,
+    actCount,
+    `le parcours complet doit accomplir les ${actCount} actes`,
+  );
+  assert.equal(
+    openedSeals,
+    actCount,
+    `le parcours complet doit ouvrir les ${actCount} sceaux de chronique`,
+  );
+
   console.log("Campaign objective runtime smoke test passed.");
   console.log(JSON.stringify({
     coveredTypes: ["destroy-nodes", "rescue", "world-state", "retrieval", "purify"],
@@ -467,8 +483,8 @@ function completeManualObjective(areaId, options = {}) {
     forwardTraversalVerified: true,
     fullRouteZonesTraversed: route.length,
     campaignFpsPurified: global.KageLevels.campaignFpsMissions.length,
-    completedObjectiveIds: global.KageSave.load().campaign.completedObjectiveIds.length,
-    chronicleSealsOpened: global.KageSave.load().codex.unlocked
-      .filter((id) => /^chronicle-0[1-7]$/.test(id)).length,
+    completedActs: finalProfile.campaign.completedActs.length,
+    completedObjectiveIds: finalProfile.campaign.completedObjectiveIds.length,
+    chronicleSealsOpened: openedSeals,
   }, null, 2));
 })();
