@@ -60,11 +60,12 @@ toutes vraies :
 Ces tâches passent avant l’ajout de nouveau contenu.
 
 La vérification reproductible est en place : `node tools/verify-all.mjs`
-matérialise le cache de frames ignoré, exécute les 21 smoke tests et écrit ses
+matérialise le cache de frames ignoré, exécute les 22 smoke tests et écrit ses
 logs dans `tmp/verify/`. Un clone neuf se vérifie donc en une commande. Ces
 tests couvrent le canon, le codex (237 fiches), les 28 zones et leurs
 objectifs, les rôles IA, la manette et le remapping clavier, ainsi que la
-traversée séquentielle des sept actes.
+traversée séquentielle des sept actes. Le parcours navigateur s’ajoute avec
+`--with-browser`.
 
 ### P0.1 — terminer le pipeline FPS huit directions
 
@@ -130,8 +131,17 @@ Critères de sortie :
   ne sont pas exercés ;
 - `campaign-save-smoke-test.js` couvre en complément la persistance d’une zone
   isolée ;
-- `node tools/verify-all.mjs` rejoue l’ensemble (21 smoke tests) en une
-  commande.
+- `campaign-objective-runtime-smoke-test.js` clôt un acte par son dernier
+  objectif dans le runtime et exige que le sceau de chronique soit ouvert dans
+  le codex puis conservé après rechargement, sans navigateur ;
+- `node tools/verify-all.mjs` rejoue l’ensemble (22 smoke tests) en une
+  commande ;
+- le harnais navigateur (`tools/browser-harness.mjs`) charge la vraie page dans
+  Chromium, avance le jeu à pas fixe et déjà parcouru les 28 zones, les sept
+  actes et les sept sceaux avec rechargement de sauvegarde par acte, sans
+  erreur console. Il ne simule toutefois ni le combat ni le rendu : les
+  rencontres sont résolues par les points d’entrée de debug et la position à
+  l’autel FPS est posée de la même façon.
 
 Travail restant (runtime navigateur) :
 
@@ -485,12 +495,13 @@ Ces modes enrichissent le jeu, mais ne doivent pas retarder la campagne 1.0 :
 
 ## Priorité immédiate
 
-Le premier livrable est le **harnais navigateur** : une commande qui charge la
-vraie page, pilote les 28 zones avec une horloge fixe et des entrées
+Le **harnais navigateur** est livré (`tools/browser-harness.mjs`) : il charge
+la vraie page, pilote les 28 zones avec une horloge fixe et des entrées
 scriptées, recharge la sauvegarde à chaque acte et échoue sur toute erreur
-console. C’est lui qui transforme la preuve de données de P0.3 en preuve de
-runtime, et qui rend les incohérences de P0.4 et les budgets de P0.5
-mesurables au lieu d’inspectables à la main.
+console. Il transforme la preuve de données de P0.3 en preuve de runtime et
+rend les incohérences de P0.4 et les budgets de P0.5 mesurables au lieu
+d’inspectables à la main. Prochaines étapes : l’exécuter en CI, puis étendre
+la même instrumentation aux budgets de chargement et aux captures de zone.
 
 Une fois ce harnais en place, la prochaine livraison doit fermer le P0 : huit
 directions FPS validées, sockets d’armes fiables, parcours complet sans

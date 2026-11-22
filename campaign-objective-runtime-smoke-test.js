@@ -141,6 +141,8 @@ global.fetch = async (url) => {
 
 require("./level-data.js");
 require("./arsenal.js");
+require("./codex-data.js");
+require("./codex.js");
 require("./save.js");
 require("./game.js");
 
@@ -169,6 +171,38 @@ function clearArea() {
 function targetPortals(areaId) {
   const area = global.KageLevels.areas[areaId];
   return area.objectiveTargets.map((target) => target.portalId);
+}
+
+/* Résout l'objectif authored d'une zone par son déclencheur réel. */
+function resolveAreaObjective(area) {
+  const objective = area.objectives[0];
+  if (objective.completionMethod === "checkpoint-reach") {
+    const checkpoint = area.checkpoints.find((entry) =>
+      objective.targetIds.includes(entry.id));
+    assert.ok(checkpoint, `${area.id}: foyer objectif introuvable`);
+    global.KageGame.debug.setPlayer2d({
+      x: checkpoint.x - global.KageGame.getState().player2d.w / 2,
+      y: 273,
+      vx: 0,
+      vy: 0,
+      grounded: true,
+    });
+    global.KageGame.debug.step(1 / 60);
+  } else if (objective.completionMethod === "manual-targets") {
+    if (area.objectiveTargets.some((target) => target.requiresAreaClear)) clearArea();
+    for (const portalId of targetPortals(area.id)) warpAndInteract(portalId);
+  } else if (objective.completionMethod === "enemy-death") {
+    clearArea();
+    global.KageGame.debug.campaignEvaluate("boss", {
+      id: objective.targetEnemyId,
+      aliases: [objective.targetEnemyId],
+    });
+  } else if (objective.completionMethod === "area-clear") {
+    clearArea();
+    global.KageGame.debug.campaignEvaluate("clear", { id: area.id });
+  } else {
+    assert.fail(`${area.id}: méthode d'objectif sans résolveur`);
+  }
 }
 
 function completeManualObjective(areaId, options = {}) {
@@ -302,6 +336,62 @@ function completeManualObjective(areaId, options = {}) {
   assert.equal(purify.state.target, 1);
 
   /*
+   * Sceau de chronique sans navigateur : clore un acte par le dernier objectif
+   * du runtime doit ouvrir son sceau et ses entrées, et ce sceau doit survivre
+   * à un rechargement de sauvegarde. Le harnais navigateur le vérifie aussi,
+   * mais il est optionnel ; ce contrat le couvre dans la chaîne standard.
+   */
+  global.KageSave.reset();
+  await global.KageGame.start();
+  const firstAct = Object.values(global.KageLevels.campaignActs)
+    .sort((left, right) => left.order - right.order)[0];
+  const sealId = `chronicle-${String(firstAct.order).padStart(2, "0")}`;
+  const nextSealId = `chronicle-${String(firstAct.order + 1).padStart(2, "0")}`;
+  assert.ok(
+    !global.KageSave.load().codex.unlocked.includes(sealId),
+    "le sceau ne doit pas être ouvert avant la clôture de l'acte",
+  );
+  for (const areaId of firstAct.areaIds) {
+    const area = global.KageLevels.areas[areaId];
+    global.KageGame.debug.setSideArea(area.id, "campaignWest");
+    resolveAreaObjective(area);
+    if (areaSnapshot().aliveEnemyIds.length) clearArea();
+    global.KageGame.debug.campaignEvaluate("clear", { id: area.id });
+    assert.equal(
+      objectiveState(area.objectives[0].id).completed,
+      true,
+      `${area.id}: objectif de clôture d'acte non terminé`,
+    );
+  }
+  let sealed = global.KageSave.load();
+  assert.ok(
+    sealed.campaign.completedActs.includes(firstAct.id),
+    "l'acte doit se clore par son dernier objectif",
+  );
+  assert.ok(
+    sealed.codex.unlocked.includes(sealId),
+    "le sceau de chronique doit s'ouvrir avec la clôture de l'acte",
+  );
+  assert.ok(
+    global.KageCodex.isUnlocked(sealed, sealId),
+    "le codex doit exposer le sceau comme ouvert",
+  );
+  assert.ok(
+    !sealed.codex.unlocked.includes(nextSealId),
+    "la clôture d'un acte ne doit pas ouvrir le sceau suivant",
+  );
+  await global.KageGame.start({ continue: true });
+  sealed = global.KageSave.load();
+  assert.ok(
+    sealed.codex.unlocked.includes(sealId),
+    "le sceau doit survivre au rechargement de la sauvegarde",
+  );
+  assert.ok(
+    sealed.campaign.completedActs.includes(firstAct.id),
+    "l'acte accompli doit survivre au rechargement",
+  );
+
+  /*
    * Parcours contractuel exhaustif : les 28 zones sont résolues avec leur
    * déclencheur réel, les sept intérieurs FPS sont purifiés, puis chaque porte
    * avant est franchie. Cela détecte un objectif isolé, une sortie qui se
@@ -315,33 +405,7 @@ function completeManualObjective(areaId, options = {}) {
     const objective = area.objectives[0];
     global.KageGame.debug.setSideArea(area.id, "campaignWest");
 
-    if (objective.completionMethod === "checkpoint-reach") {
-      const checkpoint = area.checkpoints.find((entry) =>
-        objective.targetIds.includes(entry.id));
-      assert.ok(checkpoint, `${area.id}: foyer objectif introuvable`);
-      global.KageGame.debug.setPlayer2d({
-        x: checkpoint.x - global.KageGame.getState().player2d.w / 2,
-        y: 273,
-        vx: 0,
-        vy: 0,
-        grounded: true,
-      });
-      global.KageGame.debug.step(1 / 60);
-    } else if (objective.completionMethod === "manual-targets") {
-      if (area.objectiveTargets.some((target) => target.requiresAreaClear)) clearArea();
-      for (const portalId of targetPortals(area.id)) warpAndInteract(portalId);
-    } else if (objective.completionMethod === "enemy-death") {
-      clearArea();
-      global.KageGame.debug.campaignEvaluate("boss", {
-        id: objective.targetEnemyId,
-        aliases: [objective.targetEnemyId],
-      });
-    } else if (objective.completionMethod === "area-clear") {
-      clearArea();
-      global.KageGame.debug.campaignEvaluate("clear", { id: area.id });
-    } else {
-      assert.fail(`${area.id}: méthode d'objectif sans résolveur`);
-    }
+    resolveAreaObjective(area);
 
     if (areaSnapshot().aliveEnemyIds.length) clearArea();
     global.KageGame.debug.campaignEvaluate("clear", { id: area.id });
@@ -404,5 +468,7 @@ function completeManualObjective(areaId, options = {}) {
     fullRouteZonesTraversed: route.length,
     campaignFpsPurified: global.KageLevels.campaignFpsMissions.length,
     completedObjectiveIds: global.KageSave.load().campaign.completedObjectiveIds.length,
+    chronicleSealsOpened: global.KageSave.load().codex.unlocked
+      .filter((id) => /^chronicle-0[1-7]$/.test(id)).length,
   }, null, 2));
 })();

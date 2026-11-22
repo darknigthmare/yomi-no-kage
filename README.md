@@ -187,7 +187,7 @@ flèches et à `Tab`, sans souris.
 ## Vérification locale
 
 Une seule commande matérialise le cache de frames ignoré par Git, puis exécute
-les 21 smoke tests :
+les 22 smoke tests :
 
 ```bash
 node tools/verify-all.mjs
@@ -195,7 +195,8 @@ node tools/verify-all.mjs
 
 Options : `--skip-assets` (tests sans assets uniquement), `--recheck-assets`
 (force la matérialisation), `--only <motif>`, `--list`, `--json`,
-`--with-validators`, `--fail-fast`, `--timeout <secondes>`.
+`--with-validators`, `--with-browser` (parcours navigateur), `--fail-fast`,
+`--timeout <secondes>`.
 
 Codes de sortie : `0` tout est vert, `1` au moins un test échoue, `2` usage,
 `3` prérequis manquant (Node, Python, Pillow, espace disque), `4` cache de
@@ -219,4 +220,50 @@ Un test automatisé valide un contrat de données ; il ne remplace pas un
 playthrough naturel, une inspection frame par frame, un test sur téléphone
 réel, une écoute humaine ou un profilage de performance.
 
-Le jeu ne dépend d’aucune bibliothèque externe.
+### Harnais navigateur (P0.3)
+
+Le parcours de campagne se prouve aussi dans la vraie page, avec Chromium :
+
+```bash
+npm install
+npx playwright install chromium   # une seule fois (~125 Mio)
+node tools/browser-harness.mjs
+```
+
+Le harnais coupe `requestAnimationFrame` et avance le jeu à pas fixe
+(`KageGame.debug.step`), déplace le joueur par de vrais événements clavier,
+verrouille puis ouvre les portes par le runtime, recharge la sauvegarde à
+chaque fin d’acte et échoue sur toute erreur console ou réponse HTTP en
+erreur. Il vérifie 28 zones, 7 objectifs par zone via leur méthode authored,
+7 actes et 7 sceaux de chronique, avec une reprise au bon endroit après
+rechargement.
+
+Sans Chromium, `campaign-objective-runtime-smoke-test.js` couvre déjà la règle
+du sceau : clore un acte par son dernier objectif ouvre le sceau de chronique
+dans le codex, et ce sceau survit à un rechargement de sauvegarde.
+
+Options : `--json`, `--headed`, `--only <zone>`, `--timeout <secondes>`,
+`--out <dossier>`. Le rapport est écrit dans `tmp/browser-harness/report.json`.
+
+Limites explicites : le combat n’est pas simulé (les rencontres sont résolues
+par les points d’entrée de debug, comme la position du joueur à l’autel FPS) et
+le rendu des pixels n’est pas inspecté. Un playthrough humain reste requis pour
+la difficulté et les critères visuels.
+
+Sous Linux, Chromium a besoin des bibliothèques système :
+`npx playwright install --with-deps chromium` (droits administrateur) ou
+l’équivalent fourni par votre distribution.
+
+Pour l’inclure dans la chaîne :
+
+```bash
+node tools/verify-all.mjs --with-browser
+```
+
+`browser-harness-smoke-test.js` vérifie le plan des 28 zones, des sept
+rechargements, les arguments, les types MIME et le serveur statique sans
+ouvrir de navigateur ; il fait partie des 22 tests découverts par
+`verify-all`.
+
+Le jeu lui-même ne dépend d’aucune bibliothèque externe : Playwright est une
+dépendance de développement réservée au harnais.

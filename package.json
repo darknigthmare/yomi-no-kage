@@ -1,0 +1,13 @@
+{
+  "name": "yomi-no-kage",
+  "private": true,
+  "description": "Jeu d'action pixel-art alternant plateforme 2D et FPS rétro dans un Japon féodal ravagé par une épidémie zombie.",
+  "scripts": {
+    "verify": "node tools/verify-all.mjs",
+    "verify:browser": "node tools/browser-harness.mjs",
+    "verify:all": "node tools/verify-all.mjs --with-browser"
+  },
+  "devDependencies": {
+    "playwright": "1.65.1"
+  }
+}

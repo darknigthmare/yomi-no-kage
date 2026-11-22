@@ -2624,6 +2624,15 @@
         reward: campaignObjectiveReward(objective, meta, allActZonesComplete),
         actCompletionReward: campaignActCompletionReward(),
       });
+      // L'acte peut se clore ici, avant `finalizeCurrentCampaignZoneIfReady` :
+      // le sceau de chronique doit être ouvert au même moment, comme dans le
+      // chemin de finalisation, sinon le codex reste incomplet en fin d'acte.
+      if (allActZonesComplete && window.KageCodex) {
+        const profile = window.KageSave.load();
+        if (window.KageCodex.grantSeal(profile, meta.actOrder) > 0) {
+          window.KageSave.save(profile);
+        }
+      }
       announce(`OBJECTIF ACCOMPLI — ${String(objective.label || objective.id).toUpperCase()}`);
       return true;
     } catch (_) {
@@ -11045,6 +11054,7 @@
             mission.player.y,
             0.19,
           ),
+          altar: { x: mission.altar.x, y: mission.altar.y },
           altarWalkable: isWalkable(
             mission.map,
             mission.altar.x,

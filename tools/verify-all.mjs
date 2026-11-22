@@ -41,12 +41,13 @@ function parseArgs(argv) {
     list: false,
     json: false,
     withValidators: false,
+    withBrowser: false,
     failFast: false,
     recheckAssets: false,
     timeoutMs: TIMEOUT_DEFAULT_MS,
   };
   const usage = () =>
-    "usage : node tools/verify-all.mjs [--skip-assets] [--recheck-assets] [--only <motif>] [--list] [--json] [--with-validators] [--fail-fast] [--timeout <secondes>]";
+    "usage : node tools/verify-all.mjs [--skip-assets] [--recheck-assets] [--only <motif>] [--list] [--json] [--with-validators] [--with-browser] [--fail-fast] [--timeout <secondes>]";
 
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
@@ -56,6 +57,7 @@ function parseArgs(argv) {
       case "--list": options.list = true; break;
       case "--json": options.json = true; break;
       case "--with-validators": options.withValidators = true; break;
+      case "--with-browser": options.withBrowser = true; break;
       case "--fail-fast": options.failFast = true; break;
       case "--only": {
         const value = argv[index + 1];
@@ -360,6 +362,30 @@ function main() {
     }
   }
 
+  // Phase 2b — harnais navigateur (Chromium requis)
+  if (options.withBrowser) {
+    log("→ harnais navigateur (parcours des 28 zones)…");
+    const result = run(
+      process.execPath,
+      ["tools/browser-harness.mjs", "--json"],
+      { timeout: 10 * 60 * 1000 },
+    );
+    const logPath = path.join(logDir, "browser-harness.log");
+    fs.writeFileSync(logPath, result.output);
+    results.push({
+      file: "tools/browser-harness.mjs",
+      needsAssets: true,
+      browser: true,
+      ...result,
+      logPath,
+    });
+    log(`- tools/browser-harness.mjs : ${result.status} (${formatDuration(result.durationMs)})`);
+    if (result.status !== "PASS") {
+      console.error(tail(result.output));
+      console.error(`  log : ${path.relative(ROOT, logPath)}`);
+    }
+  }
+
   // Phase 3 — validateurs optionnels
   if (options.withValidators && !options.failFast) {
     log("→ validateurs de tools/…");
@@ -413,7 +439,7 @@ function main() {
     process.exitCode = EXIT.FAIL;
   } else {
     log(
-      `\n${passed.length}/${passed.length + skipped.length} smoke tests verts` +
+      `\n${passed.length}/${passed.length + skipped.length} vérifications vertes` +
         (skipped.length ? ` (${skipped.length} ignoré(s) faute d'assets)` : "") +
         ".",
     );
